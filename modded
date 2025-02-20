@@ -111,6 +111,31 @@ do
         end
     })
 
+    Tabs.Main:AddButton({
+        Title = "Get Free 69420 fursuits",
+        Description = "Real 100%",
+        Callback = function()
+            Window:Dialog({
+                Title = "Are you sure?",
+                Content = "",
+                Buttons = {
+                    {
+                        Title = "Confirm",
+                        Callback = function()
+                            game:GetService("Players").LocalPlayer:Kick("\n You are banned forever. Have fun on other games furrywoman47")
+                        end
+                    },
+                    {
+                        Title = "Cancel",
+                        Callback = function()
+                            print("Furry is back")
+                        end
+                    }
+                }
+            })
+        end
+    })
+
     local fs1 = Tabs.fistStrength:AddToggle("fsNothing", {Title = "1. 0 Fist Strength Required", Default = false })
     local fs2 = Tabs.fistStrength:AddToggle("fsRock", {Title = "2. 10 Fist Strength Required", Default = false })
     local fs3 = Tabs.fistStrength:AddToggle("fsCrystal", {Title = "3. 10 K Fist Strength Required", Default = false })
