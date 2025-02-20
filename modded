@@ -1,6 +1,5 @@
 local Player = game:GetService("Players").LocalPlayer
 
-
 Player.Idled:connect(function()
     game:GetService("VirtualUser"):Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
     wait(1)
@@ -36,11 +35,11 @@ local Window = Fluent:CreateWindow{
     SubTitle = "",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
-    Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
+    Resize = true, 
     MinSize = Vector2.new(470, 380),
-    Acrylic = true, -- The blur may be detectable, setting this to false disables blur entirely
+    Acrylic = true, 
     Theme = "Dark",
-    MinimizeKey = Enum.KeyCode.RightControl -- Used when theres no MinimizeKeybind
+    MinimizeKey = Enum.KeyCode.RightControl 
 }
 
 local Tabs = {
@@ -49,7 +48,7 @@ local Tabs = {
     movementSpeed = Window:AddTab({ Title = "Movement Speed", Icon = "chevrons-right" }),
     jumpForce = Window:AddTab({ Title = "Jump Force", Icon = "chevrons-right" }),
     psychicPower = Window:AddTab({ Title = "Psychic Power", Icon = "chevrons-right" }),
-    Main = Window:AddTab({ Title = "Misc", Icon = "chevrons-right" }),
+    Main = Window:AddTab({ Title = "Misc", Icon = "badge-plus" }),
     Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
 }
 
@@ -114,30 +113,7 @@ do
         end
     })
 
-    Tabs.Main:AddButton({
-        Title = "Get Free 69420 fursuits",
-        Description = "Real 100%",
-        Callback = function()
-            Window:Dialog({
-                Title = "Are you sure?",
-                Content = "",
-                Buttons = {
-                    {
-                        Title = "Confirm",
-                        Callback = function()
-                            game:GetService("Players").LocalPlayer:Kick("\n You are banned forever. Have fun on other games furrywoman47")
-                        end
-                    },
-                    {
-                        Title = "Cancel",
-                        Callback = function()
-                            print("Furry is back")
-                        end
-                    }
-                }
-            })
-        end
-    })
+    local autorejoin = Tabs.Main:AddToggle("autorj", {Title = "Auto Rejoin Current Server (Every 2 Minutes)", Default = false })
 
     local fs1 = Tabs.fistStrength:AddToggle("fsNothing", {Title = "1. 0 Fist Strength Required", Default = false })
     local fs2 = Tabs.fistStrength:AddToggle("fsRock", {Title = "2. 10 Fist Strength Required", Default = false })
@@ -222,6 +198,33 @@ do
     local pp16 = Tabs.psychicPower:AddToggle("pp10qid", {Title = "16. 10 Qid Psychic Power Required", Default = false })
     local pp17 = Tabs.psychicPower:AddToggle("pp150sxd", {Title = "17. 150 Sxd Psychic Power Required", Default = false })
     local pp18 = Tabs.psychicPower:AddToggle("pp25spd", {Title = "18. 25 Spd Psychic Power Required", Default = false })
+
+
+    autorejoin:OnChanged(function(on)
+        if on then
+            local rjoin = function()
+                if #game.Players:GetPlayers() <= 1 then
+                    game.Players.LocalPlayer:Kick("\nRejoining...")
+                    wait()
+                    game:GetService("TeleportService"):Teleport(109355252375602, game.Players.LocalPlayer)
+                else
+                    game:GetService("TeleportService"):TeleportToPlaceInstance(109355252375602, game.JobId, game.Players.LocalPlayer)
+                end 
+            end
+        
+            game:GetService("RunService").RenderStepped:connect(function()
+                if game:GetService("CoreGui").RobloxPromptGui.promptOverlay:FindFirstChild("ErrorPrompt") then
+                    rjoin()
+                end
+            end)
+        
+            task.delay(120, function()
+                rjoin();
+            end)
+        end
+    end)
+
+    Options.autorj:SetValue(false)
 
 
 
@@ -2482,7 +2485,7 @@ SaveManager:BuildConfigSection(Tabs.Settings)
 Window:SelectTab(1)
 
 Fluent:Notify({
-    Title = "Furry",
+    Title = "Furry Hub",
     Content = "The script has been loaded.",
     Duration = 5
 })
