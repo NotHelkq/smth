@@ -2465,7 +2465,14 @@ do
 
 end
 
-game:GetService("CoreGui").TopBarApp.FullScreenFrame.HurtOverlay.Visible = False
+local hurtOverlay = game:GetService("CoreGui"):WaitForChild("TopBarApp"):WaitForChild("FullScreenFrame"):WaitForChild("HurtOverlay")
+if hurtOverlay then
+    hurtOverlay:Destroy()
+    print("HurtOverlay has been deleted.")
+else
+    print("HurtOverlay not found.")
+end
+
 
 SaveManager:SetLibrary(Fluent)
 InterfaceManager:SetLibrary(Fluent)
