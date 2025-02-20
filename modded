@@ -2465,6 +2465,7 @@ do
 
 end
 
+game:GetService("CoreGui").TopBarApp.FullScreenFrame.HurtOverlay.Visible = False
 
 SaveManager:SetLibrary(Fluent)
 InterfaceManager:SetLibrary(Fluent)
