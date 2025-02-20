@@ -32,7 +32,7 @@ local SaveManager = loadstring(game:HttpGetAsync("https://raw.githubusercontent.
 local InterfaceManager = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/ActualMasterOogway/Fluent-Renewed/master/Addons/InterfaceManager.luau"))()
 
 local Window = Fluent:CreateWindow{
-    Title = `Fluent {Fluent.Version}`,
+    Title = `Furry Hub`,
     SubTitle = "",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
