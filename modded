@@ -25,6 +25,7 @@ autoRespawn = function()
     end)
 end
 
+game:GetService("CoreGui").TopBarApp.FullScreenFrame.HurtOverlay.Visible = False
 
 local Fluent = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
 local SaveManager = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/ActualMasterOogway/Fluent-Renewed/master/Addons/SaveManager.luau"))()
