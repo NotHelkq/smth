@@ -1,6 +1,5 @@
 if game:IsLoaded() then
     if game.PlaceId == 109355252375602 then
-        game:GetService("CoreGui").TopBarApp.FullScreenFrame.HurtOverlay.Visible = False
         loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/modded"))()
     else
         print("Wrong game dumdum")
