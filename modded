@@ -116,6 +116,7 @@ do
     })
 
     local autorejoin = Tabs.Main:AddToggle("autorj", {Title = "Auto Rejoin Current Server (Every 2 Minutes)", Default = false })
+    local autorejoin1m = Tabs.Main:AddToggle("autorj1m", {Title = "Auto Rejoin Current Server (Every 1 Minute)", Default = false })
 
     local mlpfs = Tabs.multipliers:AddToggle("mlpfs", {Title = "Auto Upgrade FS Multiplier", Default = false })
     local mlpbt = Tabs.multipliers:AddToggle("mlpbt", {Title = "Auto Upgrade BT Multiplier", Default = false })
@@ -233,6 +234,34 @@ do
     end)
 
     Options.autorj:SetValue(false)
+
+
+
+    autorejoin1m:OnChanged(function(on)
+        if on then
+            local rjoin = function()
+                if #game.Players:GetPlayers() <= 1 then
+                    game.Players.LocalPlayer:Kick("\nRejoining...")
+                    wait()
+                    game:GetService("TeleportService"):Teleport(109355252375602, game.Players.LocalPlayer)
+                else
+                    game:GetService("TeleportService"):TeleportToPlaceInstance(109355252375602, game.JobId, game.Players.LocalPlayer)
+                end 
+            end
+        
+            game:GetService("RunService").RenderStepped:connect(function()
+                if game:GetService("CoreGui").RobloxPromptGui.promptOverlay:FindFirstChild("ErrorPrompt") then
+                    rjoin()
+                end
+            end)
+
+            task.delay(60, function()
+                rjoin();
+            end)
+        end
+    end)
+
+    Options.autorj1m:SetValue(false)
 
 
 
