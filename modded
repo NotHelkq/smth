@@ -229,6 +229,9 @@ do
             task.delay(120, function()
                 rjoin();
             end)
+            
+            game:GetService("Players").LocalPlayer.PlayerGui.IntroGui:Destroy()
+            game:GetService("Lighting").Blur:Destroy()
         end
     end)
 
