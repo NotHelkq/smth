@@ -2620,6 +2620,7 @@ Fluent:Notify({
 
 SaveManager:LoadAutoloadConfig()
 
+game.Players.LocalPlayer.PlayerGui.ScreenGui.Enabled = true;
 game.ReplicatedStorage.RemoteEvent:FireServer({"Respawn"})
 wait(2)
 game:GetService("Players").LocalPlayer.PlayerGui.IntroGui:Destroy()
