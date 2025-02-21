@@ -1,3 +1,5 @@
+wait(5)
+
 local Player = game:GetService("Players").LocalPlayer
 
 Player.Idled:connect(function()
@@ -47,6 +49,7 @@ local Tabs = {
     movementSpeed = Window:AddTab({ Title = "Movement Speed", Icon = "chevrons-right" }),
     jumpForce = Window:AddTab({ Title = "Jump Force", Icon = "chevrons-right" }),
     psychicPower = Window:AddTab({ Title = "Psychic Power", Icon = "chevrons-right" }),
+    multipliers = Window:AddTab({ Title = "Multiplier Upgrades", Icon = "chevrons-right" }),
     Main = Window:AddTab({ Title = "Misc", Icon = "badge-plus" }),
     Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
 }
@@ -79,7 +82,7 @@ do
                     {
                         Title = "Nuh uh",
                         Callback = function()
-                            print("Bad FurryGirl47")
+                            print("Bad FurryWoman47")
                         end
                     }
                 }
@@ -93,7 +96,7 @@ do
         Callback = function()
             Window:Dialog({
                 Title = "Are you sure?",
-                Content = "Bye bye furrygirl47 ;)",
+                Content = "Bye bye FurryWoman32 ;)",
                 Buttons = {
                     {
                         Title = "Confirm",
@@ -113,6 +116,12 @@ do
     })
 
     local autorejoin = Tabs.Main:AddToggle("autorj", {Title = "Auto Rejoin Current Server (Every 2 Minutes)", Default = false })
+
+    local mlp = Tabs.multipliers:AddToggle("mlpfs", {Title = "Auto Upgrade FS Multiplier", Default = false })
+    local mlp = Tabs.multipliers:AddToggle("mlpbt", {Title = "Auto Upgrade BT Multiplier", Default = false })
+    local mlp = Tabs.multipliers:AddToggle("mlpms", {Title = "Auto Upgrade MS Multiplier", Default = false })
+    local mlp = Tabs.multipliers:AddToggle("mlpjf", {Title = "Auto Upgrade JF Multiplier", Default = false })
+    local mlp = Tabs.multipliers:AddToggle("mlppp", {Title = "Auto Upgrade PP Multiplier", Default = false })
 
     local fs1 = Tabs.fistStrength:AddToggle("fsNothing", {Title = "1. 0 Fist Strength Required", Default = false })
     local fs2 = Tabs.fistStrength:AddToggle("fsRock", {Title = "2. 10 Fist Strength Required", Default = false })
@@ -224,6 +233,111 @@ do
     end)
 
     Options.autorj:SetValue(false)
+
+
+
+    multifs = 0
+    mlpfs:OnChanged(function(on)
+        if on then
+            connections["multipfs"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                multifs = multifs + 1;
+                if multifs == 240 then
+                    multifs = 0;
+                    game:GetService("ReplicatedStorage").Multipliers.UpgradeFS:FireServer();
+                end
+            end)
+        else
+            if connections["multipfs"] then
+                connections["multipfs"]:Disconnect()
+	    end
+        end
+    end)
+
+    Options.mlpfs:SetValue(false)
+
+
+
+    multibt = 0
+    mlpbt:OnChanged(function(on)
+        if on then
+            connections["multipbt"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                multibt = multibt + 1;
+                if multibt == 240 then
+                    multibt = 0;
+                    game:GetService("ReplicatedStorage").Multipliers.UpgradeBT:FireServer();
+                end
+            end)
+        else
+            if connections["multipbt"] then
+                connections["multipbt"]:Disconnect()
+	    end
+        end
+    end)
+
+    Options.mlpbt:SetValue(false)
+
+
+
+    multims = 0
+    mlpms:OnChanged(function(on)
+        if on then
+            connections["multipms"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                multims = multims + 1;
+                if multims == 240 then
+                    multims = 0;
+                    game:GetService("ReplicatedStorage").Multipliers.UpgradeMS:FireServer();
+                end
+            end)
+        else
+            if connections["multipms"] then
+                connections["multipms"]:Disconnect()
+	    end
+        end
+    end)
+
+    Options.mlpms:SetValue(false)
+
+
+
+    multijf = 0
+    mlpjf:OnChanged(function(on)
+        if on then
+            connections["multipjf"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                multijf = multijf + 1;
+                if multijf == 240 then
+                    multijf = 0;
+                    game:GetService("ReplicatedStorage").Multipliers.UpgradeJF:FireServer();
+                end
+            end)
+        else
+            if connections["multipjf"] then
+                connections["multipjf"]:Disconnect()
+	    end
+        end
+    end)
+
+    Options.mlpjf:SetValue(false)
+
+
+
+    multipp = 0
+    mlppp:OnChanged(function(on)
+        if on then
+            connections["multippp"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                multipp = multipp + 1;
+                if multipp == 240 then
+                    multipp = 0;
+                    game:GetService("ReplicatedStorage").Multipliers.UpgradePP:FireServer();
+                end
+            end)
+        else
+            if connections["multippp"] then
+                connections["multippp"]:Disconnect()
+	    end
+        end
+    end)
+
+    Options.mlppp:SetValue(false)
 
 
 
