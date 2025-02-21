@@ -2595,10 +2595,6 @@ else
     print("Update Logs not found.")
 end
 
-game:GetService("Players").LocalPlayer.PlayerGui.IntroGui:Destroy()
-game:GetService("Lighting").Blur:Destroy()
-game.ReplicatedStorage.RemoteEvent:FireServer({"Respawn"})
-
 SaveManager:SetLibrary(Fluent)
 InterfaceManager:SetLibrary(Fluent)
 
@@ -2623,3 +2619,8 @@ Fluent:Notify({
 })
 
 SaveManager:LoadAutoloadConfig()
+
+game.ReplicatedStorage.RemoteEvent:FireServer({"Respawn"})
+wait(2)
+game:GetService("Players").LocalPlayer.PlayerGui.IntroGui:Destroy()
+game:GetService("Lighting").Blur:Destroy()
