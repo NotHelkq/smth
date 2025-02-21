@@ -225,13 +225,10 @@ do
                     rjoin()
                 end
             end)
-        
+
             task.delay(120, function()
                 rjoin();
             end)
-            
-            game:GetService("Players").LocalPlayer.PlayerGui.IntroGui:Destroy()
-            game:GetService("Lighting").Blur:Destroy()
         end
     end)
 
@@ -2597,6 +2594,10 @@ if UpdateLogs then
 else
     print("Update Logs not found.")
 end
+
+game:GetService("Players").LocalPlayer.PlayerGui.IntroGui:Destroy()
+game:GetService("Lighting").Blur:Destroy()
+game.ReplicatedStorage.RemoteEvent:FireServer({"Respawn"})
 
 SaveManager:SetLibrary(Fluent)
 InterfaceManager:SetLibrary(Fluent)
