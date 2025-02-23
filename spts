@@ -1,5 +1,10 @@
-if game.PlaceId == 109355252375602 then
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/modded"))()
+if game:IsLoaded() then
+    if game.PlaceId == 109355252375602 then
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/modded"))()
+    else
+        print("Wrong game dumdum")
+    end
 else
-    print("Wrong game dumdum")
+    wait(1)
+    return
 end
