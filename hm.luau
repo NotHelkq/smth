@@ -2606,14 +2606,6 @@ else
     print("HurtOverlay not found.")
 end
 
-local UpdateLogs = game:GetService("Players").LocalPlayer.PlayerGui.IntroGui.UpdateLogs
-if UpdateLogs then
-    UpdateLogs:Destroy()
-    print("Update Logs has been deleted.")
-else
-    print("Update Logs not found.")
-end
-
 SaveManager:SetLibrary(Fluent)
 InterfaceManager:SetLibrary(Fluent)
 
