@@ -2,7 +2,7 @@ while not game:IsLoaded() do
     wait(1)
 end
 
-if game.PlaceId == 10935525237 then -- Check the PlaceId
+if game.PlaceId == 109355252375602 then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/modded"))()
 else
     print("Wrong game dumdum")
