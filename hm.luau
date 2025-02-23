@@ -1,0 +1,2646 @@
+wait(3)
+
+local Player = game:GetService("Players").LocalPlayer
+
+Player.Idled:connect(function()
+    game:GetService("VirtualUser"):Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+    wait(1)
+    game:GetService("VirtualUser"):Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame) 
+end)
+
+local connections = {};
+local waitTime = 0.05;
+
+local resp = 0;
+autoRespawn = function() 
+    if connections["rsp"] then
+        return;
+    end
+    connections["rsp"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+        settings().Network.IncomingReplicationLag = 0;
+        game.Players.LocalPlayer.PlayerGui.ScreenGui.Enabled = true;
+        resp = resp + 1
+        if resp == 60 then
+            game.ReplicatedStorage.RemoteEvent:FireServer({"Respawn"})
+            resp = 0
+        end
+    end)
+end
+
+local Fluent = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
+local SaveManager = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/ActualMasterOogway/Fluent-Renewed/master/Addons/SaveManager.luau"))()
+local InterfaceManager = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/ActualMasterOogway/Fluent-Renewed/master/Addons/InterfaceManager.luau"))()
+
+local Window = Fluent:CreateWindow{
+    Title = `Furry Hub`,
+    SubTitle = "",
+    TabWidth = 160,
+    Size = UDim2.fromOffset(830, 525),
+    Resize = true, 
+    MinSize = Vector2.new(470, 380),
+    Acrylic = true, 
+    Theme = "Dark",
+    MinimizeKey = Enum.KeyCode.RightControl 
+}
+
+local Tabs = {
+    fistStrength = Window:AddTab({ Title = "Fist Strength", Icon = "chevrons-right" }),
+    bodyToughness = Window:AddTab({ Title = "Body Toughness", Icon = "chevrons-right" }),
+    movementSpeed = Window:AddTab({ Title = "Movement Speed", Icon = "chevrons-right" }),
+    jumpForce = Window:AddTab({ Title = "Jump Force", Icon = "chevrons-right" }),
+    psychicPower = Window:AddTab({ Title = "Psychic Power", Icon = "chevrons-right" }),
+    multipliers = Window:AddTab({ Title = "Multiplier Upgrades", Icon = "chevrons-right" }),
+    Main = Window:AddTab({ Title = "Misc", Icon = "badge-plus" }),
+    Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
+}
+
+local Options = Fluent.Options
+
+do
+    Fluent:Notify({
+        Title = "Furry Hub",
+        Content = "Ples bobux, i beg you :3",
+        Duration = 10
+    })
+
+    local tpmhax = Tabs.Main:AddToggle("hacks", {Title = "Free TPM", Default = false })
+
+    Tabs.Main:AddButton({
+        Title = "Execute Infinite Yield",
+        Description = "",
+        Callback = function()
+            Window:Dialog({
+                Title = "Are you sure?",
+                Content = "",
+                Buttons = {
+                    {
+                        Title = "Yuh uh",
+                        Callback = function()
+                            loadstring(game:HttpGet('https://raw.githubusercontent.com/DarkNetworks/Infinite-Yield/main/latest.lua'))()
+                        end
+                    },
+                    {
+                        Title = "Nuh uh",
+                        Callback = function()
+                            print("Bad FurryWoman47")
+                        end
+                    }
+                }
+            })
+        end
+    })
+
+    Tabs.Main:AddButton({
+        Title = "Rejoin Current Server",
+        Description = "Works only on public servers.",
+        Callback = function()
+            Window:Dialog({
+                Title = "Are you sure?",
+                Content = "Bye bye FurryWoman32 ;)",
+                Buttons = {
+                    {
+                        Title = "Confirm",
+                        Callback = function()
+                            game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId, game:GetService("Players").LocalPlayer) 
+                        end
+                    },
+                    {
+                        Title = "Cancel",
+                        Callback = function()
+                            print("Furry is back")
+                        end
+                    }
+                }
+            })
+        end
+    })
+
+    local autorejoin = Tabs.Main:AddToggle("autorj", {Title = "Auto Rejoin Current Server (Every 2 Minutes)", Default = false })
+    local autorejoin1m = Tabs.Main:AddToggle("autorj1m", {Title = "Auto Rejoin Current Server (Every 1 Minute)", Default = false })
+
+    local mlpfs = Tabs.multipliers:AddToggle("mlpfs", {Title = "Auto Upgrade FS Multiplier", Default = false })
+    local mlpbt = Tabs.multipliers:AddToggle("mlpbt", {Title = "Auto Upgrade BT Multiplier", Default = false })
+    local mlpms = Tabs.multipliers:AddToggle("mlpms", {Title = "Auto Upgrade MS Multiplier", Default = false })
+    local mlpjf = Tabs.multipliers:AddToggle("mlpjf", {Title = "Auto Upgrade JF Multiplier", Default = false })
+    local mlppp = Tabs.multipliers:AddToggle("mlppp", {Title = "Auto Upgrade PP Multiplier", Default = false })
+
+    local fs1 = Tabs.fistStrength:AddToggle("fsNothing", {Title = "1. 0 Fist Strength Required", Default = false })
+    local fs2 = Tabs.fistStrength:AddToggle("fsRock", {Title = "2. 10 Fist Strength Required", Default = false })
+    local fs3 = Tabs.fistStrength:AddToggle("fsCrystal", {Title = "3. 10 K Fist Strength Required", Default = false })
+    local fs4 = Tabs.fistStrength:AddToggle("fs1b", {Title = "4. 1 B Fist Strength Required", Default = false })
+    local fs5 = Tabs.fistStrength:AddToggle("fs100b", {Title = "5. 100 B Fist Strength Required", Default = false })
+    local fs6 = Tabs.fistStrength:AddToggle("fs10t", {Title = "6. 10 T Fist Strength Required", Default = false })
+    local fs7 = Tabs.fistStrength:AddToggle("fs10qa", {Title = "7. 10 Qa Fist Strength Required", Default = false })
+    local fs8 = Tabs.fistStrength:AddToggle("fs1qi", {Title = "8. 1 Qi Fist Strength Required", Default = false })
+    local fs9 = Tabs.fistStrength:AddToggle("fs25sx", {Title = "9. 25 Sx Fist Strength Required", Default = false })
+    local fs10 = Tabs.fistStrength:AddToggle("fs1sp", {Title = "10. 1 Sp Fist Strength Required", Default = false })
+    local fs11 = Tabs.fistStrength:AddToggle("fs750sp", {Title = "11. 750 Sp Fist Strength Required", Default = false })
+    local fs12 = Tabs.fistStrength:AddToggle("fs1no", {Title = "12. 1 No Fist Strength Required", Default = false })
+    local fs13 = Tabs.fistStrength:AddToggle("fs10dc", {Title = "13. 10 Dc Fist Strength Required", Default = false })
+    local fs14 = Tabs.fistStrength:AddToggle("fs150ud", {Title = "14. 150 Ud Fist Strength Required", Default = false })
+    local fs15 = Tabs.fistStrength:AddToggle("fs1td", {Title = "15. 1 Td Fist Strength Required", Default = false })
+    local fs16 = Tabs.fistStrength:AddToggle("fs1qad", {Title = "16. 1 Qad Fist Strength Required", Default = false })
+    local fs17 = Tabs.fistStrength:AddToggle("fs10qid", {Title = "17. 10 Qid Fist Strength Required", Default = false })
+    local fs18 = Tabs.fistStrength:AddToggle("fs150sxd", {Title = "18. 150 Sxd Fist Strength Required", Default = false })
+    local fs19 = Tabs.fistStrength:AddToggle("fs25spd", {Title = "19. 25 Spd Fist Strength Required", Default = false })
+
+    local bt1 = Tabs.bodyToughness:AddToggle("btNothing", {Title = "1. 0 Body Toughness Required", Default = false })
+    local bt2 = Tabs.bodyToughness:AddToggle("bt5", {Title = "2. 5 Body Toughness Required", Default = false })
+    local bt3 = Tabs.bodyToughness:AddToggle("bt500", {Title = "3. 500 Body Toughness Required", Default = false })
+    local bt4 = Tabs.bodyToughness:AddToggle("bt5k", {Title = "4. 5 K Body Toughness Required", Default = false })
+    local bt5 = Tabs.bodyToughness:AddToggle("bt50k", {Title = "5. 50 K Body Toughness Required", Default = false })
+    local bt6 = Tabs.bodyToughness:AddToggle("bt500k", {Title = "6. 500 K Body Toughness Required", Default = false })
+    local bt7 = Tabs.bodyToughness:AddToggle("bt50m", {Title = "7. 50 M Body Toughness Required", Default = false })
+    local bt8 = Tabs.bodyToughness:AddToggle("bt5b", {Title = "8. 5 B Body Toughness Required", Default = false })
+    local bt9 = Tabs.bodyToughness:AddToggle("bt500b", {Title = "9. 500 B Body Toughness Required", Default = false })
+    local bt10 = Tabs.bodyToughness:AddToggle("bt500t", {Title = "10. 500 T Body Toughness Required", Default = false })
+    local bt11 = Tabs.bodyToughness:AddToggle("bt50qa", {Title = "11. 50 Qa Body Toughness Required", Default = false })
+    local bt12 = Tabs.bodyToughness:AddToggle("bt166qi", {Title = "12. 166.66 Qi Body Toughness Required", Default = false })
+    local bt13 = Tabs.bodyToughness:AddToggle("bt75sx", {Title = "13. 75 Sx Body Toughness Required", Default = false })
+    local bt14 = Tabs.bodyToughness:AddToggle("bt37sp", {Title = "14. 37.5 Sp Body Toughness Required", Default = false })
+    local bt15 = Tabs.bodyToughness:AddToggle("bt50oc", {Title = "15. 50 Oc Body Toughness Required", Default = false })
+    local bt16 = Tabs.bodyToughness:AddToggle("bt500no", {Title = "16. 500 No Body Toughness Required", Default = false })
+    local bt17 = Tabs.bodyToughness:AddToggle("bt7ud", {Title = "17. 7.5 Ud Body Toughness Required", Default = false })
+    local bt18 = Tabs.bodyToughness:AddToggle("bt50dd", {Title = "18. 50 Dd Body Toughness Required", Default = false })
+    local bt19 = Tabs.bodyToughness:AddToggle("bt50td", {Title = "19. 50 Td Body Toughness Required", Default = false })
+    local bt20 = Tabs.bodyToughness:AddToggle("bt500qad", {Title = "20. 500 Qad Body Toughness Required", Default = false })
+    local bt21 = Tabs.bodyToughness:AddToggle("bt7sxd", {Title = "21. 7.5 Sxd Body Toughness Required", Default = false })
+    local bt22 = Tabs.bodyToughness:AddToggle("bt1spd", {Title = "22. 1.25 Spd Body Toughness Required", Default = false })
+
+    local ms1 = Tabs.movementSpeed:AddToggle("msNothing", {Title = "1. 0 Movement Speed Required", Default = false })
+    local ms2 = Tabs.movementSpeed:AddToggle("ms100", {Title = "2. 100 Movement Speed Required", Default = false })
+    local ms3 = Tabs.movementSpeed:AddToggle("ms5k", {Title = "3. 5K Movement Speed Required", Default = false })
+    local ms4 = Tabs.movementSpeed:AddToggle("ms500k", {Title = "4. 500K Movement Speed Required", Default = false })
+    local ms5 = Tabs.movementSpeed:AddToggle("ms10m", {Title = "5. 10M Movement Speed Required", Default = false })
+    local ms6 = Tabs.movementSpeed:AddToggle("ms100m", {Title = "6. 100M Movement Speed Required", Default = false })
+    local ms7 = Tabs.movementSpeed:AddToggle("ms1b", {Title = "7. 1B Movement Speed Required", Default = false })
+    local ms8 = Tabs.movementSpeed:AddToggle("ms10b", {Title = "8. 10B Movement Speed Required", Default = false })
+    local ms9 = Tabs.movementSpeed:AddToggle("ms100b", {Title = "9. 100B Movement Speed Required", Default = false })
+    local ms10 = Tabs.movementSpeed:AddToggle("ms1t", {Title = "10. 1T Movement Speed Required", Default = false })
+ 
+    local jf1 = Tabs.jumpForce:AddToggle("jfNothing", {Title = "1. 0 Jump Force Required", Default = false })
+    local jf2 = Tabs.jumpForce:AddToggle("jf100", {Title = "2. 5K Jump Force Required", Default = false })
+    local jf3 = Tabs.jumpForce:AddToggle("jf5k", {Title = "3. 200K Jump Force Required", Default = false })
+    local jf4 = Tabs.jumpForce:AddToggle("jf500k", {Title = "4. 2M Jump Force Required", Default = false })
+    local jf5 = Tabs.jumpForce:AddToggle("jf10m", {Title = "5. 10M Jump Force Required", Default = false })
+    local jf6 = Tabs.jumpForce:AddToggle("jf100m", {Title = "6. 200M Jump Force Required", Default = false })
+    local jf7 = Tabs.jumpForce:AddToggle("jf1b", {Title = "7. 1B Jump Force Required", Default = false })
+    local jf8 = Tabs.jumpForce:AddToggle("jf10b", {Title = "8. 10B Jump Force Required", Default = false })
+    local jf9 = Tabs.jumpForce:AddToggle("jf100b", {Title = "9. 100B Jump Force Required", Default = false })
+    local jf10 = Tabs.jumpForce:AddToggle("jf1t", {Title = "10. 1T Jump Force Required", Default = false })
+
+    local pp1 = Tabs.psychicPower:AddToggle("ppNothing", {Title = "1. 0 Psychic Power Required", Default = false })
+    local pp2 = Tabs.psychicPower:AddToggle("ppFly", {Title = "2. Flight Ability Required", Default = false })
+    local pp3 = Tabs.psychicPower:AddToggle("pp1m", {Title = "3. 1 M Psychic Power Required", Default = false })
+    local pp4 = Tabs.psychicPower:AddToggle("pp1b", {Title = "4. 1 B Psychic Power Required", Default = false })
+    local pp5 = Tabs.psychicPower:AddToggle("pp1t", {Title = "5. 1 T Psychic Power Required", Default = false })
+    local pp6 = Tabs.psychicPower:AddToggle("pp1qa", {Title = "6. 1 Qa Psychic Power Required", Default = false })
+    local pp7 = Tabs.psychicPower:AddToggle("pp1qi", {Title = "7. 1 Qi Psychic Power Required", Default = false })
+    local pp8 = Tabs.psychicPower:AddToggle("pp1sx", {Title = "8. 1 Sx Psychic Power Required", Default = false })
+    local pp9 = Tabs.psychicPower:AddToggle("pp1sp", {Title = "9. 1 Sp Psychic Power Required", Default = false })
+    local pp10 = Tabs.psychicPower:AddToggle("pp750sp", {Title = "10. 750 Sp Psychic Power Required", Default = false })
+    local pp11 = Tabs.psychicPower:AddToggle("pp1no", {Title = "11. 1 No Psychic Power Required", Default = false })
+    local pp12 = Tabs.psychicPower:AddToggle("pp10dc", {Title = "12. 10 Dc Psychic Power Required", Default = false })
+    local pp13 = Tabs.psychicPower:AddToggle("pp150ud", {Title = "13. 150 Ud Psychic Power Required", Default = false })
+    local pp14 = Tabs.psychicPower:AddToggle("pp1td", {Title = "14. 1 Td Psychic Power Required", Default = false })
+    local pp15 = Tabs.psychicPower:AddToggle("pp1qad", {Title = "15. 1 Qad Psychic Power Required", Default = false })
+    local pp16 = Tabs.psychicPower:AddToggle("pp10qid", {Title = "16. 10 Qid Psychic Power Required", Default = false })
+    local pp17 = Tabs.psychicPower:AddToggle("pp150sxd", {Title = "17. 150 Sxd Psychic Power Required", Default = false })
+    local pp18 = Tabs.psychicPower:AddToggle("pp25spd", {Title = "18. 25 Spd Psychic Power Required", Default = false })
+
+
+    autorejoin:OnChanged(function(on)
+        if on then
+            local rjoin = function()
+                if #game.Players:GetPlayers() <= 1 then
+                    game.Players.LocalPlayer:Kick("\nRejoining...")
+                    wait()
+                    game:GetService("TeleportService"):Teleport(109355252375602, game.Players.LocalPlayer)
+                else
+                    game:GetService("TeleportService"):TeleportToPlaceInstance(109355252375602, game.JobId, game.Players.LocalPlayer)
+                end 
+            end
+        
+            game:GetService("RunService").RenderStepped:connect(function()
+                if game:GetService("CoreGui").RobloxPromptGui.promptOverlay:FindFirstChild("ErrorPrompt") then
+                    rjoin()
+                end
+            end)
+
+            task.delay(120, function()
+                rjoin();
+            end)
+        end
+    end)
+
+    Options.autorj:SetValue(false)
+
+
+
+    autorejoin1m:OnChanged(function(on)
+        if on then
+            local rjoin = function()
+                if #game.Players:GetPlayers() <= 1 then
+                    game.Players.LocalPlayer:Kick("\nRejoining...")
+                    wait()
+                    game:GetService("TeleportService"):Teleport(109355252375602, game.Players.LocalPlayer)
+                else
+                    game:GetService("TeleportService"):TeleportToPlaceInstance(109355252375602, game.JobId, game.Players.LocalPlayer)
+                end 
+            end
+        
+            game:GetService("RunService").RenderStepped:connect(function()
+                if game:GetService("CoreGui").RobloxPromptGui.promptOverlay:FindFirstChild("ErrorPrompt") then
+                    rjoin()
+                end
+            end)
+
+            task.delay(60, function()
+                rjoin();
+            end)
+        end
+    end)
+
+    Options.autorj1m:SetValue(false)
+
+
+
+    multifs = 0
+    mlpfs:OnChanged(function(on)
+        if on then
+            connections["multipfs"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                multifs = multifs + 1;
+                if multifs == 240 then
+                    multifs = 0;
+                    game:GetService("ReplicatedStorage").Multipliers.UpgradeFS:FireServer();
+                end
+            end)
+        else
+            if connections["multipfs"] then
+                connections["multipfs"]:Disconnect()
+	        end
+        end
+    end)
+
+    Options.mlpfs:SetValue(false)
+
+
+
+    multibt = 0
+    mlpbt:OnChanged(function(on)
+        if on then
+            connections["multipbt"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                multibt = multibt + 1;
+                if multibt == 240 then
+                    multibt = 0;
+                    game:GetService("ReplicatedStorage").Multipliers.UpgradeBT:FireServer();
+                end
+            end)
+        else
+            if connections["multipbt"] then
+                connections["multipbt"]:Disconnect()
+	        end
+        end
+    end)
+
+    Options.mlpbt:SetValue(false)
+
+
+
+    multims = 0
+    mlpms:OnChanged(function(on)
+        if on then
+            connections["multipms"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                multims = multims + 1;
+                if multims == 240 then
+                    multims = 0;
+                    game:GetService("ReplicatedStorage").Multipliers.UpgradeMS:FireServer();
+                end
+            end)
+        else
+            if connections["multipms"] then
+                connections["multipms"]:Disconnect()
+	        end
+        end
+    end)
+
+    Options.mlpms:SetValue(false)
+
+
+
+    multijf = 0
+    mlpjf:OnChanged(function(on)
+        if on then
+            connections["multipjf"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                multijf = multijf + 1;
+                if multijf == 240 then
+                    multijf = 0;
+                    game:GetService("ReplicatedStorage").Multipliers.UpgradeJF:FireServer();
+                end
+            end)
+        else
+            if connections["multipjf"] then
+                connections["multipjf"]:Disconnect()
+	        end
+        end
+    end)
+
+    Options.mlpjf:SetValue(false)
+
+
+
+    multipp = 0
+    mlppp:OnChanged(function(on)
+        if on then
+            connections["multippp"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                multipp = multipp + 1;
+                if multipp == 240 then
+                    multipp = 0;
+                    game:GetService("ReplicatedStorage").Multipliers.UpgradePP:FireServer();
+                end
+            end)
+        else
+            if connections["multippp"] then
+                connections["multippp"]:Disconnect()
+	        end
+        end
+    end)
+
+    Options.mlppp:SetValue(false)
+
+
+
+    fist1 = 0
+    fs1:OnChanged(function(on)
+        if on then
+            connections["fistNothing"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                fist1 = fist1 + 1;
+                if fist1 == 10 then
+                    fist1 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+FS1"});	
+                end
+            end)
+        else
+            if connections["fistNothing"] then
+                connections["fistNothing"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.fsNothing:SetValue(false)
+
+
+
+    fist2 = 0
+    fs2:OnChanged(function(on)
+        if on then
+            connections["fistRock"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                fist2 = fist2 + 1;
+                if fist2 == 10 then
+                    fist2 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+FS2"});	
+                end
+            end)
+        else
+            if connections["fistRock"] then
+                connections["fistRock"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.fsRock:SetValue(false)
+
+
+
+    fist3 = 0
+    fs3:OnChanged(function(on)
+        if on then
+            connections["fistCrystal"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                fist3 = fist3 + 1;
+                if fist3 == 10 then
+                    fist3 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+FS3"});	
+                end
+            end)
+        else
+            if connections["fistCrystal"] then
+                connections["fistCrystal"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.fsCrystal:SetValue(false)
+
+
+
+    fist4 = 0
+    fs4:OnChanged(function(on)
+        if on then
+            connections["fist1b"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                fist4 = fist4 + 1;
+                if fist4 == 10 then
+                    fist4 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+FS4"});	
+                end
+            end)
+        else
+            if connections["fist1b"] then
+                connections["fist1b"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.fs1b:SetValue(false)
+
+
+
+    fist5 = 0
+    fs5:OnChanged(function(on)
+        if on then
+            connections["fist100b"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                fist5 = fist5 + 1;
+                if fist5 == 10 then
+                    fist5 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+FS5"});	
+                end
+            end)
+        else
+            if connections["fist100b"] then
+                connections["fist100b"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.fs100b:SetValue(false)
+
+
+
+    fist6 = 0
+    fs6:OnChanged(function(on)
+        if on then
+            connections["fist10t"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                fist6 = fist6 + 1;
+                if fist6 == 10 then
+                    fist6 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+FS6"});	
+                end
+            end)
+        else
+            if connections["fist10t"] then
+                connections["fist10t"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.fs10t:SetValue(false)
+
+
+
+    fist7 = 0
+    fs7:OnChanged(function(on)
+        if on then
+            connections["fist10qa"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                fist7 = fist7 + 1;
+                if fist7 == 10 then
+                    fist7 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+FS7"});	
+                end
+            end)
+        else
+            if connections["fist10qa"] then
+                connections["fist10qa"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.fs10qa:SetValue(false)
+
+
+
+    fist8 = 0
+    fs8:OnChanged(function(on)
+        if on then
+            connections["fist1qi"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                fist8 = fist8 + 1;
+                if fist8 == 10 then
+                    fist8 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+FS8"});	
+                end
+            end)
+        else
+            if connections["fist1qi"] then
+                connections["fist1qi"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.fs1qi:SetValue(false)
+
+
+
+    fist9 = 0
+    fs9:OnChanged(function(on)
+        if on then
+            connections["fist25sx"] = game:GetService("RunService").RenderStepped:Connect(function()     
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                fist9 = fist9 + 1;
+                if fist9 == 10 then
+                    fist9 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+FS9"});    
+                end
+            end)
+        else
+            if connections["fist25sx"] then
+                connections["fist25sx"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.fs25sx:SetValue(false)
+    
+    
+    
+    fist10 = 0
+    fs10:OnChanged(function(on)
+        if on then
+            connections["fist1sp"] = game:GetService("RunService").RenderStepped:Connect(function()  
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                fist10 = fist10 + 1;
+                if fist10 == 10 then
+                    fist10 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+FS10"});   
+                end
+            end)
+        else
+            if connections["fist25sx"] then
+                connections["fist25sx"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.fs1sp:SetValue(false)
+    
+    
+
+    
+    fist11 = 0
+    fs11:OnChanged(function(on)
+        if on then
+            connections["fist750sp"] = game:GetService("RunService").RenderStepped:Connect(function()    
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                fist11 = fist11 + 1;
+                if fist11 == 10 then
+                    fist11 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+FS11"});   
+                end
+            end)
+        else
+            if connections["fist750sp"] then
+                connections["fist750sp"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.fs750sp:SetValue(false)
+    
+    
+    
+    fist12 = 0
+    fs12:OnChanged(function(on)
+        if on then
+            connections["fist1no"] = game:GetService("RunService").RenderStepped:Connect(function()  
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                fist12 = fist12 + 1;
+                if fist12 == 10 then
+                    fist12 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+FS12"});   
+                end
+            end)
+        else
+            if connections["fist1no"] then
+                connections["fist1no"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.fs1no:SetValue(false)
+    
+    
+    
+    fist13 = 0
+    fs13:OnChanged(function(on)
+        if on then
+            connections["fist10dc"] = game:GetService("RunService").RenderStepped:Connect(function()     
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                fist13 = fist13 + 1;
+                if fist13 == 10 then
+                    fist13 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+FS13"});   
+                end
+            end)
+        else
+            if connections["fist10dc"] then
+                connections["fist10dc"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.fs10dc:SetValue(false)
+    
+    
+    
+    fist14 = 0
+    fs14:OnChanged(function(on)
+        if on then
+            connections["fist150ud"] = game:GetService("RunService").RenderStepped:Connect(function()  
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                fist14 = fist14 + 1;
+                if fist14 == 10 then
+                    fist14 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+FS14"});   
+                end
+            end)
+        else
+            if connections["fist150ud"] then
+                connections["fist150ud"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.fs150ud:SetValue(false)
+    
+    
+    
+    fist15 = 0
+    fs15:OnChanged(function(on)
+        if on then
+            connections["fist1td"] = game:GetService("RunService").RenderStepped:Connect(function()     
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                fist15 = fist15 + 1;
+                if fist15 == 10 then
+                    fist15 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+FS15"});   
+                end
+            end)
+        else
+            if connections["fist1td"] then
+                connections["fist1td"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.fs1td:SetValue(false)
+    
+    
+    
+    fist16 = 0
+    fs16:OnChanged(function(on)
+        if on then
+            connections["fist1qad"] = game:GetService("RunService").RenderStepped:Connect(function()  
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                fist16 = fist16 + 1;
+                if fist16 == 10 then
+                    fist16 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+FS16"});   
+                end
+            end)
+        else
+            if connections["fist1qad"] then
+                connections["fist1qad"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.fs1qad:SetValue(false)
+    
+    
+    
+    fist17 = 0
+    fs17:OnChanged(function(on)
+        if on then
+            connections["fist10qid"] = game:GetService("RunService").RenderStepped:Connect(function()     
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                fist17 = fist17 + 1;
+                if fist17 == 10 then
+                    fist17 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+FS17"});   
+                end
+            end)
+        else
+            if connections["fist10qid"] then
+                connections["fist10qid"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.fs10qid:SetValue(false)
+    
+    
+    
+    fist18 = 0
+    fs18:OnChanged(function(on)
+        if on then
+            connections["fist150sxd"] = game:GetService("RunService").RenderStepped:Connect(function()    
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                fist18 = fist18 + 1;
+                if fist18 == 10 then
+                    fist18 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+FS18"});   
+                end
+            end)
+        else
+            if connections["fist150sxd"] then
+                connections["fist150sxd"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.fs150sxd:SetValue(false)
+    
+    
+    
+    fist19 = 0
+    fs19:OnChanged(function(on)
+        if on then
+            connections["fist25spd"] = game:GetService("RunService").RenderStepped:Connect(function()  
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                fist19 = fist19 + 1;
+                if fist19 == 10 then
+                    fist19 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+FS19"});   
+                end
+            end)
+        else
+            if connections["fist25spd"] then
+                connections["fist25spd"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.fs25spd:SetValue(false)
+    
+
+
+    
+    
+    body1 = 0
+    bt1:OnChanged(function(on)
+        if on then
+            connections["bodyNothing"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                body1 = body1 + 1;
+                if body1 == 2 then
+                    body1 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+BT1"});	
+                end
+            end)
+        else
+            if connections["bodyNothing"] then
+                connections["bodyNothing"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.btNothing:SetValue(false)
+    
+    
+    
+    body2 = 0
+    bt2:OnChanged(function(on)
+        if on then
+            connections["body5"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                body2 = body2 + 1;
+                if body2 == 2 then
+                    body2 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+BT2"});	
+                end
+            end)
+        else
+            if connections["body5"] then
+                connections["body5"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.bt5:SetValue(false)
+    
+    
+    
+    body3 = 0
+    bt3:OnChanged(function(on)
+        if on then
+            connections["body500"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                body3 = body3 + 1;
+                if body3 == 2 then
+                    body3 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+BT3"});	
+                end
+            end)
+        else
+            if connections["body500"] then
+                connections["body500"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.bt500:SetValue(false)
+    
+    
+    
+    body4 = 0
+    bt4:OnChanged(function(on)
+        if on then
+            connections["body5k"] = game:GetService("RunService").RenderStepped:Connect(function()   
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                body4 = body4 + 1;
+                if body4 == 2 then
+                    body4 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+BT4"});    
+                end
+            end)
+        else
+            if connections["body5k"] then
+                connections["body5k"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.bt5k:SetValue(false)
+    
+    
+    
+    body5 = 0
+    bt5:OnChanged(function(on)
+        if on then
+            connections["body50k"] = game:GetService("RunService").RenderStepped:Connect(function()  
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                body5 = body5 + 1;
+                if body5 == 2 then
+                    body5 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+BT5"});    
+                end
+            end)
+        else
+            if connections["body50k"] then
+                connections["body50k"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.bt50k:SetValue(false)
+    
+    
+    
+    body6 = 0
+    bt6:OnChanged(function(on)
+        if on then
+            connections["body500k"] = game:GetService("RunService").RenderStepped:Connect(function()  
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                body6 = body6 + 1;
+                if body6 == 2 then
+                    body6 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+BT6"});    
+                end
+            end)
+        else
+            if connections["body500k"] then
+                connections["body500k"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.bt500k:SetValue(false)
+    
+    
+    
+    body7 = 0
+    bt7:OnChanged(function(on)
+        if on then
+            connections["body50m"] = game:GetService("RunService").RenderStepped:Connect(function()     
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                body7 = body7 + 1;
+                if body7 == 2 then
+                    body7 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+BT7"});    
+                end
+            end)
+        else
+            if connections["body50m"] then
+                connections["body50m"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.bt50m:SetValue(false)
+    
+    
+    
+    body8 = 0
+    bt8:OnChanged(function(on)
+        if on then
+            connections["body5b"] = game:GetService("RunService").RenderStepped:Connect(function()     
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                body8 = body8 + 1;
+                if body8 == 2 then
+                    body8 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+BT8"});    
+                end
+            end)
+        else
+            if connections["body5b"] then
+                connections["body5b"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.bt5b:SetValue(false)
+    
+    
+    
+    body9 = 0
+    bt9:OnChanged(function(on)
+        if on then
+            connections["body500b"] = game:GetService("RunService").RenderStepped:Connect(function()   
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                body9 = body9 + 1;
+                if body9 == 2 then
+                    body9 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+BT9"});    
+                end
+            end)
+        else
+            if connections["body500b"] then
+                connections["body500b"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.bt500b:SetValue(false)
+    
+    
+    
+    body10 = 0
+    bt10:OnChanged(function(on)
+        if on then
+            connections["body500t"] = game:GetService("RunService").RenderStepped:Connect(function()   
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                body10 = body10 + 1;
+                if body10 == 2 then
+                    body10 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+BT10"});   
+                end
+            end)
+        else
+            if connections["body500t"] then
+                connections["body500t"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.bt500t:SetValue(false)
+    
+    
+    
+    body11 = 0
+    bt11:OnChanged(function(on)
+        if on then
+            connections["body50qa"] = game:GetService("RunService").RenderStepped:Connect(function()  
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                body11 = body11 + 1;
+                if body11 == 2 then
+                    body11 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+BT11"});  
+                end
+            end)
+        else
+            if connections["body50qa"] then
+                connections["body50qa"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.bt50qa:SetValue(false)
+    
+    
+    
+    body12 = 0
+    bt12:OnChanged(function(on)
+        if on then
+            connections["body166qi"] = game:GetService("RunService").RenderStepped:Connect(function()  
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                body12 = body12 + 1;
+                if body12 == 2 then
+                    body12 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+BT12"});   
+                end
+            end)
+        else
+            if connections["body166qi"] then
+                connections["body166qi"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.bt166qi:SetValue(false)
+    
+    
+    
+    body13 = 0
+    bt13:OnChanged(function(on)
+        if on then
+            connections["body75sx"] = game:GetService("RunService").RenderStepped:Connect(function()     
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                body13 = body13 + 1;
+                if body13 == 2 then
+                    body13 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+BT13"});   
+                end
+            end)
+        else
+            if connections["body75sx"] then
+                connections["body75sx"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.bt75sx:SetValue(false)
+    
+    
+    
+    body14 = 0
+    bt14:OnChanged(function(on)
+        if on then
+            connections["body37sp"] = game:GetService("RunService").RenderStepped:Connect(function()     
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                body14 = body14 + 1;
+                if body14 == 2 then
+                    body14 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+BT14"});   
+                end
+            end)
+        else
+            if connections["body37sp"] then
+                connections["body37sp"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.bt37sp:SetValue(false)
+    
+    
+    
+    body15 = 0
+    bt15:OnChanged(function(on)
+        if on then
+            connections["body50oc"] = game:GetService("RunService").RenderStepped:Connect(function()     
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                body15 = body15 + 1;
+                if body15 == 2 then
+                    body15 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+BT15"});   
+                end
+            end)
+        else
+            if connections["body50oc"] then
+                connections["body50oc"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.bt50oc:SetValue(false)
+    
+    
+    
+    body16 = 0
+    bt16:OnChanged(function(on)
+        if on then
+            connections["body500no"] = game:GetService("RunService").RenderStepped:Connect(function()     
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                body16 = body16 + 1;
+                if body16 == 2 then
+                    body16 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+BT16"});   
+                end
+            end)
+        else
+            if connections["body500no"] then
+                connections["body500no"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.bt500no:SetValue(false)
+    
+    
+    
+    body17 = 0
+    bt17:OnChanged(function(on)
+        if on then
+            connections["body7ud"] = game:GetService("RunService").RenderStepped:Connect(function()     
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                body17 = body17 + 1;
+                if body17 == 2 then
+                    body17 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+BT17"});   
+                end
+            end)
+        else
+            if connections["body7ud"] then
+                connections["body7ud"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.bt7ud:SetValue(false)
+    
+    
+    
+    body18 = 0
+    bt18:OnChanged(function(on)
+        if on then
+            connections["body50dd"] = game:GetService("RunService").RenderStepped:Connect(function()     
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                body18 = body18 + 1;
+                if body18 == 2 then
+                    body18 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+BT18"});   
+                end
+            end)
+        else
+            if connections["body50dd"] then
+                connections["body50dd"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.bt50dd:SetValue(false)
+    
+    
+    
+    body19 = 0
+    bt19:OnChanged(function(on)
+        if on then
+            connections["body50td"] = game:GetService("RunService").RenderStepped:Connect(function()     
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                body19 = body19 + 1;
+                if body19 == 2 then
+                    body19 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+BT19"});   
+                end
+            end)
+        else
+            if connections["body50td"] then
+                connections["body50td"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.bt50td:SetValue(false)
+    
+    
+    
+    body20 = 0
+    bt20:OnChanged(function(on)
+        if on then
+            connections["body500qad"] = game:GetService("RunService").RenderStepped:Connect(function()     
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                body20 = body20 + 1;
+                if body20 == 2 then
+                    body20 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+BT20"});   
+                end
+            end)
+        else
+            if connections["body500qad"] then
+                connections["body500qad"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.bt500qad:SetValue(false)
+    
+    
+    
+    body21 = 0
+    bt21:OnChanged(function(on)
+        if on then
+            connections["body7sxd"] = game:GetService("RunService").RenderStepped:Connect(function()     
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                body21 = body21 + 1;
+                if body21 == 2 then
+                    body21 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+BT21"});   
+                end
+            end)
+        else
+            if connections["body7sxd"] then
+                connections["body7sxd"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.bt7sxd:SetValue(false)
+    
+    
+    
+    body22 = 0
+    bt22:OnChanged(function(on)
+        if on then
+            connections["body1spd"] = game:GetService("RunService").RenderStepped:Connect(function()     
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                body22 = body22 + 1;
+                if body22 == 2 then
+                    body22 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+BT22"});   
+                end
+            end)
+        else
+            if connections["body1spd"] then
+                connections["body1spd"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.bt1spd:SetValue(false)
+
+
+
+    move1 = 0
+    ms1:OnChanged(function(on)
+        if on then
+            connections["moveNothing"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                move1 = move1 + 1;
+                if move1 == 10 then
+                    move1 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+MS1"});	
+                end
+            end)
+        else
+            if connections["moveNothing"] then
+                connections["moveNothing"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.msNothing:SetValue(false)
+    
+    
+    
+    move2 = 0
+    ms2:OnChanged(function(on)
+        if on then
+            connections["move100"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                move2 = move2 + 1;
+                if move2 == 10 then
+                    move2 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+MS2"});	
+                end
+            end)
+        else
+            if connections["move100"] then
+                connections["move100"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.ms100:SetValue(false)
+    
+    
+    
+    move3 = 0
+    ms3:OnChanged(function(on)
+        if on then
+            connections["move5k"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                move3 = move3 + 1;
+                if move3 == 10 then
+                    move3 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+MS3"});	
+                end
+            end)
+        else
+            if connections["move5k"] then
+                connections["move5k"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.ms5k:SetValue(false)
+    
+    
+    
+    move4 = 0
+    ms4:OnChanged(function(on)
+        if on then
+            connections["move500k"] = game:GetService("RunService").RenderStepped:Connect(function()  
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                move4 = move4 + 1;
+                if move4 == 10 then
+                    move4 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+MS4"});    
+                end
+            end)
+        else
+            if connections["move500k"] then
+                connections["move500k"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.ms500k:SetValue(false)
+    
+    
+    
+    move5 = 0
+    ms5:OnChanged(function(on)
+        if on then
+            connections["move10m"] = game:GetService("RunService").RenderStepped:Connect(function()  
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                move5 = move5 + 1;
+                if move5 == 10 then
+                    move5 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+MS5"});    
+                end
+            end)
+        else
+            if connections["move10m"] then
+                connections["move10m"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.ms10m:SetValue(false)
+    
+    
+    
+    move6 = 0
+    ms6:OnChanged(function(on)
+        if on then
+            connections["move100m"] = game:GetService("RunService").RenderStepped:Connect(function()     
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                move6 = move6 + 1;
+                if move6 == 10 then
+                    move6 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+MS6"});    
+                end
+            end)
+        else
+            if connections["move100m"] then
+                connections["move100m"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.ms100m:SetValue(false)
+    
+    
+    
+    move7 = 0
+    ms7:OnChanged(function(on)
+        if on then
+            connections["move1b"] = game:GetService("RunService").RenderStepped:Connect(function()     
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                move7 = move7 + 1;
+                if move7 == 10 then
+                    move7 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+MS7"});    
+                end
+            end)
+        else
+            if connections["move1b"] then
+                connections["move1b"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.ms1b:SetValue(false)
+    
+    
+    
+    move8 = 0
+    ms8:OnChanged(function(on)
+        if on then
+            connections["move10b"] = game:GetService("RunService").RenderStepped:Connect(function()   
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                move8 = move8 + 1;
+                if move8 == 10 then
+                    move8 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+MS8"});    
+                end
+            end)
+        else
+            if connections["move10b"] then
+                connections["move10b"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.ms10b:SetValue(false)
+    
+    
+    
+    move9 = 0
+    ms9:OnChanged(function(on)
+        if on then
+            connections["move100b"] = game:GetService("RunService").RenderStepped:Connect(function()   
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                move9 = move9 + 1;
+                if move9 == 10 then
+                    move9 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+MS9"});    
+                end
+            end)
+        else
+            if connections["move100b"] then
+                connections["move100b"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.ms100b:SetValue(false)
+    
+    
+    
+    move10 = 0
+    ms10:OnChanged(function(on)
+        if on then
+            connections["move1t"] = game:GetService("RunService").RenderStepped:Connect(function()   
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                move10 = move10 + 1;
+                if move10 == 10 then
+                    move10 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+MS10"});    
+                end
+            end)
+        else
+            if connections["move1t"] then
+                connections["move1t"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.ms1t:SetValue(false)
+    
+
+    jump1 = 0
+    jf1:OnChanged(function(on)
+        if on then
+            connections["jumpNothing"] = game:GetService("RunService").RenderStepped:Connect(function()     
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                jump1 = jump1 + 1;
+                if jump1 == 10 then
+                    jump1 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+JF1"});    
+                end
+            end)
+        else
+            if connections["jumpNothing"] then
+                connections["jumpNothing"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.jfNothing:SetValue(false)
+
+
+
+    jump2 = 0
+    jf2:OnChanged(function(on)
+        if on then
+            connections["jump100"] = game:GetService("RunService").RenderStepped:Connect(function()     
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                jump2 = jump2 + 1;
+                if jump2 == 10 then
+                    jump2 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+JF2"});    
+                end
+            end)
+        else
+            if connections["jump100"] then
+                connections["jump100"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+           end
+        end
+    end)
+
+    Options.jf100:SetValue(false)
+
+
+
+    jump3 = 0
+    jf3:OnChanged(function(on)
+        if on then
+            connections["jump5k"] = game:GetService("RunService").RenderStepped:Connect(function()     
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                jump3 = jump3 + 1;
+                if jump3 == 10 then
+                    jump3 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+JF3"});    
+                end
+            end)
+        else
+            if connections["jump5k"] then
+                connections["jump5k"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.jf5k:SetValue(false)
+
+
+
+    jump4 = 0
+    jf4:OnChanged(function(on)
+            if on then
+            connections["jump500k"] = game:GetService("RunService").RenderStepped:Connect(function()  
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                jump4 = jump4 + 1;
+                if jump4 == 10 then
+                    jump4 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+JF4"});    
+                end
+            end)
+        else
+            if connections["jump500k"] then
+                connections["jump500k"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.jf500k:SetValue(false)
+
+
+
+    jump5 = 0
+    jf5:OnChanged(function(on)
+        if on then
+            connections["jump10m"] = game:GetService("RunService").RenderStepped:Connect(function()  
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                jump5 = jump5 + 1;
+                if jump5 == 10 then
+                    jump5 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+JF5"});    
+                end
+            end)
+        else
+            if connections["jump10m"] then
+                connections["jump10m"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.jf10m:SetValue(false)
+
+
+
+    jump6 = 0
+    jf6:OnChanged(function(on)
+        if on then
+            connections["jump100m"] = game:GetService("RunService").RenderStepped:Connect(function()     
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                jump6 = jump6 + 1;
+                if jump6 == 10 then
+                    jump6 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+JF6"});    
+                end
+            end)
+        else
+            if connections["jump100m"] then
+                connections["jump100m"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.jf100m:SetValue(false)
+
+
+
+    jump7 = 0
+    jf7:OnChanged(function(on)
+        if on then
+            connections["jump1b"] = game:GetService("RunService").RenderStepped:Connect(function()     
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                jump7 = jump7 + 1;
+                if jump7 == 10 then
+                    jump7 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+JF7"});    
+                end
+            end)
+        else
+            if connections["jump1b"] then
+                connections["jump1b"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.jf1b:SetValue(false)
+
+
+
+    jump8 = 0
+    jf8:OnChanged(function(on)
+        if on then
+            connections["jump10b"] = game:GetService("RunService").RenderStepped:Connect(function()   
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                jump8 = jump8 + 1;
+                if jump8 == 10 then
+                    jump8 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+JF8"});    
+                end
+            end)
+        else
+            if connections["jump10b"] then
+                connections["jump10b"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.jf10b:SetValue(false)
+
+
+
+    jump9 = 0
+    jf9:OnChanged(function(on)
+        if on then
+            connections["jump100b"] = game:GetService("RunService").RenderStepped:Connect(function()   
+               if not connections["rsp"] then
+                   autoRespawn();
+                end
+                jump9 = jump9 + 1;
+                if jump9 == 10 then
+                    jump9 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+JF9"});    
+                end
+            end)
+        else
+            if connections["jump100b"] then
+                connections["jump100b"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.jf100b:SetValue(false)
+
+
+
+    jump10 = 0
+    jf10:OnChanged(function(on)
+        if on then
+            connections["jump1t"] = game:GetService("RunService").RenderStepped:Connect(function()   
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                jump10 = jump10 + 1;
+                if jump10 == 10 then
+                    jump10 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+JF10"});    
+                end
+            end)
+        else
+            if connections["jump1t"] then
+                connections["jump1t"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.jf1t:SetValue(false)
+
+
+
+    psy1 = 0
+    pp1:OnChanged(function(on)
+        if on then
+            connections["psyNothing"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                psy1 = psy1 + 1;
+                if psy1 == 10 then
+                    psy1 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+PP1"});	
+                end
+            end)
+        else
+            if connections["psyNothing"] then
+                connections["psyNothing"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.ppNothing:SetValue(false)
+
+
+
+    psy2 = 0
+    pp2:OnChanged(function(on)
+        if on then
+            connections["psyFly"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                psy2 = psy2 + 1;
+                if psy2 == 10 then
+                    psy2 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+PP2"});	
+                end
+            end)
+        else
+            if connections["psyFly"] then
+                connections["psyFly"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.ppFly:SetValue(false)
+
+
+    psy3 = 0
+    pp3:OnChanged(function(on)
+        if on then
+            connections["psy1m"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                psy3 = psy3 + 1;
+                if psy3 == 10 then
+                    psy3 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+PP3"});	
+                end
+            end)
+        else
+            if connections["psy1m"] then
+                connections["psy1m"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.pp1m:SetValue(false)
+
+    
+    psy4 = 0
+    pp4:OnChanged(function(on)
+        if on then
+            connections["psy1b"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                psy4 = psy4 + 1;
+                if psy4 == 10 then
+                    psy4 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+PP4"});	
+                end
+            end)
+        else
+            if connections["psy1b"] then
+                connections["psy1b"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.pp1b:SetValue(false)
+
+
+
+    psy5 = 0
+    pp5:OnChanged(function(on)
+        if on then
+            connections["psy1t"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                psy3 = psy3 + 1;
+                if psy3 == 10 then
+                    psy3 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+PP5"});	
+                end
+            end)
+        else
+            if connections["psy1t"] then
+                connections["psy1t"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.pp1t:SetValue(false)
+    
+
+
+    psy6 = 0
+    pp6:OnChanged(function(on)
+        if on then
+            connections["psy1qa"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                psy6 = psy6 + 1;
+                if psy6 == 10 then
+                    psy6 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+PP6"});	
+                end
+            end)
+        else
+            if connections["psy1qa"] then
+                connections["psy1qa"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.pp1qa:SetValue(false)
+
+    
+    psy7 = 0
+    pp7:OnChanged(function(on)
+        if on then
+            connections["psy1qi"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                psy7 = psy7 + 1;
+                if psy7 == 10 then
+                    psy7 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+PP7"});	
+                end
+            end)
+        else
+            if connections["psy1qi"] then
+                connections["psy1qi"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.pp1qi:SetValue(false)
+
+
+
+    psy8 = 0
+    pp8:OnChanged(function(on)
+        if on then
+            connections["psy1sx"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                psy8 = psy8 + 1;
+                if psy8 == 10 then
+                    psy8 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+PP8"});	
+                end
+            end)
+        else
+            if connections["psy1sx"] then
+                connections["psy1sx"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.pp1sx:SetValue(false)
+
+
+
+    psy9 = 0
+    pp9:OnChanged(function(on)
+        if on then
+            connections["psy1sp"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                psy9 = psy9 + 1;
+                if psy9 == 10 then
+                    psy9 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+PP9"});	
+                end
+            end)
+        else
+            if connections["psy1sp"] then
+                connections["psy1sp"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.pp1sp:SetValue(false)
+
+
+    
+    psy10 = 0
+    pp10:OnChanged(function(on)
+        if on then
+            connections["psy750sp"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                psy10 = psy10 + 1;
+                if psy10 == 10 then
+                    psy10 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+PP10"});	
+                end
+            end)
+        else
+            if connections["psy750sp"] then
+                connections["psy750sp"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.pp750sp:SetValue(false)
+
+
+
+    psy11 = 0
+    pp11:OnChanged(function(on)
+        if on then
+            connections["psy1no"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                psy11 = psy11 + 1;
+                if psy11 == 10 then
+                    psy11 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+PP11"});	
+                end
+            end)
+        else
+            if connections["psy1no"] then
+                connections["psy1no"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.pp1no:SetValue(false)
+
+
+
+    psy12 = 0
+    pp12:OnChanged(function(on)
+        if on then
+            connections["psy10dc"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                psy12 = psy12 + 1;
+                if psy12 == 10 then
+                    psy12 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+PP12"});	
+                end
+            end)
+        else
+            if connections["psy10dc"] then
+                connections["psy10dc"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.pp10dc:SetValue(false)
+
+
+
+    psy13 = 0
+    pp13:OnChanged(function(on)
+        if on then
+            connections["psy150ud"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                psy13 = psy13 + 1;
+                if psy13 == 10 then
+                    psy13 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+PP13"});	
+                end
+            end)
+        else
+            if connections["psy150ud"] then
+                connections["psy150ud"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.pp150ud:SetValue(false)
+
+
+
+    psy14 = 0
+    pp14:OnChanged(function(on)
+        if on then
+            connections["psy1td"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                psy14 = psy14 + 1;
+                if psy14 == 10 then
+                    psy14 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+PP14"});	
+                end
+            end)
+        else
+            if connections["psy1td"] then
+                connections["psy1td"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.pp1td:SetValue(false)
+
+
+
+    psy15 = 0
+    pp15:OnChanged(function(on)
+        if on then
+            connections["psy1qad"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                psy15 = psy15 + 1;
+                if psy15 == 10 then
+                    psy15 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+PP15"});	
+                end
+            end)
+        else
+            if connections["psy1qad"] then
+                connections["psy1qad"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.pp1qad:SetValue(false)
+
+
+    psy16 = 0
+    pp16:OnChanged(function(on)
+        if on then
+            connections["psy10qid"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                psy16 = psy16 + 1;
+                if psy16 == 10 then
+                    psy16 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+PP16"});	
+                end
+            end)
+        else
+            if connections["psy10qid"] then
+                connections["psy10qid"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.pp10qid:SetValue(false)
+
+
+
+    psy17 = 0
+    pp17:OnChanged(function(on)
+        if on then
+            connections["psy150sxd"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                psy17 = psy17 + 1;
+                if psy17 == 10 then
+                    psy17 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+PP17"});	
+                end
+            end)
+        else
+            if connections["psy150sxd"] then
+                connections["psy150sxd"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.pp150sxd:SetValue(false)
+
+
+
+    psy18 = 0
+    pp18:OnChanged(function(on)
+        if on then
+            connections["psy25spd"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                psy18 = psy18 + 1;
+                if psy18 == 10 then
+                    psy18 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+PP18"});	
+                end
+            end)
+        else
+            if connections["psy25spd"] then
+                connections["psy25spd"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.pp25spd:SetValue(false)
+
+
+
+    tpmhax:OnChanged(function(on)
+        if on then
+            connections["freetpm"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                game:GetService("ReplicatedStorage").MainQuestRemotes.MQ13:FireServer()
+                game:GetService("ReplicatedStorage").MainQuestRemotes.MQ13:FireServer()
+                game:GetService("ReplicatedStorage").MainQuestRemotes.MQ13:FireServer()
+            end)
+        else
+            if connections["freetpm"] then
+                connections["freetpm"]:Disconnect()
+            end
+        end
+    end)
+
+    Options.hacks:SetValue(false)
+
+end
+
+local hurtOverlay = game:GetService("CoreGui"):WaitForChild("TopBarApp"):WaitForChild("FullScreenFrame"):WaitForChild("HurtOverlay")
+if hurtOverlay then
+    hurtOverlay:Destroy()
+    print("HurtOverlay has been deleted.")
+else
+    print("HurtOverlay not found.")
+end
+
+local UpdateLogs = game:GetService("Players").LocalPlayer.PlayerGui.IntroGui.UpdateLogs
+if UpdateLogs then
+    UpdateLogs:Destroy()
+    print("Update Logs has been deleted.")
+else
+    print("Update Logs not found.")
+end
+
+SaveManager:SetLibrary(Fluent)
+InterfaceManager:SetLibrary(Fluent)
+
+SaveManager:IgnoreThemeSettings()
+
+SaveManager:SetIgnoreIndexes({})
+
+
+InterfaceManager:SetFolder("FurryHub")
+SaveManager:SetFolder("FurryHub/SptsRotrModded")
+
+InterfaceManager:BuildInterfaceSection(Tabs.Settings)
+SaveManager:BuildConfigSection(Tabs.Settings)
+
+
+Window:SelectTab(1)
+
+Fluent:Notify({
+    Title = "Furry Hub",
+    Content = "The script has been loaded.",
+    Duration = 5
+})
+
+SaveManager:LoadAutoloadConfig()
+
+game.Players.LocalPlayer.PlayerGui.ScreenGui.Enabled = true;
+game.ReplicatedStorage.RemoteEvent:FireServer({"Respawn"})
+wait(1)
+game:GetService("Players").LocalPlayer.PlayerGui.IntroGui:Destroy()
+game:GetService("Lighting").Blur:Destroy()
