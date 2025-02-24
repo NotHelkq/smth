@@ -16,11 +16,11 @@ autoRespawn = function()
     if connections["rsp"] then
         return;
     end
-    connections["rsp"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+    connections["rsp"] = game:GetService("RunService").RenderStepped:Connect(function()
         settings().Network.IncomingReplicationLag = 0;
         game.Players.LocalPlayer.PlayerGui.ScreenGui.Enabled = true;
         resp = resp + 1
-        if resp == 60 then
+        if resp == 20 then
             game.ReplicatedStorage.RemoteEvent:FireServer({"Respawn"})
             resp = 0
         end
@@ -55,6 +55,13 @@ local Tabs = {
 }
 
 local Options = Fluent.Options
+
+local tppos = function(x, y, z)
+    local player = game:GetService("Players").LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local rootPart = character:WaitForChild("HumanoidRootPart")
+    rootPart.CFrame = CFrame.new(x, y, z)
+end
 
 do
     Fluent:Notify({
@@ -143,6 +150,9 @@ do
     local fs17 = Tabs.fistStrength:AddToggle("fs10qid", {Title = "17. 10 Qid Fist Strength Required", Default = false })
     local fs18 = Tabs.fistStrength:AddToggle("fs150sxd", {Title = "18. 150 Sxd Fist Strength Required", Default = false })
     local fs19 = Tabs.fistStrength:AddToggle("fs25spd", {Title = "19. 25 Spd Fist Strength Required", Default = false })
+    local fs20 = Tabs.fistStrength:AddToggle("fs25ocd", {Title = "20. 25 Ocd Fist Strength Required", Default = false })
+    local fs21 = Tabs.fistStrength:AddToggle("fs50nod", {Title = "21. 50 Nod Fist Strength Required", Default = false })
+    local fs22 = Tabs.fistStrength:AddToggle("fs100vg", {Title = "22. 100 Vg Fist Strength Required", Default = false })
 
     local bt1 = Tabs.bodyToughness:AddToggle("btNothing", {Title = "1. 0 Body Toughness Required", Default = false })
     local bt2 = Tabs.bodyToughness:AddToggle("bt5", {Title = "2. 5 Body Toughness Required", Default = false })
@@ -166,6 +176,9 @@ do
     local bt20 = Tabs.bodyToughness:AddToggle("bt500qad", {Title = "20. 500 Qad Body Toughness Required", Default = false })
     local bt21 = Tabs.bodyToughness:AddToggle("bt7sxd", {Title = "21. 7.5 Sxd Body Toughness Required", Default = false })
     local bt22 = Tabs.bodyToughness:AddToggle("bt1spd", {Title = "22. 1.25 Spd Body Toughness Required", Default = false })
+    local bt23 = Tabs.bodyToughness:AddToggle("bt1ocd", {Title = "23. 1.25 Ocd Body Toughness Required", Default = false })
+    local bt24 = Tabs.bodyToughness:AddToggle("bt6nod", {Title = "24. 6.25 Nod Body Toughness Required", Default = false })
+    local bt25 = Tabs.bodyToughness:AddToggle("bt12vg", {Title = "25. 12.5 Vg Body Toughness Required", Default = false })
 
     local ms1 = Tabs.movementSpeed:AddToggle("msNothing", {Title = "1. 0 Movement Speed Required", Default = false })
     local ms2 = Tabs.movementSpeed:AddToggle("ms100", {Title = "2. 100 Movement Speed Required", Default = false })
@@ -207,6 +220,9 @@ do
     local pp16 = Tabs.psychicPower:AddToggle("pp10qid", {Title = "16. 10 Qid Psychic Power Required", Default = false })
     local pp17 = Tabs.psychicPower:AddToggle("pp150sxd", {Title = "17. 150 Sxd Psychic Power Required", Default = false })
     local pp18 = Tabs.psychicPower:AddToggle("pp25spd", {Title = "18. 25 Spd Psychic Power Required", Default = false })
+    local pp19 = Tabs.psychicPower:AddToggle("pp25ocd", {Title = "19. 25 Ocd Psychic Power Required", Default = false })
+    local pp20 = Tabs.psychicPower:AddToggle("pp50nod", {Title = "20. 50 Nod Psychic Power Required", Default = false })
+    local pp21 = Tabs.psychicPower:AddToggle("pp100vg", {Title = "21. 100 Vg Psychic Power Required", Default = false })
 
 
     autorejoin:OnChanged(function(on)
@@ -405,6 +421,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(412, 271, 977)
                 fist2 = fist2 + 1;
                 if fist2 == 10 then
                     fist2 = 0;
@@ -433,6 +450,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(-2278, 1943, 1050)
                 fist3 = fist3 + 1;
                 if fist3 == 10 then
                     fist3 = 0;
@@ -461,6 +479,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(1175, 4789, -2293)
                 fist4 = fist4 + 1;
                 if fist4 == 10 then
                     fist4 = 0;
@@ -489,6 +508,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(1378, 9274, 1653)
                 fist5 = fist5 + 1;
                 if fist5 == 10 then
                     fist5 = 0;
@@ -517,6 +537,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(-360, 15735, -10)
                 fist6 = fist6 + 1;
                 if fist6 == 10 then
                     fist6 = 0;
@@ -545,6 +566,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(88, 249, -432)
                 fist7 = fist7 + 1;
                 if fist7 == 10 then
                     fist7 = 0;
@@ -573,6 +595,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(-2295, 5988, -2594)
                 fist8 = fist8 + 1;
                 if fist8 == 10 then
                     fist8 = 0;
@@ -601,6 +624,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(1011, 506, 631)
                 fist9 = fist9 + 1;
                 if fist9 == 10 then
                     fist9 = 0;
@@ -629,6 +653,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(-163, 1433, 4469)
                 fist10 = fist10 + 1;
                 if fist10 == 10 then
                     fist10 = 0;
@@ -636,8 +661,8 @@ do
                 end
             end)
         else
-            if connections["fist25sx"] then
-                connections["fist25sx"]:Disconnect()
+            if connections["fist1sp"] then
+                connections["fist1sp"]:Disconnect()
             end
             if connections["rsp"] then
                 connections["rsp"]:Disconnect()
@@ -658,6 +683,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(-166, 242, 1141)
                 fist11 = fist11 + 1;
                 if fist11 == 10 then
                     fist11 = 0;
@@ -686,6 +712,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(-2642, 5566, -526)
                 fist12 = fist12 + 1;
                 if fist12 == 10 then
                     fist12 = 0;
@@ -714,6 +741,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(121, 273, 891)
                 fist13 = fist13 + 1;
                 if fist13 == 10 then
                     fist13 = 0;
@@ -742,6 +770,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(-772, 273, 558)
                 fist14 = fist14 + 1;
                 if fist14 == 10 then
                     fist14 = 0;
@@ -770,6 +799,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(-3214, 244, -2658)
                 fist15 = fist15 + 1;
                 if fist15 == 10 then
                     fist15 = 0;
@@ -798,6 +828,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(3093, 5536, 1195)
                 fist16 = fist16 + 1;
                 if fist16 == 10 then
                     fist16 = 0;
@@ -826,6 +857,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(-241, 272, 1108)
                 fist17 = fist17 + 1;
                 if fist17 == 10 then
                     fist17 = 0;
@@ -854,6 +886,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(1813, 265, -827)
                 fist18 = fist18 + 1;
                 if fist18 == 10 then
                     fist18 = 0;
@@ -882,6 +915,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(-111, 7424, -2178)
                 fist19 = fist19 + 1;
                 if fist19 == 10 then
                     fist19 = 0;
@@ -900,6 +934,93 @@ do
     end)
 
     Options.fs25spd:SetValue(false)
+
+
+
+    fist20 = 0
+    fs20:OnChanged(function(on)
+        if on then
+            connections["fist25ocd"] = game:GetService("RunService").RenderStepped:Connect(function()  
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                tppos(-4044, 66, -2543)
+                fist20 = fist20 + 1;
+                if fist20 == 10 then
+                    fist20 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+FS20"});   
+                end
+            end)
+        else
+            if connections["fist25ocd"] then
+                connections["fist25ocd"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.fs25ocd:SetValue(false)
+
+
+
+    fist21 = 0
+    fs21:OnChanged(function(on)
+        if on then
+            connections["fist50nod"] = game:GetService("RunService").RenderStepped:Connect(function()  
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                tppos(1396, 7871, 1114)
+                fist21 = fist21 + 1;
+                if fist21 == 10 then
+                    fist21 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+FS21"});   
+                end
+            end)
+        else
+            if connections["fist50nod"] then
+                connections["fist50nod"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.fs50nod:SetValue(false)
+
+
+
+    fist22 = 0
+    fs22:OnChanged(function(on)
+        if on then
+            connections["fist100vg"] = game:GetService("RunService").RenderStepped:Connect(function()  
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                tppos(1810, 266, 2491)
+                fist22 = fist22 + 1;
+                if fist22 == 10 then
+                    fist22 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+FS22"});   
+                end
+            end)
+        else
+            if connections["fist100vg"] then
+                connections["fist100vg"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.fs100vg:SetValue(false)
     
 
 
@@ -940,6 +1061,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(366, 250, -445)
                 body2 = body2 + 1;
                 if body2 == 2 then
                     body2 = 0;
@@ -968,6 +1090,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(357, 264, -494)
                 body3 = body3 + 1;
                 if body3 == 2 then
                     body3 = 0;
@@ -996,6 +1119,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(1639, 259, 2250)
                 body4 = body4 + 1;
                 if body4 == 2 then
                     body4 = 0;
@@ -1024,6 +1148,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(-2298, 977, 1071)
                 body5 = body5 + 1;
                 if body5 == 2 then
                     body5 = 0;
@@ -1052,6 +1177,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(-3210, 714, -2629)
                 body6 = body6 + 1;
                 if body6 == 2 then
                     body6 = 0;
@@ -1080,6 +1206,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(-251, 287, 980)
                 body7 = body7 + 1;
                 if body7 == 2 then
                     body7 = 0;
@@ -1108,6 +1235,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(-276, 281, 993)
                 body8 = body8 + 1;
                 if body8 == 2 then
                     body8 = 0;
@@ -1136,6 +1264,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(-279, 281, 1006)
                 body9 = body9 + 1;
                 if body9 == 2 then
                     body9 = 0;
@@ -1164,6 +1293,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(386, 249, -15)
                 body10 = body10 + 1;
                 if body10 == 2 then
                     body10 = 0;
@@ -1192,6 +1322,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(339, 249, -505)
                 body11 = body11 + 1;
                 if body11 == 2 then
                     body11 = 0;
@@ -1220,6 +1351,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(-188, 249, 1406)
                 body12 = body12 + 1;
                 if body12 == 2 then
                     body12 = 0;
@@ -1248,6 +1380,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(485, 252, 500)
                 body13 = body13 + 1;
                 if body13 == 2 then
                     body13 = 0;
@@ -1276,6 +1409,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(107, -162, 2398)
                 body14 = body14 + 1;
                 if body14 == 2 then
                     body14 = 0;
@@ -1304,6 +1438,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(1803, 522, 2749)
                 body15 = body15 + 1;
                 if body15 == 2 then
                     body15 = 0;
@@ -1332,6 +1467,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(-4100, 249, -3447)
                 body16 = body16 + 1;
                 if body16 == 2 then
                     body16 = 0;
@@ -1360,6 +1496,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos()
                 body17 = body17 + 1;
                 if body17 == 2 then
                     body17 = 0;
@@ -1388,6 +1525,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos()
                 body18 = body18 + 1;
                 if body18 == 2 then
                     body18 = 0;
@@ -1416,6 +1554,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos()
                 body19 = body19 + 1;
                 if body19 == 2 then
                     body19 = 0;
@@ -1444,6 +1583,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos()
                 body20 = body20 + 1;
                 if body20 == 2 then
                     body20 = 0;
@@ -1472,6 +1612,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos()
                 body21 = body21 + 1;
                 if body21 == 2 then
                     body21 = 0;
@@ -1500,6 +1641,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos()
                 body22 = body22 + 1;
                 if body22 == 2 then
                     body22 = 0;
@@ -1518,6 +1660,93 @@ do
     end)
     
     Options.bt1spd:SetValue(false)
+
+
+
+    body23 = 0
+    bt23:OnChanged(function(on)
+        if on then
+            connections["body1ocd"] = game:GetService("RunService").RenderStepped:Connect(function()     
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                tppos()
+                body23 = body23 + 1;
+                if body23 == 2 then
+                    body23 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+BT23"});   
+                end
+            end)
+        else
+            if connections["body1ocd"] then
+                connections["body1ocd"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.bt1ocd:SetValue(false)
+
+
+
+    body24 = 0
+    bt24:OnChanged(function(on)
+        if on then
+            connections["body6nod"] = game:GetService("RunService").RenderStepped:Connect(function()     
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                tppos()
+                body24 = body24 + 1;
+                if body24 == 2 then
+                    body24 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+BT24"});   
+                end
+            end)
+        else
+            if connections["body6nod"] then
+                connections["body6nod"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.bt6nod:SetValue(false)
+
+
+
+    body25 = 0
+    bt25:OnChanged(function(on)
+        if on then
+            connections["body12vg"] = game:GetService("RunService").RenderStepped:Connect(function()     
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                tppos()
+                body25 = body25 + 1;
+                if body25 == 2 then
+                    body25 = 0;
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+BT25"});   
+                end
+            end)
+        else
+            if connections["body12vg"] then
+                connections["body12vg"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+    
+    Options.bt12vg:SetValue(false)
 
 
 
@@ -2090,6 +2319,11 @@ do
                 psy1 = psy1 + 1;
                 if psy1 == 10 then
                     psy1 = 0;
+                    for i,v in pairs(game:GetService("Players").LocalPlayer:FindFirstChildOfClass("Backpack"):GetChildren()) do
+                        if v:IsA("Tool") or v:IsA("HopperBin") then
+                            v.Parent = game:GetService("Players").LocalPlayer.Character
+                        end
+                    end
                     game.ReplicatedStorage.RemoteEvent:FireServer({"+PP1"});	
                 end
             end)
@@ -2142,9 +2376,15 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(-2532, 5486, -535)
                 psy3 = psy3 + 1;
                 if psy3 == 10 then
                     psy3 = 0;
+                    for i,v in pairs(game:GetService("Players").LocalPlayer:FindFirstChildOfClass("Backpack"):GetChildren()) do
+                        if v:IsA("Tool") or v:IsA("HopperBin") then
+                            v.Parent = game:GetService("Players").LocalPlayer.Character
+                        end
+                    end
                     game.ReplicatedStorage.RemoteEvent:FireServer({"+PP3"});	
                 end
             end)
@@ -2169,9 +2409,15 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(-2563, 5501, -439)
                 psy4 = psy4 + 1;
                 if psy4 == 10 then
                     psy4 = 0;
+                    for i,v in pairs(game:GetService("Players").LocalPlayer:FindFirstChildOfClass("Backpack"):GetChildren()) do
+                        if v:IsA("Tool") or v:IsA("HopperBin") then
+                            v.Parent = game:GetService("Players").LocalPlayer.Character
+                        end
+                    end
                     game.ReplicatedStorage.RemoteEvent:FireServer({"+PP4"});	
                 end
             end)
@@ -2197,9 +2443,15 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
-                psy3 = psy3 + 1;
-                if psy3 == 10 then
-                    psy3 = 0;
+                tppos(-2582, 5516, -503)
+                psy5 = psy5 + 1;
+                if psy5 == 10 then
+                    psy5 = 0;
+                    for i,v in pairs(game:GetService("Players").LocalPlayer:FindFirstChildOfClass("Backpack"):GetChildren()) do
+                        if v:IsA("Tool") or v:IsA("HopperBin") then
+                            v.Parent = game:GetService("Players").LocalPlayer.Character
+                        end
+                    end
                     game.ReplicatedStorage.RemoteEvent:FireServer({"+PP5"});	
                 end
             end)
@@ -2225,9 +2477,15 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(-2541, 5409, -495)
                 psy6 = psy6 + 1;
                 if psy6 == 10 then
                     psy6 = 0;
+                    for i,v in pairs(game:GetService("Players").LocalPlayer:FindFirstChildOfClass("Backpack"):GetChildren()) do
+                        if v:IsA("Tool") or v:IsA("HopperBin") then
+                            v.Parent = game:GetService("Players").LocalPlayer.Character
+                        end
+                    end
                     game.ReplicatedStorage.RemoteEvent:FireServer({"+PP6"});	
                 end
             end)
@@ -2248,13 +2506,19 @@ do
     psy7 = 0
     pp7:OnChanged(function(on)
         if on then
-            connections["psy1qi"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+            connections["psy1qi"] = game:GetService("RunService").RenderStepped:Connect(function()
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(-2542, 5301, -485)
                 psy7 = psy7 + 1;
                 if psy7 == 10 then
                     psy7 = 0;
+                    for i,v in pairs(game:GetService("Players").LocalPlayer:FindFirstChildOfClass("Backpack"):GetChildren()) do
+                        if v:IsA("Tool") or v:IsA("HopperBin") then
+                            v.Parent = game:GetService("Players").LocalPlayer.Character
+                        end
+                    end
                     game.ReplicatedStorage.RemoteEvent:FireServer({"+PP7"});	
                 end
             end)
@@ -2280,9 +2544,15 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(-567, 249, 1396)
                 psy8 = psy8 + 1;
                 if psy8 == 10 then
                     psy8 = 0;
+                    for i,v in pairs(game:GetService("Players").LocalPlayer:FindFirstChildOfClass("Backpack"):GetChildren()) do
+                        if v:IsA("Tool") or v:IsA("HopperBin") then
+                            v.Parent = game:GetService("Players").LocalPlayer.Character
+                        end
+                    end
                     game.ReplicatedStorage.RemoteEvent:FireServer({"+PP8"});	
                 end
             end)
@@ -2308,9 +2578,15 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(448, 2287, 1072)
                 psy9 = psy9 + 1;
                 if psy9 == 10 then
                     psy9 = 0;
+                    for i,v in pairs(game:GetService("Players").LocalPlayer:FindFirstChildOfClass("Backpack"):GetChildren()) do
+                        if v:IsA("Tool") or v:IsA("HopperBin") then
+                            v.Parent = game:GetService("Players").LocalPlayer.Character
+                        end
+                    end
                     game.ReplicatedStorage.RemoteEvent:FireServer({"+PP9"});	
                 end
             end)
@@ -2336,9 +2612,15 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(418, 112, -962)
                 psy10 = psy10 + 1;
                 if psy10 == 10 then
                     psy10 = 0;
+                    for i,v in pairs(game:GetService("Players").LocalPlayer:FindFirstChildOfClass("Backpack"):GetChildren()) do
+                        if v:IsA("Tool") or v:IsA("HopperBin") then
+                            v.Parent = game:GetService("Players").LocalPlayer.Character
+                        end
+                    end
                     game.ReplicatedStorage.RemoteEvent:FireServer({"+PP10"});	
                 end
             end)
@@ -2364,9 +2646,15 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(413, 262, -631)
                 psy11 = psy11 + 1;
                 if psy11 == 10 then
                     psy11 = 0;
+                    for i,v in pairs(game:GetService("Players").LocalPlayer:FindFirstChildOfClass("Backpack"):GetChildren()) do
+                        if v:IsA("Tool") or v:IsA("HopperBin") then
+                            v.Parent = game:GetService("Players").LocalPlayer.Character
+                        end
+                    end
                     game.ReplicatedStorage.RemoteEvent:FireServer({"+PP11"});	
                 end
             end)
@@ -2392,9 +2680,15 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(-2607, 5607, -573)
                 psy12 = psy12 + 1;
                 if psy12 == 10 then
                     psy12 = 0;
+                    for i,v in pairs(game:GetService("Players").LocalPlayer:FindFirstChildOfClass("Backpack"):GetChildren()) do
+                        if v:IsA("Tool") or v:IsA("HopperBin") then
+                            v.Parent = game:GetService("Players").LocalPlayer.Character
+                        end
+                    end
                     game.ReplicatedStorage.RemoteEvent:FireServer({"+PP12"});	
                 end
             end)
@@ -2420,9 +2714,15 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(-357, 254, -91)
                 psy13 = psy13 + 1;
                 if psy13 == 10 then
                     psy13 = 0;
+                    for i,v in pairs(game:GetService("Players").LocalPlayer:FindFirstChildOfClass("Backpack"):GetChildren()) do
+                        if v:IsA("Tool") or v:IsA("HopperBin") then
+                            v.Parent = game:GetService("Players").LocalPlayer.Character
+                        end
+                    end
                     game.ReplicatedStorage.RemoteEvent:FireServer({"+PP13"});	
                 end
             end)
@@ -2448,9 +2748,15 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(-23, 249, -92)
                 psy14 = psy14 + 1;
                 if psy14 == 10 then
                     psy14 = 0;
+                    for i,v in pairs(game:GetService("Players").LocalPlayer:FindFirstChildOfClass("Backpack"):GetChildren()) do
+                        if v:IsA("Tool") or v:IsA("HopperBin") then
+                            v.Parent = game:GetService("Players").LocalPlayer.Character
+                        end
+                    end
                     game.ReplicatedStorage.RemoteEvent:FireServer({"+PP14"});	
                 end
             end)
@@ -2476,9 +2782,15 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(-688, 2474, -495)
                 psy15 = psy15 + 1;
                 if psy15 == 10 then
                     psy15 = 0;
+                    for i,v in pairs(game:GetService("Players").LocalPlayer:FindFirstChildOfClass("Backpack"):GetChildren()) do
+                        if v:IsA("Tool") or v:IsA("HopperBin") then
+                            v.Parent = game:GetService("Players").LocalPlayer.Character
+                        end
+                    end
                     game.ReplicatedStorage.RemoteEvent:FireServer({"+PP15"});	
                 end
             end)
@@ -2503,9 +2815,15 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(-1466, 266, 2465)
                 psy16 = psy16 + 1;
                 if psy16 == 10 then
                     psy16 = 0;
+                    for i,v in pairs(game:GetService("Players").LocalPlayer:FindFirstChildOfClass("Backpack"):GetChildren()) do
+                        if v:IsA("Tool") or v:IsA("HopperBin") then
+                            v.Parent = game:GetService("Players").LocalPlayer.Character
+                        end
+                    end
                     game.ReplicatedStorage.RemoteEvent:FireServer({"+PP16"});	
                 end
             end)
@@ -2531,9 +2849,15 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(-1151, 246, -3423)
                 psy17 = psy17 + 1;
                 if psy17 == 10 then
                     psy17 = 0;
+                    for i,v in pairs(game:GetService("Players").LocalPlayer:FindFirstChildOfClass("Backpack"):GetChildren()) do
+                        if v:IsA("Tool") or v:IsA("HopperBin") then
+                            v.Parent = game:GetService("Players").LocalPlayer.Character
+                        end
+                    end
                     game.ReplicatedStorage.RemoteEvent:FireServer({"+PP17"});	
                 end
             end)
@@ -2559,9 +2883,15 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
+                tppos(1445, 309, 974)
                 psy18 = psy18 + 1;
                 if psy18 == 10 then
                     psy18 = 0;
+                    for i,v in pairs(game:GetService("Players").LocalPlayer:FindFirstChildOfClass("Backpack"):GetChildren()) do
+                        if v:IsA("Tool") or v:IsA("HopperBin") then
+                            v.Parent = game:GetService("Players").LocalPlayer.Character
+                        end
+                    end
                     game.ReplicatedStorage.RemoteEvent:FireServer({"+PP18"});	
                 end
             end)
@@ -2577,6 +2907,108 @@ do
     end)
 
     Options.pp25spd:SetValue(false)
+
+
+
+    psy19 = 0
+    pp19:OnChanged(function(on)
+        if on then
+            connections["psy25ocd"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                tppos(626, 2358, 2032)
+                psy19 = psy19 + 1;
+                if psy19 == 10 then
+                    psy19 = 0;
+                    for i,v in pairs(game:GetService("Players").LocalPlayer:FindFirstChildOfClass("Backpack"):GetChildren()) do
+                        if v:IsA("Tool") or v:IsA("HopperBin") then
+                            v.Parent = game:GetService("Players").LocalPlayer.Character
+                        end
+                    end
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+PP19"});	
+                end
+            end)
+        else
+            if connections["psy25ocd"] then
+                connections["psy25ocd"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.pp25ocd:SetValue(false)
+
+
+
+    psy20 = 0
+    pp20:OnChanged(function(on)
+        if on then
+            connections["psy50nod"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                tppos(-3467, 7536, -2124)
+                psy20 = psy20 + 1;
+                if psy20 == 10 then
+                    psy20 = 0;
+                    for i,v in pairs(game:GetService("Players").LocalPlayer:FindFirstChildOfClass("Backpack"):GetChildren()) do
+                        if v:IsA("Tool") or v:IsA("HopperBin") then
+                            v.Parent = game:GetService("Players").LocalPlayer.Character
+                        end
+                    end
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+PP20"});	
+                end
+            end)
+        else
+            if connections["psy50nod"] then
+                connections["psy50nod"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.pp50nod:SetValue(false)
+
+
+
+    psy21 = 0
+    pp21:OnChanged(function(on)
+        if on then
+            connections["psy100vg"] = game:GetService("RunService").RenderStepped:Connect(function()	 
+                if not connections["rsp"] then
+                    autoRespawn();
+                end
+                tppos(1796, 16168, 2491)
+                psy21 = psy21 + 1;
+                if psy21 == 10 then
+                    psy21 = 0;
+                    for i,v in pairs(game:GetService("Players").LocalPlayer:FindFirstChildOfClass("Backpack"):GetChildren()) do
+                        if v:IsA("Tool") or v:IsA("HopperBin") then
+                            v.Parent = game:GetService("Players").LocalPlayer.Character
+                        end
+                    end
+                    game.ReplicatedStorage.RemoteEvent:FireServer({"+PP21"});	
+                end
+            end)
+        else
+            if connections["psy100vg"] then
+                connections["psy100vg"]:Disconnect()
+            end
+            if connections["rsp"] then
+                connections["rsp"]:Disconnect()
+                connections["rsp"] = nil
+            end
+        end
+    end)
+
+    Options.pp100vg:SetValue(false)
 
 
 
@@ -2596,14 +3028,6 @@ do
 
     Options.hacks:SetValue(false)
 
-end
-
-local hurtOverlay = game:GetService("CoreGui"):WaitForChild("TopBarApp"):WaitForChild("FullScreenFrame"):WaitForChild("HurtOverlay")
-if hurtOverlay then
-    hurtOverlay:Destroy()
-    print("HurtOverlay has been deleted.")
-else
-    print("HurtOverlay not found.")
 end
 
 SaveManager:SetLibrary(Fluent)
@@ -2631,8 +3055,18 @@ Fluent:Notify({
 
 SaveManager:LoadAutoloadConfig()
 
-game.Players.LocalPlayer.PlayerGui.ScreenGui.Enabled = true;
-game.ReplicatedStorage.RemoteEvent:FireServer({"Respawn"})
-wait(1)
-game:GetService("Players").LocalPlayer.PlayerGui.IntroGui:Destroy()
-game:GetService("Lighting").Blur:Destroy()
+local hurtOverlay = game:GetService("CoreGui"):WaitForChild("TopBarApp"):WaitForChild("FullScreenFrame"):WaitForChild("HurtOverlay")
+if hurtOverlay then
+    hurtOverlay:Destroy()
+    print("HurtOverlay has been deleted.")
+else
+    print("HurtOverlay not found.")
+end
+
+local UpdateLogs = game:GetService("Players").LocalPlayer.PlayerGui.IntroGui.UpdateLogs
+if UpdateLogs then
+    UpdateLogs:Destroy()
+    print("Update Logs has been deleted.")
+else
+    print("Update Logs not found.")
+end
