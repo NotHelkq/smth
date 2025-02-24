@@ -1670,7 +1670,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
-                tppos()
+                tppos(1796, 243, 2142)
                 body23 = body23 + 1;
                 if body23 == 2 then
                     body23 = 0;
