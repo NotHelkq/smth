@@ -1496,7 +1496,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
-                tppos()
+                tppos(-3288, 1488, -2640)
                 body17 = body17 + 1;
                 if body17 == 2 then
                     body17 = 0;
@@ -1525,7 +1525,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
-                tppos()
+                tppos(-756, 3283, -2957)
                 body18 = body18 + 1;
                 if body18 == 2 then
                     body18 = 0;
@@ -1554,7 +1554,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
-                tppos()
+                tppos(-4056, 245, 2444)
                 body19 = body19 + 1;
                 if body19 == 2 then
                     body19 = 0;
@@ -1583,7 +1583,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
-                tppos()
+                tppos(1827, 250, -3454)
                 body20 = body20 + 1;
                 if body20 == 2 then
                     body20 = 0;
@@ -1612,7 +1612,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
-                tppos()
+                tppos(-4102, 2259, -374)
                 body21 = body21 + 1;
                 if body21 == 2 then
                     body21 = 0;
@@ -1641,7 +1641,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
-                tppos()
+                tppos(-4024, 263, -2555)
                 body22 = body22 + 1;
                 if body22 == 2 then
                     body22 = 0;
@@ -1699,7 +1699,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
-                tppos()
+                tppos(-1297, 7050, 2676)
                 body24 = body24 + 1;
                 if body24 == 2 then
                     body24 = 0;
@@ -1728,7 +1728,7 @@ do
                 if not connections["rsp"] then
                     autoRespawn();
                 end
-                tppos()
+                tppos(-11182, 8455, 2505)
                 body25 = body25 + 1;
                 if body25 == 2 then
                     body25 = 0;
