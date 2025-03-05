@@ -32,7 +32,7 @@ local SaveManager = loadstring(game:HttpGetAsync("https://raw.githubusercontent.
 local InterfaceManager = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/ActualMasterOogway/Fluent-Renewed/master/Addons/InterfaceManager.luau"))()
 
 local Window = Fluent:CreateWindow{
-    Title = `Furry Hub`,
+    Title = `Kitsune is a furry and not me wtf lol`,
     SubTitle = "",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
@@ -65,8 +65,8 @@ end
 
 do
     Fluent:Notify({
-        Title = "Furry Hub",
-        Content = "Ples bobux, i beg you :3",
+        Title = "Kitsune is a furry",
+        Content = "Give her some money so she can buy some furry suits",
         Duration = 10
     })
 
