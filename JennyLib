@@ -219,10 +219,10 @@ do
 				utility:Create("TextButton", {
 					Name = "ResizeWindow",
 					Position = UDim2.new(1,-2,1,-2),
-					Size = UDim2.new(0,10,0,10),
+					Size = UDim2.new(0,-10,0,-10),
 					ZIndex = 5;
-					BackgroundColor3 = Color3.fromRGB(14,14,14);
-					BackgroundTransparency = 1,
+					BackgroundColor3 = Color3.fromRGB(0,0,0);
+					BackgroundTransparency = 0.75,
 					BorderSizePixel = 0,
 					Text = ""
 				}),
