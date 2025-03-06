@@ -299,50 +299,30 @@ do
 		utility:DraggingEnabled(container.Main.TopBar, container.Main)
 
 
-	local function updateGlowAndResize()
-    	local x, y = mouse.X - 1, mouse.Y - 1
-    	local pos = container.Main.AbsolutePosition
-    	local size = container.Main.AbsoluteSize
+		local draggingResize
+		container.Main.ResizeWindow.MouseButton1Down:Connect(function()
+			draggingResize = true;
+			while draggingResize do
 
-    	if x - pos.X >= 800 and <= 800 then
-    	    container.Main.Size = UDim2.new(0, x - pos.X, 0, size.Y) 
-    	end
-
-    	size = container.Main.AbsoluteSize
-    	if y - pos.Y >= 450 and <= 450 then
-    	    container.Main.Size = UDim2.new(0, size.X, 0, y - pos.Y)
-    	end
-
-    	local glow = container.Main:FindFirstChild("Glow")
-    	if glow then
-    	    glow.Size = UDim2.new(1.06, 30, 1.042, 30)
-    	    glow.Position = UDim2.new(0, -33, 0, -25)
-    	end
-
-    	UISize = UDim2.new(0, container.Main.AbsoluteSize.X, 0, container.Main.AbsoluteSize.Y)
-    	utility:Wait()
-	end
-
-	container.Main.ResizeWindow.MouseButton1Down:Connect(function()
-    	local draggingResize = true
-
-    	local resizeConnection
-    	resizeConnection = run.RenderStepped:Connect(function()
-        	if draggingResize then
-            	updateGlowAndResize()
-        	else
-            	resizeConnection:Disconnect()
-        	end
-    	end)
-
-    	container.Main.ResizeWindow.MouseButton1Up:Connect(function()
-        draggingResize = false
-    	end)
-
-    	container.Main.ResizeWindow.MouseLeave:Connect(function()
-        	draggingResize = false
-    	end)
-	end)
+				local x, y = mouse.X-1, mouse.Y-1
+				
+				local pos = container.Main.AbsolutePosition;
+				local size = container.Main.AbsoluteSize
+				if x-pos.X >= 500 then
+					container.Main.Size = UDim2.new(0,x-pos.X,0,size.Y)
+				end
+				size = container.Main.AbsoluteSize
+				if y-pos.Y >= 400 then
+					container.Main.Size = UDim2.new(0,size.X,0,y-pos.Y)
+				end
+				UISize = UDim2.new(0, container.Main.AbsoluteSize.X, 0, container.Main.AbsoluteSize.Y);
+				utility:Wait()
+			end
+		end)
+		
+		container.Main.ResizeWindow.MouseButton1Up:Connect(function()
+			draggingResize = false;
+		end)
 		
 		return setmetatable({
 			container = container,
