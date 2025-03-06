@@ -26,7 +26,7 @@ do
 		for i, v in pairs(properties or {}) do
 			object[i] = v
 
-			if typeof(v) == "Color3" then 
+			if typeof(v) == "Color3" then
 				local theme = utility:Find(themes, v)
 
 				if theme then
@@ -140,14 +140,14 @@ do
 		}
 	end
 
-	function utility:KeyPressed() 
+	function utility:KeyPressed()
 		local key = input.InputBegan:Wait()
 
 		while key.UserInputType ~= Enum.UserInputType.Keyboard	 do
 			key = input.InputBegan:Wait()
 		end
 
-		wait()
+		wait() 
 
 		return key
 	end
@@ -194,7 +194,9 @@ do
 
 end
 
-local library = {}
+
+
+local library = {} 
 local page = {}
 local section = {}
 
@@ -205,7 +207,7 @@ do
 
 	function library.new(title : string)
 		local container = utility:Create("ScreenGui", {
-			Name = title or "Jenny Lib",
+			Name = title or "Jenny Hub test",
 			Parent = game.CoreGui;
 		}, {
 			utility:Create("Frame", {
@@ -227,6 +229,16 @@ do
 					Visible = true,
 					Active = false,
 				}),
+				utility:Create("TextButton", {
+					Name = "ResizeWindow",
+					Position = UDim2.new(1,-2,1,-2),
+					Size = UDim2.new(0,10,0,10),
+					ZIndex = 5;
+					BackgroundColor3 = themes.Glow;
+					BackgroundTransparency = 0.3,
+					BorderSizePixel = 0,
+					Text = ""
+				}),
 				utility:Create("Frame", {
 					Name = "TopBar",
 					ClipsDescendants = true,
@@ -242,7 +254,7 @@ do
 						Size = UDim2.new(1, 0, 1, 0),
 						ZIndex = 5,
 						Font = Enum.Font.SourceSansSemibold,
-						Text = title or "Jenny Lib",
+						Text = title or "Jenny Hub test",
 						TextColor3 = themes.TextColor,
 						TextSize = 14,
 						TextXAlignment = Enum.TextXAlignment.Center
@@ -285,31 +297,52 @@ do
 
 		utility:InitializeKeybind()
 		utility:DraggingEnabled(container.Main.TopBar, container.Main)
-		
-		local draggingResize
-		container.Main.ResizeWindow.MouseButton1Down:Connect(function()
-			draggingResize = true;
-			while draggingResize do
 
-				local x, y = mouse.X-1, mouse.Y-1
-				
-				local pos = container.Main.AbsolutePosition;
-				local size = container.Main.AbsoluteSize
-				if x-pos.X >= 800 and <= 800 then
-					container.Main.Size = UDim2.new(0,x-pos.X,0,size.Y)
-				end
-				size = container.Main.AbsoluteSize
-				if y-pos.Y >= 450 and <= 450 then
-					container.Main.Size = UDim2.new(0,size.X,0,y-pos.Y)
-				end
-				UISize = UDim2.new(0, container.Main.AbsoluteSize.X, 0, container.Main.AbsoluteSize.Y);
-				utility:Wait()
-			end
-		end)
-		
-		container.Main.ResizeWindow.MouseButton1Up:Connect(function()
-			draggingResize = false;
-		end)
+
+	local function updateGlowAndResize()
+    	local x, y = mouse.X - 1, mouse.Y - 1
+    	local pos = container.Main.AbsolutePosition
+    	local size = container.Main.AbsoluteSize
+
+    	if x - pos.X >= 800 and <= 800 then
+    	    container.Main.Size = UDim2.new(0, x - pos.X, 0, size.Y) 
+    	end
+
+    	size = container.Main.AbsoluteSize
+    	if y - pos.Y >= 450 and <= 450 then
+    	    container.Main.Size = UDim2.new(0, size.X, 0, y - pos.Y)
+    	end
+
+    	local glow = container.Main:FindFirstChild("Glow")
+    	if glow then
+    	    glow.Size = UDim2.new(1.06, 30, 1.042, 30)
+    	    glow.Position = UDim2.new(0, -33, 0, -25)
+    	end
+
+    	UISize = UDim2.new(0, container.Main.AbsoluteSize.X, 0, container.Main.AbsoluteSize.Y)
+    	utility:Wait()
+	end
+
+	container.Main.ResizeWindow.MouseButton1Down:Connect(function()
+    	local draggingResize = true
+
+    	local resizeConnection
+    	resizeConnection = run.RenderStepped:Connect(function()
+        	if draggingResize then
+            	updateGlowAndResize()
+        	else
+            	resizeConnection:Disconnect()
+        	end
+    	end)
+
+    	container.Main.ResizeWindow.MouseButton1Up:Connect(function()
+        draggingResize = false
+    	end)
+
+    	container.Main.ResizeWindow.MouseLeave:Connect(function()
+        	draggingResize = false
+    	end)
+	end)
 		
 		return setmetatable({
 			container = container,
@@ -516,6 +549,8 @@ do
 
 		self.toggling = false
 	end
+
+
 
 	function library:Notify(title, text, callback)
 
@@ -879,7 +914,7 @@ do
 
 		input:GetPropertyChangedSignal("Text"):Connect(function()
 
-			if button.ImageTransparency == 0 and (button.Size == UDim2.new(0, 200, 0, 16) or button.Size == UDim2.new(0, 100, 0, 16)) then 
+			if button.ImageTransparency == 0 and (button.Size == UDim2.new(0, 200, 0, 16) or button.Size == UDim2.new(0, 100, 0, 16)) then -- i know, i dont like this either
 				utility:Pop(button, 10)
 			end
 
@@ -990,7 +1025,7 @@ do
 
 			animate()
 
-			if self.binds[keybind].connection then
+			if self.binds[keybind].connection then 
 				return self:updateKeybind(keybind)
 			end
 
@@ -1167,7 +1202,7 @@ do
 						Size = UDim2.new(0, 2, 1, 0),
 						ZIndex = 2
 					}),
-					utility:Create("UIGradient", { 
+					utility:Create("UIGradient", { -- rainbow canvas
 						Color = ColorSequence.new({
 							ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 0, 0)), 
 							ColorSequenceKeypoint.new(0.17, Color3.fromRGB(255, 255, 0)), 
@@ -1370,7 +1405,7 @@ do
 			end
 		end
 
-		for i, container in pairs(tab.Container.Inputs:GetChildren()) do
+		for i, container in pairs(tab.Container.Inputs:GetChildren()) do 
 			if container:IsA("ImageLabel") then
 				local textbox = container.Textbox
 				local focused
@@ -1421,7 +1456,7 @@ do
 					rgb[prop] = color3[prop:upper()] * 255
 				end
 
-				self:updateColorPicker(colorpicker, nil, {hue, sat, brightness}) 
+				self:updateColorPicker(colorpicker, nil, {hue, sat, brightness})
 				utility:Tween(canvas.Cursor, {Position = UDim2.new(sat, 0, 1 - brightness, 0)}, 0.1)
 
 				callback(color3)
@@ -1441,15 +1476,16 @@ do
 					rgb[prop] = color3[prop:upper()] * 255
 				end
 
-				local x = hue
-				self:updateColorPicker(colorpicker, nil, {hue, sat, brightness})
-				utility:Tween(tab.Container.Color.Select, {Position = UDim2.new(x, 0, 0, 0)}, 0.1) 
+				local x = hue 
+				self:updateColorPicker(colorpicker, nil, {hue, sat, brightness}) 
+				utility:Tween(tab.Container.Color.Select, {Position = UDim2.new(x, 0, 0, 0)}, 0.1)
 
 				callback(color3)
 				utility:Wait()
 			end
 		end)
 
+		-- click events
 		local button = colorpicker.Button
 		local toggle, debounce, animate
 
@@ -1768,6 +1804,7 @@ do
 
 		table.insert(self.modules, dropdown)
 
+
 		local search = dropdown.Search
 		local focused
 
@@ -1924,8 +1961,8 @@ do
 			size = size + module.AbsoluteSize.Y + 4
 		end
 		
-		self.container.ScrollingFrame.CanvasSize = UDim2.new(0,0,0,size);
-		
+		self.container.ScrollingFrame.CanvasSize = UDim2.new(0,0,0,size)
+
 	end
 
 	function section:getModule(info)
@@ -2036,7 +2073,7 @@ do
 		local color3
 		local hue, sat, brightness
 
-		if type(color) == "table" then 
+		if type(color) == "table" then
 			hue, sat, brightness = unpack(color)
 			color3 = Color3.fromHSV(hue, sat, brightness)
 		else
