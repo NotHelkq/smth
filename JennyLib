@@ -225,7 +225,7 @@ do
 					ZIndex = 0,
 					Image = "rbxassetid://5028857084",
 					ImageColor3 = themes.Glow,
-					ImageTransparency = 1.5,
+					ImageTransparency = 0.5,
 					ScaleType = Enum.ScaleType.Stretch,
 					Visible = true,
 					Active = false,
