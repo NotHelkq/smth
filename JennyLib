@@ -45,6 +45,15 @@ do
 		return object
 	end
 
+	local function updateGlow()
+		local main = container.Main
+		local glow = main:FindFirstChild("Glow")
+		if glow then
+			glow.Size = UDim2.new(1.06, 30, 1.042, 30)
+			glow.Position = UDim2.new(0, -33, 0, -25)
+		end
+	end
+
 	function utility:Tween(instance, properties, duration, ...)
 		tween:Create(instance, tweeninfo(duration, ...), properties):Play()
 	end
@@ -313,6 +322,7 @@ do
 				size = container.Main.AbsoluteSize
 				if y-pos.Y >= 400 then
 					container.Main.Size = UDim2.new(0,size.X,0,y-pos.Y)
+					updateGlow()
 				end
 				UISize = UDim2.new(0, container.Main.AbsoluteSize.X, 0, container.Main.AbsoluteSize.Y);
 				utility:Wait()
