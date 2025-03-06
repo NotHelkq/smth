@@ -1,5 +1,3 @@
-print("ee")
-
 local player = game.Players.LocalPlayer
 local mouse = player:GetMouse()
 
@@ -223,7 +221,7 @@ do
 					Name = "Glow",
 					BackgroundTransparency = 1,
 					Position = UDim2.new(-0.01, -33, 0, -25),
-					Size = UDim2.new(1.06, 33, 1.042, 33),
+					Size = UDim2.new(1.06, 33, 1.041, 33),
 					ZIndex = 0,
 					Image = "rbxassetid://5028857084",
 					ImageColor3 = themes.Glow,
