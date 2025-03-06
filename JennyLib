@@ -288,7 +288,7 @@ do
 
 		local draggingResize
 		container.Main.ResizeWindow.MouseButton1Down:Connect(function()
-			draggingResize = false;
+			draggingResize = true;
 			while draggingResize do
 
 				local x, y = mouse.X-1, mouse.Y-1
