@@ -1,4 +1,4 @@
-local player = game.Players.LocalPlayer
+	local player = game.Players.LocalPlayer
 local mouse = player:GetMouse()
 
 local input = game:GetService("UserInputService")
@@ -220,7 +220,7 @@ do
 				utility:Create("ImageLabel", {
 					Name = "Glow",
 					BackgroundTransparency = 1,
-					Position = UDim2.new(0, -29, 0, -25),
+					Position = UDim2.new(0, -27, 0, -25),
 					Size = UDim2.new(1.06, 30, 1.042, 30),
 					ZIndex = 0,
 					Image = "rbxassetid://5028857084",
@@ -254,7 +254,7 @@ do
 						Size = UDim2.new(1, 0, 1, 0),
 						ZIndex = 5,
 						Font = Enum.Font.SourceSansSemibold,
-						Text = title or "Jenny Hub test",
+						Text = title or "Jenny Hub",
 						TextColor3 = themes.TextColor,
 						TextSize = 14,
 						TextXAlignment = Enum.TextXAlignment.Center
