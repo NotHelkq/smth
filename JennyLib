@@ -1,4 +1,4 @@
-print("n")
+print("l")
 
 local player = game.Players.LocalPlayer
 local mouse = player:GetMouse()
@@ -227,7 +227,7 @@ do
 					ZIndex = 0,
 					Image = "rbxassetid://5028857084",
 					ImageColor3 = themes.Glow,
-					ImageTransparency = 0.5,
+					ImageTransparency = 0.1,
 					ScaleType = Enum.ScaleType.Stretch,
 					Visible = true,
 					Active = false,
