@@ -10,8 +10,7 @@ local utility = {}
 
 local objects = {}
 local themes = {
-	Background = Color3.fromRGB(24, 24, 24), 
-	Glow = Color3.fromRGB(255,0,0), 
+	Background = Color3.fromRGB(24, 24, 24),  
 	Accent = Color3.fromRGB(10, 10, 10), 
 	LightContrast = Color3.fromRGB(20, 20, 20), 
 	DarkContrast = Color3.fromRGB(14, 14, 14),  
@@ -217,24 +216,12 @@ do
 				BackgroundColor3 = themes.DarkContrast
 			}, {
 				utility:Create("UICorner"),
-				utility:Create("ImageLabel", {
-					Name = "Glow",
-					BackgroundTransparency = 1,
-					Position = UDim2.new(-0.01, -33, 0, -25),
-					Size = UDim2.new(1.06, 33, 1.045, 33),
-					ZIndex = 0,
-					Image = "rbxassetid://5028857084",
-					ImageColor3 = themes.Glow,
-					ScaleType = Enum.ScaleType.Stretch,
-					Visible = true,
-					Active = false,
-				}),
 				utility:Create("TextButton", {
 					Name = "ResizeWindow",
 					Position = UDim2.new(1,-2,1,-2),
 					Size = UDim2.new(0,0,0,0),
 					ZIndex = 5;
-					BackgroundColor3 = themes.Glow;
+					BackgroundColor3 = Color3.fromRGB(255,0,0);
 					BackgroundTransparency = 0.3,
 					BorderSizePixel = 0,
 					Text = ""
@@ -557,17 +544,6 @@ do
 				Image = "rbxassetid://4641149554",
 				ImageColor3 = themes.TextColor,
 				ZIndex = 5
-			}),
-			utility:Create("ImageLabel", {
-				Name = "Glow",
-				BackgroundTransparency = 1,
-				Position = UDim2.new(0, -15, 0, -15),
-				Size = UDim2.new(1, 30, 1, 30),
-				ZIndex = 2,
-				Image = "rbxassetid://5028857084",
-				ImageColor3 = themes.Glow,
-				ScaleType = Enum.ScaleType.Slice,
-				SliceCenter = Rect.new(24, 24, 276, 276)
 			}),
 			utility:Create("TextLabel", {
 				Name = "Title",
@@ -1083,17 +1059,6 @@ do
 			SliceCenter = Rect.new(2, 2, 298, 298),
 			Visible = false,
 		}, {
-			utility:Create("ImageLabel", {
-				Name = "Glow",
-				BackgroundTransparency = 1,
-				Position = UDim2.new(0, -15, 0, -15),
-				Size = UDim2.new(1, 30, 1, 30),
-				ZIndex = 0,
-				Image = "rbxassetid://5028857084",
-				ImageColor3 = themes.Glow,
-				ScaleType = Enum.ScaleType.Slice,
-				SliceCenter = Rect.new(22, 22, 278, 278)
-			}),
 			utility:Create("TextLabel", {
 				Name = "Title",
 				BackgroundTransparency = 1,
