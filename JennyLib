@@ -220,7 +220,7 @@ do
 				utility:Create("ImageLabel", {
 					Name = "Glow",
 					BackgroundTransparency = 1,
-					Position = UDim2.new(-0.015, -33, 0, -25),
+					Position = UDim2.new(-0.005, -33, 0, -25),
 					Size = UDim2.new(1.06, 33, 1.042, 33),
 					ZIndex = 0,
 					Image = "rbxassetid://5028857084",
