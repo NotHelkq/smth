@@ -227,24 +227,14 @@ do
 				utility:Create("ImageLabel", {
 					Name = "Glow",
 					BackgroundTransparency = 1,
-					Position = UDim2.new(0, -33, 0, -25),
-					Size = UDim2.new(1.06, 30, 1.042, 30),
+					Position = UDim2.new(0, -33, 0, -33),
+					Size = UDim2.new(1.06, 30, 1.06, 30),
 					ZIndex = 0,
 					Image = "rbxassetid://5028857084",
 					ImageColor3 = themes.Glow,
 					ScaleType = Enum.ScaleType.Stretch,
-					Visible = false,
+					Visible = true,
 					Active = false,
-				}),
-				utility:Create("TextButton", {
-					Name = "ResizeWindow",
-					Position = UDim2.new(1,-2,1,-2),
-					Size = UDim2.new(0,10,0,10),
-					ZIndex = 5;
-					BackgroundColor3 = themes.Glow;
-					BackgroundTransparency = 0.3,
-					BorderSizePixel = 0,
-					Text = ""
 				}),
 				utility:Create("Frame", {
 					Name = "TopBar",
@@ -314,11 +304,11 @@ do
 				
 				local pos = container.Main.AbsolutePosition;
 				local size = container.Main.AbsoluteSize
-				if x-pos.X >= 500 then
+				if x-pos.X >= 800 and <= 800 then
 					container.Main.Size = UDim2.new(0,x-pos.X,0,size.Y)
 				end
 				size = container.Main.AbsoluteSize
-				if y-pos.Y >= 400 then
+				if y-pos.Y >= 450 and <= 450 then
 					container.Main.Size = UDim2.new(0,size.X,0,y-pos.Y)
 				end
 				UISize = UDim2.new(0, container.Main.AbsoluteSize.X, 0, container.Main.AbsoluteSize.Y);
