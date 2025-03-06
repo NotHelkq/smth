@@ -207,7 +207,7 @@ do
 
 	function library.new(title : string)
 		local container = utility:Create("ScreenGui", {
-			Name = title or "Jenny Hub test",
+			Name = title or "Jenny Hub",
 			Parent = game.CoreGui;
 		}, {
 			utility:Create("Frame", {
@@ -301,18 +301,18 @@ do
 
 		local draggingResize
 		container.Main.ResizeWindow.MouseButton1Down:Connect(function()
-			draggingResize = true;
+			draggingResize = false;
 			while draggingResize do
 
 				local x, y = mouse.X-1, mouse.Y-1
 				
 				local pos = container.Main.AbsolutePosition;
 				local size = container.Main.AbsoluteSize
-				if x-pos.X >= 800 and <= 800 then
+				if x-pos.X >= 800 then
 					container.Main.Size = UDim2.new(0,x-pos.X,0,size.Y)
 				end
 				size = container.Main.AbsoluteSize
-				if y-pos.Y >= 450 and <= 450 then
+				if y-pos.Y >= 450 then
 					container.Main.Size = UDim2.new(0,size.X,0,y-pos.Y)
 				end
 				UISize = UDim2.new(0, container.Main.AbsoluteSize.X, 0, container.Main.AbsoluteSize.Y);
