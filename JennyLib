@@ -219,8 +219,8 @@ do
 				utility:Create("UICorner"),
 				utility:Create("ImageLabel", {
 					Name = "Glow",
-					BackgroundTransparency = 1,
-					Position = UDim2.new(0, -34, 0, -25),
+						BackgroundTransparency = 1,
+					Position = UDim2.new(0, -34.5, 0, -25),
 					Size = UDim2.new(1.06, 31, 1.042, 31),
 					ZIndex = 0,
 					Image = "rbxassetid://5028857084",
