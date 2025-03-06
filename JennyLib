@@ -11,7 +11,7 @@ local utility = {}
 local objects = {}
 local themes = {
 	Background = Color3.fromRGB(24, 24, 24), 
-	Glow = Color3.fromRGB(0,255,0), 
+	Glow = Color3.fromRGB(255,0,0), 
 	Accent = Color3.fromRGB(10, 10, 10), 
 	LightContrast = Color3.fromRGB(20, 20, 20), 
 	DarkContrast = Color3.fromRGB(14, 14, 14),  
@@ -220,8 +220,8 @@ do
 				utility:Create("ImageLabel", {
 					Name = "Glow",
 					BackgroundTransparency = 1,
-					Position = UDim2.new(-0.01, -33, 0, -25),
-					Size = UDim2.new(1.06, 33, 1.041, 33),
+					Position = UDim2.new(-0.015, -33, 0, -25),
+					Size = UDim2.new(1.06, 33, 1.042, 33),
 					ZIndex = 0,
 					Image = "rbxassetid://5028857084",
 					ImageColor3 = themes.Glow,
