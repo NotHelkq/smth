@@ -1,13 +1,17 @@
+-- init
 local player = game.Players.LocalPlayer
 local mouse = player:GetMouse()
 
+-- services
 local input = game:GetService("UserInputService")
 local run = game:GetService("RunService")
 local tween = game:GetService("TweenService")
 local tweeninfo = TweenInfo.new
 
+-- additional
 local utility = {}
 
+-- themes
 local objects = {}
 local themes = {
 	Background = Color3.fromRGB(24, 24, 24), 
@@ -26,7 +30,7 @@ do
 		for i, v in pairs(properties or {}) do
 			object[i] = v
 
-			if typeof(v) == "Color3" then
+			if typeof(v) == "Color3" then -- save for theme changer later
 				local theme = utility:Find(themes, v)
 
 				if theme then
@@ -54,7 +58,7 @@ do
 		return true
 	end
 
-	function utility:Find(table, value) 
+	function utility:Find(table, value) -- table.find doesn't work for dictionaries
 		for i, v in  pairs(table) do
 			if v == value then
 				return i
@@ -140,14 +144,14 @@ do
 		}
 	end
 
-	function utility:KeyPressed()
+	function utility:KeyPressed() -- yield until next key is pressed
 		local key = input.InputBegan:Wait()
 
 		while key.UserInputType ~= Enum.UserInputType.Keyboard	 do
 			key = input.InputBegan:Wait()
 		end
 
-		wait() 
+		wait() -- overlapping connection
 
 		return key
 	end
@@ -156,6 +160,7 @@ do
 
 		parent = parent or frame
 
+		-- stolen from wally or kiriot, kek
 		local dragging = false
 		local dragInput, mousePos, framePos
 
@@ -194,9 +199,9 @@ do
 
 end
 
+-- classes
 
-
-local library = {} 
+local library = {} -- main
 local page = {}
 local section = {}
 
@@ -205,9 +210,11 @@ do
 	page.__index = page
 	section.__index = section
 
+	-- new classes
+
 	function library.new(title : string)
 		local container = utility:Create("ScreenGui", {
-			Name = title or "Jenny Hub tes",
+			Name = title or "Jenny Lib",
 			Parent = game.CoreGui;
 		}, {
 			utility:Create("Frame", {
@@ -226,7 +233,7 @@ do
 					Image = "rbxassetid://5028857084",
 					ImageColor3 = themes.Glow,
 					ScaleType = Enum.ScaleType.Stretch,
-					Visible = true,
+					Visible = false,
 					Active = false,
 				}),
 				utility:Create("TextButton", {
@@ -254,7 +261,7 @@ do
 						Size = UDim2.new(1, 0, 1, 0),
 						ZIndex = 5,
 						Font = Enum.Font.SourceSansSemibold,
-						Text = title or "Jenny Hub tes",
+						Text = title or "Jenny Lib",
 						TextColor3 = themes.TextColor,
 						TextSize = 14,
 						TextXAlignment = Enum.TextXAlignment.Center
@@ -297,52 +304,31 @@ do
 
 		utility:InitializeKeybind()
 		utility:DraggingEnabled(container.Main.TopBar, container.Main)
+		
+		local draggingResize
+		container.Main.ResizeWindow.MouseButton1Down:Connect(function()
+			draggingResize = true;
+			while draggingResize do
 
-
-	local function updateGlowAndResize()
-    	local x, y = mouse.X - 1, mouse.Y - 1
-    	local pos = container.Main.AbsolutePosition
-    	local size = container.Main.AbsoluteSize
-
-    	if x - pos.X >= 500 then
-    	    container.Main.Size = UDim2.new(0, x - pos.X, 0, size.Y) 
-    	end
-
-    	size = container.Main.AbsoluteSize
-    	if y - pos.Y >= 400 then
-    	    container.Main.Size = UDim2.new(0, size.X, 0, y - pos.Y)
-    	end
-
-    	local glow = container.Main:FindFirstChild("Glow")
-    	if glow then
-    	    glow.Size = UDim2.new(1.06, 30, 1.042, 30)
-    	    glow.Position = UDim2.new(0, -33, 0, -25)
-    	end
-
-    	UISize = UDim2.new(0, container.Main.AbsoluteSize.X, 0, container.Main.AbsoluteSize.Y)
-    	utility:Wait()
-	end
-
-	container.Main.ResizeWindow.MouseButton1Down:Connect(function()
-    	local draggingResize = true
-
-    	local resizeConnection
-    	resizeConnection = run.RenderStepped:Connect(function()
-        	if draggingResize then
-            	updateGlowAndResize()
-        	else
-            	resizeConnection:Disconnect()
-        	end
-    	end)
-
-    	container.Main.ResizeWindow.MouseButton1Up:Connect(function()
-        draggingResize = false
-    	end)
-
-    	container.Main.ResizeWindow.MouseLeave:Connect(function()
-        	draggingResize = false
-    	end)
-	end)
+				local x, y = mouse.X-1, mouse.Y-1
+				
+				local pos = container.Main.AbsolutePosition;
+				local size = container.Main.AbsoluteSize
+				if x-pos.X >= 500 then
+					container.Main.Size = UDim2.new(0,x-pos.X,0,size.Y)
+				end
+				size = container.Main.AbsoluteSize
+				if y-pos.Y >= 400 then
+					container.Main.Size = UDim2.new(0,size.X,0,y-pos.Y)
+				end
+				UISize = UDim2.new(0, container.Main.AbsoluteSize.X, 0, container.Main.AbsoluteSize.Y);
+				utility:Wait()
+			end
+		end)
+		
+		container.Main.ResizeWindow.MouseButton1Up:Connect(function()
+			draggingResize = false;
+		end)
 		
 		return setmetatable({
 			container = container,
@@ -496,13 +482,15 @@ do
 		return section
 	end
 
+	-- functions
+
 	function library:setTheme(theme, color3)
 		themes[theme] = color3
 
 		for property, objects in pairs(objects[theme]) do
 			for i, object in pairs(objects) do
 				if not object.Parent or (object.Name == "Button" and object.Parent.Name == "ColorPicker") then
-					objects[i] = nil 
+					objects[i] = nil -- i can do this because weak tables :D
 				else
 					object[property] = color3
 				end
@@ -550,14 +538,16 @@ do
 		self.toggling = false
 	end
 
-
+	-- new modules
 
 	function library:Notify(title, text, callback)
 
+		-- overwrite last notification
 		if self.activeNotification then
 			self.activeNotification = self.activeNotification()
 		end
 
+		-- standard create
 		local notification = utility:Create("ImageLabel", {
 			Name = "Notification",
 			Parent = self.container,
@@ -631,8 +621,10 @@ do
 			})
 		})
 
+		-- dragging
 		utility:DraggingEnabled(notification)
 
+		-- position and size
 		title = title or "Notification"
 		text = text or ""
 
@@ -654,6 +646,7 @@ do
 			Position = UDim2.new(1, 0, 0, 0)
 		}, 0.2)
 
+		-- callbacks
 		local active = true
 		local close = function()
 
@@ -734,6 +727,7 @@ do
 		})
 
 		table.insert(self.modules, button)
+		--self:Resize()
 
 		local text = button.Title
 		local debounce
@@ -744,6 +738,7 @@ do
 				return
 			end
 
+			-- animation
 			utility:Pop(button, 10)
 
 			debounce = true
@@ -819,6 +814,7 @@ do
 		})
 
 		table.insert(self.modules, toggle)
+		--self:Resize()
 
 		local active = default
 		self:updateToggle(toggle, nil, active)
@@ -891,6 +887,7 @@ do
 		})
 
 		table.insert(self.modules, textbox)
+		--self:Resize()
 
 		local button = textbox.Button
 		local input = button.Textbox
@@ -997,6 +994,7 @@ do
 		})
 
 		table.insert(self.modules, keybind)
+		--self:Resize()
 
 		local text = keybind.Button.Text
 		local button = keybind.Button
@@ -1025,11 +1023,11 @@ do
 
 			animate()
 
-			if self.binds[keybind].connection then 
+			if self.binds[keybind].connection then -- unbind
 				return self:updateKeybind(keybind)
 			end
 
-			if text.Text == "None" then 
+			if text.Text == "None" then -- new bind
 				text.Text = "..."
 
 				local key = utility:KeyPressed()
@@ -1353,6 +1351,7 @@ do
 
 		utility:DraggingEnabled(tab)
 		table.insert(self.modules, colorpicker)
+		--self:Resize()
 
 		local allowed = {
 			[""] = true
@@ -1405,7 +1404,7 @@ do
 			end
 		end
 
-		for i, container in pairs(tab.Container.Inputs:GetChildren()) do 
+		for i, container in pairs(tab.Container.Inputs:GetChildren()) do -- i know what you are about to say, so shut up
 			if container:IsA("ImageLabel") then
 				local textbox = container.Textbox
 				local focused
@@ -1456,8 +1455,8 @@ do
 					rgb[prop] = color3[prop:upper()] * 255
 				end
 
-				self:updateColorPicker(colorpicker, nil, {hue, sat, brightness})
-				utility:Tween(canvas.Cursor, {Position = UDim2.new(sat, 0, 1 - brightness, 0)}, 0.1)
+				self:updateColorPicker(colorpicker, nil, {hue, sat, brightness}) -- roblox is literally retarded
+				utility:Tween(canvas.Cursor, {Position = UDim2.new(sat, 0, 1 - brightness, 0)}, 0.1) -- overwrite
 
 				callback(color3)
 				utility:Wait()
@@ -1476,9 +1475,9 @@ do
 					rgb[prop] = color3[prop:upper()] * 255
 				end
 
-				local x = hue 
-				self:updateColorPicker(colorpicker, nil, {hue, sat, brightness}) 
-				utility:Tween(tab.Container.Color.Select, {Position = UDim2.new(x, 0, 0, 0)}, 0.1)
+				local x = hue -- hue is updated
+				self:updateColorPicker(colorpicker, nil, {hue, sat, brightness}) -- roblox is literally retarded
+				utility:Tween(tab.Container.Color.Select, {Position = UDim2.new(x, 0, 0, 0)}, 0.1) -- overwrite
 
 				callback(color3)
 				utility:Wait()
@@ -1525,7 +1524,7 @@ do
 				self.page.library.activePicker = animate
 				lastColor = Color3.fromHSV(hue, sat, brightness)
 
-				local x1, x2 = button.AbsoluteSize.X / 2, 162
+				local x1, x2 = button.AbsoluteSize.X / 2, 162--tab.AbsoluteSize.X
 				local px, py = button.AbsolutePosition.X, button.AbsolutePosition.Y
 
 				tab.ClipsDescendants = true
@@ -1535,6 +1534,7 @@ do
 				tab.Position = UDim2.new(0, x1 + x2 + px, 0, py)
 				utility:Tween(tab, {Size = UDim2.new(0, 162, 0, 169)}, 0.2)
 
+				-- update size and position
 				wait(0.2)
 				tab.ClipsDescendants = false
 
@@ -1657,6 +1657,7 @@ do
 		})
 
 		table.insert(self.modules, slider)
+		--self:Resize()
 
 		local allowed = {
 			[""] = true,
@@ -1803,7 +1804,7 @@ do
 		})
 
 		table.insert(self.modules, dropdown)
-
+		--self:Resize()
 
 		local search = dropdown.Search
 		local focused
@@ -1846,15 +1847,18 @@ do
 		return dropdown
 	end
 
+	-- class functions
+
 	function library:SelectPage(page, toggle)
 
-		if toggle and self.focusedPage == page then
+		if toggle and self.focusedPage == page then -- already selected
 			return
 		end
 
 		local button = page.button
 
 		if toggle then
+			-- page button
 			button.Title.TextTransparency = 0
 			button.Title.Font = Enum.Font.SourceSansSemibold
 
@@ -1862,6 +1866,7 @@ do
 				button.Icon.ImageTransparency = 0
 			end
 
+			-- update selected page
 			local focusedPage = self.focusedPage
 			self.focusedPage = page
 
@@ -1869,6 +1874,7 @@ do
 				self:SelectPage(focusedPage)
 			end
 
+			-- sections
 			local existingSections = focusedPage and #focusedPage.sections or 0
 			local sectionsRequired = #page.sections - existingSections
 
@@ -1878,7 +1884,7 @@ do
 				section.container.Parent.BackgroundTransparency = 0
 			end
 
-			if sectionsRequired < 0 then
+			if sectionsRequired < 0 then -- "hides" some sections
 				for i = existingSections, #page.sections + 1, -1 do
 					local section = focusedPage.sections[i].container.Parent
 
@@ -1893,7 +1899,7 @@ do
 				focusedPage.container.Visible = false
 			end
 
-			if sectionsRequired > 0 then
+			if sectionsRequired > 0 then -- "creates" more section
 				for i = existingSections + 1, #page.sections do
 					local section = page.sections[i].container.Parent
 
@@ -1915,6 +1921,7 @@ do
 			wait(0.05)
 			page:Resize(true)
 		else
+			-- page button
 			button.Title.Font = Enum.Font.Gotham
 			button.Title.TextTransparency = 0.65
 
@@ -1922,6 +1929,7 @@ do
 				button.Icon.ImageTransparency = 0.65
 			end
 
+			-- sections
 			for i, section in pairs(page.sections) do	
 				utility:Tween(section.container.Parent, {Size = UDim2.new(0.48, 0, 0, 240)}, 0.1)
 				utility:Tween(section.container.Title, {TextTransparency = 1}, 0.1)
@@ -1956,13 +1964,22 @@ do
 		end
 		
 		local size = 0;
+		
+		--local padding = 4
+		--local size = (4 * padding) + self.container.Title.AbsoluteSize.Y -- offset
 
 		for i, module in pairs(self.modules) do
 			size = size + module.AbsoluteSize.Y + 4
 		end
 		
-		self.container.ScrollingFrame.CanvasSize = UDim2.new(0,0,0,size)
-
+		self.container.ScrollingFrame.CanvasSize = UDim2.new(0,0,0,size);
+		
+		--if smooth then
+		--	utility:Tween(self.container.Parent, {Size = UDim2.new(1, -10, 0, size)}, 0.05)
+		--else
+		--	self.container.Parent.Size = UDim2.new(1, -10, 0, size)
+		--	self.page:Resize()
+		--end
 	end
 
 	function section:getModule(info)
@@ -1979,6 +1996,8 @@ do
 
 		error("No module found under "..tostring(info))
 	end
+
+	-- updates
 
 	function section:updateButton(button, title)
 		button = self:getModule(button)
@@ -2073,7 +2092,7 @@ do
 		local color3
 		local hue, sat, brightness
 
-		if type(color) == "table" then
+		if type(color) == "table" then -- roblox is literally retarded x2
 			hue, sat, brightness = unpack(color)
 			color3 = Color3.fromHSV(hue, sat, brightness)
 		else
@@ -2092,6 +2111,7 @@ do
 				local value = math.clamp(color3[container.Name], 0, 1) * 255
 
 				container.Textbox.Text = math.floor(value)
+				--callback(container.Name:lower(), value)
 			end
 		end
 	end
@@ -2106,7 +2126,7 @@ do
 		local bar = slider.Slider.Bar
 		local percent = (mouse.X - bar.AbsolutePosition.X) / bar.AbsoluteSize.X
 
-		if value then
+		if value then -- support negative ranges
 			percent = (value - min) / (max - min)
 		end
 
