@@ -68,9 +68,7 @@ local autobubble = AutoFarm:addToggle("Auto Bubble", false, function(on)
                 local args = {
                     [1] = "BlowBubble"
                 }
-                    
                 game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
-
                 task.wait(0.25)
             end
         end)
@@ -88,9 +86,7 @@ local autosellbubble = AutoFarm:addToggle("Auto Sell Bubble", false, function(on
                 local args = {
                     [1] = "SellBubble"
                 }
-                    
                 game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
-
                 task.wait(1)
             end
         end)
