@@ -4,8 +4,6 @@ if not game:IsLoaded() then
     print("Loaded Game")
 end
 
-print("v1.0.01")
-
 local Player = game:GetService("Players").LocalPlayer
 
 Player.Idled:connect(function()
@@ -440,7 +438,12 @@ end)
 ---------------------------------
 
 local islandCheck = function(icheck)
-    local pos = workspace.Rendered.Rifts["golden-chest"].Chest.WorldPivot.Position
+    local pos = workspace.Rendered.Rifts["golden-chest"].Chest.WorldPivot.Position 
+    local roundedPos = Vector3.new(
+        math.floor(pos.X + 0.5),
+        math.floor(pos.Y + 0.5),
+        math.floor(pos.Z + 0.5)
+    )
     local y = pos.Y
     local area = nil
     if y >= 0 and y < 410 then
@@ -468,8 +471,8 @@ local islandCheck = function(icheck)
     end
 
     print("Island is near area:", area)
-    tppos(pos)
-    print(pos)
+    tppos(roundedPos)
+    print(roundedPos)
 end
 
 local Misc = Window:addPage("Misc", 5012544693)
@@ -567,7 +570,6 @@ local autogChest = miscstuff:addToggle("Auto Open Golden Chest", false, function
                         [2] = "golden-chest"
                     }
                     game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
-
                     task.wait(10)
                 else
                     print("Chest not found or no Golden Key")
@@ -620,5 +622,9 @@ end)
 Window:SelectPage(Window.pages[1], true)
 
 -- workspace.Rendered.Gifts
+
+
+
+
 
 -- game:GetService("ReplicatedStorage").Assets.Rifts["royal-chest"].Chest
