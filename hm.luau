@@ -68,7 +68,9 @@ local autobubble = AutoFarm:addToggle("Auto Bubble", false, function(on)
                 local args = {
                     [1] = "BlowBubble"
                 }
+                    
                 game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+
                 task.wait(0.25)
             end
         end)
@@ -86,7 +88,9 @@ local autosellbubble = AutoFarm:addToggle("Auto Sell Bubble", false, function(on
                 local args = {
                     [1] = "SellBubble"
                 }
+                    
                 game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+
                 task.wait(1)
             end
         end)
@@ -425,6 +429,33 @@ end)
 
 local Misc = Window:addPage("Misc", 5012544693)
 local miscstuff = Misc:addSection("Misc")
+local fpsboost = miscstuff:addButton("Boost FPS", function(fps)
+    _G.Settings = {
+        Players = {
+            ["Ignore Me"] = true, 
+            ["Ignore Others"] = true
+        },
+        Meshes = {
+            Destroy = false,
+            LowDetail = true 
+        },
+        Images = {
+            Invisible = true, 
+            LowDetail = false,
+            Destroy = false, 
+        },
+        ["No Particles"] = true, 
+        ["No Camera Effects"] = true, 
+        ["No Explosions"] = true,
+        ["No Clothes"] = true,
+        ["Low Water Graphics"] = true, 
+        ["No Shadows"] = true, 
+        ["Low Rendering"] = true, 
+        ["Low Quality Parts"] = true 
+    }
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/CasperFlyModz/discord.gg-rips/main/FPSBooster.lua"))()
+end)
+
 local allAreas = miscstuff:addButton("Unlock All Areas", function(tp)
     ttppos(-16, 423, 143)
     task.wait(3)
