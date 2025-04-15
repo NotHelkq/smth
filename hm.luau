@@ -234,9 +234,9 @@ end)
 
 
 
-local Autoopeneggs = Window:addPage("Eggs", 5012544693)
-local eggstuff = Misc:addSection("Auto Open Eggs")
-local egg = 
+-- local Autoopeneggs = Window:addPage("Eggs", 5012544693)
+-- local eggstuff = Misc:addSection("Auto Open Eggs")
+-- local egg = 
 
 
 local Misc = Window:addPage("Misc", 5012544693)
