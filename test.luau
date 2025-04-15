@@ -23,38 +23,6 @@ local tppos = function(x, y, z)
 	if r then game:GetService("TweenService"):Create(r, TweenInfo.new(10), {CFrame = CFrame.new(x, y, z)}):Play() end
 end
 
-local islandCheck = function(icheck)
-    local pos = workspace.Rendered.Rifts["golden-chest"].Chest.WorldPivot.Position
-    local y = pos.Y
-    local area = nil
-    if y >= 0 and y < 410 then
-        area = "a1"
-        argArea1()
-        task.wait(2)
-    elseif y >= 410 and y < 2650 then
-        area = "a2"
-        argArea2()
-        task.wait(2)
-    elseif y >= 2650 and y < 6850 then
-        area = "a3"
-        argArea3()
-        task.wait(2)
-    elseif y >= 6850 and y < 10130 then
-        area = "a4"
-        argArea4()
-        task.wait(2)
-    elseif y >= 10130 and y <= 15960 then
-        area = "a5"
-        argArea5()
-        task.wait(2)
-    else
-        area = nil
-    end
-
-    print("Island is near area:", area)
-    tppos(pos)
-end
-
 local enchantments = {
     "⚡ Team Up I",
     "⚡ Team Up II",
@@ -469,6 +437,38 @@ end)
 
 ---------------------------------
 
+local islandCheck = function(icheck)
+    local pos = workspace.Rendered.Rifts["golden-chest"].Chest.WorldPivot.Position
+    local y = pos.Y
+    local area = nil
+    if y >= 0 and y < 410 then
+        area = "a1"
+        argArea1()
+        task.wait(2)
+    elseif y >= 410 and y < 2650 then
+        area = "a2"
+        argArea2()
+        task.wait(2)
+    elseif y >= 2650 and y < 6850 then
+        area = "a3"
+        argArea3()
+        task.wait(2)
+    elseif y >= 6850 and y < 10130 then
+        area = "a4"
+        argArea4()
+        task.wait(2)
+    elseif y >= 10130 and y <= 15960 then
+        area = "a5"
+        argArea5()
+        task.wait(2)
+    else
+        area = nil
+    end
+
+    print("Island is near area:", area)
+    tppos(pos)
+end
+
 local Misc = Window:addPage("Misc", 5012544693)
 local miscstuff = Misc:addSection("Misc")
 local fpsboost = miscstuff:addButton("Boost FPS", function(fps)
@@ -617,9 +617,5 @@ end)
 Window:SelectPage(Window.pages[1], true)
 
 -- workspace.Rendered.Gifts
-
-
-
-
 
 -- game:GetService("ReplicatedStorage").Assets.Rifts["royal-chest"].Chest
