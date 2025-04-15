@@ -453,7 +453,7 @@ local fpsboost = miscstuff:addButton("Boost FPS", function(fps)
         ["Low Rendering"] = true, 
         ["Low Quality Parts"] = true 
     }
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/CasperFlyModz/discord.gg-rips/main/FPSBooster.lua"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/boost.luau"))()
 end)
 
 local allAreas = miscstuff:addButton("Unlock All Areas", function(tp)
