@@ -16,7 +16,7 @@ end
 
 local tppos = function(x, y, z)
 	local r = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-	if r then game:GetService("TweenService"):Create(r, TweenInfo.new(1), {CFrame = CFrame.new(x, y, z)}):Play() end
+	if r then game:GetService("TweenService"):Create(r, TweenInfo.new(10), {CFrame = CFrame.new(x, y, z)}):Play() end
 end
 
 local enchantments = {
@@ -227,12 +227,14 @@ local selectedEgg = nil
 local hatchingEggs = nil
 local Autoopeneggs = Window:addPage("Eggs", 5012544693)
 local eggstuff = Autoopeneggs:addSection("Hatch (You must be near egg!)")
-local egg = eggstuff:addDropdown("Eggs", {"0. Infinity Egg","1. Common Egg","2. Spotted Egg","3. Iceshard Egg","4. Spikey Egg","5. Magma Egg","6. Crystal Egg","7. Lunar Egg","8. Void Egg","9. Hell Egg","10. Nightmare Egg","11. Rainbow Egg"}, function(selected)
+local egg = eggstuff:addDropdown("Eggs", {"Infinity Egg","Common Egg","Spotted Egg","Iceshard Egg","Spikey Egg","Magma Egg","Crystal Egg","Lunar Egg","Void Egg","Hell Egg","Nightmare Egg","Rainbow Egg"}, function(selected)
     selectedEgg = selected
 end)
 local multiegg = eggstuff:addSlider("Open Amount", 1, 1, 6, function(multi)
     hatchingEggs = multi
 end)
+
+
 
 local openingEggs = false
 local openEgg = eggstuff:addToggle("Open Eggs", false, function(on)
@@ -240,9 +242,14 @@ local openEgg = eggstuff:addToggle("Open Eggs", false, function(on)
         openingEggs = true
         task.spawn(function()
             while openingEggs do
-                task.wait(1)
-                -- nothing yet
-            end    
+                local args = {
+                    [1] = "HatchEgg",
+                    [2] = selectedEgg,
+                    [3] = hatchingEggs
+                }
+                game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))   
+                task.wait(0.2)
+            end
         end)
     else
         openingEggs = false
@@ -253,84 +260,84 @@ local tpToEggs = false
 local tpEgg = eggstuff:addToggle("Teleport to Egg", false, function(on)
     if on then 
         tpToEggs = true
-        if selectedEgg == "0. Infinity Egg" then
+        if selectedEgg == "Infinity Egg" then
             task.spawn(function()
                 while tpToEggs do
                     tppos(-96, 10, -27)
                     task.wait(1)
                 end
             end)
-        elseif selectedEgg == "1. Common Egg" then
+        elseif selectedEgg == "Common Egg" then
             task.spawn(function()
                 while tpToEggs do
                     tppos(-7, 11, -82)
                     task.wait(1)
                 end
             end)
-        elseif selectedEgg == "2. Spotted Egg" then
+        elseif selectedEgg == "Spotted Egg" then
             task.spawn(function()
                 while tpToEggs do
                     tppos(-7, 11, -71)
                     task.wait(1)
                 end
             end)
-        elseif selectedEgg == "3. Iceshard Egg" then
+        elseif selectedEgg == "Iceshard Egg" then
             task.spawn(function()
                 while tpToEggs do
                     tppos(-7, 11, -60)
                     task.wait(1)
                 end
             end)
-        elseif selectedEgg == "4. Spikey Egg" then
+        elseif selectedEgg == "Spikey Egg" then
             task.spawn(function()
                 while tpToEggs do
                     tppos(-8, 424, 158)
                     task.wait(1)
                 end
             end)
-        elseif selectedEgg == "5. Magma Egg" then
+        elseif selectedEgg == "Magma Egg" then
             task.spawn(function()
                 while tpToEggs do
                     tppos(-17, 2666, 9)
                     task.wait(1)
                 end
             end)
-        elseif selectedEgg == "6. Crystal Egg" then
+        elseif selectedEgg == "Crystal Egg" then
             task.spawn(function()
                 while tpToEggs do
                     tppos(-19, 2666, 19)
                     task.wait(1)
                 end
             end)
-        elseif selectedEgg == "7. Lunar Egg" then
+        elseif selectedEgg == "Lunar Egg" then
             task.spawn(function()
                 while tpToEggs do
                     tppos(-58, 6865, 81)
                     task.wait(1)
                 end
             end)
-        elseif selectedEgg == "8. Void Egg" then
+        elseif selectedEgg == "Void Egg" then
             task.spawn(function()
                 while tpToEggs do
                     tppos(6, 10149, 188)
                     task.wait(1)
                 end
             end)
-        elseif selectedEgg == "9. Hell Egg" then
+        elseif selectedEgg == "Hell Egg" then
             task.spawn(function()
                 while tpToEggs do
                     tppos(-6, 10149, 192)
                     task.wait(1)
                 end
             end)
-        elseif selectedEgg == "10. Nightmare Egg" then
+        elseif selectedEgg == "Nightmare Egg" then
             task.spawn(function()
                 while tpToEggs do
                     tppos(-20, 10149, 184)
                     task.wait(1)
                 end
             end)
-        elseif selectedEgg == "11. Rainbow Egg" then
+        elseif selectedEgg == "Rainbow Egg" then
             task.spawn(function()
                 while tpToEggs do
                     tppos(-35, 15974, 44)
@@ -339,7 +346,7 @@ local tpEgg = eggstuff:addToggle("Teleport to Egg", false, function(on)
             end)
         else
             print("Egg is not selected")
-            task.wait(1w)
+            task.wait(1)
         end
     else
         tpToEggs = false
