@@ -4,7 +4,7 @@ if not game:IsLoaded() then
     print("Loaded Game")
 end
 
-print("v1.0.0.34")
+print("v1.0.0.35")
 
 local Player = game:GetService("Players").LocalPlayer
 
@@ -565,8 +565,8 @@ local autogChest = miscstuff:addToggle("Auto Open Golden Chest", false, function
                 local goldenKey = game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Inventory.Frame.Inner.Items.Main.ScrollingFrame.Powerups.Items:FindFirstChild("Golden Key")
                 if chest and goldenKey then
                     islandCheck()
-                    tppos(islandpos)
-                    print("2nd check : " .. islandpos)
+                    print("Island Position: X=" .. islandpos.X .. ", Y=" .. islandpos.Y .. ", Z=" .. islandpos.Z)
+                    tppos(islandpos.X, islandpos.Y, islandpos.Z)
                     local args = {
                         [1] = "UnlockRiftChest",
                         [2] = "golden-chest"
