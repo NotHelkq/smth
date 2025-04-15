@@ -4,7 +4,7 @@ if not game:IsLoaded() then
     print("Loaded Game")
 end
 
-print("v1.0.0.3")
+print("v1.0.0.31")
 
 local Player = game:GetService("Players").LocalPlayer
 
