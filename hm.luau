@@ -171,6 +171,54 @@ local autoBuyAlien = AutoFarm:addToggle("Auto Buy Alien Merchant", false, functi
 end)
 
 
+local argspawn = function(tp)
+    local args = {
+        [1] = "Teleport",
+        [2] = "Workspace.Worlds.The Overworld.PortalSpawn"
+    }
+    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+end
+
+local argArea1 = function(tp)
+    local args = {
+        [1] = "Teleport",
+        [2] = "Workspace.Worlds.The Overworld.Islands.Floating Island.Island.Portal.Spawn"
+    }
+    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+end
+
+local argArea2 = function(tp)
+    local args = {
+        [1] = "Teleport",
+        [2] = "Workspace.Worlds.The Overworld.Islands.Outer Space.Island.Portal.Spawn"
+    }
+    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+end
+
+local argArea3 = function(tp)
+    local args = {
+        [1] = "Teleport",
+        [2] = "Workspace.Worlds.The Overworld.Islands.Twilight.Island.Portal.Spawn"
+    }
+    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+end
+
+local argArea4 = function(tp)
+    local args = {
+        [1] = "Teleport",
+        [2] = "Workspace.Worlds.The Overworld.Islands.The Void.Island.Portal.Spawn"
+    }
+    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+end
+
+local argArea5 = function(tp)
+    local args = {
+        [1] = "Teleport",
+        [2] = "Workspace.Worlds.The Overworld.Islands.Zen.Island.Portal.Spawn"
+    }
+    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+end
+
 
 local Teleport = Main:addSection("Teleport")
 local spawn = Teleport:addButton("Spawn", function(tp)
@@ -261,6 +309,8 @@ local tpEgg = eggstuff:addToggle("Teleport to Egg", false, function(on)
     if on then 
         tpToEggs = true
         if selectedEgg == "Infinity Egg" then
+            argspawn()
+            task.wait(1.5)
             task.spawn(function()
                 while tpToEggs do
                     tppos(-96, 10, -27)
@@ -268,6 +318,8 @@ local tpEgg = eggstuff:addToggle("Teleport to Egg", false, function(on)
                 end
             end)
         elseif selectedEgg == "Common Egg" then
+            argspawn()
+            task.wait(1.5)
             task.spawn(function()
                 while tpToEggs do
                     tppos(-7, 11, -82)
@@ -275,6 +327,8 @@ local tpEgg = eggstuff:addToggle("Teleport to Egg", false, function(on)
                 end
             end)
         elseif selectedEgg == "Spotted Egg" then
+            argspawn()
+            task.wait(1.5)
             task.spawn(function()
                 while tpToEggs do
                     tppos(-7, 11, -71)
@@ -282,6 +336,8 @@ local tpEgg = eggstuff:addToggle("Teleport to Egg", false, function(on)
                 end
             end)
         elseif selectedEgg == "Iceshard Egg" then
+            argspawn()
+            task.wait(1.5)
             task.spawn(function()
                 while tpToEggs do
                     tppos(-7, 11, -60)
@@ -289,6 +345,8 @@ local tpEgg = eggstuff:addToggle("Teleport to Egg", false, function(on)
                 end
             end)
         elseif selectedEgg == "Spikey Egg" then
+            argArea1()
+            task.wait(1.5)
             task.spawn(function()
                 while tpToEggs do
                     tppos(-8, 424, 158)
@@ -296,6 +354,8 @@ local tpEgg = eggstuff:addToggle("Teleport to Egg", false, function(on)
                 end
             end)
         elseif selectedEgg == "Magma Egg" then
+            argArea2()
+            task.wait(1.5)
             task.spawn(function()
                 while tpToEggs do
                     tppos(-17, 2666, 9)
@@ -303,6 +363,8 @@ local tpEgg = eggstuff:addToggle("Teleport to Egg", false, function(on)
                 end
             end)
         elseif selectedEgg == "Crystal Egg" then
+            argArea2()
+            task.wait(1.5)
             task.spawn(function()
                 while tpToEggs do
                     tppos(-19, 2666, 19)
@@ -310,6 +372,8 @@ local tpEgg = eggstuff:addToggle("Teleport to Egg", false, function(on)
                 end
             end)
         elseif selectedEgg == "Lunar Egg" then
+            argArea3()
+            task.wait(1.5)
             task.spawn(function()
                 while tpToEggs do
                     tppos(-58, 6865, 81)
@@ -317,6 +381,8 @@ local tpEgg = eggstuff:addToggle("Teleport to Egg", false, function(on)
                 end
             end)
         elseif selectedEgg == "Void Egg" then
+            argArea4()
+            task.wait(1.5)
             task.spawn(function()
                 while tpToEggs do
                     tppos(6, 10149, 188)
@@ -324,6 +390,8 @@ local tpEgg = eggstuff:addToggle("Teleport to Egg", false, function(on)
                 end
             end)
         elseif selectedEgg == "Hell Egg" then
+            argArea4()
+            task.wait(1.5)
             task.spawn(function()
                 while tpToEggs do
                     tppos(-6, 10149, 192)
@@ -331,6 +399,8 @@ local tpEgg = eggstuff:addToggle("Teleport to Egg", false, function(on)
                 end
             end)
         elseif selectedEgg == "Nightmare Egg" then
+            argArea4()
+            task.wait(1.5)
             task.spawn(function()
                 while tpToEggs do
                     tppos(-20, 10149, 184)
@@ -338,6 +408,8 @@ local tpEgg = eggstuff:addToggle("Teleport to Egg", false, function(on)
                 end
             end)
         elseif selectedEgg == "Rainbow Egg" then
+            argArea5()
+            task.wait(1.5)
             task.spawn(function()
                 while tpToEggs do
                     tppos(-35, 15974, 44)
