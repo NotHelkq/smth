@@ -150,7 +150,7 @@ local autocollectChests = AutoFarm:addToggle("Auto Claim Void/Giant Chest", fals
                     [2] = "Giant Chest"
                 }              
                 game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
-                task.wait(15)
+                task.wait(5)
             end
         end)
     else
@@ -233,10 +233,47 @@ end)
 
 
 
+local selectedEgg = nil
+local hatchingEggs = nil
+local Autoopeneggs = Window:addPage("Eggs", 5012544693)
+local eggstuff = Autoopeneggs:addSection("Hatch (You must be near egg!)")
+local egg = eggstuff:addDropdown("Eggs", {"0. Infinity Egg","1. Common Egg","2. Spotted Egg","3. Iceshard Egg","4. Spikey Egg","5. Magma Egg","6. Crystal Egg","7. Lunar Egg","8. Void Egg","9. Hell Egg","10. Nightmare Egg","11. Rainbow Egg"}, function(selected)
+    selectedEgg = selected
+end)
+local multiegg = eggstuff:addSlider("Open Amount", 1, 1, 6, function(multi)
+    hatchingEggs = multi
+end)
 
--- local Autoopeneggs = Window:addPage("Eggs", 5012544693)
--- local eggstuff = Misc:addSection("Auto Open Eggs")
--- local egg = 
+local openingEggs = false
+local openEgg = eggstuff:addToggle("Open Eggs", false, function(on)
+    if on then 
+        openingEggs = true
+        task.spawn(function()
+            while openingEggs do
+                task.wait(1)
+                -- nothing yet
+            end    
+        end)
+    else
+        openingEggs = false
+    end
+end)
+
+local tpToEggs = false
+local tpEgg = eggstuff:addToggle("Teleport to Egg", false, function(on)
+    if on then 
+        tpToEggs = true
+        task.spawn(function()
+            while tpToEggs do
+                task.wait(1)
+                -- nothing yet
+            end    
+        end)
+    else
+        tpToEggs = false
+    end
+end)
+
 
 
 local Misc = Window:addPage("Misc", 5012544693)
