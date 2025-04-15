@@ -4,7 +4,7 @@ if not game:IsLoaded() then
     print("Loaded Game")
 end
 
-print("v1.0.0.2")
+print("v1.0.0.3")
 
 local Player = game:GetService("Players").LocalPlayer
 
@@ -439,6 +439,50 @@ end)
 
 ---------------------------------
 
+local islandpos = nil
+local islandCheck = function(icheck)
+    local pos = workspace.Rendered.Rifts["golden-chest"].Chest.WorldPivot.Position 
+    local roundedPos = Vector3.new(
+        math.floor(pos.X + 0.5),
+        math.floor(pos.Y + 0.5),
+        math.floor(pos.Z + 0.5)
+    )
+    local y = pos.Y
+    local area = nil
+    if y >= 0 and y < 410 then
+        area = "a1"
+        argArea1()
+        task.wait(2)
+    elseif y >= 410 and y < 2650 then
+        area = "a2"
+        argArea2()
+        task.wait(2)
+    elseif y >= 2650 and y < 6850 then
+        area = "a3"
+        argArea3()
+        task.wait(2)
+    elseif y >= 6850 and y < 10130 then
+        area = "a4"
+        argArea4()
+        task.wait(2)
+    elseif y >= 10130 and y <= 15960 then
+        area = "a5"
+        argArea5()
+        task.wait(2)
+    else
+        area = nil
+    end
+
+    local x = pos.X
+    local y = pos.Y
+    local z = pos.Z
+    local islandpos = x, y, z
+
+    print("1st check : " .. islandpos)
+end
+
+print("2nd check : " .. islandpos)
+
 local Misc = Window:addPage("Misc", 5012544693)
 local miscstuff = Misc:addSection("Misc")
 local fpsboost = miscstuff:addButton("Boost FPS", function(fps)
@@ -518,50 +562,6 @@ local autoClaimTickets = miscstuff:addToggle("Auto Claim Wheel Spin", false, fun
         autotickets = false
     end
 end)
-
-local islandpos = nil
-local islandCheck = function(icheck)
-    local pos = workspace.Rendered.Rifts["golden-chest"].Chest.WorldPivot.Position 
-    local roundedPos = Vector3.new(
-        math.floor(pos.X + 0.5),
-        math.floor(pos.Y + 0.5),
-        math.floor(pos.Z + 0.5)
-    )
-    local y = pos.Y
-    local area = nil
-    if y >= 0 and y < 410 then
-        area = "a1"
-        argArea1()
-        task.wait(2)
-    elseif y >= 410 and y < 2650 then
-        area = "a2"
-        argArea2()
-        task.wait(2)
-    elseif y >= 2650 and y < 6850 then
-        area = "a3"
-        argArea3()
-        task.wait(2)
-    elseif y >= 6850 and y < 10130 then
-        area = "a4"
-        argArea4()
-        task.wait(2)
-    elseif y >= 10130 and y <= 15960 then
-        area = "a5"
-        argArea5()
-        task.wait(2)
-    else
-        area = nil
-    end
-
-    local x = pos.X
-    local y = pos.Y
-    local z = pos.Z
-    local islandpos = x, y, z
-
-    print("1st check : " .. islandpos)
-end
-
-print("2nd check : " .. islandpos)
 
 local autoGoldenChest = false
 local autogChest = miscstuff:addToggle("Auto Open Golden Chest", false, function(on)
