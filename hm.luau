@@ -16,7 +16,7 @@ end
 
 local tppos = function(x, y, z)
 	local r = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-	if r then game:GetService("TweenService"):Create(r, TweenInfo.new(10), {CFrame = CFrame.new(x, y, z)}):Play() end
+	if r then game:GetService("TweenService"):Create(r, TweenInfo.new(5), {CFrame = CFrame.new(x, y, z)}):Play() end
 end
 
 local enchantments = {
