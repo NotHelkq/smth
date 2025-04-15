@@ -107,14 +107,16 @@ local autocollectChests = AutoFarm:addToggle("Auto Claim Void/Giant Chest", fals
             while autoChests do
                 local args = {
                     [1] = "ClaimChest",
-                    [2] = "Void Chest"
-                }              
+                    [2] = "Void Chest",
+                    [3] = true
+                }
                 game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
                 task.wait(1)
                 local args = {
                     [1] = "ClaimChest",
-                    [2] = "Giant Chest"
-                }              
+                    [2] = "Giant Chest",
+                    [3] = true
+                }
                 game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
                 task.wait(5)
             end
@@ -137,12 +139,34 @@ local autoBuyAlien = AutoFarm:addToggle("Auto Buy Alien Merchant", false, functi
                         [3] = i
                     }
                     game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
-                    task.wait(3)
+                    task.wait(0.75)
                 end              
             end
         end)
     else
         autoAlienShop = false
+    end
+end)
+
+local autoshardShop = false
+local autoBuyShard = AutoFarm:addToggle("Auto Buy Alien Merchant", false, function(on)
+    if on then
+        autoshardShop = true
+        task.spawn(function()
+            while autoshardShop do
+                for i = 1, 3 do
+                    local args = {
+                        [1] = "BuyShopItem",
+                        [2] = "shard-shop",
+                        [3] = i
+                    }
+                    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+                    task.wait(1.5)
+                end              
+            end
+        end)
+    else
+        autoshardShop = false
     end
 end)
 
