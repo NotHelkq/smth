@@ -15,7 +15,7 @@ local tppos = function(x, y, z)
 end
 
 TeleportService = game:GetService("TeleportService")
-local serverhop = function(
+local function serverhop()
     if httprequest then
 		local servers = {}
 		local req = httprequest({Url = string.format("https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=Desc&limit=100", PlaceId)})
@@ -33,7 +33,7 @@ local serverhop = function(
 			return print("Serverhop", "Couldn't find a server.")
 		end
 	end
-end)
+end
 
 local egglist = {
     "Infinity Egg",
