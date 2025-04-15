@@ -16,7 +16,7 @@ end
 
 local tppos = function(x, y, z)
 	local r = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-	if r then game:GetService("TweenService"):Create(r, TweenInfo.new(5), {CFrame = CFrame.new(x, y, z)}):Play() end
+	if r then game:GetService("TweenService"):Create(r, TweenInfo.new(10), {CFrame = CFrame.new(x, y, z)}):Play() end
 end
 
 local enchantments = {
@@ -53,6 +53,11 @@ local Window = library.new()
 
 local Main = Window:addPage("Auto Farm", 5012544693)
 local AutoFarm = Main:addSection("Auto Farm")
+
+local autoCollectCoins = AutoFarm:addButton("Auto Collect Coins/Gems", function(cg)
+    local c = require(game:GetService("ReplicatedStorage").Shared.Constants)
+    c.DefaultPickupRadius = 9999999999999999999999
+end)
 
 local autochewbubble = false
 local autobubble = AutoFarm:addToggle("Auto Bubble", false, function(on)
@@ -91,35 +96,6 @@ local autosellbubble = AutoFarm:addToggle("Auto Sell Bubble", false, function(on
         end)
     else
         autoSellBubbles = false
-    end
-end)
-
-local coinsCollected = 0
-local autoPickupCoins = false
-local pickables = game:GetService('Workspace').Rendered:GetChildren()[12]
-local autoCollectCoins = AutoFarm:addToggle("Auto Collect Coins/Gems", false, function(on)
-    if on then
-        autoPickupCoins = true
-        print("Auto Collect Coins turned on")
-        task.spawn(function()
-            while autoPickupCoins do
-                for _, v in next, pickables:GetChildren() do
-                    if v:IsA("Model") then
-                        local part = v:FindFirstChildWhichIsA("Part") or v:FindFirstChildWhichIsA("MeshPart")
-                        if part then
-                            game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.CFrame = part.CFrame
-                            task.wait(0.15)
-                        end
-                    end
-                end
-                task.wait(1)
-                coinsCollected = coinsCollected + 1
-                print(" Collected Coins : " .. coinsCollected)
-            end
-        end)
-    else
-        autoPickupCoins = false
-        print("Auto Collect Coins turned off")
     end
 end)
 
@@ -272,7 +248,7 @@ end)
 
 
 local selectedEgg = nil
-local hatchingEggs = 1
+local hatchingEggs = nil
 local Autoopeneggs = Window:addPage("Eggs", 5012544693)
 local eggstuff = Autoopeneggs:addSection("Hatch (You must be near egg!)")
 local egg = eggstuff:addDropdown("Eggs", {"Infinity Egg","Common Egg","Spotted Egg","Iceshard Egg","Spikey Egg","Magma Egg","Crystal Egg","Lunar Egg","Void Egg","Hell Egg","Nightmare Egg","Rainbow Egg"}, function(selected)
