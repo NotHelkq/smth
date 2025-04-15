@@ -4,6 +4,8 @@ if not game:IsLoaded() then
     print("Loaded Game")
 end
 
+print("v1.0.0.1")
+
 local Player = game:GetService("Players").LocalPlayer
 
 Player.Idled:connect(function()
