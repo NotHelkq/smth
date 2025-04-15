@@ -504,6 +504,7 @@ local autoClaimTickets = miscstuff:addToggle("Auto Claim Wheel Spin", false, fun
                     [1] = "ClaimFreeWheelSpin"
                 }
                 game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+                task.wait(5)
             end
         end)
     else
