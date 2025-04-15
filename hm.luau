@@ -1,4 +1,8 @@
-wait(3)
+if not game:IsLoaded() then
+    print("Waiting for game to load...")
+    game.Loaded:Wait()
+    print("Loaded Game")
+end
 
 local Player = game:GetService("Players").LocalPlayer
 
@@ -149,7 +153,7 @@ local autoBuyAlien = AutoFarm:addToggle("Auto Buy Alien Merchant", false, functi
 end)
 
 local autoshardShop = false
-local autoBuyShard = AutoFarm:addToggle("Auto Buy Alien Merchant", false, function(on)
+local autoBuyShard = AutoFarm:addToggle("Auto Buy Black Market", false, function(on)
     if on then
         autoshardShop = true
         task.spawn(function()
@@ -490,6 +494,23 @@ local autoRewards = miscstuff:addToggle("Auto Claim Playtime Rewards", false, fu
     end
 end)
 
+local autotickets = false
+local autoClaimTickets = miscstuff:addToggle("Auto Claim Wheel Spin", false, function(on)
+    if on then
+        autotickets = true
+        task.spawn(function()
+            while autotickets do
+                local args = {
+                    [1] = "ClaimFreeWheelSpin"
+                }
+                game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+            end
+        end)
+    else
+        autotickets = false
+    end
+end)
+
 local automystery = false
 local autombox = miscstuff:addToggle("Auto Open Mystery Box", false, function(on)
     if on then
@@ -538,11 +559,5 @@ Window:SelectPage(Window.pages[1], true)
 --     [2] = "golden-chest"
 -- }
 -- game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
-    
--- local args = {
---     [1] = "ClaimFreeWheelSpin"
--- }
--- game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
-
 
 -- workspace.Rendered.Rifts["golden-chest"].Chest
