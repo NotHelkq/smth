@@ -557,7 +557,7 @@ local autoClaimTickets = miscstuff:addToggle("Auto Claim Wheel Spin", false, fun
 end)
 
 local autoGoldenChest = false
-local autogChest = miscstuff:addToggle("Auto Open Golden Chest", false, function(on)
+local autogChest = miscstuff:addToggle("Auto Open Golden Chest (Broken)", false, function(on)
     if on then
         autoGoldenChest = true
         task.spawn(function()
@@ -586,7 +586,7 @@ local autogChest = miscstuff:addToggle("Auto Open Golden Chest", false, function
 end)
 
 local automystery = false
-local autombox = miscstuff:addToggle("Auto Open Mystery Box", false, function(on)
+local autombox = miscstuff:addToggle("Auto Open Mystery Box (Not auto yet)", false, function(on)
     if on then
         automystery = true
         task.spawn(function()
