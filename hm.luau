@@ -9,9 +9,14 @@ Player.Idled:connect(function()
 end)
 
 local connections = {};
-local tppos = function(x, y, z)
+local ttppos = function(x, y, z)
 	local r = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
 	if r then game:GetService("TweenService"):Create(r, TweenInfo.new(3), {CFrame = CFrame.new(x, y, z)}):Play() end
+end
+
+local tppos = function(x, y, z)
+	local r = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+	if r then game:GetService("TweenService"):Create(r, TweenInfo.new(1), {CFrame = CFrame.new(x, y, z)}):Play() end
 end
 
 local egglist = {
@@ -263,78 +268,93 @@ local tpToEggs = false
 local tpEgg = eggstuff:addToggle("Teleport to Egg", false, function(on)
     if on then 
         tpToEggs = true
-        if selectedEgg = "0. Infinity Egg" then
+        if selectedEgg == "0. Infinity Egg" then
             task.spawn(function()
                 while tpToEggs do
                     tppos(-96, 10, -27)
                     task.wait(1)
+                end
             end)
-        elseif selectedEgg = "1. Common Egg" then
+        elseif selectedEgg == "1. Common Egg" then
             task.spawn(function()
                 while tpToEggs do
                     tppos(-7, 11, -82)
                     task.wait(1)
+                end
             end)
-        elseif selectedEgg = "2. Spotted Egg" then
+        elseif selectedEgg == "2. Spotted Egg" then
             task.spawn(function()
                 while tpToEggs do
                     tppos(-7, 11, -71)
                     task.wait(1)
+                end
             end)
-        elseif selectedEgg = "3. Iceshard Egg" then
+        elseif selectedEgg == "3. Iceshard Egg" then
             task.spawn(function()
                 while tpToEggs do
                     tppos(-7, 11, -60)
                     task.wait(1)
+                end
             end)
-        elseif selectedEgg = "4. Spikey Egg" then
+        elseif selectedEgg == "4. Spikey Egg" then
             task.spawn(function()
                 while tpToEggs do
                     tppos(-8, 424, 158)
                     task.wait(1)
+                end
             end)
-        elseif selectedEgg = "5. Magma Egg" then
+        elseif selectedEgg == "5. Magma Egg" then
             task.spawn(function()
                 while tpToEggs do
                     tppos(-17, 2666, 9)
                     task.wait(1)
+                end
             end)
-        elseif selectedEgg = "6. Crystal Egg" then
+        elseif selectedEgg == "6. Crystal Egg" then
             task.spawn(function()
                 while tpToEggs do
                     tppos(-19, 2666, 19)
                     task.wait(1)
+                end
             end)
-        elseif selectedEgg = "7. Lunar Egg" then
+        elseif selectedEgg == "7. Lunar Egg" then
             task.spawn(function()
                 while tpToEggs do
                     tppos(-58, 6865, 81)
                     task.wait(1)
+                end
             end)
-        elseif selectedEgg = "8. Void Egg" then
+        elseif selectedEgg == "8. Void Egg" then
             task.spawn(function()
                 while tpToEggs do
                     tppos(6, 10149, 188)
                     task.wait(1)
+                end
             end)
-        elseif selectedEgg = "9. Hell Egg" then
+        elseif selectedEgg == "9. Hell Egg" then
             task.spawn(function()
                 while tpToEggs do
                     tppos(-6, 10149, 192)
                     task.wait(1)
+                end
             end)
-        elseif selectedEgg = "10. Nightmare Egg" then
+        elseif selectedEgg == "10. Nightmare Egg" then
             task.spawn(function()
                 while tpToEggs do
                     tppos(-20, 10149, 184)
                     task.wait(1)
+                end
             end)
-        elseif selectedEgg = "11. Rainbow Egg" then
+        elseif selectedEgg == "11. Rainbow Egg" then
             task.spawn(function()
                 while tpToEggs do
                     tppos(-35, 15974, 44)
                     task.wait(1)
+                end
             end)
+        else
+            print("Egg is not selected")
+            task.wait(1w)
         end
     else
         tpToEggs = false
@@ -346,15 +366,15 @@ end)
 local Misc = Window:addPage("Misc", 5012544693)
 local miscstuff = Misc:addSection("Misc")
 local allAreas = miscstuff:addButton("Unlock All Areas", function(tp)
-    tppos(-16, 423, 143)
+    ttppos(-16, 423, 143)
     task.wait(3)
-    tppos(42, 2663, -6)
+    ttppos(42, 2663, -6)
     task.wait(3)
-    tppos(-78, 6862, 88)
+    ttppos(-78, 6862, 88)
     task.wait(3)
-    tppos(16, 10146, 152)
+    ttppos(16, 10146, 152)
     task.wait(3)
-    tppos(36, 15972, 42)
+    ttppos(36, 15972, 42)
     task.wait(3)
 end)
 
@@ -420,29 +440,18 @@ Window:SelectPage(Window.pages[1], true)
 
 
 
-workspace.Rendered.Gifts
+-- workspace.Rendered.Gifts
 
-local args = {
-    [1] = "UnlockRiftChest",
-    [2] = "golden-chest"
-}
-game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+-- local args = {
+--     [1] = "UnlockRiftChest",
+--     [2] = "golden-chest"
+-- }
+-- game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
     
-local args = {
-    [1] = "ClaimFreeWheelSpin"
-}
-game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+-- local args = {
+--     [1] = "ClaimFreeWheelSpin"
+-- }
+-- game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
 
 
--- Rainbow egg = -35, 15974, 44
--- Nightmare egg = -20, 10149, 184
--- Hell egg = -6, 10149, 192
--- Void egg = 6, 10149, 188
--- Lunar egg = -58, 6865, 81
--- Crystal egg = -19, 2666, 19
--- Magma egg = -17, 2666, 9
--- Spikey egg = -8, 424, 158
--- Iceshard egg = -7, 11, -60
--- Spotted egg = -7, 11, -71
--- Common egg = -7, 11, -82
--- Infinity egg = -96, 10, -27
+-- workspace.Rendered.Rifts["golden-chest"].Chest
