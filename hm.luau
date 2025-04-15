@@ -272,7 +272,7 @@ end)
 
 
 local selectedEgg = nil
-local hatchingEggs = nil
+local hatchingEggs = 1
 local Autoopeneggs = Window:addPage("Eggs", 5012544693)
 local eggstuff = Autoopeneggs:addSection("Hatch (You must be near egg!)")
 local egg = eggstuff:addDropdown("Eggs", {"Infinity Egg","Common Egg","Spotted Egg","Iceshard Egg","Spikey Egg","Magma Egg","Crystal Egg","Lunar Egg","Void Egg","Hell Egg","Nightmare Egg","Rainbow Egg"}, function(selected)
