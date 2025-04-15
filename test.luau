@@ -4,7 +4,7 @@ if not game:IsLoaded() then
     print("Loaded Game")
 end
 
-print("v1.0.0.32")
+print("v1.0.0.33")
 
 local Player = game:GetService("Players").LocalPlayer
 
@@ -478,8 +478,6 @@ local islandCheck = function(icheck)
     print("1st check : " .. islandpos)
 end
 
-print("2nd check : " .. islandpos)
-
 local Misc = Window:addPage("Misc", 5012544693)
 local miscstuff = Misc:addSection("Misc")
 local fpsboost = miscstuff:addButton("Boost FPS", function(fps)
@@ -571,7 +569,7 @@ local autogChest = miscstuff:addToggle("Auto Open Golden Chest", false, function
                 if chest and goldenKey then
                     islandCheck()
                     tppos(islandpos)
-                    print("3rd check : " .. islandpos)
+                    print("2nd check : " .. islandpos)
                     local args = {
                         [1] = "UnlockRiftChest",
                         [2] = "golden-chest"
