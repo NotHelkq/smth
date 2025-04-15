@@ -1,4 +1,4 @@
-wait(3)
+wait(1)
 
 local Player = game:GetService("Players").LocalPlayer
 
@@ -12,27 +12,6 @@ local connections = {};
 local tppos = function(x, y, z)
 	local r = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
 	if r then game:GetService("TweenService"):Create(r, TweenInfo.new(3), {CFrame = CFrame.new(x, y, z)}):Play() end
-end
-
-TeleportService = game:GetService("TeleportService")
-local function serverhop()
-    if httprequest then
-		local servers = {}
-		local req = httprequest({Url = string.format("https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=Desc&limit=100", PlaceId)})
-		local body = HttpService:JSONDecode(req.Body)
-		if body and body.data then
-			for i, v in next, body.data do
-				if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.id ~= JobId then
-					table.insert(servers, 1, v.id)
-				end
-			end
-		end
-		if #servers > 0 then
-			TeleportService:TeleportToPlaceInstance(PlaceId, servers[math.random(1, #servers)], game:GetService("Players").LocalPlayer)
-		else
-			return print("Serverhop", "Couldn't find a server.")
-		end
-	end
 end
 
 local egglist = {
@@ -254,9 +233,10 @@ end)
 
 
 
--- local Autoopeneggs = Window:addPage("Eggs", 5012544693)
--- local eggstuff = Misc:addSection("Auto Open Eggs")
--- local egg = 
+
+local Autoopeneggs = Window:addPage("Eggs", 5012544693)
+local eggstuff = Misc:addSection("Auto Open Eggs")
+local egg = 
 
 
 local Misc = Window:addPage("Misc", 5012544693)
@@ -275,7 +255,24 @@ local allAreas = miscstuff:addButton("Unlock All Areas", function(tp)
 end)
 
 local sHop = miscstuff:addButton("Server Hop", function(tp)
-    serverhop()
+    TeleportService = game:GetService("TeleportService")
+    if httprequest then
+		local servers = {}
+		local req = httprequest({Url = string.format("https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=Desc&limit=100", PlaceId)})
+		local body = HttpService:JSONDecode(req.Body)
+		if body and body.data then
+			for i, v in next, body.data do
+				if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.id ~= JobId then
+					table.insert(servers, 1, v.id)
+				end
+			end
+		end
+		if #servers > 0 then
+			TeleportService:TeleportToPlaceInstance(PlaceId, servers[math.random(1, #servers)], game:GetService("Players").LocalPlayer)
+		else
+			return print("Serverhop", "Couldn't find a server.")
+		end
+	end
 end)
 
 local autoPlaytime = false
