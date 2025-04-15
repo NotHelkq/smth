@@ -4,7 +4,7 @@ if not game:IsLoaded() then
     print("Loaded Game")
 end
 
-print("v1.0.0.1")
+print("v1.0.0.2")
 
 local Player = game:GetService("Players").LocalPlayer
 
@@ -439,44 +439,6 @@ end)
 
 ---------------------------------
 
-local islandCheck = function(icheck)
-    local pos = workspace.Rendered.Rifts["golden-chest"].Chest.WorldPivot.Position 
-    local roundedPos = Vector3.new(
-        math.floor(pos.X + 0.5),
-        math.floor(pos.Y + 0.5),
-        math.floor(pos.Z + 0.5)
-    )
-    local y = pos.Y
-    local area = nil
-    if y >= 0 and y < 410 then
-        area = "a1"
-        argArea1()
-        task.wait(2)
-    elseif y >= 410 and y < 2650 then
-        area = "a2"
-        argArea2()
-        task.wait(2)
-    elseif y >= 2650 and y < 6850 then
-        area = "a3"
-        argArea3()
-        task.wait(2)
-    elseif y >= 6850 and y < 10130 then
-        area = "a4"
-        argArea4()
-        task.wait(2)
-    elseif y >= 10130 and y <= 15960 then
-        area = "a5"
-        argArea5()
-        task.wait(2)
-    else
-        area = nil
-    end
-
-    print("Island is near area:", area)
-    tppos(roundedPos)
-    print(roundedPos)
-end
-
 local Misc = Window:addPage("Misc", 5012544693)
 local miscstuff = Misc:addSection("Misc")
 local fpsboost = miscstuff:addButton("Boost FPS", function(fps)
@@ -557,6 +519,50 @@ local autoClaimTickets = miscstuff:addToggle("Auto Claim Wheel Spin", false, fun
     end
 end)
 
+local islandpos = nil
+local islandCheck = function(icheck)
+    local pos = workspace.Rendered.Rifts["golden-chest"].Chest.WorldPivot.Position 
+    local roundedPos = Vector3.new(
+        math.floor(pos.X + 0.5),
+        math.floor(pos.Y + 0.5),
+        math.floor(pos.Z + 0.5)
+    )
+    local y = pos.Y
+    local area = nil
+    if y >= 0 and y < 410 then
+        area = "a1"
+        argArea1()
+        task.wait(2)
+    elseif y >= 410 and y < 2650 then
+        area = "a2"
+        argArea2()
+        task.wait(2)
+    elseif y >= 2650 and y < 6850 then
+        area = "a3"
+        argArea3()
+        task.wait(2)
+    elseif y >= 6850 and y < 10130 then
+        area = "a4"
+        argArea4()
+        task.wait(2)
+    elseif y >= 10130 and y <= 15960 then
+        area = "a5"
+        argArea5()
+        task.wait(2)
+    else
+        area = nil
+    end
+
+    local x = pos.X
+    local y = pos.Y
+    local z = pos.Z
+    local islandpos = x, y, z
+
+    print("1st check : " .. islandpos)
+end
+
+print("2nd check : " .. islandpos)
+
 local autoGoldenChest = false
 local autogChest = miscstuff:addToggle("Auto Open Golden Chest", false, function(on)
     if on then
@@ -567,6 +573,8 @@ local autogChest = miscstuff:addToggle("Auto Open Golden Chest", false, function
                 local goldenKey = game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Inventory.Frame.Inner.Items.Main.ScrollingFrame.Powerups.Items:FindFirstChild("Golden Key")
                 if chest and goldenKey then
                     islandCheck()
+                    tppos(islandpos)
+                    print("3rd check : " .. islandpos)
                     local args = {
                         [1] = "UnlockRiftChest",
                         [2] = "golden-chest"
@@ -624,9 +632,5 @@ end)
 Window:SelectPage(Window.pages[1], true)
 
 -- workspace.Rendered.Gifts
-
-
-
-
 
 -- game:GetService("ReplicatedStorage").Assets.Rifts["royal-chest"].Chest
