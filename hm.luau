@@ -19,21 +19,6 @@ local tppos = function(x, y, z)
 	if r then game:GetService("TweenService"):Create(r, TweenInfo.new(1), {CFrame = CFrame.new(x, y, z)}):Play() end
 end
 
-local egglist = {
-    "Infinity Egg",
-    "Common Egg",
-    "Spotted Egg",
-    "Iceshard Egg",
-    "Spikey Egg",
-    "Magma Egg",
-    "Crystal Egg",
-    "Lunar Egg",
-    "Void Egg",
-    "Hell Egg",
-    "Nightmare Egg",
-    "Rainbow Egg"
-}
-
 local enchantments = {
     "⚡ Team Up I",
     "⚡ Team Up II",
