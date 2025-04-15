@@ -4,7 +4,7 @@ if not game:IsLoaded() then
     print("Loaded Game")
 end
 
-print("v1.0.0.33")
+print("v1.0.0.34")
 
 local Player = game:GetService("Players").LocalPlayer
 
@@ -440,42 +440,39 @@ end)
 ---------------------------------
 
 local islandpos = nil
-local islandCheck = function(icheck)
+local function islandCheck(iCheck)
     local pos = workspace.Rendered.Rifts["golden-chest"].Chest.WorldPivot.Position 
     local roundedPos = Vector3.new(
         math.floor(pos.X + 0.5),
         math.floor(pos.Y + 0.5),
         math.floor(pos.Z + 0.5)
-    )
+    ) 
     local y = pos.Y
     local area = nil
     if y >= 0 and y < 410 then
         area = "a1"
         argArea1()
-        task.wait(2)
     elseif y >= 410 and y < 2650 then
         area = "a2"
         argArea2()
-        task.wait(2)
     elseif y >= 2650 and y < 6850 then
         area = "a3"
         argArea3()
-        task.wait(2)
     elseif y >= 6850 and y < 10130 then
         area = "a4"
         argArea4()
-        task.wait(2)
     elseif y >= 10130 and y <= 15960 then
         area = "a5"
         argArea5()
-        task.wait(2)
     else
         area = nil
+        print("Position not within defined area ranges.")
     end
-
+    if area ~= nil then
+        task.wait(2)
+    end
     islandpos = Vector3.new(pos.X, pos.Y, pos.Z)
-
-    print("1st check : " .. islandpos)
+    print("Updated island position: " .. tostring(islandpos))
 end
 
 local Misc = Window:addPage("Misc", 5012544693)
