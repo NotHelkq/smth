@@ -14,7 +14,8 @@ local tppos = function(x, y, z)
 	if r then game:GetService("TweenService"):Create(r, TweenInfo.new(3), {CFrame = CFrame.new(x, y, z)}):Play() end
 end
 
-local serverhop = function()
+TeleportService = game:GetService("TeleportService")
+local serverhop = function(
     if httprequest then
 		local servers = {}
 		local req = httprequest({Url = string.format("https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=Desc&limit=100", PlaceId)})
@@ -27,12 +28,12 @@ local serverhop = function()
 			end
 		end
 		if #servers > 0 then
-			TeleportService:TeleportToPlaceInstance(PlaceId, servers[math.random(1, #servers)], Players.LocalPlayer)
+			TeleportService:TeleportToPlaceInstance(PlaceId, servers[math.random(1, #servers)], game:GetService("Players").LocalPlayer)
 		else
-			return notify("Serverhop", "Couldn't find a server.")
+			return print("Serverhop", "Couldn't find a server.")
 		end
 	end
-end
+end)
 
 local egglist = {
     "Infinity Egg",
