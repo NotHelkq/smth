@@ -4,7 +4,7 @@ if not game:IsLoaded() then
     print("Loaded Game")
 end
 
-print("v1.0.0.35")
+print("v1.0.0.0")
 
 local Player = game:GetService("Players").LocalPlayer
 
@@ -548,6 +548,7 @@ local autoClaimTickets = miscstuff:addToggle("Auto Claim Wheel Spin", false, fun
                     [1] = "ClaimFreeWheelSpin"
                 }
                 game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+                task.wait(5)
             end
         end)
     else
@@ -624,5 +625,4 @@ end)
 Window:SelectPage(Window.pages[1], true)
 
 -- workspace.Rendered.Gifts
-
 -- game:GetService("ReplicatedStorage").Assets.Rifts["royal-chest"].Chest
