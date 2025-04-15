@@ -4,7 +4,7 @@ if not game:IsLoaded() then
     print("Loaded Game")
 end
 
-print("v1.0.0")
+print("v1.0.01")
 
 local Player = game:GetService("Players").LocalPlayer
 
@@ -469,6 +469,7 @@ local islandCheck = function(icheck)
 
     print("Island is near area:", area)
     tppos(pos)
+    print(pos)
 end
 
 local Misc = Window:addPage("Misc", 5012544693)
