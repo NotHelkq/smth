@@ -4,7 +4,7 @@ if not game:IsLoaded() then
     print("Loaded Game")
 end
 
-print("v1.0.0.31")
+print("v1.0.0.32")
 
 local Player = game:GetService("Players").LocalPlayer
 
@@ -473,10 +473,7 @@ local islandCheck = function(icheck)
         area = nil
     end
 
-    local x = pos.X
-    local y = pos.Y
-    local z = pos.Z
-    local islandpos = x, y, z
+    islandpos = Vector3.new(pos.X, pos.Y, pos.Z)
 
     print("1st check : " .. islandpos)
 end
