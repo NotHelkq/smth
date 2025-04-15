@@ -47,7 +47,7 @@ local potions = {
     "Mythic"
 }
 
-local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/JennyLib"))()
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/idk.luau"))()
 
 local Window = library.new()
 
