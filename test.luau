@@ -4,7 +4,7 @@ if not game:IsLoaded() then
     print("Loaded Game")
 end
 
-print("v1.0.0")
+print("v1.0.10")
 
 local Player = game:GetService("Players").LocalPlayer
 
@@ -449,6 +449,24 @@ end)
 
 ---------------------------------
 
+local function clickNearIcon(iconPath, clickCount)
+    local icon = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild(iconPath, true)
+
+    if icon and icon.Visible then
+        for i = 1, clickCount do
+            local iconPosition = icon.AbsolutePosition
+            local x = iconPosition.X 
+            local y = iconPosition.Y - 140 
+            mousemoveabs(x, y)
+            mouse1click()
+            wait(0.25)
+        end
+        print(clickCount .. " clicks performed near the icon!")
+    else
+        print("The icon is either not visible or not found!")
+    end
+end
+
 local function checkGiftsFolder(folderPath)
     local giftsFolder = folderPath
     
@@ -669,7 +687,7 @@ local autombox = miscstuff:addToggle("Auto Open Mystery Box (Not auto yet)", fal
                 end                 
                 task.wait(3)
                 if not mBoxOpened and checkGiftsFolder(workspace.Rendered.Gifts) then
-                    -- click 10 times
+                    clickNearIcon("ScreenGui.Buffs.Shiny.Button.Icon", 10)
                     task.wait(0.25)
                     mBoxOpened = true
                 end
