@@ -625,7 +625,8 @@ local autombox = miscstuff:addToggle("Auto Open Mystery Box (Not auto yet)", fal
                 game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))                    
                 task.wait(5)
                 if checkGiftsFolder(workspace.Rendered.Gifts) then
-
+                    print("nothing yet")
+                end
             end
         end)
     else
@@ -644,22 +645,22 @@ end)
 SetSec2:addButton("Kill Hub", function()
 	for i,v in pairs(connections) do
 		v:Disconnect();
-            autochewbubble = false
-            autoSellBubbles = false
-            autoChests = false
-            autoAlienShop = false
-            autoshardShop = false
-            openingEggs = false
-            tpToEggs = false
-            autoPlaytime = false
-            autotickets = false
-            autoGoldenChest = false
-            islandChecked = false
-            automystery = false
-            selectedEgg = nil
-            selectedEnchant = nil
-            islandpos = nil
-            hatchingEggs = 1
+        autochewbubble = false
+        autoSellBubbles = false
+        autoChests = false
+        autoAlienShop = false
+        autoshardShop = false
+        openingEggs = false
+        tpToEggs = false
+        autoPlaytime = false
+        autotickets = false
+        autoGoldenChest = false
+        islandChecked = false
+        automystery = false
+        selectedEgg = nil
+        selectedEnchant = nil
+        islandpos = nil
+        hatchingEggs = 1
 	end
 	Window.container:Destroy()
 end)
