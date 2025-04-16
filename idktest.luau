@@ -1,5 +1,3 @@
-print("v1")
-
 local player = game.Players.LocalPlayer
 local mouse = player:GetMouse()
 
@@ -1981,17 +1979,26 @@ do
 				entries = entries + 1
 			end
 	
+			-- Define tuning variables
+			local visibleEntries = 5   -- how many entries to show before scrolling occurs
+			local baseHeight = 30      -- the minimum height (when no entries are present)
+			local entryHeight = 34     -- the assumed height of each entry
+			local extraPadding = 8     -- extra pixels to add (you can tweak this)
+
+			-- Adjust the dropdown list size based on the number of entries
 			local frame = dropdown.List.Frame
-			utility:Tween(dropdown, {Size = UDim2.new(1, 0, 0, (entries == 0 and 30) or math.clamp(entries, 0, 6) * 34 + 38)}, 0.3)
+			utility:Tween(dropdown, {
+				Size = UDim2.new(1, 0, 0, (entries == 0 and baseHeight) or math.clamp(entries, 0, visibleEntries) * entryHeight + extraPadding)
+			}, 0.3)
 			utility:Tween(dropdown.Search.Button, {Rotation = entries > 0 and 180 or 0}, 0.3)
-	
-			if entries > 6 then
+
+			if entries > visibleEntries then
 				for _, button in pairs(frame:GetChildren()) do
 					if button:IsA("ImageButton") then
 						button.Size = UDim2.new(1, -6, 0, 30)
 					end
 				end
-				frame.CanvasSize = UDim2.new(0, 0, 0, (entries * 34) - 4)
+				frame.CanvasSize = UDim2.new(0, 0, 0, (entries * entryHeight) - 4)
 				frame.ScrollBarImageTransparency = 0
 			else
 				frame.CanvasSize = UDim2.new(0, 0, 0, 0)
