@@ -4,7 +4,7 @@ if not game:IsLoaded() then
     print("Loaded Game")
 end
 
-print("v1.0.0")
+print("v1.0.1")
 
 local Player = game:GetService("Players").LocalPlayer
 
@@ -451,7 +451,6 @@ end)
 
 local function clickNearIcon(iconPath, clickCount)
     local icon = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild(iconPath, true)
-
     if icon and icon.Visible then
         for i = 1, clickCount do
             local iconPosition = icon.AbsolutePosition
@@ -462,26 +461,29 @@ local function clickNearIcon(iconPath, clickCount)
             wait(0.25)
         end
         print(clickCount .. " clicks performed near the icon!")
+        return true
     else
         print("The icon is either not visible or not found!")
+        return false
     end
 end
 
 local function checkGiftsFolder(folderPath)
-    local giftsFolder = folderPath
-    
-    if giftsFolder then
-        local children = giftsFolder:GetChildren()
+    if folderPath then
+        local children = folderPath:GetChildren()
         if #children > 0 then
-            print("Gifts found.")
+            print("Gifts found:")
             for _, child in ipairs(children) do
                 print("Object found: " .. child.Name)
             end
+            return true
         else
-            print("The Gifts doesnt exist")
+            print("No gifts found in the folder.")
+            return false
         end
     else
         print("The Gifts folder does not exist.")
+        return false
     end
 end
 
@@ -707,7 +709,6 @@ end)
 
 
 
-
 local Settings = Window:addPage("Settings", 5012544693)
 local SetSec2 = Settings:addSection("Others")
 
@@ -738,33 +739,30 @@ local fpsboost = SetSec2:addButton("Boost FPS", function(fps)
     loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/boost.luau"))()
 end)
 
-SetSec2:addKeybind("Toggle Hub", Enum.KeyCode.LeftControl, function()
-	Window:toggle()
-end)
 SetSec2:addButton("Kill Hub", function()
-	for i,v in pairs(connections) do
-		v:Disconnect();
-            mBoxOpened = true
-            autochewbubble = false
-            autoSellBubbles = false
-            autoChests = false
-            autoAlienShop = false
-            autoshardShop = false
-            openingEggs = false
-            tpToEggs = false
-            autoPlaytime = false
-            autotickets = false
-            autoGoldenChest = false
-            autoRoyalChest = false
-            royalChecked = false
-            goldenChecked = false
-            automystery = false
-            selectedEgg = nil
-            selectedEnchant = nil
-            islandpos = nil
-            hatchingEggs = 1
-	end
-	Window.container:Destroy()
-end)
+    for _, conn in pairs(connections) do
+        conn:Disconnect()
+    end
 
-Window:SelectPage(Window.pages[1], true)
+    autochewbubble   = false
+    autoSellBubbles  = false
+    autoChests       = false
+    autoAlienShop    = false
+    autoshardShop    = false
+    openingEggs      = false
+    tpToEggs         = false
+    autoPlaytime     = false
+    autotickets      = false
+    autoGoldenChest  = false
+    autoRoyalChest   = false
+    mBoxOpened       = true  
+    royalChecked     = false
+    goldenChecked    = false
+    automystery      = false
+    selectedEgg      = nil
+    selectedEnchant  = nil
+    islandpos        = nil
+    hatchingEggs     = 1
+
+    Window.container:Destroy()
+end)
