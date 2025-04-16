@@ -243,7 +243,7 @@ do
 						Font = Enum.Font.SourceSansSemibold,
 						Text = title or "Bubble Gum Simulator Infinity",
 						TextColor3 = themes.TextColor,
-						TextSize = 16,
+						TextSize = 14,
 						TextXAlignment = Enum.TextXAlignment.Center
 					})
 				}),
