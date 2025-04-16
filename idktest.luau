@@ -1,3 +1,5 @@
+print("v1")
+
 local player = game.Players.LocalPlayer
 local mouse = player:GetMouse()
 
@@ -243,7 +245,7 @@ do
 						Font = Enum.Font.SourceSansSemibold,
 						Text = title or "Bubble Gum Simulator Infinity",
 						TextColor3 = themes.TextColor,
-						TextSize = 14,
+						TextSize = 16,
 						TextXAlignment = Enum.TextXAlignment.Center
 					})
 				}),
@@ -1816,6 +1818,9 @@ do
 				ScaleType = Enum.ScaleType.Slice,
 				SliceCenter = Rect.new(2, 2, 298, 298)
 			}, {
+				utility:Create("UICorner", {    
+					CornerRadius = UDim.new(0, 5)
+				}),
 				utility:Create("TextBox", {
 					Name = "TextBox",
 					AnchorPoint = Vector2.new(0, 0.5),
@@ -1983,15 +1988,13 @@ do
 				end)
 				entries = entries + 1
 			end
-
+	
 			local frame = dropdown.List.Frame
-
-			utility:Tween(dropdown, {Size = UDim2.new(1, 0, 0, (entries == 0 and 30) or math.clamp(entries, 0, 5) * 34 + 38)}, 0.3)
-			utility:Tween(dropdown.Search.Button, {Rotation = list and 180 or 0}, 0.3)
+			utility:Tween(dropdown, {Size = UDim2.new(1, 0, 0, (entries == 0 and 30) or math.clamp(entries, 0, 6) * 34 + 38)}, 0.3)
+			utility:Tween(dropdown.Search.Button, {Rotation = entries > 0 and 180 or 0}, 0.3)
 	
-			if entries > 5 then
-	
-				for i, button in pairs(dropdown.List.Frame:GetChildren()) do
+			if entries > 6 then
+				for _, button in pairs(frame:GetChildren()) do
 					if button:IsA("ImageButton") then
 						button.Size = UDim2.new(1, -6, 0, 30)
 					end
@@ -2374,10 +2377,10 @@ do
 
 		local frame = dropdown.List.Frame
 
-		utility:Tween(dropdown, {Size = UDim2.new(1, 0, 0, (entries == 0 and 30) or math.clamp(entries, 0, 5) * 34 + 38)}, 0.3)
+		utility:Tween(dropdown, {Size = UDim2.new(1, 0, 0, (entries == 0 and 30) or math.clamp(entries, 0, 3) * 34 + 38)}, 0.3)
 		utility:Tween(dropdown.Search.Button, {Rotation = list and 180 or 0}, 0.3)
 
-		if entries > 5 then
+		if entries > 3 then
 
 			for i, button in pairs(dropdown.List.Frame:GetChildren()) do
 				if button:IsA("ImageButton") then
