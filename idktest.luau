@@ -1,3 +1,5 @@
+print("v1")
+
 local player = game.Players.LocalPlayer
 local mouse = player:GetMouse()
 
@@ -243,7 +245,7 @@ do
 						Font = Enum.Font.SourceSansSemibold,
 						Text = title or "Bubble Gum Simulator Infinity",
 						TextColor3 = themes.TextColor,
-						TextSize = 14,
+						TextSize = 16,
 						TextXAlignment = Enum.TextXAlignment.Center
 					})
 				}),
@@ -1954,7 +1956,7 @@ do
 						TextSize = 14,
 						TextXAlignment = Enum.TextXAlignment.Left,
 						TextTransparency = 0.1,
-					}),
+					})
 				})
 
 				optionButton.MouseButton1Click:Connect(function()
@@ -1990,7 +1992,7 @@ do
 			local frame = dropdown.List.Frame
 			utility:Tween(dropdown, {Size = UDim2.new(1, 0, 0, (entries == 0 and 30) or math.clamp(entries, 0, 6) * 34 + 38)}, 0.3)
 			utility:Tween(dropdown.Search.Button, {Rotation = entries > 0 and 180 or 0}, 0.3)
-
+	
 			if entries > 6 then
 				for _, button in pairs(frame:GetChildren()) do
 					if button:IsA("ImageButton") then
@@ -2003,6 +2005,7 @@ do
 				frame.CanvasSize = UDim2.new(0, 0, 0, 0)
 				frame.ScrollBarImageTransparency = 1
 			end
+		end
 	
 		updateMultiDropdown(allOptions)
 	
