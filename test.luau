@@ -671,12 +671,16 @@ local autombox = miscstuff:addToggle("Auto Open Mystery Box (Not auto yet)", fal
                 print("Mystery box used!")
                 task.wait(3)
                 if checkGiftsFolder(workspace.Rendered.Gifts) then
+                    local player = game:GetService("Players").LocalPlayer
+                    local chewingUI = player.PlayerGui.ScreenGui.HUD.Chewing
+                    local targetPosition = Vector2.new(chewingUI.AbsolutePosition.X, chewingUI.AbsolutePosition.Y - 20)
                     local virtualUser = game:GetService("VirtualUser")
                     for i = 1, 15 do
                         print("Click number: " .. i)
-                        virtualUser:Button1Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
-                        virtualUser:Button1Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
-                        task.wait(0.25) 
+                        virtualUser:Button1Down(targetPosition, workspace.CurrentCamera.CFrame)
+                        task.wait(0.1)
+                        virtualUser:Button1Up(targetPosition, workspace.CurrentCamera.CFrame)
+                        task.wait(0.25)
                     end
                 end
             end
