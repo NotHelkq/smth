@@ -4,10 +4,6 @@ if not game:IsLoaded() then
     print("Loaded Game")
 end
 
-local ver = "v1.0.0.0"
-
-print(ver)
-
 local Player = game:GetService("Players").LocalPlayer
 
 Player.Idled:connect(function()
@@ -731,7 +727,7 @@ local rtPart = game:GetService("Players").LocalPlayer.Character:FindFirstChild("
 local playerPos = rtPart.Position
 print(playerPos)
 
-local function findArea(pos)
+local function testfindArea(pos)
     local y = pos.Y
     local area = nil
     if y >= 0 and y < 410 then
@@ -758,11 +754,12 @@ local function findArea(pos)
     return area
 end
 
-local function goldenCheck()
+local function testgoldenCheck()
     local chest = workspace.Rendered.Rifts["golden-chest"]:FindFirstChild("Chest")
     if chest then
         local pos = chest.WorldPivot.Position
         goldenPos = Vector3.new(pos.X, pos.Y, pos.Z)
+        print("Golden Chest Position: X=" .. goldenPos.X .. ", Y=" .. goldenPos.Y .. ", Z=" .. goldenPos.Z)
     else
         print("Golden chest not found")
         goldenPos = nil
@@ -776,13 +773,14 @@ local tests = testing:addSection("Test")
 local autogChest = tests:addToggle("Auto Open Golden Chest", false, function(on)
     if on then
         autoGoldenChest = true
+        print("Golden Chest test turned on")
         task.spawn(function()
             while autoGoldenChest do
                 local gchest = workspace.Rendered.Rifts["golden-chest"]:FindFirstChild("Chest") 
                 local goldenKey = game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Inventory.Frame.Inner.Items.Main.ScrollingFrame.Powerups.Items:FindFirstChild("Golden Key")
-                if goldenChecked and gchest and goldenKey.Visible then
-                    goldenCheck()
-                    findArea()
+                if not goldenChecked and gchest and goldenKey.Visible then
+                    testgoldenCheck()
+                    testfindArea()
                     print("Golden Chest Position: X=" .. goldenPos.X .. ", Y=" .. goldenPos.Y .. ", Z=" .. goldenPos.Z)
                     tppos(goldenPos.X, playerPos.Y, goldenPos.Z)
                     task.wait(5)
@@ -808,13 +806,3 @@ local autogChest = tests:addToggle("Auto Open Golden Chest", false, function(on)
         goldenChecked = false 
     end
 end)
-
-
-
-
-
-
--- local function royalCheck(rCheck)
- --    local pos = workspace.Rendered.Rifts["royal-chest"].Chest.WorldPivot.Position 
- --    royalPos = Vector3.new(pos.X, pos.Y, pos.Z)
--- end
