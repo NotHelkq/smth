@@ -478,6 +478,7 @@ local function checkGiftsFolder(folderPath)
 end
 
 local function findArea(pos)
+    local pos = local pos = workspace.Rendered.Rifts["golden-chest"].Chest.WorldPivot.Position 
     local y = pos.Y
     local area = nil
     if y >= 0 and y < 410 then
@@ -727,48 +728,42 @@ local rtPart = game:GetService("Players").LocalPlayer.Character:FindFirstChild("
 local playerPos = rtPart.Position
 print(playerPos)
 
-local function testfindArea(pos)
-    local y = pos.Y
-    local area = nil
-    if y >= 0 and y < 410 then
-        area = "a0"
-        argArea1()
-    elseif y >= 410 and y < 2650 then
-        area = "a1"
-        argArea2()
-    elseif y >= 2650 and y < 6850 then
-        area = "a2"
-        argArea3()
-    elseif y >= 6850 and y < 10130 then
-        area = "a3"
-        argArea4()
-    elseif y >= 10130 and y <= 15960 then
-        area = "a4"
-        argArea5()
-    else
-        area = nil
+local testAreas = {
+    {min = 0,     max = 410,   func = argArea1},
+    {min = 410,   max = 2650,  func = argArea2},
+    {min = 2650,  max = 6850,  func = argArea3},
+    {min = 6850,  max = 10130, func = argArea4},
+    {min = 10130, max = 15961, func = argArea5}
+}
+
+local function testgChestfind(gpos)
+    local gpos = workspace.Rendered.Rifts["golden-chest"]:FindFirstChild("Chest")
+    local y = gpos.Y
+    for _, area in ipairs(areas) do
+        if y >= area.min and y < area.max then
+            area.func()
+            return
+        end
     end
-    if area ~= nil then
-        task.wait(2)
-    end
-    return area
+    goldenPos = Vector3.new(gpos.X, gpos.Y, gpos.Z)
+    print("Golden Chest Position: X=" .. goldenPos.X .. ", Y=" .. goldenPos.Y .. ", Z=" .. goldenPos.Z)
 end
 
-local function testgoldenCheck()
-    local chest = workspace.Rendered.Rifts["golden-chest"]:FindFirstChild("Chest")
-    if chest then
-        local pos = chest.WorldPivot.Position
-        goldenPos = Vector3.new(pos.X, pos.Y, pos.Z)
-        print("Golden Chest Position: X=" .. goldenPos.X .. ", Y=" .. goldenPos.Y .. ", Z=" .. goldenPos.Z)
-    else
-        print("Golden chest not found")
-        goldenPos = nil
+local function testrChestfind(rpos)
+    local rpos = workspace.Rendered.Rifts["royal-chest"]:FindFirstChild("Chest")
+    local y = gpos.Y
+    for _, area in ipairs(areas) do
+        if y >= area.min and y < area.max then
+            area.func()
+            return
+        end
     end
+    royalPos = Vector3.new(gpos.X, gpos.Y, gpos.Z)
+    print("Golden Chest Position: X=" .. royalPos.X .. ", Y=" .. royalPos.Y .. ", Z=" .. royalPos.Z)
 end
 
 local testing = Window:addPage("Test Features", 5012544693)
 local tests = testing:addSection("Test")
-
 
 local autogChest = tests:addToggle("Auto Open Golden Chest", false, function(on)
     if on then
