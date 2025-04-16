@@ -4,7 +4,7 @@ if not game:IsLoaded() then
     print("Loaded Game")
 end
 
-print("v1.1.0")
+print("v1.0.0")
 
 local Player = game:GetService("Players").LocalPlayer
 
@@ -453,26 +453,35 @@ end)
 
 ---------------------------------
 
-local function clickAboveIcon(iconPath, clickCount)
+local function getChildFromPath(root, path)
+    local current = root
+    for segment in string.gmatch(path, "([^%.]+)") do
+        current = current:WaitForChild(segment)
+        if not current then
+            return nil
+        end
+    end
+    return current
+end
+
+local function clickAboveIconFromPath(path, clickCount)
     local player = game:GetService("Players").LocalPlayer
     local playerGui = player:WaitForChild("PlayerGui")
-    local icon = playerGui:FindFirstChild(iconPath, true)
+    local icon = getChildFromPath(playerGui, path)
+    
     if not icon or not icon.Visible then
-        print("Icon not found or not visible.")
+        print("Icon '" .. path .. "' not found or not visible.")
         return false
     end
-
     local absPos = icon.AbsolutePosition
-    local absSize = icon.AbsoluteSize  
-
+    local absSize = icon.AbsoluteSize 
     local margin = 20
     local offsetY = absSize.Y * 2 + margin
     local clickX = absPos.X + absSize.X / 2
-    local clickY = absPos.Y - offsetY 
+    local clickY = absPos.Y - offsetY
 
     local vu = game:GetService("VirtualUser")
     vu:CaptureController()
-
     for i = 1, clickCount do
         vu:Button1Down(Vector2.new(clickX, clickY), workspace.CurrentCamera.CFrame)
         wait(0.05)
@@ -480,7 +489,7 @@ local function clickAboveIcon(iconPath, clickCount)
         wait(0.1)
     end
 
-    print(clickCount .. " clicks performed above the icons at (" .. clickX .. ", " .. clickY .. ")")
+    print(clickCount .. " clicks performed above the icon at (" .. clickX .. ", " .. clickY .. ")")
     return true
 end
 
@@ -694,35 +703,31 @@ local autombox = miscstuff:addToggle("Auto Open Mystery Box (Not auto yet)", fal
         automystery = true
         task.spawn(function()
             while automystery do
-                if mBoxOpened then
-                    local args = {
-                        [1] = "UseGift",
-                        [2] = "Mystery Box",
-                        [3] = 10
-                    }
-                    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
-                    mBoxOpened = false
-                    print("Mystery box used!")
-                end
+                local args = {
+                    [1] = "UseGift",
+                    [2] = "Mystery Box",
+                    [3] = 10
+                }
+                game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+                print("Mystery box used!")
                 task.wait(3)
-                if checkGiftsFolder(workspace.Rendered.Gifts) and not mBoxOpened then
-                    local iconClicked = clickAboveIcon("ScreenGui.Buffs.Shiny.Button.Icon", 15)
+                if checkGiftsFolder(workspace.Rendered.Gifts) then
+                    local iconClicked = clickAboveIconFromPath("ScreenGui.Buffs.Shiny.Button.Icon", 15)
                     if iconClicked then
-                        print("Clicked near the icon!")
+                        print("Clicked above the icon!")
                     else
-                        print("Failed to click near the icon.")
+                        print("Failed to click above the icon.")
                     end
-                    task.wait(0.25) 
-                    mBoxOpened = true 
+                else
+                    print("No gifts available to click!")
                 end
+                task.wait(0.25)
             end
         end)
     else
-        mBoxOpened = true
         automystery = false
     end
 end)
-
 
 
 local Settings = Window:addPage("Settings", 5012544693)
