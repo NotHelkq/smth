@@ -243,7 +243,7 @@ do
 						Font = Enum.Font.SourceSansSemibold,
 						Text = title or "Bubble Gum Simulator Infinity",
 						TextColor3 = themes.TextColor,
-						TextSize = 14,
+						TextSize = 16,
 						TextXAlignment = Enum.TextXAlignment.Center
 					})
 				}),
@@ -332,7 +332,7 @@ do
 			AutoButtonColor = false,
 			Font = Enum.Font.SourceSansSemibold,
 			Text = "",
-			TextSize = 14
+			TextSize = 16
 		}, {
 			utility:Create("TextLabel", {
 				Name = "Title",
@@ -344,7 +344,7 @@ do
 				Font = Enum.Font.SourceSansSemibold,
 				Text = title,
 				TextColor3 = themes.TextColor,
-				TextSize = 12,
+				TextSize = 14,
 				TextTransparency = 0.65,
 				TextXAlignment = Enum.TextXAlignment.Left
 			}),
@@ -409,7 +409,7 @@ do
 					Font = Enum.Font.SourceSansSemibold,
 					Text = title,
 					TextColor3 = themes.TextColor,
-					TextSize = 12,
+					TextSize = 14,
 					TextXAlignment = Enum.TextXAlignment.Left,
 					TextTransparency = 1
 				}),
@@ -555,7 +555,7 @@ do
 				ZIndex = 4,
 				Font = Enum.Font.SourceSansSemibold,
 				TextColor3 = themes.TextColor,
-				TextSize = 14.000,
+				TextSize = 16.000,
 				TextXAlignment = Enum.TextXAlignment.Left
 			}),
 			utility:Create("TextLabel", {
@@ -566,7 +566,7 @@ do
 				ZIndex = 4,
 				Font = Enum.Font.Gotham,
 				TextColor3 = themes.TextColor,
-				TextSize = 12.000,
+				TextSize = 14.000,
 				TextXAlignment = Enum.TextXAlignment.Left
 			}),
 			utility:Create("ImageButton", {
@@ -686,7 +686,7 @@ do
 				Font = Enum.Font.Gotham,
 				Text = title,
 				TextColor3 = themes.TextColor,
-				TextSize = 12,
+				TextSize = 14,
 				TextTransparency = 0.10000000149012
 			})
 		})
@@ -746,7 +746,7 @@ do
 				Font = Enum.Font.Gotham,
 				Text = title,
 				TextColor3 = themes.TextColor,
-				TextSize = 12,
+				TextSize = 14,
 				TextTransparency = 0.10000000149012,
 				TextXAlignment = Enum.TextXAlignment.Left
 			}),
@@ -818,7 +818,7 @@ do
 				Font = Enum.Font.Gotham,
 				Text = title,
 				TextColor3 = themes.TextColor,
-				TextSize = 12,
+				TextSize = 14,
 				TextTransparency = 0.10000000149012,
 				TextXAlignment = Enum.TextXAlignment.Left
 			}),
@@ -843,7 +843,7 @@ do
 					Font = Enum.Font.SourceSansSemibold,
 					Text = default or "",
 					TextColor3 = themes.TextColor,
-					TextSize = 11
+					TextSize = 14
 				})
 			})
 		})
@@ -925,7 +925,7 @@ do
 				Font = Enum.Font.Gotham,
 				Text = title,
 				TextColor3 = themes.TextColor,
-				TextSize = 12,
+				TextSize = 14,
 				TextTransparency = 0.10000000149012,
 				TextXAlignment = Enum.TextXAlignment.Left
 			}),
@@ -949,7 +949,7 @@ do
 					Font = Enum.Font.SourceSansSemibold,
 					Text = default and default.Name or "None",
 					TextColor3 = themes.TextColor,
-					TextSize = 11
+					TextSize = 14
 				})
 			})
 		})
@@ -1029,7 +1029,7 @@ do
 				Font = Enum.Font.Gotham,
 				Text = title,
 				TextColor3 = themes.TextColor,
-				TextSize = 12,
+				TextSize = 14,
 				TextTransparency = 0.10000000149012,
 				TextXAlignment = Enum.TextXAlignment.Left
 			}),
@@ -1070,7 +1070,7 @@ do
 				Font = Enum.Font.SourceSansSemibold,
 				Text = title,
 				TextColor3 = themes.TextColor,
-				TextSize = 14,
+				TextSize = 16,
 				TextXAlignment = Enum.TextXAlignment.Left
 			}),
 			utility:Create("ImageButton", {
@@ -1191,7 +1191,7 @@ do
 							Font = Enum.Font.Gotham,
 							Text = "R:",
 							TextColor3 = themes.TextColor,
-							TextSize = 10.000
+							TextSize = 12.000
 						}),
 						utility:Create("TextBox", {
 							Name = "Textbox",
@@ -1203,7 +1203,7 @@ do
 							PlaceholderColor3 = themes.DarkContrast,
 							Text = "255",
 							TextColor3 = themes.TextColor,
-							TextSize = 10.000
+							TextSize = 12.000
 						})
 					}),
 					utility:Create("ImageLabel", {
@@ -1225,7 +1225,7 @@ do
 							Font = Enum.Font.Gotham,
 							Text = "G:",
 							TextColor3 = themes.TextColor,
-							TextSize = 10.000
+							TextSize = 12.000
 						}),
 						utility:Create("TextBox", {
 							Name = "Textbox",
@@ -1236,7 +1236,7 @@ do
 							Font = Enum.Font.Gotham,
 							Text = "255",
 							TextColor3 = themes.TextColor,
-							TextSize = 10.000
+							TextSize = 12.000
 						})
 					}),
 					utility:Create("ImageLabel", {
@@ -1258,7 +1258,7 @@ do
 							Font = Enum.Font.Gotham,
 							Text = "B:",
 							TextColor3 = themes.TextColor,
-							TextSize = 10.000
+							TextSize = 12.000
 						}),
 						utility:Create("TextBox", {
 							Name = "Textbox",
@@ -1269,7 +1269,7 @@ do
 							Font = Enum.Font.Gotham,
 							Text = "255",
 							TextColor3 = themes.TextColor,
-							TextSize = 10.000
+							TextSize = 12.000
 						})
 					}),
 				}),
@@ -1292,7 +1292,7 @@ do
 						Font = Enum.Font.Gotham,
 						Text = "Submit",
 						TextColor3 = themes.TextColor,
-						TextSize = 11.000
+						TextSize = 12.000
 					})
 				})
 			})
@@ -1540,7 +1540,7 @@ do
 				Font = Enum.Font.Gotham,
 				Text = title,
 				TextColor3 = themes.TextColor,
-				TextSize = 12,
+				TextSize = 14,
 				TextTransparency = 0.10000000149012,
 				TextXAlignment = Enum.TextXAlignment.Left
 			}),
@@ -1554,7 +1554,7 @@ do
 				Font = Enum.Font.SourceSansSemibold,
 				Text = default or min,
 				TextColor3 = themes.TextColor,
-				TextSize = 12,
+				TextSize = 14,
 				TextXAlignment = Enum.TextXAlignment.Right
 			}),
 			utility:Create("TextLabel", {
@@ -1701,7 +1701,7 @@ do
 					Font = Enum.Font.Gotham,
 					Text = title,
 					TextColor3 = themes.TextColor,
-					TextSize = 12,
+					TextSize = 14,
 					TextTransparency = 0.10000000149012,
 					TextXAlignment = Enum.TextXAlignment.Left
 				}),
@@ -1816,7 +1816,7 @@ do
 				ScaleType = Enum.ScaleType.Slice,
 				SliceCenter = Rect.new(2, 2, 298, 298)
 			}, {
-				utility:Create("UICorner", {
+				utility:Create("UICorner", {    
 					CornerRadius = UDim.new(0, 5)
 				}),
 				utility:Create("TextBox", {
@@ -1830,7 +1830,7 @@ do
 					Font = Enum.Font.Gotham,
 					Text = title,
 					TextColor3 = themes.TextColor,
-					TextSize = 12,
+					TextSize = 14,
 					TextTransparency = 0.1,
 					TextXAlignment = Enum.TextXAlignment.Left
 				}),
@@ -1857,6 +1857,9 @@ do
 				ScaleType = Enum.ScaleType.Slice,
 				SliceCenter = Rect.new(2, 2, 298, 298)
 			}, {
+				utility:Create("UICorner", {   
+					CornerRadius = UDim.new(0, 5)
+				}),
 				utility:Create("ScrollingFrame", {
 					Name = "Frame",
 					Active = true,
@@ -1877,7 +1880,7 @@ do
 				})
 			})
 		})
-		
+	
 		local selected = {}
 		local allOptions = list or {}
 	
@@ -1893,17 +1896,17 @@ do
 				textBox.Text = title
 			end
 		end
-		
+	
 		local function updateMultiDropdown(filteredList, callbackArg)
 			for _, child in pairs(dropdown.List.Frame:GetChildren()) do
 				if child:IsA("ImageButton") then
 					child:Destroy()
 				end
 			end
-		
+	
 			local entries = 0
 			local optionsToDisplay = filteredList or allOptions
-		
+	
 			for _, value in pairs(optionsToDisplay) do
 				local isSelected = false
 				for i, sel in pairs(selected) do
@@ -1912,7 +1915,7 @@ do
 						break
 					end
 				end
-		
+	
 				local optionButton = utility:Create("ImageButton", {
 					Parent = dropdown.List.Frame,
 					BackgroundTransparency = 1,
@@ -1924,34 +1927,25 @@ do
 					ScaleType = Enum.ScaleType.Slice,
 					SliceCenter = Rect.new(2, 2, 298, 298)
 				}, {
-					(function()
-						local indicator = utility:Create("Frame", {
-							Name = "Indicator",
-							BackgroundColor3 = Color3.fromRGB(255, 0, 0), 
-							BorderSizePixel = 0,
-							AnchorPoint = Vector2.new(0, 0),
-							Position = UDim2.new(0, 0, 0, 0),
-							Size = UDim2.new(0, 4, 1, 0),
-							Visible = isSelected,
-							ZIndex = 4,
-						})
-						utility:Create("UICorner", {    
-							CornerRadius = UDim.new(0, 5),
-							Parent = indicator
-						})
-						return indicator
-					end)(),
-
+					utility:Create("Frame", {
+						Name = "Indicator",
+						BackgroundColor3 = Color3.fromRGB(255, 255, 255), 
+						BorderSizePixel = 0,
+						AnchorPoint = Vector2.new(0, 0),
+						Position = UDim2.new(0, 0, 0, 0),
+						Size = UDim2.new(0, 3.8, 1, 0),
+						Visible = isSelected,
+						ZIndex = 4,
+					}),
 					utility:Create("ImageLabel", {
 						Name = "Check",
 						BackgroundTransparency = 1,
 						Position = UDim2.new(1, -20, 0.5, -8),
 						Size = UDim2.new(0, 16, 0, 16),
 						ZIndex = 3,
-						Image = "rbxassetid://1234567890",  -
+						Image = "rbxassetid://1234567890",  
 						Visible = isSelected,
 					}),
-
 					utility:Create("TextLabel", {
 						BackgroundTransparency = 1,
 						Position = UDim2.new(0, 10, 0, 0),
@@ -1960,12 +1954,15 @@ do
 						Font = Enum.Font.SourceSansSemibold,
 						Text = value,
 						TextColor3 = themes.TextColor,
-						TextSize = 12,
+						TextSize = 14,
 						TextXAlignment = Enum.TextXAlignment.Left,
 						TextTransparency = 0.1,
 					}),
+					utility:Create("UICorner", {    
+						CornerRadius = UDim.new(0, 5)
+					})
 				})
-		
+
 				optionButton.MouseButton1Click:Connect(function()
 					local found = false
 					for idx, sel in pairs(selected) do
@@ -1995,11 +1992,11 @@ do
 				end)
 				entries = entries + 1
 			end
-
+	
 			local frame = dropdown.List.Frame
 			utility:Tween(dropdown, {Size = UDim2.new(1, 0, 0, (entries == 0 and 30) or math.clamp(entries, 0, 3) * 34 + 38)}, 0.3)
 			utility:Tween(dropdown.Search.Button, {Rotation = entries > 0 and 180 or 0}, 0.3)
-		
+	
 			if entries > 3 then
 				for _, button in pairs(frame:GetChildren()) do
 					if button:IsA("ImageButton") then
@@ -2013,12 +2010,12 @@ do
 				frame.ScrollBarImageTransparency = 1
 			end
 		end
-		
+	
 		updateMultiDropdown(allOptions)
-		
+	
 		local search = dropdown.Search
 		local focused = false
-		
+	
 		search.Button.MouseButton1Click:Connect(function()
 			if search.Button.Rotation == 0 then
 				updateMultiDropdown(allOptions, callback)
@@ -2026,18 +2023,18 @@ do
 				updateMultiDropdown({}, callback)
 			end
 		end)
-		
+	
 		search.TextBox.Focused:Connect(function()
 			if search.Button.Rotation == 0 then
 				updateMultiDropdown(allOptions, callback)
 			end
 			focused = true
 		end)
-		
+	
 		search.TextBox.FocusLost:Connect(function()
 			focused = false
 		end)
-		
+	
 		search.TextBox:GetPropertyChangedSignal("Text"):Connect(function()
 			if focused then
 				local sorted = utility:Sort(search.TextBox.Text, allOptions)
@@ -2045,7 +2042,7 @@ do
 				updateMultiDropdown(sorted, callback)
 			end
 		end)
-		
+	
 		return dropdown
 	end
 
@@ -2363,7 +2360,7 @@ do
 					Font = Enum.Font.SourceSansSemibold,
 					Text = value,
 					TextColor3 = themes.TextColor,
-					TextSize = 12,
+					TextSize = 14,
 					TextXAlignment = "Left",
 					TextTransparency = 0.10000000149012
 				})
