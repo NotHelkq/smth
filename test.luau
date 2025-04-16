@@ -4,7 +4,7 @@ if not game:IsLoaded() then
     print("Loaded Game")
 end
 
-print("v1.0.1")
+print("v1.0.0")
 
 local Player = game:GetService("Players").LocalPlayer
 
@@ -497,7 +497,6 @@ local function goldenCheck(gCheck)
         task.wait(2)
     end
     goldenPos = Vector3.new(pos.X, pos.Y, pos.Z)
-    print("Golden Chest position: " .. tostring(goldenPos))
 end
 
 local function royalCheck(rCheck)
@@ -531,7 +530,6 @@ local function royalCheck(rCheck)
         task.wait(2)
     end
     royalPos = Vector3.new(pos.X, pos.Y, pos.Z)
-    print("Royal Chest position: " .. tostring(royalPos))
 end
 
 local Misc = Window:addPage("Misc", 5012544693)
@@ -596,20 +594,18 @@ local autogChest = miscstuff:addToggle("Auto Open Golden Chest", false, function
                 local goldenKey = game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Inventory.Frame.Inner.Items.Main.ScrollingFrame.Powerups.Items:FindFirstChild("Golden Key") 
                 if not goldenChecked then
                     goldenCheck()
-                    print("Island Position: X=" .. goldenPos.X .. ", Y=" .. goldenPos.Y .. ", Z=" .. goldenPos.Z)
+                    print("Golden Chest Position: X=" .. goldenPos.X .. ", Y=" .. goldenPos.Y .. ", Z=" .. goldenPos.Z)
+                    tppos(goldenPos.X, goldenPos.Y + 10, goldenPos.Z) 
                     goldenChecked = true 
                 end
                 if gchest and goldenKey then
-                    tppos(goldenPos.X, goldenPos.Y + 10, goldenPos.Z) 
                     local args = {
                         [1] = "UnlockRiftChest",
                         [2] = "golden-chest"
                     }
                     game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
-                    print("Chest unlocked!")
                     task.wait(3) 
                 else
-                    print("Chest not found or no Golden Key")
                     task.wait(5) 
                     goldenChecked = false
                 end
@@ -630,7 +626,7 @@ local autorChest = miscstuff:addToggle("Auto Open Royal Chest", false, function(
                 local royalKey = game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Inventory.Frame.Inner.Items.Main.ScrollingFrame.Powerups.Items:FindFirstChild("Royal Key") 
                 if not royalChecked then
                     islandCheck()
-                    print("Island Position: X=" .. royalPos.X .. ", Y=" .. royalPos.Y .. ", Z=" .. royalPos.Z)
+                    print("Royal Chest Position: X=" .. royalPos.X .. ", Y=" .. royalPos.Y .. ", Z=" .. royalPos.Z)
                     royalChecked = true 
                 end
                 if rchest and royalKey then
