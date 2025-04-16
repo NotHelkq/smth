@@ -77,9 +77,6 @@ local Window = library.new()
 
 local testing = Window:addPage("Test Features", 5012544693)
 local test = testing:addSection("Hatch (You must be near egg!)")
-local egg = test:addDropdown("Eggs", {"Aura Egg", "Infinity Egg","Common Egg","Spotted Egg","Iceshard Egg","Spikey Egg","Magma Egg","Crystal Egg","Lunar Egg","Void Egg","Hell Egg","Nightmare Egg","Rainbow Egg"}, function(selected)
-    selectedEgg = selected
-end)
 local multiegg = test:addSlider("Open Amount", 1, 1, 6, function(multi)
     hatchingEggs = multi
 end)
@@ -101,6 +98,10 @@ local openEgg = test:addToggle("Open Eggs", false, function(on)
     else
         openingEggs = false
     end
+end)
+
+local egg = test:addDropdown("Eggs", {"Aura Egg", "Infinity Egg","Common Egg","Spotted Egg","Iceshard Egg","Spikey Egg","Magma Egg","Crystal Egg","Lunar Egg","Void Egg","Hell Egg","Nightmare Egg","Rainbow Egg"}, function(selected)
+    selectedEgg = selected
 end)
 
 local test1 = testing:addSection("Auto Lucky Eggs")
