@@ -1857,9 +1857,6 @@ do
 				ScaleType = Enum.ScaleType.Slice,
 				SliceCenter = Rect.new(2, 2, 298, 298)
 			}, {
-				utility:Create("UICorner", {   
-					CornerRadius = UDim.new(0, 5)
-				}),
 				utility:Create("ScrollingFrame", {
 					Name = "Frame",
 					Active = true,
@@ -1933,7 +1930,7 @@ do
 						BorderSizePixel = 0,
 						AnchorPoint = Vector2.new(0, 0),
 						Position = UDim2.new(0, 0, 0, 0),
-						Size = UDim2.new(0, 3.8, 1, 0),
+						Size = UDim2.new(0, 5, 1, 0),
 						Visible = isSelected,
 						ZIndex = 4,
 					}),
@@ -1958,9 +1955,6 @@ do
 						TextXAlignment = Enum.TextXAlignment.Left,
 						TextTransparency = 0.1,
 					}),
-					utility:Create("UICorner", {    
-						CornerRadius = UDim.new(0, 5)
-					})
 				})
 
 				optionButton.MouseButton1Click:Connect(function()
@@ -1994,10 +1988,10 @@ do
 			end
 	
 			local frame = dropdown.List.Frame
-			utility:Tween(dropdown, {Size = UDim2.new(1, 0, 0, (entries == 0 and 30) or math.clamp(entries, 0, 3) * 34 + 38)}, 0.3)
+			utility:Tween(dropdown, {Size = UDim2.new(1, 0, 0, (entries == 0 and 30) or math.clamp(entries, 0, 6) * 34 + 38)}, 0.3)
 			utility:Tween(dropdown.Search.Button, {Rotation = entries > 0 and 180 or 0}, 0.3)
-	
-			if entries > 3 then
+
+			if entries > 6 then
 				for _, button in pairs(frame:GetChildren()) do
 					if button:IsA("ImageButton") then
 						button.Size = UDim2.new(1, -6, 0, 30)
@@ -2009,7 +2003,6 @@ do
 				frame.CanvasSize = UDim2.new(0, 0, 0, 0)
 				frame.ScrollBarImageTransparency = 1
 			end
-		end
 	
 		updateMultiDropdown(allOptions)
 	
