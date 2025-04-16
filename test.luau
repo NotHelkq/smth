@@ -4,7 +4,7 @@ if not game:IsLoaded() then
     print("Loaded Game")
 end
 
-print("v1.0.10")
+print("v1.0.0")
 
 local Player = game:GetService("Players").LocalPlayer
 
@@ -684,12 +684,18 @@ local autombox = miscstuff:addToggle("Auto Open Mystery Box (Not auto yet)", fal
                     }
                     game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
                     mBoxOpened = false
-                end                 
+                    print("Mystery box used!")
+                end
                 task.wait(3)
-                if not mBoxOpened and checkGiftsFolder(workspace.Rendered.Gifts) then
-                    clickNearIcon("ScreenGui.Buffs.Shiny.Button.Icon", 10)
-                    task.wait(0.25)
-                    mBoxOpened = true
+                if checkGiftsFolder(workspace.Rendered.Gifts) and not mBoxOpened then
+                    local iconClicked = clickNearIcon("ScreenGui.Buffs.Shiny.Button.Icon", 15)
+                    if iconClicked then
+                        print("Clicked near the icon!")
+                    else
+                        print("Failed to click near the icon.")
+                    end
+                    task.wait(0.25) 
+                    mBoxOpened = true 
                 end
             end
         end)
@@ -698,6 +704,7 @@ local autombox = miscstuff:addToggle("Auto Open Mystery Box (Not auto yet)", fal
         automystery = false
     end
 end)
+
 
 
 
