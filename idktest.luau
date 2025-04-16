@@ -1,15 +1,3 @@
---[[ 
-  Updated JennyLib.lua
-  --------------------
-  This version incorporates improvements for code reuse, event management, modern task delays, and modular UI component creation.
-
-  Improvements include: 
-    • A helper to create a base dropdown UI (createDropdownBase) used by both addDropdown and addMultiDropdown.
-    • Connection tracking and cleanup for events.
-    • Usage of task.wait/task.delay and an async tween helper.
-    • Inline comments and clearer variable names.
---]]
-
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
@@ -34,20 +22,26 @@ local UISize = UDim2.new(0,800,0,450)
 -- Utility functions table
 local utility = {}
 
--- Connection tracking: allows later clean-up of event connections.
+-- Create a table to store connections by object. Using a weak table so that if the object is destroyed, the key is automatically removed.
+utility.connections = setmetatable({}, { __mode = "k" })
+
+-- trackConnection adds an event connection for an object in a separate table.
 function utility:trackConnection(object, eventName, callback)
     local connection = object[eventName]:Connect(callback)
-    object._connections = object._connections or {}
-    table.insert(object._connections, connection)
+    if not self.connections[object] then
+        self.connections[object] = {}
+    end
+    table.insert(self.connections[object], connection)
     return connection
 end
 
+-- cleanupConnections disconnects all tracked connections for a given object.
 function utility:cleanupConnections(object)
-    if object._connections then
-        for _, connection in ipairs(object._connections) do
+    if self.connections[object] then
+        for _, connection in ipairs(self.connections[object]) do
             connection:Disconnect()
         end
-        object._connections = nil
+        self.connections[object] = nil
     end
 end
 
