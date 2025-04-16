@@ -1,3 +1,5 @@
+print("v1")
+
 local player = game.Players.LocalPlayer
 local mouse = player:GetMouse()
 
@@ -243,7 +245,7 @@ do
 						Font = Enum.Font.SourceSansSemibold,
 						Text = title or "Bubble Gum Simulator Infinity",
 						TextColor3 = themes.TextColor,
-						TextSize = 16,
+						TextSize = 14,
 						TextXAlignment = Enum.TextXAlignment.Center
 					})
 				}),
@@ -1980,10 +1982,10 @@ do
 			end
 	
 			local frame = dropdown.List.Frame
-			utility:Tween(dropdown, {Size = UDim2.new(1, 0, 0, (entries == 0 and 30) or math.clamp(entries, 0, 5) * 34 + 38)}, 0.3)
+			utility:Tween(dropdown, {Size = UDim2.new(1, 0, 0, (entries == 0 and 30) or math.clamp(entries, 0, 6) * 34 + 38)}, 0.3)
 			utility:Tween(dropdown.Search.Button, {Rotation = entries > 0 and 180 or 0}, 0.3)
 	
-			if entries > 5 then
+			if entries > 6 then
 				for _, button in pairs(frame:GetChildren()) do
 					if button:IsA("ImageButton") then
 						button.Size = UDim2.new(1, -6, 0, 30)
