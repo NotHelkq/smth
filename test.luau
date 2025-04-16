@@ -12,6 +12,10 @@ Player.Idled:connect(function()
     game:GetService("VirtualUser"):Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame) 
 end)
 
+local rtPart = game:GetService("Players").LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+local playerPos = rtPart.Position
+print(playerPos)
+
 local connections = {};
 local ttppos = function(x, y, z)
 	local r = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
@@ -23,24 +27,28 @@ local tppos = function(x, y, z)
 	if r then game:GetService("TweenService"):Create(r, TweenInfo.new(10), {CFrame = CFrame.new(x, y, z)}):Play() end
 end
 
-local autochewbubble = false
-local autoSellBubbles = false
-local autoChests = false
-local autoAlienShop = false
-local autoshardShop = false
-local openingEggs = false
-local tpToEggs = false
-local autoPlaytime = false
-local autotickets = false
-local autoGoldenChest = false
-local goldenChecked = false
-local autoRoyalChest = false
-local royalChecked = false
-local automystery = false
-local selectedEgg = nil
-local selectedEnchant = nil
-local islandpos = nil
-local hatchingEggs = 1
+local autochewbubble         = false
+local autoSellBubbles        = false
+local autoChests             = false
+local autoAlienShop          = false
+local autoshardShop          = false
+local openingEggs            = false
+local tpToEggs               = false
+local autoPlaytime           = false
+local autotickets            = false
+local selectedEgg            = nil
+local hatchingEggs           = 1
+
+
+local autoGoldenChest        = false
+local goldenChecked          = false
+local goldenPos              = nil
+local autoRoyalChest         = false
+local royalChecked           = false
+local royalPos               = nil
+local automystery            = false
+
+local selectedEnchant        = nil
 
 local enchantments = {
     "⚡ Team Up I",
@@ -469,13 +477,7 @@ local function checkGiftsFolder(folderPath)
     end
 end
 
-local function goldenCheck(gCheck)
-    local pos = workspace.Rendered.Rifts["golden-chest"].Chest.WorldPivot.Position 
-    local rgPos = Vector3.new(
-        math.floor(pos.X + 0.5),
-        math.floor(pos.Y + 0.5),
-        math.floor(pos.Z + 0.5)
-    ) 
+local function findArea(pos)
     local y = pos.Y
     local area = nil
     if y >= 0 and y < 410 then
@@ -499,39 +501,16 @@ local function goldenCheck(gCheck)
     if area ~= nil then
         task.wait(2)
     end
+    return area
+end
+
+local function goldenCheck(gCheck)
+    local pos = workspace.Rendered.Rifts["golden-chest"].Chest.WorldPivot.Position 
     goldenPos = Vector3.new(pos.X, pos.Y, pos.Z)
 end
 
 local function royalCheck(rCheck)
     local pos = workspace.Rendered.Rifts["royal-chest"].Chest.WorldPivot.Position 
-    local rrPos = Vector3.new(
-        math.floor(pos.X + 0.5),
-        math.floor(pos.Y + 0.5),
-        math.floor(pos.Z + 0.5)
-    ) 
-    local y = pos.Y
-    local area = nil
-    if y >= 0 and y < 410 then
-        area = "a1"
-        argArea1()
-    elseif y >= 410 and y < 2650 then
-        area = "a2"
-        argArea2()
-    elseif y >= 2650 and y < 6850 then
-        area = "a3"
-        argArea3()
-    elseif y >= 6850 and y < 10130 then
-        area = "a4"
-        argArea4()
-    elseif y >= 10130 and y <= 15960 then
-        area = "a5"
-        argArea5()
-    else
-        area = nil
-    end
-    if area ~= nil then
-        task.wait(2)
-    end
     royalPos = Vector3.new(pos.X, pos.Y, pos.Z)
 end
 
@@ -727,16 +706,111 @@ SetSec2:addButton("Kill Hub", function()
     tpToEggs               = false
     autoPlaytime           = false
     autotickets            = false
-    autoGoldenChest        = false
-    autoRoyalChest         = false
-    royalChecked           = false
-    goldenChecked          = false
-    automystery            = false
     selectedEgg            = nil
-    selectedEnchant        = nil
-    islandpos              = nil
     hatchingEggs           = 1
     cg.DefaultPickupRadius = 10
 
+    autoGoldenChest        = false
+    goldenChecked          = false
+    goldenPos              = nil
+    autoRoyalChest         = false
+    royalChecked           = false
+    royalPos               = nil
+    automystery            = false
+
+    selectedEnchant        = nil
+
     Window.container:Destroy()
 end)
+
+local rtPart = game:GetService("Players").LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+local playerPos = rtPart.Position
+print(playerPos)
+
+local function findArea(pos)
+    local y = pos.Y
+    local area = nil
+    if y >= 0 and y < 410 then
+        area = "a0"
+        argArea1()
+    elseif y >= 410 and y < 2650 then
+        area = "a1"
+        argArea2()
+    elseif y >= 2650 and y < 6850 then
+        area = "a2"
+        argArea3()
+    elseif y >= 6850 and y < 10130 then
+        area = "a3"
+        argArea4()
+    elseif y >= 10130 and y <= 15960 then
+        area = "a4"
+        argArea5()
+    else
+        area = nil
+    end
+    if area ~= nil then
+        task.wait(2)
+    end
+    return area
+end
+
+local function goldenCheck()
+    local chest = workspace.Rendered.Rifts["golden-chest"]:FindFirstChild("Chest")
+    if chest then
+        local pos = chest.WorldPivot.Position
+        goldenPos = Vector3.new(pos.X, pos.Y, pos.Z)
+    else
+        print("Golden chest not found")
+        goldenPos = nil
+    end
+end
+
+local testing = Window:addPage("Test Features", 5012544693)
+local tests = testing:addSection("Test")
+
+
+local autogChest = tests:addToggle("Auto Open Golden Chest", false, function(on)
+    if on then
+        autoGoldenChest = true
+        task.spawn(function()
+            while autoGoldenChest do
+                local gchest = workspace.Rendered.Rifts["golden-chest"]:FindFirstChild("Chest") 
+                local goldenKey = game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Inventory.Frame.Inner.Items.Main.ScrollingFrame.Powerups.Items:FindFirstChild("Golden Key")
+                if goldenChecked and gchest and goldenKey.Visible then
+                    goldenCheck()
+                    findArea()
+                    print("Golden Chest Position: X=" .. goldenPos.X .. ", Y=" .. goldenPos.Y .. ", Z=" .. goldenPos.Z)
+                    tppos(goldenPos.X, playerPos.Y, goldenPos.Z)
+                    task.wait(5)
+                    tppos(goldenPos.X, goldenPos.Y, goldenPos.Z)
+                    goldenChecked = true
+                end
+                if gchest and goldenKey.Visible then
+                    local args = {
+                        [1] = "UnlockRiftChest",
+                        [2] = "golden-chest"
+                    }
+                    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+                    task.wait(3) 
+                else
+                    print("Golden Chest or Golden Key missing!")
+                    goldenChecked = false 
+                    task.wait(5)
+                end
+            end
+        end)
+    else
+        autoGoldenChest = false
+        goldenChecked = false 
+    end
+end)
+
+
+
+
+
+
+-- local function royalCheck(rCheck)
+ --    local pos = workspace.Rendered.Rifts["royal-chest"].Chest.WorldPivot.Position 
+ --    royalPos = Vector3.new(pos.X, pos.Y, pos.Z)
+-- end
