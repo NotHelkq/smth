@@ -25,7 +25,6 @@ local tppos = function(x, y, z)
 	if r then game:GetService("TweenService"):Create(r, TweenInfo.new(12), {CFrame = CFrame.new(x, y, z)}):Play() end
 end
 
-local mBoxOpened = true
 local autochewbubble = false
 local autoSellBubbles = false
 local autoChests = false
@@ -453,46 +452,6 @@ end)
 
 ---------------------------------
 
-local function getChildFromPath(root, path)
-    local current = root
-    for segment in string.gmatch(path, "([^%.]+)") do
-        current = current:WaitForChild(segment)
-        if not current then
-            return nil
-        end
-    end
-    return current
-end
-
-local function clickAboveIconFromPath(path, clickCount)
-    local player = game:GetService("Players").LocalPlayer
-    local playerGui = player:WaitForChild("PlayerGui")
-    local icon = getChildFromPath(playerGui, path)
-    
-    if not icon or not icon.Visible then
-        print("Icon '" .. path .. "' not found or not visible.")
-        return false
-    end
-    local absPos = icon.AbsolutePosition
-    local absSize = icon.AbsoluteSize 
-    local margin = 20
-    local offsetY = absSize.Y * 2 + margin
-    local clickX = absPos.X + absSize.X / 2
-    local clickY = absPos.Y - offsetY
-
-    local vu = game:GetService("VirtualUser")
-    vu:CaptureController()
-    for i = 1, clickCount do
-        vu:Button1Down(Vector2.new(clickX, clickY), workspace.CurrentCamera.CFrame)
-        wait(0.05)
-        vu:Button1Up(Vector2.new(clickX, clickY), workspace.CurrentCamera.CFrame)
-        wait(0.1)
-    end
-
-    print(clickCount .. " clicks performed above the icon at (" .. clickX .. ", " .. clickY .. ")")
-    return true
-end
-
 local function checkGiftsFolder(folderPath)
     if folderPath then
         local children = folderPath:GetChildren()
@@ -712,16 +671,14 @@ local autombox = miscstuff:addToggle("Auto Open Mystery Box (Not auto yet)", fal
                 print("Mystery box used!")
                 task.wait(3)
                 if checkGiftsFolder(workspace.Rendered.Gifts) then
-                    local iconClicked = clickAboveIconFromPath("ScreenGui.Buffs.Shiny.Button.Icon", 15)
-                    if iconClicked then
-                        print("Clicked above the icon!")
-                    else
-                        print("Failed to click above the icon.")
+                    local virtualUser = game:GetService("VirtualUser")
+                    for i = 1, 15 do
+                        print("Click number: " .. i)
+                        virtualUser:Button1Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+                        virtualUser:Button1Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+                        task.wait(0.25) 
                     end
-                else
-                    print("No gifts available to click!")
                 end
-                task.wait(0.25)
             end
         end)
     else
@@ -780,7 +737,6 @@ SetSec2:addButton("Kill Hub", function()
     autotickets            = false
     autoGoldenChest        = false
     autoRoyalChest         = false
-    mBoxOpened             = true  
     royalChecked           = false
     goldenChecked          = false
     automystery            = false
