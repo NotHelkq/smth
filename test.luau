@@ -4,7 +4,7 @@ if not game:IsLoaded() then
     print("Loaded Game")
 end
 
-print("v1.0.0.0")
+print("v1.0.0.1")
 
 local Player = game:GetService("Players").LocalPlayer
 
@@ -439,6 +439,25 @@ end)
 
 ---------------------------------
 
+local function checkGiftsFolder(folderPath)
+    local giftsFolder = folderPath
+    
+    if giftsFolder then
+        local children = giftsFolder:GetChildren()
+        if #children > 0 then
+            print("Gifts found.")
+            for _, child in ipairs(children) do
+                print("Object found: " .. child.Name)
+            end
+        else
+            print("The Gifts doesnt exist")
+        end
+    else
+        print("The Gifts folder does not exist.")
+    end
+end
+
+
 local islandpos = nil
 local function islandCheck(iCheck)
     local pos = workspace.Rendered.Rifts["golden-chest"].Chest.WorldPivot.Position 
@@ -557,33 +576,42 @@ local autoClaimTickets = miscstuff:addToggle("Auto Claim Wheel Spin", false, fun
 end)
 
 local autoGoldenChest = false
+local islandChecked = false
 local autogChest = miscstuff:addToggle("Auto Open Golden Chest (Broken)", false, function(on)
     if on then
         autoGoldenChest = true
         task.spawn(function()
             while autoGoldenChest do
-                local chest = workspace.Rendered.Rifts["golden-chest"]:FindFirstChild("Chest")
-                local goldenKey = game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Inventory.Frame.Inner.Items.Main.ScrollingFrame.Powerups.Items:FindFirstChild("Golden Key")
-                if chest and goldenKey then
+                local chest = workspace.Rendered.Rifts["golden-chest"]:FindFirstChild("Chest") 
+                local goldenKey = game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Inventory.Frame.Inner.Items.Main.ScrollingFrame.Powerups.Items:FindFirstChild("Golden Key") 
+                if not islandChecked then
                     islandCheck()
                     print("Island Position: X=" .. islandpos.X .. ", Y=" .. islandpos.Y .. ", Z=" .. islandpos.Z)
-                    tppos(islandpos.X, islandpos.Y, islandpos.Z)
+                    islandChecked = true 
+                end
+                if chest and goldenKey then
+                    tppos(islandpos.X, islandpos.Y + 10, islandpos.Z) 
                     local args = {
                         [1] = "UnlockRiftChest",
                         [2] = "golden-chest"
                     }
                     game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
-                    task.wait(10)
+                    print("Chest unlocked!")
+                    task.wait(3) 
                 else
                     print("Chest not found or no Golden Key")
-                    task.wait(1)
+                    task.wait(5) 
+                    islandChecked = false
                 end
             end
         end)
     else
         autoGoldenChest = false
+        islandChecked = false -
     end
 end)
+
+
 
 local automystery = false
 local autombox = miscstuff:addToggle("Auto Open Mystery Box (Not auto yet)", false, function(on)
@@ -597,8 +625,9 @@ local autombox = miscstuff:addToggle("Auto Open Mystery Box (Not auto yet)", fal
                     [3] = 10
                 }
                 game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))                    
-                task.wait(3)
-                -- script to click 8-10 times after gifts was used to make it auto
+                task.wait(5)
+                if checkGiftsFolder(workspace.Rendered.Gifts) then
+
             end
         end)
     else
