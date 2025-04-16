@@ -702,7 +702,7 @@ local autombox = miscstuff:addToggle("Auto Open Mystery Box (Not auto yet)", fal
                 end
                 task.wait(3)
                 if checkGiftsFolder(workspace.Rendered.Gifts) and not mBoxOpened then
-                    local iconClicked = clickNearIcon("ScreenGui.Buffs.Shiny.Button.Icon", 15)
+                    local iconClicked = clickAboveIcon("ScreenGui.Buffs.Shiny.Button.Icon", 15)
                     if iconClicked then
                         print("Clicked near the icon!")
                     else
@@ -749,6 +749,10 @@ local fpsboost = SetSec2:addButton("Boost FPS", function(fps)
         ["Low Quality Parts"] = true 
     }
     loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/boost.luau"))()
+end)
+
+SetSec2:addKeybind("Toggle Hub", Enum.KeyCode.LeftControl, function()
+	Window:toggle()
 end)
 
 SetSec2:addButton("Kill Hub", function()
