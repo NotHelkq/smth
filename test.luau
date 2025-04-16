@@ -4,7 +4,7 @@ if not game:IsLoaded() then
     print("Loaded Game")
 end
 
-print("v1.0.0.0")
+print("v1.0.1")
 
 local Player = game:GetService("Players").LocalPlayer
 
@@ -35,7 +35,9 @@ local tpToEggs = false
 local autoPlaytime = false
 local autotickets = false
 local autoGoldenChest = false
-local islandChecked = false
+local goldenChecked = false
+local autoRoyalChest = false
+local royalChecked = false
 local automystery = false
 local selectedEgg = nil
 local selectedEnchant = nil
@@ -464,9 +466,9 @@ local function checkGiftsFolder(folderPath)
     end
 end
 
-local function islandCheck(iCheck)
+local function goldenCheck(gCheck)
     local pos = workspace.Rendered.Rifts["golden-chest"].Chest.WorldPivot.Position 
-    local roundedPos = Vector3.new(
+    local rgPos = Vector3.new(
         math.floor(pos.X + 0.5),
         math.floor(pos.Y + 0.5),
         math.floor(pos.Z + 0.5)
@@ -490,43 +492,50 @@ local function islandCheck(iCheck)
         argArea5()
     else
         area = nil
-        print("Position not within defined area ranges.")
     end
     if area ~= nil then
         task.wait(2)
     end
-    islandpos = Vector3.new(pos.X, pos.Y, pos.Z)
-    print("Updated island position: " .. tostring(islandpos))
+    goldenPos = Vector3.new(pos.X, pos.Y, pos.Z)
+    print("Golden Chest position: " .. tostring(goldenPos))
+end
+
+local function royalCheck(rCheck)
+    local pos = workspace.Rendered.Rifts["royal-chest"].Chest.WorldPivot.Position 
+    local rrPos = Vector3.new(
+        math.floor(pos.X + 0.5),
+        math.floor(pos.Y + 0.5),
+        math.floor(pos.Z + 0.5)
+    ) 
+    local y = pos.Y
+    local area = nil
+    if y >= 0 and y < 410 then
+        area = "a1"
+        argArea1()
+    elseif y >= 410 and y < 2650 then
+        area = "a2"
+        argArea2()
+    elseif y >= 2650 and y < 6850 then
+        area = "a3"
+        argArea3()
+    elseif y >= 6850 and y < 10130 then
+        area = "a4"
+        argArea4()
+    elseif y >= 10130 and y <= 15960 then
+        area = "a5"
+        argArea5()
+    else
+        area = nil
+    end
+    if area ~= nil then
+        task.wait(2)
+    end
+    royalPos = Vector3.new(pos.X, pos.Y, pos.Z)
+    print("Royal Chest position: " .. tostring(royalPos))
 end
 
 local Misc = Window:addPage("Misc", 5012544693)
 local miscstuff = Misc:addSection("Misc")
-local fpsboost = miscstuff:addButton("Boost FPS", function(fps)
-    _G.Settings = {
-        Players = {
-            ["Ignore Me"] = true, 
-            ["Ignore Others"] = true
-        },
-        Meshes = {
-            Destroy = false,
-            LowDetail = true 
-        },
-        Images = {
-            Invisible = true, 
-            LowDetail = false,
-            Destroy = false, 
-        },
-        ["No Particles"] = true, 
-        ["No Camera Effects"] = true, 
-        ["No Explosions"] = true,
-        ["No Clothes"] = true,
-        ["Low Water Graphics"] = true, 
-        ["No Shadows"] = true, 
-        ["Low Rendering"] = true, 
-        ["Low Quality Parts"] = true 
-    }
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/boost.luau"))()
-end)
 
 local allAreas = miscstuff:addButton("Unlock All Areas", function(tp)
     ttppos(-16, 423, 143)
@@ -578,20 +587,20 @@ local autoClaimTickets = miscstuff:addToggle("Auto Claim Wheel Spin", false, fun
     end
 end)
 
-local autogChest = miscstuff:addToggle("Auto Open Golden Chest (Broken)", false, function(on)
+local autogChest = miscstuff:addToggle("Auto Open Golden Chest", false, function(on)
     if on then
         autoGoldenChest = true
         task.spawn(function()
             while autoGoldenChest do
-                local chest = workspace.Rendered.Rifts["golden-chest"]:FindFirstChild("Chest") 
+                local gchest = workspace.Rendered.Rifts["golden-chest"]:FindFirstChild("Chest") 
                 local goldenKey = game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Inventory.Frame.Inner.Items.Main.ScrollingFrame.Powerups.Items:FindFirstChild("Golden Key") 
-                if not islandChecked then
-                    islandCheck()
-                    print("Island Position: X=" .. islandpos.X .. ", Y=" .. islandpos.Y .. ", Z=" .. islandpos.Z)
-                    islandChecked = true 
+                if not goldenChecked then
+                    goldenCheck()
+                    print("Island Position: X=" .. goldenPos.X .. ", Y=" .. goldenPos.Y .. ", Z=" .. goldenPos.Z)
+                    goldenChecked = true 
                 end
-                if chest and goldenKey then
-                    tppos(islandpos.X, islandpos.Y + 10, islandpos.Z) 
+                if gchest and goldenKey then
+                    tppos(goldenPos.X, goldenPos.Y + 10, goldenPos.Z) 
                     local args = {
                         [1] = "UnlockRiftChest",
                         [2] = "golden-chest"
@@ -602,13 +611,45 @@ local autogChest = miscstuff:addToggle("Auto Open Golden Chest (Broken)", false,
                 else
                     print("Chest not found or no Golden Key")
                     task.wait(5) 
-                    islandChecked = false
+                    goldenChecked = false
                 end
             end
         end)
     else
         autoGoldenChest = false
-        islandChecked = false
+        goldenChecked = false
+    end
+end)
+
+local autorChest = miscstuff:addToggle("Auto Open Royal Chest", false, function(on)
+    if on then
+        autoRoyalChest = true
+        task.spawn(function()
+            while autoRoyalChest do
+                local rchest = workspace.Rendered.Rifts["golden-chest"]:FindFirstChild("Chest") 
+                local royalKey = game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Inventory.Frame.Inner.Items.Main.ScrollingFrame.Powerups.Items:FindFirstChild("Royal Key") 
+                if not royalChecked then
+                    islandCheck()
+                    print("Island Position: X=" .. royalPos.X .. ", Y=" .. royalPos.Y .. ", Z=" .. royalPos.Z)
+                    royalChecked = true 
+                end
+                if rchest and royalKey then
+                    tppos(royalPos.X, royalPos.Y + 10, royalPos.Z) 
+                    local args = {
+                        [1] = "UnlockRiftChest",
+                        [2] = "royal-chest"
+                    }
+                    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+                    task.wait(3) 
+                else
+                    task.wait(5) 
+                    royalChecked = false
+                end
+            end
+        end)
+    else
+        autoRoyalChest = false
+        royalChecked = false
     end
 end)
 
@@ -639,6 +680,33 @@ end)
 local Settings = Window:addPage("Settings", 5012544693)
 local SetSec2 = Settings:addSection("Others")
 
+local fpsboost = SetSec2:addButton("Boost FPS", function(fps)
+    _G.Settings = {
+        Players = {
+            ["Ignore Me"] = true, 
+            ["Ignore Others"] = true
+        },
+        Meshes = {
+            Destroy = false,
+            LowDetail = true 
+        },
+        Images = {
+            Invisible = true, 
+            LowDetail = false,
+            Destroy = false, 
+        },
+        ["No Particles"] = true, 
+        ["No Camera Effects"] = true, 
+        ["No Explosions"] = true,
+        ["No Clothes"] = true,
+        ["Low Water Graphics"] = true, 
+        ["No Shadows"] = true, 
+        ["Low Rendering"] = true, 
+        ["Low Quality Parts"] = true 
+    }
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/boost.luau"))()
+end)
+
 SetSec2:addKeybind("Toggle Hub", Enum.KeyCode.LeftControl, function()
 	Window:toggle()
 end)
@@ -655,7 +723,9 @@ SetSec2:addButton("Kill Hub", function()
         autoPlaytime = false
         autotickets = false
         autoGoldenChest = false
-        islandChecked = false
+        autoRoyalChest = false
+        royalChecked = false
+        goldenChecked = false
         automystery = false
         selectedEgg = nil
         selectedEnchant = nil
@@ -666,5 +736,3 @@ SetSec2:addButton("Kill Hub", function()
 end)
 
 Window:SelectPage(Window.pages[1], true)
-
--- game:GetService("ReplicatedStorage").Assets.Rifts["royal-chest"].Chest
