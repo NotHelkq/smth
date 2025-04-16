@@ -1793,9 +1793,10 @@ do
 		return dropdown
 	end
 
+	local TextService = game:GetService("TextService")
+
 	function section:addMultiDropdown(title, list, callback)
-		-- Create a dropdown container nearly identical to the existing dropdown
-		local dropdown = utility:Create("Frame", {
+		local multiDropdown = utility:Create("Frame", {
 			Name = "MultiDropdown",
 			Parent = self.container.ScrollingFrame,
 			BackgroundTransparency = 1,
@@ -1821,15 +1822,13 @@ do
 					Name = "TextBox",
 					AnchorPoint = Vector2.new(0, 0.5),
 					BackgroundTransparency = 1,
-					TextTruncate = Enum.TextTruncate.AtEnd,
-					Position = UDim2.new(0, 10, 0.5, 0),
+					Position = UDim2.new(0, 10, 0.5, 1),
 					Size = UDim2.new(1, -42, 1, 0),
 					ZIndex = 3,
 					Font = Enum.Font.Gotham,
 					Text = title,
 					TextColor3 = themes.TextColor,
 					TextSize = 12,
-					TextTransparency = 0.1,
 					TextXAlignment = Enum.TextXAlignment.Left
 				}),
 				utility:Create("ImageButton", {
@@ -1876,177 +1875,107 @@ do
 			})
 		})
 	
-		-- Maintain the currently selected options in a table.
-		local selected = {}
-		local allOptions = list or {}
+		local search = multiDropdown.Search
+		local selectedValues = {}
 	
-		-- Utility function to update the search TextBox with the joined selection.
-		local function updateSearchText()
-			local textBox = dropdown.Search.TextBox
-			if next(selected) then
-				local txt = ""
-				for _, v in pairs(selected) do
-					txt = txt .. v .. ", "
-				end
-				textBox.Text = txt:sub(1, -3)  -- remove the trailing comma and space
-			else
-				textBox.Text = title
-			end
-		end
-	
-		-- Function to update (or rebuild) the dropdown list based on a passed set of options.
-		local function updateMultiDropdown(filteredList, callbackArg)
-			-- Clear previous buttons in the list
-			for _, child in pairs(dropdown.List.Frame:GetChildren()) do
-				if child:IsA("ImageButton") then
-					child:Destroy()
-				end
-			end
-	
-			local entries = 0
-			local optionsToDisplay = filteredList or allOptions
-	
-			-- For each option, create a button with a label, a check mark, and a selection indicator.
-			for _, value in pairs(optionsToDisplay) do
-				local isSelected = false
-				for i, sel in pairs(selected) do
-					if sel == value then
-						isSelected = true
-						break
-					end
-				end
-	
-				local optionButton = utility:Create("ImageButton", {
-					Parent = dropdown.List.Frame,
-					BackgroundTransparency = 1,
-					BorderSizePixel = 0,
-					Size = UDim2.new(1, 0, 0, 30),
-					ZIndex = 2,
-					Image = "rbxassetid://5028857472",
-					ImageColor3 = themes.DarkContrast,
-					ScaleType = Enum.ScaleType.Slice,
-					SliceCenter = Rect.new(2, 2, 298, 298)
-				}, {
-					-- Selection Indicator: a colored vertical bar on the left side
-					utility:Create("Frame", {
-						Name = "Indicator",
-						BackgroundColor3 = Color3.fromRGB(0, 255, 0),  -- Change this to suit your theme
-						BorderSizePixel = 0,
-						AnchorPoint = Vector2.new(0, 0),
-						Position = UDim2.new(0, 0, 0, 0),
-						Size = UDim2.new(0, 4, 1, 0),
-						Visible = isSelected,
-						ZIndex = 4,
-					}),
-					-- Check mark image on the right side (replace asset ID as needed)
-					utility:Create("ImageLabel", {
-						Name = "Check",
-						BackgroundTransparency = 1,
-						Position = UDim2.new(1, -20, 0.5, -8),
-						Size = UDim2.new(0, 16, 0, 16),
-						ZIndex = 3,
-						Image = "rbxassetid://1234567890",  -- Replace with a valid checkmark asset ID
-						Visible = isSelected,
-					}),
-					utility:Create("TextLabel", {
-						BackgroundTransparency = 1,
-						Position = UDim2.new(0, 10, 0, 0),
-						Size = UDim2.new(1, -40, 1, 0),
-						ZIndex = 3,
-						Font = Enum.Font.SourceSansSemibold,
-						Text = value,
-						TextColor3 = themes.TextColor,
-						TextSize = 12,
-						TextXAlignment = Enum.TextXAlignment.Left,
-						TextTransparency = 0.1,
-					}),
-				})
-	
-				-- Toggle selection on click and update both check mark and indicator visibility.
-				optionButton.MouseButton1Click:Connect(function()
-					local found = false
-					for idx, sel in pairs(selected) do
-						if sel == value then
-							table.remove(selected, idx)
-							found = true
-							break
-						end
-					end
-					if not found then
-						table.insert(selected, value)
-					end
-					local checkMark = optionButton:FindFirstChild("Check")
-					if checkMark then
-						checkMark.Visible = not found
-					end
-					local indicator = optionButton:FindFirstChild("Indicator")
-					if indicator then
-						indicator.Visible = not found
-					end
-					updateSearchText()
-					if callbackArg then
-						callbackArg(selected)
-					elseif callback then
-						callback(selected)
-					end
-				end)
-				entries = entries + 1
-			end
-	
-			-- Adjust the dropdown list size based on the number of entries
-			local frame = dropdown.List.Frame
-			utility:Tween(dropdown, {Size = UDim2.new(1, 0, 0, (entries == 0 and 30) or math.clamp(entries, 0, 3) * 34 + 38)}, 0.3)
-			utility:Tween(dropdown.Search.Button, {Rotation = entries > 0 and 180 or 0}, 0.3)
-	
-			if entries > 3 then
-				for _, button in pairs(frame:GetChildren()) do
-					if button:IsA("ImageButton") then
-						button.Size = UDim2.new(1, -6, 0, 30)
-					end
-				end
-				frame.CanvasSize = UDim2.new(0, 0, 0, (entries * 34) - 4)
-				frame.ScrollBarImageTransparency = 0
-			else
-				frame.CanvasSize = UDim2.new(0, 0, 0, 0)
-				frame.ScrollBarImageTransparency = 1
-			end
-		end
-	
-		-- Initial fill of the list using the full options list
-		updateMultiDropdown(allOptions)
-	
-		local search = dropdown.Search
-		local focused = false
+		list = list or {}
 	
 		search.Button.MouseButton1Click:Connect(function()
 			if search.Button.Rotation == 0 then
-				updateMultiDropdown(allOptions, callback)
+				self:updateMultiDropdown(multiDropdown, nil, list, selectedValues, callback)
 			else
-				updateMultiDropdown({}, callback)
+				self:updateMultiDropdown(multiDropdown, nil, nil, selectedValues, callback)
 			end
-		end)
-	
-		search.TextBox.Focused:Connect(function()
-			if search.Button.Rotation == 0 then
-				updateMultiDropdown(allOptions, callback)
-			end
-			focused = true
-		end)
-	
-		search.TextBox.FocusLost:Connect(function()
-			focused = false
 		end)
 	
 		search.TextBox:GetPropertyChangedSignal("Text"):Connect(function()
-			if focused then
-				local sorted = utility:Sort(search.TextBox.Text, allOptions)
-				sorted = (#sorted ~= 0 and sorted) or allOptions
-				updateMultiDropdown(sorted, callback)
-			end
+			local filteredList = utility:Sort(search.TextBox.Text, list)
+			filteredList = #filteredList ~= 0 and filteredList or list
+			self:updateMultiDropdown(multiDropdown, nil, filteredList, selectedValues, callback)
 		end)
 	
-		return dropdown
-	end	
+		return multiDropdown
+	end
+	
+	function section:updateMultiDropdown(multiDropdown, title, list, selectedValues, callback)
+		multiDropdown = self:getModule(multiDropdown)
+	
+		if title then
+			multiDropdown.Search.TextBox.Text = title
+		end
+	
+		-- Clear any existing list entries
+		for _, button in pairs(multiDropdown.List.Frame:GetChildren()) do
+			if button:IsA("ImageButton") then
+				button:Destroy()
+			end
+		end
+	
+		local totalHeight = 0
+	
+		for _, value in pairs(list or {}) do
+			-- Calculate text bounds using TextService for dynamic sizing
+			local textSize = TextService:GetTextSize(value, 12, Enum.Font.SourceSansSemibold, Vector2.new(1000, 30))
+			local paddingX = 20  -- Total horizontal padding
+			local paddingY = 10  -- Total vertical padding
+			local buttonWidth = textSize.X + paddingX
+			local buttonHeight = textSize.Y + paddingY
+	
+			local button = utility:Create("ImageButton", {
+				Parent = multiDropdown.List.Frame,
+				BackgroundTransparency = 1,
+				BorderSizePixel = 0,
+				Size = UDim2.new(0, buttonWidth, 0, buttonHeight),
+				ZIndex = 2,
+				Image = "rbxassetid://5028857472",
+				ImageColor3 = selectedValues[value] and Color3.fromRGB(255, 0, 0) or themes.DarkContrast,
+				ScaleType = Enum.ScaleType.Slice,
+				SliceCenter = Rect.new(2, 2, 298, 298)
+			}, {
+				utility:Create("TextLabel", {
+					BackgroundTransparency = 1,
+					Position = UDim2.new(0, paddingX * 0.5, 0, 0), -- Leave half the padding on the left
+					Size = UDim2.new(1, -paddingX, 1, 0),
+					ZIndex = 3,
+					Font = Enum.Font.SourceSansSemibold,
+					Text = value,
+					TextColor3 = themes.TextColor,
+					TextSize = 12,
+					TextXAlignment = Enum.TextXAlignment.Left,
+					TextTransparency = 0.1
+				}),
+				utility:Create("UICorner", {
+					CornerRadius = UDim.new(0, 5)
+				})
+			})
+	
+			button.MouseButton1Click:Connect(function()
+				selectedValues[value] = not selectedValues[value]
+				self:updateMultiDropdown(multiDropdown, nil, list, selectedValues, callback)
+	
+				if callback then
+					local selectedKeys = {}
+					for key, isSelected in pairs(selectedValues) do
+						if isSelected then
+							table.insert(selectedKeys, key)
+						end
+					end
+					callback(selectedKeys, function(...)
+						self:updateMultiDropdown(multiDropdown, ...)
+					end)
+				end
+			end)
+	
+			totalHeight = totalHeight + buttonHeight + 4 -- Account for layout padding
+		end
+	
+		local frame = multiDropdown.List.Frame
+		multiDropdown.Size = UDim2.new(1, 0, 0, math.max(totalHeight + 38, 30))
+		frame.CanvasSize = UDim2.new(0, 0, 0, totalHeight)
+		frame.ScrollBarImageTransparency = totalHeight > 90 and 0 or 1
+	end
+	
+	return section
 
 	function library:SelectPage(page, toggle)
 
