@@ -4,8 +4,6 @@ if not game:IsLoaded() then
     print("Loaded Game")
 end
 
-print("v1")
-
 local Player = game:GetService("Players").LocalPlayer
 
 Player.Idled:connect(function()
@@ -22,7 +20,7 @@ end
 
 local tppos = function(x, y, z)
 	local r = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-	if r then game:GetService("TweenService"):Create(r, TweenInfo.new(12), {CFrame = CFrame.new(x, y, z)}):Play() end
+	if r then game:GetService("TweenService"):Create(r, TweenInfo.new(10), {CFrame = CFrame.new(x, y, z)}):Play() end
 end
 
 local autochewbubble = false
@@ -79,15 +77,6 @@ local Window = library.new()
 local Main = Window:addPage("Auto Farm", 5012544693)
 local AutoFarm = Main:addSection("Auto Farm")
 
-local cg = require(game:GetService("ReplicatedStorage").Shared.Constants)
-local autoCollectCoins = AutoFarm:addToggle("Auto Collect Coins/Gems", false, function(on)
-    if on then 
-        cg.DefaultPickupRadius = 9999999999999999999999
-    else
-        cg.DefaultPickupRadius = 10
-    end
-end)
-
 local autobubble = AutoFarm:addToggle("Auto Bubble", false, function(on)
     if on then
         autochewbubble = true
@@ -123,6 +112,15 @@ local autosellbubble = AutoFarm:addToggle("Auto Sell Bubble", false, function(on
         end)
     else
         autoSellBubbles = false
+    end
+end)
+
+local cg = require(game:GetService("ReplicatedStorage").Shared.Constants)
+local autoCollectCoins = AutoFarm:addToggle("Auto Collect Coins/Gems", false, function(on)
+    if on then 
+        cg.DefaultPickupRadius = 9999999999999999999999
+    else
+        cg.DefaultPickupRadius = 10
     end
 end)
 
@@ -482,19 +480,19 @@ local function goldenCheck(gCheck)
     local area = nil
     if y >= 0 and y < 410 then
         area = "a0"
-        argspawn()
+        argArea1()
     elseif y >= 410 and y < 2650 then
         area = "a1"
-        argArea1()
+        argArea2()
     elseif y >= 2650 and y < 6850 then
         area = "a2"
-        argArea2()
+        argArea3()
     elseif y >= 6850 and y < 10130 then
         area = "a3"
-        argArea3()
+        argArea4()
     elseif y >= 10130 and y <= 15960 then
         area = "a4"
-        argArea4()
+        argArea5()
     else
         area = nil
     end
@@ -515,19 +513,19 @@ local function royalCheck(rCheck)
     local area = nil
     if y >= 0 and y < 410 then
         area = "a1"
-        argspawn()
+        argArea1()
     elseif y >= 410 and y < 2650 then
         area = "a2"
-        argArea1()
+        argArea2()
     elseif y >= 2650 and y < 6850 then
         area = "a3"
-        argArea2()
+        argArea3()
     elseif y >= 6850 and y < 10130 then
         area = "a4"
-        argArea3()
+        argArea4()
     elseif y >= 10130 and y <= 15960 then
         area = "a5"
-        argArea4()
+        argArea5()
     else
         area = nil
     end
@@ -590,7 +588,7 @@ local autoClaimTickets = miscstuff:addToggle("Auto Claim Wheel Spin", false, fun
     end
 end)
 
-local autogChest = miscstuff:addToggle("Auto Open Golden Chest", false, function(on)
+local autogChest = miscstuff:addToggle("Auto Open Golden Chest (broken)", false, function(on)
     if on then
         autoGoldenChest = true
         task.spawn(function()
@@ -623,7 +621,7 @@ local autogChest = miscstuff:addToggle("Auto Open Golden Chest", false, function
     end
 end)
 
-local autorChest = miscstuff:addToggle("Auto Open Royal Chest", false, function(on)
+local autorChest = miscstuff:addToggle("Auto Open Royal Chest (broken)", false, function(on)
     if on then
         autoRoyalChest = true
         task.spawn(function()
@@ -657,7 +655,7 @@ local autorChest = miscstuff:addToggle("Auto Open Royal Chest", false, function(
     end
 end)
 
-local autombox = miscstuff:addToggle("Auto Open Mystery Box (Not auto yet)", false, function(on)
+local autombox = miscstuff:addToggle("Auto Open Mystery Box (Not auto)", false, function(on)
     if on then
         automystery = true
         task.spawn(function()
@@ -671,17 +669,7 @@ local autombox = miscstuff:addToggle("Auto Open Mystery Box (Not auto yet)", fal
                 print("Mystery box used!")
                 task.wait(3)
                 if checkGiftsFolder(workspace.Rendered.Gifts) then
-                    local player = game:GetService("Players").LocalPlayer
-                    local chewingUI = player.PlayerGui.ScreenGui.HUD.Chewing
-                    local targetPosition = Vector2.new(chewingUI.AbsolutePosition.X, chewingUI.AbsolutePosition.Y - 20)
-                    local virtualUser = game:GetService("VirtualUser")
-                    for i = 1, 15 do
-                        print("Click number: " .. i)
-                        virtualUser:Button1Down(targetPosition, workspace.CurrentCamera.CFrame)
-                        task.wait(0.1)
-                        virtualUser:Button1Up(targetPosition, workspace.CurrentCamera.CFrame)
-                        task.wait(0.25)
-                    end
+                    -- nothing 
                 end
             end
         end)
