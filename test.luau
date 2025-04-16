@@ -22,9 +22,10 @@ end
 
 local tppos = function(x, y, z)
 	local r = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-	if r then game:GetService("TweenService"):Create(r, TweenInfo.new(10), {CFrame = CFrame.new(x, y, z)}):Play() end
+	if r then game:GetService("TweenService"):Create(r, TweenInfo.new(12), {CFrame = CFrame.new(x, y, z)}):Play() end
 end
 
+local mBoxOpened = true
 local autochewbubble = false
 local autoSellBubbles = false
 local autoChests = false
@@ -598,7 +599,7 @@ local autogChest = miscstuff:addToggle("Auto Open Golden Chest", false, function
                     tppos(goldenPos.X, goldenPos.Y + 10, goldenPos.Z) 
                     goldenChecked = true
                 end
-                if rchest and royalKey.Visible then
+                if rchest and goldenKey.Visible then
                     local args = {
                         [1] = "UnlockRiftChest",
                         [2] = "golden-chest"
@@ -652,25 +653,30 @@ local autorChest = miscstuff:addToggle("Auto Open Royal Chest", false, function(
     end
 end)
 
-
 local autombox = miscstuff:addToggle("Auto Open Mystery Box (Not auto yet)", false, function(on)
     if on then
         automystery = true
         task.spawn(function()
             while automystery do
-                local args = {
-                    [1] = "UseGift",
-                    [2] = "Mystery Box",
-                    [3] = 10
-                }
-                game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))                    
-                task.wait(5)
-                if checkGiftsFolder(workspace.Rendered.Gifts) then
-                    print("nothing yet")
+                if mBoxOpened then
+                    local args = {
+                        [1] = "UseGift",
+                        [2] = "Mystery Box",
+                        [3] = 10
+                    }
+                    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+                    mBoxOpened = false
+                end                 
+                task.wait(3)
+                if not mBoxOpened and checkGiftsFolder(workspace.Rendered.Gifts) then
+                    -- click 10 times
+                    task.wait(0.25)
+                    mBoxOpened = true
                 end
             end
         end)
     else
+        mBoxOpened = true
         automystery = false
     end
 end)
@@ -713,6 +719,7 @@ end)
 SetSec2:addButton("Kill Hub", function()
 	for i,v in pairs(connections) do
 		v:Disconnect();
+            mBoxOpened = true
             autochewbubble = false
             autoSellBubbles = false
             autoChests = false
