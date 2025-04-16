@@ -4,7 +4,7 @@ if not game:IsLoaded() then
     print("Loaded Game")
 end
 
-print("v1.0.1")
+print("v1.0.0")
 
 local Player = game:GetService("Players").LocalPlayer
 
@@ -592,13 +592,13 @@ local autogChest = miscstuff:addToggle("Auto Open Golden Chest", false, function
             while autoGoldenChest do
                 local gchest = workspace.Rendered.Rifts["golden-chest"]:FindFirstChild("Chest") 
                 local goldenKey = game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Inventory.Frame.Inner.Items.Main.ScrollingFrame.Powerups.Items:FindFirstChild("Golden Key")
-                if gchest and goldenKey then
-                    if not goldenChecked then
-                        goldenCheck() 
-                        print("Golden Chest Position: X=" .. goldenPos.X .. ", Y=" .. goldenPos.Y .. ", Z=" .. goldenPos.Z)
-                        tppos(goldenPos.X, goldenPos.Y + 10, goldenPos.Z) 
-                        goldenChecked = true
-                    end
+                if not goldenChecked and gchest and goldenKey.Visible then
+                    goldenCheck() 
+                    print("Golden Chest Position: X=" .. goldenPos.X .. ", Y=" .. goldenPos.Y .. ", Z=" .. goldenPos.Z)
+                    tppos(goldenPos.X, goldenPos.Y + 10, goldenPos.Z) 
+                    goldenChecked = true
+                end
+                if rchest and royalKey.Visible then
                     local args = {
                         [1] = "UnlockRiftChest",
                         [2] = "golden-chest"
@@ -625,13 +625,13 @@ local autorChest = miscstuff:addToggle("Auto Open Royal Chest", false, function(
             while autoRoyalChest do
                 local rchest = workspace.Rendered.Rifts["royal-chest"]:FindFirstChild("Chest")
                 local royalKey = game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Inventory.Frame.Inner.Items.Main.ScrollingFrame.Powerups.Items:FindFirstChild("Royal Key")
-                if not royalChecked and rchest and royalKey then
+                if not royalChecked and rchest and royalKey.Visible then
                     islandCheck()
                     print("Royal Chest Position: X=" .. royalPos.X .. ", Y=" .. royalPos.Y .. ", Z=" .. royalPos.Z)
                     tppos(royalPos.X, royalPos.Y + 10, royalPos.Z)
                     royalChecked = true 
                 end
-                if rchest and royalKey then
+                if rchest and royalKey.Visible then
                     local args = {
                         [1] = "UnlockRiftChest",
                         [2] = "royal-chest"
