@@ -4,7 +4,7 @@ if not game:IsLoaded() then
     print("Loaded Game")
 end
 
-print("v1.0.0")
+print("v1")
 
 local Player = game:GetService("Players").LocalPlayer
 
@@ -481,20 +481,20 @@ local function goldenCheck(gCheck)
     local y = pos.Y
     local area = nil
     if y >= 0 and y < 410 then
+        area = "a0"
+        argspawn()
+    elseif y >= 410 and y < 2650 then
         area = "a1"
         argArea1()
-    elseif y >= 410 and y < 2650 then
+    elseif y >= 2650 and y < 6850 then
         area = "a2"
         argArea2()
-    elseif y >= 2650 and y < 6850 then
+    elseif y >= 6850 and y < 10130 then
         area = "a3"
         argArea3()
-    elseif y >= 6850 and y < 10130 then
+    elseif y >= 10130 and y <= 15960 then
         area = "a4"
         argArea4()
-    elseif y >= 10130 and y <= 15960 then
-        area = "a5"
-        argArea5()
     else
         area = nil
     end
@@ -515,19 +515,19 @@ local function royalCheck(rCheck)
     local area = nil
     if y >= 0 and y < 410 then
         area = "a1"
-        argArea1()
+        argspawn()
     elseif y >= 410 and y < 2650 then
         area = "a2"
-        argArea2()
+        argArea1()
     elseif y >= 2650 and y < 6850 then
         area = "a3"
-        argArea3()
+        argArea2()
     elseif y >= 6850 and y < 10130 then
         area = "a4"
-        argArea4()
+        argArea3()
     elseif y >= 10130 and y <= 15960 then
         area = "a5"
-        argArea5()
+        argArea4()
     else
         area = nil
     end
