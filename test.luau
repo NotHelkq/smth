@@ -4,7 +4,7 @@ if not game:IsLoaded() then
     print("Loaded Game")
 end
 
-print("v1.0.1")
+print("v1.0.0")
 
 local Player = game:GetService("Players").LocalPlayer
 
@@ -449,23 +449,35 @@ end)
 
 ---------------------------------
 
-local function clickNearIcon(iconPath, clickCount)
-    local icon = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild(iconPath, true)
-    if icon and icon.Visible then
-        for i = 1, clickCount do
-            local iconPosition = icon.AbsolutePosition
-            local x = iconPosition.X 
-            local y = iconPosition.Y - 140 
-            mousemoveabs(x, y)
-            mouse1click()
-            wait(0.25)
-        end
-        print(clickCount .. " clicks performed near the icon!")
-        return true
-    else
-        print("The icon is either not visible or not found!")
+local function clickAboveIcon(iconPath, clickCount)
+    local player = game:GetService("Players").LocalPlayer
+    local playerGui = player:WaitForChild("PlayerGui")
+    local icon = playerGui:FindFirstChild(iconPath, true)
+    if not icon or not icon.Visible then
+        print("Icon not found or not visible.")
         return false
     end
+
+    local absPos = icon.AbsolutePosition
+    local absSize = icon.AbsoluteSize  
+
+    local margin = 20
+    local offsetY = absSize.Y * 2 + margin
+    local clickX = absPos.X + absSize.X / 2
+    local clickY = absPos.Y - offsetY 
+
+    local vu = game:GetService("VirtualUser")
+    vu:CaptureController()
+
+    for i = 1, clickCount do
+        vu:Button1Down(Vector2.new(clickX, clickY), workspace.CurrentCamera.CFrame)
+        wait(0.05)
+        vu:Button1Up(Vector2.new(clickX, clickY), workspace.CurrentCamera.CFrame)
+        wait(0.1)
+    end
+
+    print(clickCount .. " clicks performed above the icons at (" .. clickX .. ", " .. clickY .. ")")
+    return true
 end
 
 local function checkGiftsFolder(folderPath)
