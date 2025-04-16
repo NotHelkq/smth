@@ -4,7 +4,7 @@ if not game:IsLoaded() then
     print("Loaded Game")
 end
 
-print("v1.0.0.1")
+print("v1.0.0.0")
 
 local Player = game:GetService("Players").LocalPlayer
 
@@ -24,6 +24,23 @@ local tppos = function(x, y, z)
 	local r = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
 	if r then game:GetService("TweenService"):Create(r, TweenInfo.new(10), {CFrame = CFrame.new(x, y, z)}):Play() end
 end
+
+local autochewbubble = false
+local autoSellBubbles = false
+local autoChests = false
+local autoAlienShop = false
+local autoshardShop = false
+local openingEggs = false
+local tpToEggs = false
+local autoPlaytime = false
+local autotickets = false
+local autoGoldenChest = false
+local islandChecked = false
+local automystery = false
+local selectedEgg = nil
+local selectedEnchant = nil
+local islandpos = nil
+local hatchingEggs = 1
 
 local enchantments = {
     "⚡ Team Up I",
@@ -65,7 +82,6 @@ local autoCollectCoins = AutoFarm:addButton("Auto Collect Coins/Gems", function(
     c.DefaultPickupRadius = 9999999999999999999999
 end)
 
-local autochewbubble = false
 local autobubble = AutoFarm:addToggle("Auto Bubble", false, function(on)
     if on then
         autochewbubble = true
@@ -85,7 +101,6 @@ local autobubble = AutoFarm:addToggle("Auto Bubble", false, function(on)
     end
 end)
 
-local autoSellBubbles = false
 local autosellbubble = AutoFarm:addToggle("Auto Sell Bubble", false, function(on)
     if on then
         autoSellBubbles = true
@@ -105,7 +120,6 @@ local autosellbubble = AutoFarm:addToggle("Auto Sell Bubble", false, function(on
     end
 end)
 
-local autoChests = false
 local autocollectChests = AutoFarm:addToggle("Auto Claim Void/Giant Chest", false, function(on)
     if on then
         autoChests = true
@@ -132,7 +146,6 @@ local autocollectChests = AutoFarm:addToggle("Auto Claim Void/Giant Chest", fals
     end
 end)
 
-local autoAlienShop = false
 local autoBuyAlien = AutoFarm:addToggle("Auto Buy Alien Merchant", false, function(on)
     if on then
         autoAlienShop = true
@@ -154,7 +167,6 @@ local autoBuyAlien = AutoFarm:addToggle("Auto Buy Alien Merchant", false, functi
     end
 end)
 
-local autoshardShop = false
 local autoBuyShard = AutoFarm:addToggle("Auto Buy Black Market", false, function(on)
     if on then
         autoshardShop = true
@@ -276,8 +288,6 @@ local area5 = Teleport:addButton("Area 5 - Zen", function(tp)
 end)
 
 
-local selectedEgg = nil
-local hatchingEggs = 1
 local Autoopeneggs = Window:addPage("Eggs", 5012544693)
 local eggstuff = Autoopeneggs:addSection("Hatch (You must be near egg!)")
 local egg = eggstuff:addDropdown("Eggs", {"Infinity Egg","Common Egg","Spotted Egg","Iceshard Egg","Spikey Egg","Magma Egg","Crystal Egg","Lunar Egg","Void Egg","Hell Egg","Nightmare Egg","Rainbow Egg"}, function(selected)
@@ -287,7 +297,6 @@ local multiegg = eggstuff:addSlider("Open Amount", 1, 1, 6, function(multi)
     hatchingEggs = multi
 end)
 
-local openingEggs = false
 local openEgg = eggstuff:addToggle("Open Eggs", false, function(on)
     if on then 
         openingEggs = true
@@ -307,7 +316,6 @@ local openEgg = eggstuff:addToggle("Open Eggs", false, function(on)
     end
 end)
 
-local tpToEggs = false
 local tpEgg = eggstuff:addToggle("Teleport to Egg", false, function(on)
     if on then 
         tpToEggs = true
@@ -430,7 +438,6 @@ end)
 
 -----------------------------------
 
-local selectedEnchant = nil
 local Enchants = Window:addPage("Enchants", 5012544693)
 local enchanting = Enchants:addSection("Enchanting")
 local enchantlist = enchanting:addDropdown("Enchantment list", {"⚡ Team Up I","⚡ Team Up II","⚡ Team Up III","⚡ Team Up IV","⚡ Team Up V","💰 Looter I","💰 Looter II","💰 Looter III","💰 Looter IV","💰 Looter V","🫧 Bubbler I","🫧 Bubbler II","🫧 Bubbler III","🫧 Bubbler IV","🫧 Bubbler V","✨ Gleaming I","✨ Gleaming II", "✨ Gleaming III"}, function(eSelected)
@@ -457,8 +464,6 @@ local function checkGiftsFolder(folderPath)
     end
 end
 
-
-local islandpos = nil
 local function islandCheck(iCheck)
     local pos = workspace.Rendered.Rifts["golden-chest"].Chest.WorldPivot.Position 
     local roundedPos = Vector3.new(
@@ -536,7 +541,6 @@ local allAreas = miscstuff:addButton("Unlock All Areas", function(tp)
     task.wait(3)
 end)
 
-local autoPlaytime = false
 local autoRewards = miscstuff:addToggle("Auto Claim Playtime Rewards", false, function(on)
     if on then
         autoPlaytime = true
@@ -557,7 +561,6 @@ local autoRewards = miscstuff:addToggle("Auto Claim Playtime Rewards", false, fu
     end
 end)
 
-local autotickets = false
 local autoClaimTickets = miscstuff:addToggle("Auto Claim Wheel Spin", false, function(on)
     if on then
         autotickets = true
@@ -575,8 +578,6 @@ local autoClaimTickets = miscstuff:addToggle("Auto Claim Wheel Spin", false, fun
     end
 end)
 
-local autoGoldenChest = false
-local islandChecked = false
 local autogChest = miscstuff:addToggle("Auto Open Golden Chest (Broken)", false, function(on)
     if on then
         autoGoldenChest = true
@@ -607,13 +608,10 @@ local autogChest = miscstuff:addToggle("Auto Open Golden Chest (Broken)", false,
         end)
     else
         autoGoldenChest = false
-        islandChecked = false -
+        islandChecked = false
     end
 end)
 
-
-
-local automystery = false
 local autombox = miscstuff:addToggle("Auto Open Mystery Box (Not auto yet)", false, function(on)
     if on then
         automystery = true
@@ -646,12 +644,26 @@ end)
 SetSec2:addButton("Kill Hub", function()
 	for i,v in pairs(connections) do
 		v:Disconnect();
-		autoeggRoll = false
+            autochewbubble = false
+            autoSellBubbles = false
+            autoChests = false
+            autoAlienShop = false
+            autoshardShop = false
+            openingEggs = false
+            tpToEggs = false
+            autoPlaytime = false
+            autotickets = false
+            autoGoldenChest = false
+            islandChecked = false
+            automystery = false
+            selectedEgg = nil
+            selectedEnchant = nil
+            islandpos = nil
+            hatchingEggs = 1
 	end
 	Window.container:Destroy()
 end)
 
 Window:SelectPage(Window.pages[1], true)
 
--- workspace.Rendered.Gifts
 -- game:GetService("ReplicatedStorage").Assets.Rifts["royal-chest"].Chest
