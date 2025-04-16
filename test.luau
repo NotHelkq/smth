@@ -4,7 +4,7 @@ if not game:IsLoaded() then
     print("Loaded Game")
 end
 
-print("v1.0.0")
+print("v1.1.0")
 
 local Player = game:GetService("Players").LocalPlayer
 
@@ -80,9 +80,13 @@ local Window = library.new()
 local Main = Window:addPage("Auto Farm", 5012544693)
 local AutoFarm = Main:addSection("Auto Farm")
 
-local autoCollectCoins = AutoFarm:addButton("Auto Collect Coins/Gems", function(cg)
-    local c = require(game:GetService("ReplicatedStorage").Shared.Constants)
-    c.DefaultPickupRadius = 9999999999999999999999
+local cg = require(game:GetService("ReplicatedStorage").Shared.Constants)
+local autoCollectCoins = AutoFarm:addToggle("Auto Collect Coins/Gems", false, function(on)
+    if on then 
+        cg.DefaultPickupRadius = 9999999999999999999999
+    else
+        cg.DefaultPickupRadius = 10
+    end
 end)
 
 local autobubble = AutoFarm:addToggle("Auto Bubble", false, function(on)
@@ -760,25 +764,26 @@ SetSec2:addButton("Kill Hub", function()
         conn:Disconnect()
     end
 
-    autochewbubble   = false
-    autoSellBubbles  = false
-    autoChests       = false
-    autoAlienShop    = false
-    autoshardShop    = false
-    openingEggs      = false
-    tpToEggs         = false
-    autoPlaytime     = false
-    autotickets      = false
-    autoGoldenChest  = false
-    autoRoyalChest   = false
-    mBoxOpened       = true  
-    royalChecked     = false
-    goldenChecked    = false
-    automystery      = false
-    selectedEgg      = nil
-    selectedEnchant  = nil
-    islandpos        = nil
-    hatchingEggs     = 1
+    autochewbubble         = false
+    autoSellBubbles        = false
+    autoChests             = false
+    autoAlienShop          = false
+    autoshardShop          = false
+    openingEggs            = false
+    tpToEggs               = false
+    autoPlaytime           = false
+    autotickets            = false
+    autoGoldenChest        = false
+    autoRoyalChest         = false
+    mBoxOpened             = true  
+    royalChecked           = false
+    goldenChecked          = false
+    automystery            = false
+    selectedEgg            = nil
+    selectedEnchant        = nil
+    islandpos              = nil
+    hatchingEggs           = 1
+    cg.DefaultPickupRadius = 10
 
     Window.container:Destroy()
 end)
