@@ -1,5 +1,3 @@
-print("v1")
-
 local player = game.Players.LocalPlayer
 local mouse = player:GetMouse()
 
@@ -1818,9 +1816,6 @@ do
 				ScaleType = Enum.ScaleType.Slice,
 				SliceCenter = Rect.new(2, 2, 298, 298)
 			}, {
-				utility:Create("UICorner", {    
-					CornerRadius = UDim.new(0, 5)
-				}),
 				utility:Create("TextBox", {
 					Name = "TextBox",
 					AnchorPoint = Vector2.new(0, 0.5),
