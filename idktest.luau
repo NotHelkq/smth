@@ -1,3 +1,5 @@
+print("v1")
+
 local player = game.Players.LocalPlayer
 local mouse = player:GetMouse()
 
@@ -1885,13 +1887,14 @@ do
 				for _, v in pairs(selected) do
 					txt = txt .. v .. ", "
 				end
-				textBox.Text = txt:sub(1, -3) 
+				textBox.Text = txt:sub(1, -3)
 			else
 				textBox.Text = title
 			end
 		end
 	
 		local function updateMultiDropdown(filteredList, callbackArg)
+			-- Clear any previous options
 			for _, child in pairs(dropdown.List.Frame:GetChildren()) do
 				if child:IsA("ImageButton") then
 					child:Destroy()
@@ -1899,11 +1902,12 @@ do
 			end
 	
 			local entries = 0
+			-- If no filtered list is given, use the full list
 			local optionsToDisplay = filteredList or allOptions
 	
 			for _, value in pairs(optionsToDisplay) do
 				local isSelected = false
-				for i, sel in pairs(selected) do
+				for _, sel in pairs(selected) do
 					if sel == value then
 						isSelected = true
 						break
@@ -1923,7 +1927,7 @@ do
 				}, {
 					utility:Create("Frame", {
 						Name = "Indicator",
-						BackgroundColor3 = Color3.fromRGB(255, 255, 255), 
+						BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 						BorderSizePixel = 0,
 						AnchorPoint = Vector2.new(0, 0),
 						Position = UDim2.new(0, 0, 0, 0),
@@ -1937,7 +1941,7 @@ do
 						Position = UDim2.new(1, -20, 0.5, -8),
 						Size = UDim2.new(0, 16, 0, 16),
 						ZIndex = 3,
-						Image = "rbxassetid://1234567890",  
+						Image = "rbxassetid://1234567890",
 						Visible = isSelected,
 					}),
 					utility:Create("TextLabel", {
@@ -1953,8 +1957,9 @@ do
 						TextTransparency = 0.1,
 					})
 				})
-
+	
 				optionButton.MouseButton1Click:Connect(function()
+					-- Toggle selection of this option
 					local found = false
 					for idx, sel in pairs(selected) do
 						if sel == value then
@@ -1966,6 +1971,7 @@ do
 					if not found then
 						table.insert(selected, value)
 					end
+	
 					local checkMark = optionButton:FindFirstChild("Check")
 					if checkMark then
 						checkMark.Visible = not found
@@ -2001,8 +2007,8 @@ do
 				frame.ScrollBarImageTransparency = 1
 			end
 		end
-	
-		updateMultiDropdown(allOptions)
+
+		updateMultiDropdown({}, callback)
 	
 		local search = dropdown.Search
 		local focused = false
@@ -2372,10 +2378,10 @@ do
 
 		local frame = dropdown.List.Frame
 
-		utility:Tween(dropdown, {Size = UDim2.new(1, 0, 0, (entries == 0 and 30) or math.clamp(entries, 0, 3) * 34 + 38)}, 0.3)
+		utility:Tween(dropdown, {Size = UDim2.new(1, 0, 0, (entries == 0 and 30) or math.clamp(entries, 0, 5) * 34 + 38)}, 0.3)
 		utility:Tween(dropdown.Search.Button, {Rotation = list and 180 or 0}, 0.3)
 
-		if entries > 3 then
+		if entries > 5 then
 
 			for i, button in pairs(dropdown.List.Frame:GetChildren()) do
 				if button:IsA("ImageButton") then
