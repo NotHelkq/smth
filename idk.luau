@@ -399,7 +399,7 @@ do
 				BackgroundTransparency = 1,
 				BorderSizePixel = 0,
 				Position = UDim2.new(0, 8, 0, 8),
-				Size = UDim2.new(1, -16, 1, -16)
+				Size = UDim2.new(1, -16, 1, -20)
 			}, {
 				utility:Create("TextLabel", {
 					Name = "Title",
