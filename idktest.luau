@@ -1,3 +1,5 @@
+-- 1
+
 local player = game.Players.LocalPlayer
 local mouse = player:GetMouse()
 
@@ -387,7 +389,7 @@ do
 		local container = utility:Create("Frame", {
 			Name = title,
 			Parent = page.container,
-			Size = UDim2.new(1, -10, 0, 28),
+			Size = UDim2.new(1, -10, 0, 30),
 			ZIndex = 2,
 			BackgroundColor3 = themes.LightContrast,
 			ClipsDescendants = true
@@ -399,7 +401,7 @@ do
 				BackgroundTransparency = 1,
 				BorderSizePixel = 0,
 				Position = UDim2.new(0, 8, 0, 8),
-				Size = UDim2.new(1, -16, 1, -20)
+				Size = UDim2.new(1, -16, 1, -16)
 			}, {
 				utility:Create("TextLabel", {
 					Name = "Title",
