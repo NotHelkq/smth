@@ -105,8 +105,28 @@ local egg = test:addDropdown("Eggs", {"Aura Egg", "Infinity Egg","Common Egg","S
 end)
 
 local test1 = testing:addSection("Auto Lucky Eggs")
-local luckyegg = test1:addMultiDropdown("Select Options", {"Aura Egg", "Infinity Egg","Common Egg","Spotted Egg","Iceshard Egg","Spikey Egg","Magma Egg","Crystal Egg","Lunar Egg","Void Egg","Hell Egg","Nightmare Egg","Rainbow Egg"}, function(selected)
-    print("Current selections: " .. table.concat(selected, ", "))
+local tests2 = test1:addButton("test 1", function(on)
+    print("test 1")
+end)
+
+local tests3 = test1:addButton("test 2", function(on)
+    print("test 2")
+end)
+
+local tests4 = test1:addButton("test 3", function(on)
+    print("test 3")
+end)
+
+local tests5 = test1:addButton("test 4", function(on)
+    print("test 4")
+end)
+
+local tests6 = test1:addButton("test 5", function(on)
+    print("test 5")
+end)
+
+local tests7 = test1:addButton("test 6", function(on)
+    print("test 6")
 end)
 
 
