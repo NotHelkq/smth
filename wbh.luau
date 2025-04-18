@@ -39,9 +39,6 @@ local petImages = {
 
 local fallbackImage = "https://static.wikia.nocookie.net/bgs-infinity/images/7/73/Common_Pet.png"
 
-local lastWebhookTime = 0
-local cooldownDuration = 2
-
 local function sendWebhook(name, rarity, image, chance)
     local title = "🐾 Pet Hatched!"
     local rarityLower = rarity:lower()
@@ -55,7 +52,7 @@ local function sendWebhook(name, rarity, image, chance)
     end
 
     local desc = string.format(
-        "** 🐾 Pet Name :** %s\n** 💎 Pet Rarity :** %s\n%s** 🕛 Catch Date :** %s 🕛",
+        "** 🐾 Pet Name :** %s 🐾\n** 💎 Pet Rarity :** %s 💎\n%s** 🕛 Catch Date :** %s 🕛",
         name,
         rarity,
         (chance and chance ~= "" and string.format("** ❓ Chance :** %s ❓\n", chance) or ""),
@@ -98,12 +95,9 @@ local function monitorHatch()
             local rarityLower = rarity:lower()
 
             if rarityLower:find("legendary") or rarityLower:find("secret") or rarityLower:find("mythic") then
-                if tick() - lastWebhookTime >= cooldownDuration then
-                    lastWebhookTime = tick()
-                    local image = petImages[name] or fallbackImage
-                    sendWebhook(name, rarity, image, chance)
-                    print("📤 Sent webhook for:", name)
-                end
+                local image = petImages[name] or fallbackImage
+                sendWebhook(name, rarity, image, chance)
+                wait(1)
             end
         end
     end
