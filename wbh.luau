@@ -1,5 +1,3 @@
-print("v2")
-
 local httpRequest =
     (syn and syn.request) or
     (http and http.request) or
@@ -62,7 +60,7 @@ local function sendWebhook(name, rarity, image, chance)
     )    
 
     local data = {
-        ["content"] = "<@534044411475001354> <@858912359103201300>",
+        ["content"] = "<@534044411475001354>",
         ["embeds"] = {{
             ["title"] = title,
             ["description"] = desc,
@@ -72,6 +70,7 @@ local function sendWebhook(name, rarity, image, chance)
         }}
     }
 
+    wait(1)
     httpRequest({
         Url = getgenv().Config.Webhook,
         Method = "POST",
@@ -80,7 +79,6 @@ local function sendWebhook(name, rarity, image, chance)
         },
         Body = httpService:JSONEncode(data)
     })
-    wait(2.5)
 end
 
 local function monitorHatch()
@@ -89,7 +87,6 @@ local function monitorHatch()
 
     local hatch = gui:FindFirstChild("Hatching")
     if not hatch then return end
-
     for _, frame in ipairs(hatch:GetChildren()) do
         if frame:IsA("Frame") and frame:FindFirstChild("Label") and frame:FindFirstChild("Rarity") then
             local name = frame.Label.Text
@@ -100,10 +97,10 @@ local function monitorHatch()
             if rarityLower:find("legendary") or rarityLower:find("secret") or rarityLower:find("mythic") then
                 local image = petImages[name] or fallbackImage
                 sendWebhook(name, rarity, image, chance)
-                wait(2.5)
             end
         end
     end
+	repeat task.wait() until not gui:FindFirstChild("Hatching")
 end
 
 runService.RenderStepped:Connect(monitorHatch)
