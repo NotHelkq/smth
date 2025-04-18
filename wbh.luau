@@ -70,7 +70,7 @@ local function sendWebhook(name, rarity, image, chance)
         }}
     }
 
-    wait(1)
+    wait(3)
     httpRequest({
         Url = getgenv().Config.Webhook,
         Method = "POST",
