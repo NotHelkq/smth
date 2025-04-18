@@ -1,3 +1,5 @@
+print("v2")
+
 local httpRequest =
     (syn and syn.request) or
     (http and http.request) or
@@ -60,7 +62,7 @@ local function sendWebhook(name, rarity, image, chance)
     )    
 
     local data = {
-        ["content"] = "<@534044411475001354>",
+        ["content"] = "<@534044411475001354> <@858912359103201300>",
         ["embeds"] = {{
             ["title"] = title,
             ["description"] = desc,
