@@ -39,16 +39,8 @@ local petImages = {
 
 local fallbackImage = "https://static.wikia.nocookie.net/bgs-infinity/images/7/73/Common_Pet.png"
 
-local recentFrames = {}
-
-local function isRecentFrame(frame)
-    local id = tostring(frame)
-    if recentFrames[id] and tick() - recentFrames[id] < 10 then
-        return true
-    end
-    recentFrames[id] = tick()
-    return false
-end
+local lastWebhookTime = 0
+local cooldownDuration = 2
 
 local function sendWebhook(name, rarity, image, chance)
     local title = "🐾 Pet Hatched!"
@@ -62,11 +54,13 @@ local function sendWebhook(name, rarity, image, chance)
         title = "🔥 Mythic Pet Hatched"
     end
 
-    local desc = string.format("** 🐾 Pet Name :** %s\n** 💎 Pet Rarity :** %s\n", name, rarity)
-    if chance and chance ~= "" then
-        desc = desc .. "** ❓ Chance :** " .. chance .. " ❓ " .. "\n"
-    end
-    desc = desc .. "** 🕛 Catch Date :** " .. os.date("%m/%d/%Y %H:%M:%S") .. " 🕛 "
+    local desc = string.format(
+        "** 🐾 Pet Name :** %s\n** 💎 Pet Rarity :** %s\n%s** 🕛 Catch Date :** %s 🕛",
+        name,
+        rarity,
+        (chance and chance ~= "" and string.format("** ❓ Chance :** %s ❓\n", chance) or ""),
+        os.date("%m/%d/%Y %H:%M:%S")
+    )    
 
     local data = {
         ["content"] = "<@534044411475001354>",
@@ -74,12 +68,8 @@ local function sendWebhook(name, rarity, image, chance)
             ["title"] = title,
             ["description"] = desc,
             ["color"] = 28927,
-            ["footer"] = {
-                ["text"] = "Ez pz"
-            },
-            ["thumbnail"] = {
-                ["url"] = image or fallbackImage
-            }
+            ["footer"] = { ["text"] = "Ez pz" },
+            ["thumbnail"] = { ["url"] = image or fallbackImage }
         }}
     }
 
@@ -108,10 +98,10 @@ local function monitorHatch()
             local rarityLower = rarity:lower()
 
             if rarityLower:find("legendary") or rarityLower:find("secret") or rarityLower:find("mythic") then
-                if not isRecentFrame(frame) then
+                if tick() - lastWebhookTime >= cooldownDuration then
+                    lastWebhookTime = tick()
                     local image = petImages[name] or fallbackImage
                     sendWebhook(name, rarity, image, chance)
-                    task.wait(0.25)
                     print("📤 Sent webhook for:", name)
                 end
             end
