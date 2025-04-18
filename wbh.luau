@@ -62,11 +62,11 @@ local function sendWebhook(name, rarity, image, chance)
         title = "🔥 Mythic Pet Hatched"
     end
 
-    local desc = string.format("**Pet Name:** %s\n**Pet Rarity:** %s\n", name, rarity)
+    local desc = string.format("** 🐾 Pet Name :** %s\n** 💎 Pet Rarity :** %s\n", name, rarity)
     if chance and chance ~= "" then
-        desc = desc .. "**Chance:** " .. chance .. "\n"
+        desc = desc .. "** ❓ Chance :** " .. chance .. " ❓ " .. "\n"
     end
-    desc = desc .. "**Catch Date:** " .. os.date("%Y-%m-%d %H:%M:%S")
+    desc = desc .. "** 🕛 Catch Date :** " .. os.date("%m/%d/%Y %H:%M:%S") .. " 🕛 "
 
     local data = {
         ["content"] = "<@534044411475001354>",
@@ -75,7 +75,7 @@ local function sendWebhook(name, rarity, image, chance)
             ["description"] = desc,
             ["color"] = 28927,
             ["footer"] = {
-                ["text"] = "Pet Hatched By: " .. player.Name
+                ["text"] = "Ez pz"
             },
             ["thumbnail"] = {
                 ["url"] = image or fallbackImage
@@ -111,6 +111,7 @@ local function monitorHatch()
                 if not isRecentFrame(frame) then
                     local image = petImages[name] or fallbackImage
                     sendWebhook(name, rarity, image, chance)
+                    task.wait(0.25)
                     print("📤 Sent webhook for:", name)
                 end
             end
