@@ -78,6 +78,7 @@ local function sendWebhook(name, rarity, image, chance)
         },
         Body = httpService:JSONEncode(data)
     })
+    wait(1)
 end
 
 local function monitorHatch()
