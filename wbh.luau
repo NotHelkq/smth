@@ -78,7 +78,7 @@ local function sendWebhook(name, rarity, image, chance)
         },
         Body = httpService:JSONEncode(data)
     })
-    wait(1)
+    wait(2.5)
 end
 
 local function monitorHatch()
@@ -98,7 +98,7 @@ local function monitorHatch()
             if rarityLower:find("legendary") or rarityLower:find("secret") or rarityLower:find("mythic") then
                 local image = petImages[name] or fallbackImage
                 sendWebhook(name, rarity, image, chance)
-                wait(1)
+                wait(2.5)
             end
         end
     end
