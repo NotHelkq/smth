@@ -100,25 +100,6 @@ local autobubble = AutoFarm:addToggle("Auto Bubble", false, function(on)
     end
 end)
 
-local autosellbubble = AutoFarm:addToggle("Auto Sell Bubble", false, function(on)
-    if on then
-        autoSellBubbles = true
-        task.spawn(function()
-            while autoSellBubbles do
-                local args = {
-                    [1] = "SellBubble"
-                }
-                    
-                game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
-
-                task.wait(1)
-            end
-        end)
-    else
-        autoSellBubbles = false
-    end
-end)
-
 local cg = require(game:GetService("ReplicatedStorage").Shared.Constants)
 local autoCollectCoins = AutoFarm:addToggle("Auto Collect Coins/Gems", false, function(on)
     if on then 
@@ -298,7 +279,7 @@ end)
 
 local Autoopeneggs = Window:addPage("Eggs", 5012544693)
 local eggstuff = Autoopeneggs:addSection("Hatch (You must be near egg!)")
-local egg = eggstuff:addDropdown("Eggs", {"Infinity Egg","Common Egg","Spotted Egg","Iceshard Egg","Spikey Egg","Magma Egg","Crystal Egg","Lunar Egg","Void Egg","Hell Egg","Nightmare Egg","Rainbow Egg"}, function(selected)
+local egg = eggstuff:addDropdown("Eggs", {"Infinity Egg","Bunny Egg","Pastel Egg","Common Egg","Spotted Egg","Iceshard Egg","Spikey Egg","Magma Egg","Crystal Egg","Lunar Egg","Void Egg","Hell Egg","Nightmare Egg","Rainbow Egg"}, function(selected)
     selectedEgg = selected
 end)
 local multiegg = eggstuff:addSlider("Open Amount", 1, 1, 6, function(multi)
