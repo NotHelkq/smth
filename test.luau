@@ -297,7 +297,7 @@ local openEgg = eggstuff:addToggle("Open Eggs", false, function(on)
                     [3] = hatchingEggs
                 }
                 game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))   
-                task.wait(0.2)
+                task.wait(0.1)
             end
         end)
     else
@@ -427,11 +427,11 @@ end)
 
 -----------------------------------
 
-local Enchants = Window:addPage("Enchants", 5012544693)
-local enchanting = Enchants:addSection("Enchanting")
-local enchantlist = enchanting:addDropdown("Enchantment list", {"⚡ Team Up I","⚡ Team Up II","⚡ Team Up III","⚡ Team Up IV","⚡ Team Up V","💰 Looter I","💰 Looter II","💰 Looter III","💰 Looter IV","💰 Looter V","🫧 Bubbler I","🫧 Bubbler II","🫧 Bubbler III","🫧 Bubbler IV","🫧 Bubbler V","✨ Gleaming I","✨ Gleaming II", "✨ Gleaming III"}, function(eSelected)
-    selectedEnchant = eSelected
-end)
+--local Enchants = Window:addPage("Enchants", 5012544693)
+--local enchanting = Enchants:addSection("Enchanting")
+--local enchantlist = enchanting:addDropdown("Enchantment list", {"⚡ Team Up I","⚡ Team Up II","⚡ Team Up III","⚡ Team Up IV","⚡ Team Up V","💰 Looter I","💰 Looter II","💰 Looter III","💰 Looter IV","💰 Looter V","🫧 Bubbler I","🫧 Bubbler II","🫧 Bubbler III","🫧 Bubbler IV","🫧 Bubbler V","✨ Gleaming I","✨ Gleaming II", "✨ Gleaming III"}, function(eSelected)
+--    selectedEnchant = eSelected
+--end)
 
 ---------------------------------
 
@@ -754,3 +754,13 @@ SetSec2:addButton("Kill Hub", function()
 
     Window.container:Destroy()
 end)
+
+
+
+--local args = {
+--    [1] = "CraftPotion",
+--    [2] = "Coins",
+--    [3] = 5,
+--    [4] = true
+--}
+--game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
