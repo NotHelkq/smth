@@ -785,8 +785,8 @@ local function tpafkPos()
 end
 
 local bunnyPos = nil
-local function pastelCheck(e2Check)
-    local pos = workspace.Rendered.Rifts["event-2"].WorldPivot.Position
+local function bunnyCheck(e1Check)
+    local pos = workspace.Rendered.Rifts["event-1"].WorldPivot.Position
     local e1Pos = Vector3.new(
         math.floor(pos.X + 0.5),
         math.floor(pos.Y + 0.5),
@@ -889,7 +889,7 @@ local autoevent1egg = testing:addToggle("Auto Lucky Bunny Egg", false, function(
             while autobunnyegg do
                 local event1egg = workspace.Rendered.Rifts["event-1"]
                 if not event1Checked and event1egg then
-                    pastelCheck()
+                    bunnyCheck()
                     print("Lucky Bunny Egg Position: X=" .. bunnyPos.X .. ", Y=" .. bunnyPos.Y .. ", Z=" .. bunnyPos.Z)
                     playerPos()
                     tppos(bunnyPos.X, plrPos.Y, bunnyPos.Z)
