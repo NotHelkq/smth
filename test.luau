@@ -784,6 +784,34 @@ local function tpafkPos()
     print("Player's afk position : X = " .. afkPos.X .. ", Y = " .. afkPos.Y .. ", Z = " .. afkPos.Z)
 end
 
+local function afkposCheck()
+    local pos = Vector3.new(afkPos.X, afkPos.Y, afkPos.Z)
+    local y = pos.y
+    local area = nil
+    if y >= 0 and y < 410 then
+        area = "a1"
+        argArea1()
+    elseif y >= 410 and y < 2650 then
+        area = "a2"
+        argArea2()
+    elseif y >= 2650 and y < 6850 then
+        area = "a3"
+        argArea3()
+    elseif y >= 6850 and y < 10130 then
+        area = "a4"
+        argArea4()
+    elseif y >= 10130 and y <= 15960 then
+        area = "a5"
+        argArea5()
+    else
+        area = nil
+        print("Position not within defined area ranges.")
+    end
+    if area ~= nil then
+        task.wait(2)
+    end
+end
+
 local bunnyPos = nil
 local function bunnyCheck(e1Check)
     local pos = workspace.Rendered.Rifts["event-1"].WorldPivot.Position
@@ -865,18 +893,27 @@ local afkposbutton = testing:addButton("Save afk Position", function(tp)
     print("afk pos is saved")
 end)
 
+local afkposChecked = false
 local afkPosOn = false
 local afkpostoggle = testing:addToggle("Afk Position Teleport", false, function(on)
     if on then
         afkPosOn = true
         task.spawn(function()
-            while afkPosOn and afkPos ~= nil do
-                tppos(afkPos.X, afkPos.Y+1, afkPos.Z)
-                wait(1)
+            while not autobunnyegg and not autopastelegg and afkPosOn and afkPos ~= nil do
+                if not afkposChecked then
+                    afkposCheck()
+                    afkposChecked = true
+                    wait(1)
+                end
+                if afkposChecked then
+                    tppos(afkPos.X, afkPos.Y+1, afkPos.Z)
+                    wait(1)
+                end
             end
         end)
     else
         afkPosOn = false
+        afkposChecked = false
     end
 end)
 
@@ -885,6 +922,7 @@ local autobunnyegg = false
 local autoevent1egg = testing:addToggle("Auto Lucky Bunny Egg", false, function(on)
     if on then
         autobunnyegg = true
+        wait(1)
         task.spawn(function()
             while autobunnyegg do
                 local event1egg = workspace.Rendered.Rifts["event-1"]
@@ -897,6 +935,7 @@ local autoevent1egg = testing:addToggle("Auto Lucky Bunny Egg", false, function(
                     tppos(bunnyPos.X, bunnyPos.Y + 10, bunnyPos.Z)
                     event1Checked = true 
                     afkPosOn = false
+                    afkposChecked = false
                 end
                 if event1egg then
                     local args = {
@@ -924,6 +963,7 @@ local autopastelegg = false
 local autoevent2egg = testing:addToggle("Auto Lucky Pastel Egg", false, function(on)
     if on then
         autopastelegg = true
+        wait(1)
         task.spawn(function()
             while autopastelegg do
                 local event2egg = workspace.Rendered.Rifts["event-2"]
@@ -936,6 +976,7 @@ local autoevent2egg = testing:addToggle("Auto Lucky Pastel Egg", false, function
                     tppos(pastelPos.X, pastelPos.Y + 10, pastelPos.Z)
                     event2Checked = true 
                     afkPosOn = false
+                    afkposChecked
                 end
                 if event2egg then
                     local args = {
