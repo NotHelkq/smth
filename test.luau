@@ -226,54 +226,29 @@ local argArea5 = function(tp)
     game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
 end
 
-
 local Teleport = Main:addSection("Teleport")
 local spawn = Teleport:addButton("Spawn", function(tp)
-    local args = {
-        [1] = "Teleport",
-        [2] = "Workspace.Worlds.The Overworld.PortalSpawn"
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+    argspawn() 
 end)
 
 local area1 = Teleport:addButton("Area 1 - Floating Island", function(tp) 
-    local args = {
-        [1] = "Teleport",
-        [2] = "Workspace.Worlds.The Overworld.Islands.Floating Island.Island.Portal.Spawn"
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+    argArea1() 
 end)
 
 local area2 = Teleport:addButton("Area 2 - Outer Space", function(tp)
-    local args = {
-        [1] = "Teleport",
-        [2] = "Workspace.Worlds.The Overworld.Islands.Outer Space.Island.Portal.Spawn"
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+    argArea2() 
 end)
 
 local area3 = Teleport:addButton("Area 3 - Twilight", function(tp)
-    local args = {
-        [1] = "Teleport",
-        [2] = "Workspace.Worlds.The Overworld.Islands.Twilight.Island.Portal.Spawn"
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))    
+    argArea3()   
 end)
 
 local area4 = Teleport:addButton("Area 4 - The Void", function(tp)
-    local args = {
-        [1] = "Teleport",
-        [2] = "Workspace.Worlds.The Overworld.Islands.The Void.Island.Portal.Spawn"
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))    
+    argArea4()    
 end)
 
 local area5 = Teleport:addButton("Area 5 - Zen", function(tp)
-    local args = {
-        [1] = "Teleport",
-        [2] = "Workspace.Worlds.The Overworld.Islands.Zen.Island.Portal.Spawn"
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))    
+    argArea5() 
 end)
 
 
@@ -774,236 +749,3 @@ SetSec2:addButton("Kill Hub", function()
 
     Window.container:Destroy()
 end)
-
-
-
-local afkPos = nil
-local function tpafkPos()
-    playerPos()
-    afkPos = Vector3.new(plrPos.X, plrPos.Y, plrPos.Z)
-    print("Player's afk position : X = " .. afkPos.X .. ", Y = " .. afkPos.Y .. ", Z = " .. afkPos.Z)
-end
-
-local function afkposCheck()
-    local pos = Vector3.new(afkPos.X, afkPos.Y, afkPos.Z)
-    local y = pos.y
-    local area = nil
-    if y >= 0 and y < 410 then
-        area = "a1"
-        argArea1()
-    elseif y >= 410 and y < 2650 then
-        area = "a2"
-        argArea2()
-    elseif y >= 2650 and y < 6850 then
-        area = "a3"
-        argArea3()
-    elseif y >= 6850 and y < 10130 then
-        area = "a4"
-        argArea4()
-    elseif y >= 10130 and y <= 15960 then
-        area = "a5"
-        argArea5()
-    else
-        area = nil
-        print("Position not within defined area ranges.")
-    end
-    if area ~= nil then
-        task.wait(2)
-    end
-end
-
-local bunnyPos = nil
-local function bunnyCheck(e1Check)
-    local pos = workspace.Rendered.Rifts["event-1"].WorldPivot.Position
-    local e1Pos = Vector3.new(
-        math.floor(pos.X + 0.5),
-        math.floor(pos.Y + 0.5),
-        math.floor(pos.Z + 0.5)
-    ) 
-    local y = pos.Y
-    local area = nil
-    if y >= 0 and y < 410 then
-        area = "a1"
-        argArea1()
-    elseif y >= 410 and y < 2650 then
-        area = "a2"
-        argArea2()
-    elseif y >= 2650 and y < 6850 then
-        area = "a3"
-        argArea3()
-    elseif y >= 6850 and y < 10130 then
-        area = "a4"
-        argArea4()
-    elseif y >= 10130 and y <= 15960 then
-        area = "a5"
-        argArea5()
-    else
-        area = nil
-        print("Position not within defined area ranges.")
-    end
-    if area ~= nil then
-        task.wait(2)
-    end
-    bunnyPos = Vector3.new(e1Pos.X, e1Pos.Y, e1Pos.Z)
-    print("Lucky Bunny Egg Position: X=" .. bunnyPos.X .. ", Y=" .. bunnyPos.Y .. ", Z=" .. bunnyPos.Z)
-end
-
-
-local pastelPos = nil
-local function pastelCheck(e2Check)
-    local pos = workspace.Rendered.Rifts["event-2"].WorldPivot.Position
-    local e2Pos = Vector3.new(
-        math.floor(pos.X + 0.5),
-        math.floor(pos.Y + 0.5),
-        math.floor(pos.Z + 0.5)
-    ) 
-    local y = pos.Y
-    local area = nil
-    if y >= 0 and y < 410 then
-        area = "a1"
-        argArea1()
-    elseif y >= 410 and y < 2650 then
-        area = "a2"
-        argArea2()
-    elseif y >= 2650 and y < 6850 then
-        area = "a3"
-        argArea3()
-    elseif y >= 6850 and y < 10130 then
-        area = "a4"
-        argArea4()
-    elseif y >= 10130 and y <= 15960 then
-        area = "a5"
-        argArea5()
-    else
-        area = nil
-        print("Position not within defined area ranges.")
-    end
-    if area ~= nil then
-        task.wait(2)
-    end
-    pastelPos = Vector3.new(e2Pos.X, e2Pos.Y, e2Pos.Z)
-    print("Lucky Pastel Egg Position: X=" .. pastelPos.X .. ", Y=" .. pastelPos.Y .. ", Z=" .. pastelPos.Z)
-end
-
-local test = Window:addPage("Test Features", 5012544693)
-local testing = test:addSection("tests")
-
-local afkposbutton = testing:addButton("Save afk Position", function(tp)
-    tpafkPos()
-    print("afk pos is saved")
-end)
-
-local afkposChecked = false
-local afkPosOn = false
-local afkpostoggle = testing:addToggle("Afk Position Teleport", false, function(on)
-    if on then
-        afkPosOn = true
-        task.spawn(function()
-            while not autobunnyegg and not autopastelegg and afkPosOn and afkPos ~= nil do
-                if not afkposChecked then
-                    afkposCheck()
-                    afkposChecked = true
-                    wait(1)
-                end
-                if afkposChecked then
-                    tppos(afkPos.X, afkPos.Y+1, afkPos.Z)
-                    wait(1)
-                end
-            end
-        end)
-    else
-        afkPosOn = false
-        afkposChecked = false
-    end
-end)
-
-local event1Checked = false
-local autobunnyegg = false
-local autoevent1egg = testing:addToggle("Auto Lucky Bunny Egg", false, function(on)
-    if on then
-        autobunnyegg = true
-        wait(1)
-        task.spawn(function()
-            while autobunnyegg do
-                local event1egg = workspace.Rendered.Rifts["event-1"]
-                if not event1Checked and event1egg then
-                    bunnyCheck()
-                    print("Lucky Bunny Egg Position: X=" .. bunnyPos.X .. ", Y=" .. bunnyPos.Y .. ", Z=" .. bunnyPos.Z)
-                    playerPos()
-                    tppos(bunnyPos.X, plrPos.Y, bunnyPos.Z)
-                    wait(5)
-                    tppos(bunnyPos.X, bunnyPos.Y + 10, bunnyPos.Z)
-                    event1Checked = true 
-                    afkPosOn = false
-                    afkposChecked = false
-                end
-                if event1egg then
-                    local args = {
-                        [1] = "HatchEgg",
-                        [2] = "Bunny Egg",
-                        [3] = 6
-                    }
-                    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
-                    task.wait(0.1)
-                else
-                    event1Checked = false 
-                    afkPosOn = true
-                end
-            end
-        end)
-    else
-        autobunnyegg = false
-        event1Checked = false
-        afkPosOn = true
-    end
-end)
-
-local event2Checked = false
-local autopastelegg = false
-local autoevent2egg = testing:addToggle("Auto Lucky Pastel Egg", false, function(on)
-    if on then
-        autopastelegg = true
-        wait(1)
-        task.spawn(function()
-            while autopastelegg do
-                local event2egg = workspace.Rendered.Rifts["event-2"]
-                if not event2Checked and event2egg then
-                    pastelCheck()
-                    print("Lucky Pastel Egg Position: X=" .. pastelPos.X .. ", Y=" .. pastelPos.Y .. ", Z=" .. pastelPos.Z)
-                    playerPos()
-                    tppos(pastelPos.X, plrPos.Y, pastelPos.Z)
-                    wait(5)
-                    tppos(pastelPos.X, pastelPos.Y + 10, pastelPos.Z)
-                    event2Checked = true 
-                    afkPosOn = false
-                    afkposChecked
-                end
-                if event2egg then
-                    local args = {
-                        [1] = "HatchEgg",
-                        [2] = "Pastel Egg",
-                        [3] = 6
-                    }
-                    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
-                    task.wait(0.1)
-                else
-                    event2Checked = false 
-                    afkPosOn = true
-                end
-            end
-        end)
-    else
-        autopastelegg = false
-        event2Checked = false
-        afkPosOn = true
-    end
-end)
-
-
---local args = {
---    [1] = "CraftPotion",
---    [2] = "Coins",
---    [3] = 5,
---    [4] = true
---}
---game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
