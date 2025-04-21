@@ -513,7 +513,7 @@ end
 local time = os.time()
 desc = desc .. " 🕛** Catch Date : ** <t:" .. time .. ":F> 🕛"
 local eggsOpened = "0"
-eggsOpened = player.leaderstats["\240\159\165\154 Hatches"].Value
+eggsOpened = player.leaderstats["🥚 Hatches"].Value
 
 local data = {
     ["content"] = "<@" .. getgenv().Config.UserID .. ">",
