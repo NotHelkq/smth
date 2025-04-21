@@ -115,6 +115,7 @@ local function monitorHatch()
         if frame:IsA("Frame") and frame:FindFirstChild("Label") and frame:FindFirstChild("Rarity") then
             local name = frame.Label.Text
             local rarity = frame.Rarity.Text
+            local shiny = frame.Shiny.Visible
             local chance = frame:FindFirstChild("Chance") and frame.Chance.Text or nil
             local rarityLower = rarity:lower()
 
