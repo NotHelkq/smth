@@ -58,7 +58,7 @@ local function isRecentFrame(frame)
     return false
 end
 
-local function sendWebhook(name, rarity, image, chance)
+local function sendWebhook(name, rarity, shiny, image, chance)
     local title = "🐾 Pet Hatched!"
     local rarityLower = rarity:lower()
 
@@ -71,6 +71,9 @@ local function sendWebhook(name, rarity, image, chance)
     end
 
     local desc = string.format(" 🐾 **Pet Name :** %s 🐾 \n 💎 **Pet Rarity : ** %s 💎 \n", name, rarity)
+    if shiny and shiny ~= "" then
+        desc = desc .. " ✨ **Is Shiny : **" .. shiny .. " ✨ \n"
+    end
     if chance and chance ~= "" then
         desc = desc .. " ❓ ** Chance : **" .. chance .. " ❓ \n"
     end
@@ -118,8 +121,7 @@ local function monitorHatch()
             if rarityLower:find("legendary") or rarityLower:find("secret") or rarityLower:find("mythic") then
                 if not isRecentFrame(frame) then
                     local image = petImages[name] or fallbackImage
-                    sendWebhook(name, rarity, image, chance)
-                    print("📤 Sent webhook for:", name)
+                    sendWebhook(name, rarity, shiny, image, chance)
                 end
             end
         end
