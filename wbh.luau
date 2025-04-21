@@ -74,7 +74,7 @@ local function sendWebhook(name, rarity, image, chance)
     if chance and chance ~= "" then
         desc = desc .. " ❓ ** Chance : **" .. chance .. " ❓ \n"
     end
-    desc = desc .. " 🕛** Catch Date : ** " .. os.date("%m/%d/%Y %H:%M:%S") .. "🕛"
+    desc = desc .. " 🕛** Catch Date : ** " .. os.date("%m/%d/%Y %H:%M:%S") .. " 🕛"
 
     local data = {
         ["content"] = "<@534044411475001354>",
