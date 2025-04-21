@@ -510,10 +510,12 @@ local function sendWebhook(name, rarity, shiny, image, chance)
     if chance and chance ~= "" then
         desc = desc .. " ❓ ** Chance :**" .. petChance .. " ❓ \n"
     end
-    desc = desc .. " 🕛** Catch Date : ** " .. os.date("%m/%d/%Y %H:%M:%S") .. " 🕛"
+    local timestamp = os.time()
+    local time = "<t:" .. timestamp .. ":F>"
+    desc = desc .. " 🕛** Catch Date : ** " .. time .. " 🕛"
 
     local data = {
-        ["content"] = "<@534044411475001354>",
+        ["content"] = getgenv().Config.UserID,
         ["embeds"] = {{
             ["title"] = petTitle,
             ["description"] = desc,
