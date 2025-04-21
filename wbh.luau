@@ -79,15 +79,191 @@ local function sendWebhook(name, rarity, shiny, image, chance)
         isShiny = "Yes"
     end
     desc = desc .. " ✨ **Is Shiny : **" .. isShiny .. " ✨ \n"
-    if name == "Emerald Golem" and isShiny == "No" and rarity == "Legendary" then
+    if name == "King Doggy" and isShiny == "No" and rarity == "Secret" then
+        petChance = " 1 in 100,000,000"
+    elseif name == "King Doggy" and isShiny == "Yes" and rarity == "Secret" then
+        petChance = " 1 in 4,000,000,000"
+    elseif name == "King Doggy" and isShiny == "No" and rarity == "Mythic" then
+        petChance = " 1 in 10,000,000,000"
+    elseif name == "King Doggy" and isShiny == "Yes" and rarity == "Mythic" then
+        petChance = " 1 in 400,000,000,000"
+    elseif name == "Emerald Golem" and isShiny == "No" and rarity == "Legendary" then
         petChance = " 1 in 200"
     elseif name == "Emerald Golem" and isShiny == "Yes" and rarity == "Legendary" then
-        petChance = " 1 in 4,000"
+        petChance = " 1 in 8,000"
     elseif name == "Emerald Golem" and isShiny == "No" and rarity == "Mythic" then
         petChance = " 1 in 20,000"
     elseif name == "Emerald Golem" and isShiny == "Yes" and rarity == "Mythic" then
         petChance = " 1 in 400,000"
-    elseif name == "Seraphic Bunny" and isShiny == "No" and rarity == "Legendary" then
+    elseif name == "Inferno Dragon" and isShiny == "No" and rarity == "Legendary" then
+        petChance = " 1 in 400"
+    elseif name == "Inferno Dragon" and isShiny == "Yes" and rarity == "Legendary" then
+        petChance = " 1 in 16,000"
+    elseif name == "Inferno Dragon" and isShiny == "No" and rarity == "Mythic" then
+        petChance = " 1 in 40,000"
+    elseif name == "Inferno Dragon" and isShiny == "Yes" and rarity == "Mythic" then
+        petChance = " 1 in 800,000"
+    elseif name == "Unicorn" and isShiny == "No" and rarity == "Legendary" then
+        petChance = " 1 in 400"
+    elseif name == "Unicorn" and isShiny == "Yes" and rarity == "Legendary" then
+        petChance = " 1 in 16,000"
+    elseif name == "Unicorn" and isShiny == "No" and rarity == "Mythic" then
+        petChance = " 1 in 40,000"
+    elseif name == "Unicorn" and isShiny == "Yes" and rarity == "Mythic" then
+        petChance = " 1 in 800,000"
+    elseif name == "Flying Pig" and isShiny == "No" and rarity == "Legendary" then
+        petChance = " 1 in 1,000"
+    elseif name == "Flying Pig" and isShiny == "Yes" and rarity == "Legendary" then
+        petChance = " 1 in 40,000"
+    elseif name == "Flying Pig" and isShiny == "No" and rarity == "Mythic" then
+        petChance = " 1 in 100,000"
+    elseif name == "Flying Pig" and isShiny == "Yes" and rarity == "Mythic" then
+        petChance = " 1 in 4,000,000"
+    elseif name == "Lunar Serpent" and isShiny == "No" and rarity == "Legendary" then
+        petChance = " 1 in 400"
+    elseif name == "Lunar Serpent" and isShiny == "Yes" and rarity == "Legendary" then
+        petChance = " 1 in 16,000"
+    elseif name == "Lunar Serpent" and isShiny == "No" and rarity == "Mythic" then
+        petChance = " 1 in 40,000"
+    elseif name == "Lunar Serpent" and isShiny == "Yes" and rarity == "Mythic" then
+        petChance = " 1 in 800,000"
+    elseif name == "Electra" and isShiny == "No" and rarity == "Legendary" then
+        petChance = " 1 in 1,000"
+    elseif name == "Electra" and isShiny == "Yes" and rarity == "Legendary" then
+        petChance = " 1 in 40,000"
+    elseif name == "Electra" and isShiny == "No" and rarity == "Mythic" then
+        petChance = " 1 in 100,000"
+    elseif name == "Electra" and isShiny == "Yes" and rarity == "Mythic" then
+        petChance = " 1 in 4,000,000"
+    elseif name == "Dark Phoenix" and isShiny == "No" and rarity == "Legendary" then
+        petChance = " 1 in 2,000"
+    elseif name == "Dark Phoenix" and isShiny == "Yes" and rarity == "Legendary" then
+        petChance = " 1 in 80,000"
+    elseif name == "Dark Phoenix" and isShiny == "No" and rarity == "Mythic" then
+        petChance = " 1 in 200,000"
+    elseif name == "Dark Phoenix" and isShiny == "Yes" and rarity == "Mythic" then
+        petChance = " 1 in 8,000,000"
+    elseif name == "Neon Elemental" and isShiny == "No" and rarity == "Legendary" then
+        petChance = " 1 in 5,000"
+    elseif name == "Neon Elemental" and isShiny == "Yes" and rarity == "Legendary" then
+        petChance = " 1 in 200,000"
+    elseif name == "Neon Elemental" and isShiny == "No" and rarity == "Mythic" then
+        petChance = " 1 in 500,000"
+    elseif name == "Neon Elemental" and isShiny == "Yes" and rarity == "Mythic" then
+        petChance = " 1 in 20,000,000"
+    elseif name == "NULLVoid" and isShiny == "No" and rarity == "Legendary" then
+        petChance = " 1 in 1,000,000"
+    elseif name == "NULLVoid" and isShiny == "Yes" and rarity == "Legendary" then
+        petChance = " 1 in 40,000,000"
+    elseif name == "NULLVoid" and isShiny == "No" and rarity == "Mythic" then
+        petChance = " 1 in 100,000,000"
+    elseif name == "NULLVoid" and isShiny == "Yes" and rarity == "Mythic" then
+        petChance = " 1 in 4,000,000,000"
+    elseif name == "Inferno Cube" and isShiny == "No" and rarity == "Legendary" then
+        petChance = " 1 in 4,000"
+    elseif name == "Inferno Cube" and isShiny == "Yes" and rarity == "Legendary" then
+        petChance = " 1 in 160,000"
+    elseif name == "Inferno Cube" and isShiny == "No" and rarity == "Mythic" then
+        petChance = " 1 in 400,000"
+    elseif name == "Inferno Cube" and isShiny == "Yes" and rarity == "Mythic" then
+        petChance = " 1 in 16,000,000"
+    elseif name == "Virus" and isShiny == "No" and rarity == "Legendary" then
+        petChance = " 1 in 50,000"
+    elseif name == "Virus" and isShiny == "Yes" and rarity == "Legendary" then
+        petChance = " 1 in 2,000,000"
+    elseif name == "Virus" and isShiny == "No" and rarity == "Mythic" then
+        petChance = " 1 in 5,000,000"
+    elseif name == "Virus" and isShiny == "Yes" and rarity == "Mythic" then
+        petChance = " 1 in 200,000,000"
+    elseif name == "Green Hydra" and isShiny == "No" and rarity == "Legendary" then
+        petChance = " 1 in 25,000"
+    elseif name == "Green Hydra" and isShiny == "Yes" and rarity == "Legendary" then
+        petChance = " 1 in 1,000,000"
+    elseif name == "Green Hydra" and isShiny == "No" and rarity == "Mythic" then
+        petChance = " 1 in 2,500,000"
+    elseif name == "Green Hydra" and isShiny == "Yes" and rarity == "Mythic" then
+        petChance = " 1 in 100,000,000"
+    elseif name == "Demonic Hydra" and isShiny == "No" and rarity == "Legendary" then
+        petChance = " 1 in 100,000"
+    elseif name == "Demonic Hydra" and isShiny == "Yes" and rarity == "Legendary" then
+        petChance = " 1 in 4,000,000"
+    elseif name == "Demonic Hydra" and isShiny == "No" and rarity == "Mythic" then
+        petChance = " 1 in 10,000,000"
+    elseif name == "Demonic Hydra" and isShiny == "Yes" and rarity == "Mythic" then
+        petChance = " 1 in 400,000,000"
+    elseif name == "The Overlord" and isShiny == "No" and rarity == "Secret" then
+        petChance = " 1 in 50,000,000"
+    elseif name == "The Overlord" and isShiny == "Yes" and rarity == "Secret" then
+        petChance = " 1 in 2,000,000,000"
+    elseif name == "The Overlord" and isShiny == "No" and rarity == "Mythic" then
+        petChance = " 1 in 5,000,000,000"
+    elseif name == "The Overlord" and isShiny == "Yes" and rarity == "Mythic" then
+        petChance = " 1 in 200,000,000,000"
+    elseif name == "Hexarium" and isShiny == "No" and rarity == "Legendary" then
+        petChance = " 1 in 100,000"
+    elseif name == "Hexarium" and isShiny == "Yes" and rarity == "Legendary" then
+        petChance = " 1 in 4,000,000"
+    elseif name == "Hexarium" and isShiny == "No" and rarity == "Mythic" then
+        petChance = " 1 in 10,000,000"
+    elseif name == "Hexarium" and isShiny == "Yes" and rarity == "Mythic" then
+        petChance = " 1 in 400,000,000"
+    elseif name == "Rainbow Shock" and isShiny == "No" and rarity == "Legendary" then
+        petChance = " 1 in 200,000"
+    elseif name == "Rainbow Shock" and isShiny == "Yes" and rarity == "Legendary" then
+        petChance = " 1 in 8,000,000"
+    elseif name == "Rainbow Shock" and isShiny == "No" and rarity == "Mythic" then
+        petChance = " 1 in 20,000,000"
+    elseif name == "Rainbow Shock" and isShiny == "Yes" and rarity == "Mythic" then
+        petChance = " 1 in 800,000,000"
+    elseif name == "Sigma Serpent" and isShiny == "No" and rarity == "Legendary" then
+        petChance = " 1 in 10,000"
+    elseif name == "Sigma Serpent" and isShiny == "Yes" and rarity == "Legendary" then
+        petChance = " 1 in 400,000"
+    elseif name == "Sigma Serpent" and isShiny == "No" and rarity == "Mythic" then
+        petChance = " 1 in 2,000,000"
+    elseif name == "Sigma Serpent" and isShiny == "Yes" and rarity == "Mythic" then
+        petChance = " 1 in 40,000,000"
+    elseif name == "Manarium" and isShiny == "No" and rarity == "Legendary" then
+        petChance = " 1 in 20,000"
+    elseif name == "Manarium" and isShiny == "Yes" and rarity == "Legendary" then
+        petChance = " 1 in 800,000"
+    elseif name == "Manarium" and isShiny == "No" and rarity == "Mythic" then
+        petChance = " 1 in 10,000,000"
+    elseif name == "Manarium" and isShiny == "Yes" and rarity == "Mythic" then
+        petChance = " 1 in 80,000,000"
+    elseif name == "MAN FACE GOD" and isShiny == "No" and rarity == "Secret" then
+        petChance = " 1 in 1,000,000"
+    elseif name == "MAN FACE GOD" and isShiny == "Yes" and rarity == "Secret" then
+        petChance = " 1 in 40,000,000"
+    elseif name == "MAN FACE GOD" and isShiny == "No" and rarity == "Mythic" then
+        petChance = " 1 in 100,000,000"
+    elseif name == "MAN FACE GOD" and isShiny == "Yes" and rarity == "Mythic" then
+        petChance = " 1 in 4,000,000,000"
+    elseif name == "Sweet Treat" and isShiny == "No" and rarity == "Legendary" then -- event pets
+        petChance = " 1 in 25,000"
+    elseif name == "Sweet Treat" and isShiny == "Yes" and rarity == "Legendary" then
+        petChance = " 1 in 1,000,000"
+    elseif name == "Sweet Treat" and isShiny == "No" and rarity == "Mythic" then
+        petChance = " 1 in 2,500,000"
+    elseif name == "Sweet Treat" and isShiny == "Yes" and rarity == "Mythic" then
+        petChance = " 1 in 100,000,000"
+    elseif name == "Rainbow Marshmellow" and isShiny == "No" and rarity == "Legendary" then 
+        petChance = " 1 in 125,000"
+    elseif name == "Rainbow Marshmellow" and isShiny == "Yes" and rarity == "Legendary" then
+        petChance = " 1 in 5,000,000"
+    elseif name == "Rainbow Marshmellow" and isShiny == "No" and rarity == "Mythic" then
+        petChance = " 1 in 12,500,000"
+    elseif name == "Rainbow Marshmellow" and isShiny == "Yes" and rarity == "Mythic" then
+        petChance = " 1 in 500,000,000"
+    elseif name == "Giant Chocolate Chicken" and isShiny == "No" and rarity == "Secret" then
+        petChance = " 1 in 50,000,000"
+    elseif name == "Giant Chocolate Chicken" and isShiny == "Yes" and rarity == "Secret" then
+        petChance = " 1 in 2,000,000,000"
+    elseif name == "Giant Chocolate Chicken" and isShiny == "No" and rarity == "Mythic" then
+        petChance = " 1 in 5,000,000,000"
+    elseif name == "Giant Chocolate Chicken" and isShiny == "Yes" and rarity == "Mythic" then
+        petChance = " 1 in 200,000,000,000"
+    elseif name == "Seraphic Bunny" and isShiny == "No" and rarity == "Legendary" then 
         petChance = " 1 in 5,000"
     elseif name == "Seraphic Bunny" and isShiny == "Yes" and rarity == "Legendary" then
         petChance = " 1 in 200,000"
@@ -111,6 +287,14 @@ local function sendWebhook(name, rarity, shiny, image, chance)
         petChance = " 1 in 100,000,000"
     elseif name == "Cardinal Bunny" and isShiny == "Yes" and rarity == "Mythic" then
         petChance = " 1 in 4,000,000,000"
+    elseif name == "Easter Basket" and isShiny == "No" and rarity == "Secret" then
+        petChance = " 1 in 100,000,000"
+    elseif name == "Easter Basket" and isShiny == "Yes" and rarity == "Secret" then
+        petChance = " 1 in 4,000,000,000"
+    elseif name == "Easter Basket" and isShiny == "No" and rarity == "Mythic" then
+        petChance = " 1 in 10,000,000,000"
+    elseif name == "Easter Basket" and isShiny == "Yes" and rarity == "Mythic" then
+        petChance = " 1 in 400,000,000,000"
     end
     if chance and chance ~= "" then
         desc = desc .. " ❓ ** Chance :**" .. petChance .. " ❓ \n"
