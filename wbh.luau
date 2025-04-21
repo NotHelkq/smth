@@ -515,7 +515,7 @@ local function sendWebhook(name, rarity, shiny, image, chance)
     desc = desc .. " 🕛** Catch Date : ** " .. time .. " 🕛"
 
     local data = {
-        ["content"] = getgenv().Config.UserID,
+        ["content"] = "<@" .. getgenv().Config.UserID .. ">",
         ["embeds"] = {{
             ["title"] = petTitle,
             ["description"] = desc,
