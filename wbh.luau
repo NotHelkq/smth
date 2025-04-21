@@ -116,6 +116,9 @@ local function sendWebhook(name, rarity, shiny, image, chance)
         elseif name == "Cardinal Bunny" and isShiny == "Yes" and rarity == "mythic" then
             petChance = " 1 in 4,000,000,000"
             desc = desc .. " ❓ ** Chance :**" .. petChance .. " ❓ \n
+        else
+            petChance = " Unknown"
+            desc = desc .. " ❓ ** Chance :**" .. petChance .. " ❓ \n
         end
     end
     desc = desc .. " 🕛** Catch Date : ** " .. os.date("%m/%d/%Y %H:%M:%S") .. " 🕛"
