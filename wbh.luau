@@ -58,6 +58,7 @@ local function isRecentFrame(frame)
     return false
 end
 
+local isShiny = "Maybe"
 local function sendWebhook(name, rarity, shiny, image, chance)
     local title = "🐾 Pet Hatched!"
     local rarityLower = rarity:lower()
@@ -71,7 +72,12 @@ local function sendWebhook(name, rarity, shiny, image, chance)
     end
 
     local desc = string.format(" 🐾 **Pet Name :** %s 🐾 \n 💎 **Pet Rarity : ** %s 💎 \n", name, rarity)
-    desc = desc .. " ✨ **Is Shiny : **" .. shiny .. " ✨ \n"
+    if shiny == false then
+        isShiny = "No"
+    elseif shiny == true then
+        isShiny = "Yes"
+    end
+    desc = desc .. " ✨ **Is Shiny : **" .. isShiny .. " ✨ \n"
     if chance and chance ~= "" then
         desc = desc .. " ❓ ** Chance : **" .. chance .. " ❓ \n"
     end
