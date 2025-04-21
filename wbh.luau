@@ -58,27 +58,238 @@ local function isRecentFrame(frame)
     return false
 end
 
+local petTitle = "Unknown Pet Hatched"
 local petChance = " Unknown"
 local isShiny = "Maybe"
 local function sendWebhook(name, rarity, shiny, image, chance)
     local title = "🐾 Pet Hatched!"
     local rarityLower = rarity:lower()
 
-    if rarityLower:find("secret") then
-        title = "🌟 Secret Pet Hatched 🌟"
-    elseif rarityLower:find("legendary") then
-        title = "⭐ Legendary Pet Hatched ⭐"
-    elseif rarityLower:find("mythic") then
-        title = "🔥 Mythic Pet Hatched 🔥"
-    end
-
-    local desc = string.format(" 🐾 **Pet Name :** %s 🐾 \n 💎 **Pet Rarity : ** %s 💎 \n", name, rarity)
     if shiny == false then
         isShiny = "No"
     elseif shiny == true then
         isShiny = "Yes"
     end
-    desc = desc .. " ✨ **Is Shiny : **" .. isShiny .. " ✨ \n"
+
+    if name == "King Doggy" and isShiny == "No" and rarity == "Secret" then
+        petTitle = "🔥 Secret Pet Hatched 🔥"
+    elseif name == "King Doggy" and isShiny == "Yes" and rarity == "Secret" then
+        petTitle = "🔥✨ Shiny Secret Pet Hatched ✨🔥"
+    elseif name == "King Doggy" and isShiny == "No" and rarity == "Mythic" then
+        petTitle = "🔥💎✨ Mythic Secret Pet Hatched ✨💎🔥"
+    elseif name == "King Doggy" and isShiny == "Yes" and rarity == "Mythic" then
+        petTitle = "🔥💎✨ Shiny Mythic Secret Pet Hatched ✨💎🔥"
+    elseif name == "Emerald Golem" and isShiny == "No" and rarity == "Legendary" then
+        petTitle = "⭐ Legendary Pet Hatched ⭐"
+    elseif name == "Emerald Golem" and isShiny == "Yes" and rarity == "Legendary" then
+        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
+    elseif name == "Emerald Golem" and isShiny == "No" and rarity == "Mythic" then
+        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
+    elseif name == "Emerald Golem" and isShiny == "Yes" and rarity == "Mythic" then
+        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
+    elseif name == "Inferno Dragon" and isShiny == "No" and rarity == "Legendary" then
+        petTitle = "⭐ Legendary Pet Hatched ⭐"
+    elseif name == "Inferno Dragon" and isShiny == "Yes" and rarity == "Legendary" then
+        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
+    elseif name == "Inferno Dragon" and isShiny == "No" and rarity == "Mythic" then
+        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
+    elseif name == "Inferno Dragon" and isShiny == "Yes" and rarity == "Mythic" then
+        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
+    elseif name == "Unicorn" and isShiny == "No" and rarity == "Legendary" then
+        petTitle = "⭐ Legendary Pet Hatched ⭐"
+    elseif name == "Unicorn" and isShiny == "Yes" and rarity == "Legendary" then
+        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
+    elseif name == "Unicorn" and isShiny == "No" and rarity == "Mythic" then
+        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
+    elseif name == "Unicorn" and isShiny == "Yes" and rarity == "Mythic" then
+        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
+    elseif name == "Flying Pig" and isShiny == "No" and rarity == "Legendary" then
+        petTitle = "⭐ Legendary Pet Hatched ⭐"
+    elseif name == "Flying Pig" and isShiny == "Yes" and rarity == "Legendary" then
+        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
+    elseif name == "Flying Pig" and isShiny == "No" and rarity == "Mythic" then
+        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
+    elseif name == "Flying Pig" and isShiny == "Yes" and rarity == "Mythic" then
+        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
+    elseif name == "Lunar Serpent" and isShiny == "No" and rarity == "Legendary" then
+        petTitle = "⭐ Legendary Pet Hatched ⭐"
+    elseif name == "Lunar Serpent" and isShiny == "Yes" and rarity == "Legendary" then
+        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
+    elseif name == "Lunar Serpent" and isShiny == "No" and rarity == "Mythic" then
+        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
+    elseif name == "Lunar Serpent" and isShiny == "Yes" and rarity == "Mythic" then
+        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
+    elseif name == "Electra" and isShiny == "No" and rarity == "Legendary" then
+        petTitle = "⭐ Legendary Pet Hatched ⭐"
+    elseif name == "Electra" and isShiny == "Yes" and rarity == "Legendary" then
+        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
+    elseif name == "Electra" and isShiny == "No" and rarity == "Mythic" then
+        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
+    elseif name == "Electra" and isShiny == "Yes" and rarity == "Mythic" then
+        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
+    elseif name == "Dark Phoenix" and isShiny == "No" and rarity == "Legendary" then
+        petTitle = "⭐ Legendary Pet Hatched ⭐"
+    elseif name == "Dark Phoenix" and isShiny == "Yes" and rarity == "Legendary" then
+        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
+    elseif name == "Dark Phoenix" and isShiny == "No" and rarity == "Mythic" then
+        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
+    elseif name == "Dark Phoenix" and isShiny == "Yes" and rarity == "Mythic" then
+        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
+    elseif name == "Neon Elemental" and isShiny == "No" and rarity == "Legendary" then
+        petTitle = "⭐ Legendary Pet Hatched ⭐"
+    elseif name == "Neon Elemental" and isShiny == "Yes" and rarity == "Legendary" then
+        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
+    elseif name == "Neon Elemental" and isShiny == "No" and rarity == "Mythic" then
+        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
+    elseif name == "Neon Elemental" and isShiny == "Yes" and rarity == "Mythic" then
+        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
+    elseif name == "NULLVoid" and isShiny == "No" and rarity == "Legendary" then
+        petTitle = "⭐ Legendary Pet Hatched ⭐"
+    elseif name == "NULLVoid" and isShiny == "Yes" and rarity == "Legendary" then
+        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
+    elseif name == "NULLVoid" and isShiny == "No" and rarity == "Mythic" then
+        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
+    elseif name == "NULLVoid" and isShiny == "Yes" and rarity == "Mythic" then
+        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
+    elseif name == "Inferno Cube" and isShiny == "No" and rarity == "Legendary" then
+        petTitle = "⭐ Legendary Pet Hatched ⭐"
+    elseif name == "Inferno Cube" and isShiny == "Yes" and rarity == "Legendary" then
+        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
+    elseif name == "Inferno Cube" and isShiny == "No" and rarity == "Mythic" then
+        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
+    elseif name == "Inferno Cube" and isShiny == "Yes" and rarity == "Mythic" then
+        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
+    elseif name == "Virus" and isShiny == "No" and rarity == "Legendary" then
+        petTitle = "⭐ Legendary Pet Hatched ⭐"
+    elseif name == "Virus" and isShiny == "Yes" and rarity == "Legendary" then
+        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
+    elseif name == "Virus" and isShiny == "No" and rarity == "Mythic" then
+        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
+    elseif name == "Virus" and isShiny == "Yes" and rarity == "Mythic" then
+        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
+    elseif name == "Green Hydra" and isShiny == "No" and rarity == "Legendary" then
+        petTitle = "⭐ Legendary Pet Hatched ⭐"
+    elseif name == "Green Hydra" and isShiny == "Yes" and rarity == "Legendary" then
+        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
+    elseif name == "Green Hydra" and isShiny == "No" and rarity == "Mythic" then
+        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
+    elseif name == "Green Hydra" and isShiny == "Yes" and rarity == "Mythic" then
+        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
+    elseif name == "Demonic Hydra" and isShiny == "No" and rarity == "Legendary" then
+        petTitle = "⭐ Legendary Pet Hatched ⭐"
+    elseif name == "Demonic Hydra" and isShiny == "Yes" and rarity == "Legendary" then
+        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
+    elseif name == "Demonic Hydra" and isShiny == "No" and rarity == "Mythic" then
+        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
+    elseif name == "Demonic Hydra" and isShiny == "Yes" and rarity == "Mythic" then
+        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
+    elseif name == "The Overlord" and isShiny == "No" and rarity == "Secret" then
+        petTitle = "🔥 Secret Pet Hatched 🔥"
+    elseif name == "The Overlord" and isShiny == "Yes" and rarity == "Secret" then
+        petTitle = "🔥✨ Shiny Secret Pet Hatched ✨🔥"
+    elseif name == "The Overlord" and isShiny == "No" and rarity == "Mythic" then
+        petTitle = "🔥💎 Mythic Secret Pet Hatched 💎🔥"
+    elseif name == "The Overlord" and isShiny == "Yes" and rarity == "Mythic" then
+        petTitle = "🔥💎✨ Shiny Mythic Secret Pet Hatched ✨💎🔥"
+    elseif name == "Hexarium" and isShiny == "No" and rarity == "Legendary" then
+        petTitle = "⭐ Legendary Pet Hatched ⭐"
+    elseif name == "Hexarium" and isShiny == "Yes" and rarity == "Legendary" then
+        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
+    elseif name == "Hexarium" and isShiny == "No" and rarity == "Mythic" then
+        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
+    elseif name == "Hexarium" and isShiny == "Yes" and rarity == "Mythic" then
+        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
+    elseif name == "Rainbow Shock" and isShiny == "No" and rarity == "Legendary" then
+        petTitle = "⭐ Legendary Pet Hatched ⭐"
+    elseif name == "Rainbow Shock" and isShiny == "Yes" and rarity == "Legendary" then
+        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
+    elseif name == "Rainbow Shock" and isShiny == "No" and rarity == "Mythic" then
+        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
+    elseif name == "Rainbow Shock" and isShiny == "Yes" and rarity == "Mythic" then
+        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
+    elseif name == "Sigma Serpent" and isShiny == "No" and rarity == "Legendary" then
+        petTitle = "⭐ Legendary Pet Hatched ⭐"
+    elseif name == "Sigma Serpent" and isShiny == "Yes" and rarity == "Legendary" then
+        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
+    elseif name == "Sigma Serpent" and isShiny == "No" and rarity == "Mythic" then
+        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
+    elseif name == "Sigma Serpent" and isShiny == "Yes" and rarity == "Mythic" then
+        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
+    elseif name == "Manarium" and isShiny == "No" and rarity == "Legendary" then
+        petTitle = "⭐ Legendary Pet Hatched ⭐"
+    elseif name == "Manarium" and isShiny == "Yes" and rarity == "Legendary" then
+        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
+    elseif name == "Manarium" and isShiny == "No" and rarity == "Mythic" then
+        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
+    elseif name == "Manarium" and isShiny == "Yes" and rarity == "Mythic" then
+        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
+    elseif name == "MAN FACE GOD" and isShiny == "No" and rarity == "Secret" then
+        petTitle = "🔥 Secret Pet Hatched 🔥"
+    elseif name == "MAN FACE GOD" and isShiny == "Yes" and rarity == "Secret" then
+        petTitle = "🔥✨ Shiny Secret Pet Hatched ✨🔥"
+    elseif name == "MAN FACE GOD" and isShiny == "No" and rarity == "Mythic" then
+        petTitle = "🔥💎 Mythic Secret Pet Hatched 💎🔥"
+    elseif name == "MAN FACE GOD" and isShiny == "Yes" and rarity == "Mythic" then
+        petTitle = "🔥💎✨ Shiny Mythic Secret Pet Hatched ✨💎🔥"
+    elseif name == "Sweet Treat" and isShiny == "No" and rarity == "Legendary" then -- event pets
+        petTitle = "⭐ Legendary Pet Hatched ⭐"
+    elseif name == "Sweet Treat" and isShiny == "Yes" and rarity == "Legendary" then
+        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
+    elseif name == "Sweet Treat" and isShiny == "No" and rarity == "Mythic" then
+        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
+    elseif name == "Sweet Treat" and isShiny == "Yes" and rarity == "Mythic" then
+        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
+    elseif name == "Rainbow Marshmellow" and isShiny == "No" and rarity == "Legendary" then 
+        petTitle = "⭐ Legendary Pet Hatched ⭐"
+    elseif name == "Rainbow Marshmellow" and isShiny == "Yes" and rarity == "Legendary" then
+        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
+    elseif name == "Rainbow Marshmellow" and isShiny == "No" and rarity == "Mythic" then
+        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
+    elseif name == "Rainbow Marshmellow" and isShiny == "Yes" and rarity == "Mythic" then
+        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
+    elseif name == "Giant Chocolate Chicken" and isShiny == "No" and rarity == "Secret" then
+        petTitle = "🔥 Secret Pet Hatched 🔥"
+    elseif name == "Giant Chocolate Chicken" and isShiny == "Yes" and rarity == "Secret" then
+        petTitle = "🔥✨ Shiny Secret Pet Hatched ✨🔥"
+    elseif name == "Giant Chocolate Chicken" and isShiny == "No" and rarity == "Mythic" then
+        petTitle = "🔥💎 Mythic Secret Pet Hatched 💎🔥"
+    elseif name == "Giant Chocolate Chicken" and isShiny == "Yes" and rarity == "Mythic" then
+        petTitle = "🔥💎✨ Shiny Mythic Secret Pet Hatched ✨💎🔥"
+    elseif name == "Seraphic Bunny" and isShiny == "No" and rarity == "Legendary" then 
+        petTitle = "⭐ Legendary Pet Hatched ⭐"
+    elseif name == "Seraphic Bunny" and isShiny == "Yes" and rarity == "Legendary" then
+        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
+    elseif name == "Seraphic Bunny" and isShiny == "No" and rarity == "Mythic" then
+        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
+    elseif name == "Seraphic Bunny" and isShiny == "Yes" and rarity == "Mythic" then
+        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
+    elseif name == "Ethereal Bunny" and isShiny == "No" and rarity == "Legendary" then
+        petTitle = "⭐ Legendary Pet Hatched ⭐"
+    elseif name == "Ethereal Bunny" and isShiny == "Yes" and rarity == "Legendary" then
+        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
+    elseif name == "Ethereal Bunny" and isShiny == "No" and rarity == "Mythic" then
+        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
+    elseif name == "Ethereal Bunny" and isShiny == "Yes" and rarity == "Mythic" then
+        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
+    elseif name == "Cardinal Bunny" and isShiny == "No" and rarity == "Legendary" then
+        petTitle = "⭐ Legendary Pet Hatched ⭐"
+    elseif name == "Cardinal Bunny" and isShiny == "Yes" and rarity == "Legendary" then
+        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
+    elseif name == "Cardinal Bunny" and isShiny == "No" and rarity == "Mythic" then
+        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
+    elseif name == "Cardinal Bunny" and isShiny == "Yes" and rarity == "Mythic" then
+        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
+    elseif name == "Easter Basket" and isShiny == "No" and rarity == "Secret" then
+        petTitle = "🔥 Secret Pet Hatched 🔥"
+    elseif name == "Easter Basket" and isShiny == "Yes" and rarity == "Secret" then
+        petTitle = "🔥✨ Shiny Secret Pet Hatched ✨🔥"
+    elseif name == "Easter Basket" and isShiny == "No" and rarity == "Mythic" then
+        petTitle = "🔥💎 Mythic Secret Pet Hatched 💎🔥"
+    elseif name == "Easter Basket" and isShiny == "Yes" and rarity == "Mythic" then
+        petTitle = "🔥💎✨ Shiny Mythic Secret Pet Hatched ✨💎🔥"
+    end
+
+    local desc = string.format(" 🐾 **Pet Name :** %s 🐾 \n 💎 **Pet Rarity : ** %s 💎 \n", name, rarity)
     if name == "King Doggy" and isShiny == "No" and rarity == "Secret" then
         petChance = " 1 in 100,000,000"
     elseif name == "King Doggy" and isShiny == "Yes" and rarity == "Secret" then
@@ -304,7 +515,7 @@ local function sendWebhook(name, rarity, shiny, image, chance)
     local data = {
         ["content"] = "<@534044411475001354>",
         ["embeds"] = {{
-            ["title"] = title,
+            ["title"] = petTitle,
             ["description"] = desc,
             ["color"] = 28927,
             ["footer"] = {
