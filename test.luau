@@ -26,7 +26,6 @@ local tppos = function(x, y, z)
 end
 
 local autochewbubble         = false
-local autoSellBubbles        = false
 local autoChests             = false
 local autoAlienShop          = false
 local autoshardShop          = false
@@ -47,34 +46,6 @@ local royalPos               = nil
 local automystery            = false
 
 local selectedEnchant        = nil
-
-local enchantments = {
-    "⚡ Team Up I",
-    "⚡ Team Up II",
-    "⚡ Team Up III",
-    "⚡ Team Up IV",
-    "⚡ Team Up V",
-    "💰 Looter I",
-    "💰 Looter II",
-    "💰 Looter III",
-    "💰 Looter IV",
-    "💰 Looter V",
-    "🫧 Bubbler I",
-    "🫧 Bubbler II",
-    "🫧 Bubbler III",
-    "🫧 Bubbler IV",
-    "🫧 Bubbler V",
-    "✨ Gleaming I",
-    "✨ Gleaming II",
-    "✨ Gleaming III"
-}
-
-local potions = {
-    "Speed",
-    "Lucky",
-    "Coins",
-    "Mythic"
-}
 
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/idk.luau"))()
 
@@ -676,7 +647,7 @@ local autombox = miscstuff:addToggle("Auto Open Mystery Box (Not auto)", false, 
                 print("Mystery box used!")
                 task.wait(3)
                 if checkGiftsFolder(workspace.Rendered.Gifts) then
-                    -- nothing 
+                    -- make it click 10 times after gifts r uses.
                 end
             end
         end)
@@ -726,7 +697,6 @@ SetSec2:addButton("Kill Hub", function()
     end
 
     autochewbubble         = false
-    autoSellBubbles        = false
     autoChests             = false
     autoAlienShop          = false
     autoshardShop          = false
