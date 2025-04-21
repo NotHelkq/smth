@@ -71,9 +71,7 @@ local function sendWebhook(name, rarity, shiny, image, chance)
     end
 
     local desc = string.format(" 🐾 **Pet Name :** %s 🐾 \n 💎 **Pet Rarity : ** %s 💎 \n", name, rarity)
-    if shiny and shiny ~= "" then
-        desc = desc .. " ✨ **Is Shiny : **" .. shiny .. " ✨ \n"
-    end
+    desc = desc .. " ✨ **Is Shiny : **" .. shiny .. " ✨ \n"
     if chance and chance ~= "" then
         desc = desc .. " ❓ ** Chance : **" .. chance .. " ❓ \n"
     end
