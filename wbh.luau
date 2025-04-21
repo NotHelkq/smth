@@ -79,47 +79,41 @@ local function sendWebhook(name, rarity, shiny, image, chance)
         isShiny = "Yes"
     end
     desc = desc .. " ✨ **Is Shiny : **" .. isShiny .. " ✨ \n"
+    if name == "Emerald Golem" and isShiny == "No" and rarity == "legendary" then
+        petChance = " 1 in 200"
+    elseif name == "Emerald Golem" and isShiny == "Yes" and rarity == "legendary" then
+        petChance = " 1 in 4,000"
+    elseif name == "Emerald Golem" and isShiny == "No" and rarity == "mythic" then
+        petChance = " 1 in 20,000"
+    elseif name == "Emerald Golem" and isShiny == "Yes" and rarity == "mythic" then
+        petChance = " 1 in 400,000"
+    elseif name == "Seraphic Bunny" and isShiny == "No" and rarity == "legendary" then
+        petChance = " 1 in 5,000"
+    elseif name == "Seraphic Bunny" and isShiny == "Yes" and rarity == "legendary" then
+        petChance = " 1 in 200,000"
+    elseif name == "Seraphic Bunny" and isShiny == "No" and rarity == "mythic" then
+        petChance = " 1 in 500,000"
+    elseif name == "Seraphic Bunny" and isShiny == "Yes" and rarity == "mythic" then
+        petChance = " 1 in 20,000,000"
+    elseif name == "Ethereal Bunny" and isShiny == "No" and rarity == "legendary" then
+        petChance = " 1 in 100,000"
+    elseif name == "Ethereal Bunny" and isShiny == "Yes" and rarity == "legendary" then
+        petChance = " 1 in 4,000,000"
+    elseif name == "Ethereal Bunny" and isShiny == "No" and rarity == "mythic" then
+        petChance = " 1 in 10,000,000"
+    elseif name == "Ethereal Bunny" and isShiny == "Yes" and rarity == "mythic" then
+        petChance = " 1 in 400,000,000"
+    elseif name == "Cardinal Bunny" and isShiny == "No" and rarity == "legendary" then
+        petChance = " 1 in 1,000,000"
+    elseif name == "Cardinal Bunny" and isShiny == "Yes" and rarity == "legendary" then
+        petChance = " 1 in 40,000,000"
+    elseif name == "Cardinal Bunny" and isShiny == "No" and rarity == "mythic" then
+        petChance = " 1 in 100,000,000"
+    elseif name == "Cardinal Bunny" and isShiny == "Yes" and rarity == "mythic" then
+        petChance = " 1 in 4,000,000,000"
+    end
     if chance and chance ~= "" then
-        if name == "Seraphic Bunny" and isShiny == "No" and rarity == "legendary" then
-            petChance = " 1 in 5,000"
-            desc = desc .. " ❓ ** Chance :**" .. petChance .. " ❓ \n"
-        elseif name == "Seraphic Bunny" and isShiny == "Yes" and rarity == "legendary" then
-            petChance = " 1 in 200,000"
-            desc = desc .. " ❓ ** Chance :**" .. petChance .. " ❓ \n"
-        elseif name == "Seraphic Bunny" and isShiny == "No" and rarity == "mythic" then
-            petChance = " 1 in 500,000"
-            desc = desc .. " ❓ ** Chance :**" .. petChance .. " ❓ \n
-        elseif name == "Seraphic Bunny" and isShiny == "Yes" and rarity == "mythic" then
-            petChance = " 1 in 20,000,000"
-            desc = desc .. " ❓ ** Chance :**" .. petChance .. " ❓ \n
-        elseif name == "Ethereal Bunny" and isShiny == "No" and rarity == "legendary" then
-            petChance = " 1 in 100,000"
-            desc = desc .. " ❓ ** Chance :**" .. petChance .. " ❓ \n"
-        elseif name == "Ethereal Bunny" and isShiny == "Yes" and rarity == "legendary" then
-            petChance = " 1 in 4,000,000"
-            desc = desc .. " ❓ ** Chance :**" .. petChance .. " ❓ \n"
-        elseif name == "Ethereal Bunny" and isShiny == "No" and rarity == "mythic" then
-            petChance = " 1 in 10,000,000"
-            desc = desc .. " ❓ ** Chance :**" .. petChance .. " ❓ \n
-        elseif name == "Ethereal Bunny" and isShiny == "Yes" and rarity == "mythic" then
-            petChance = " 1 in 400,000,000"
-            desc = desc .. " ❓ ** Chance :**" .. petChance .. " ❓ \n
-        elseif name == "Cardinal Bunny" and isShiny == "No" and rarity == "legendary" then
-            petChance = " 1 in 1,000,000"
-            desc = desc .. " ❓ ** Chance :**" .. petChance .. " ❓ \n"
-        elseif name == "Cardinal Bunny" and isShiny == "Yes" and rarity == "legendary" then
-            petChance = " 1 in 40,000,000"
-            desc = desc .. " ❓ ** Chance :**" .. petChance .. " ❓ \n"
-        elseif name == "Cardinal Bunny" and isShiny == "No" and rarity == "mythic" then
-            petChance = " 1 in 100,000,000"
-            desc = desc .. " ❓ ** Chance :**" .. petChance .. " ❓ \n
-        elseif name == "Cardinal Bunny" and isShiny == "Yes" and rarity == "mythic" then
-            petChance = " 1 in 4,000,000,000"
-            desc = desc .. " ❓ ** Chance :**" .. petChance .. " ❓ \n
-        else
-            petChance = " Unknown"
-            desc = desc .. " ❓ ** Chance :**" .. petChance .. " ❓ \n
-        end
+        desc = desc .. " ❓ ** Chance :**" .. petChance .. " ❓ \n"
     end
     desc = desc .. " 🕛** Catch Date : ** " .. os.date("%m/%d/%Y %H:%M:%S") .. " 🕛"
 
