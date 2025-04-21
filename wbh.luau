@@ -512,9 +512,15 @@ local function sendWebhook(name, rarity, shiny, image, chance)
     end
     local time = os.time()
     desc = desc .. " 🕛** Catch Date : ** <t:" .. time .. ":F> 🕛"
-    local eggsOpened = "N/A"
-    eggsOpened = player.leaderstats[🥚 Hatches].Value
-    
+    local totalHatches = "N/A"
+    local leaderstats = player:FindFirstChild("leaderstats")
+    if leaderstats then
+        local hatches = leaderstats:FindFirstChild("🥚 Hatches")
+        if hatches and hatches:IsA("IntValue") then
+            totalHatches = tostring(hatches.Value)
+        end
+    end
+
     local data = {
         ["content"] = "<@" .. getgenv().Config.UserID .. ">",
         ["embeds"] = {{
@@ -522,7 +528,7 @@ local function sendWebhook(name, rarity, shiny, image, chance)
             ["description"] = desc,
             ["color"] = 16711680,
             ["footer"] = {
-                ["text"] = "Pet Hatched By : " .. player.Name .. " | 🥚 Total Hatches : " .. eggsOpened
+                ["text"] = "Pet Hatched By : " .. player.Name .. " | 🥚 Total Hatches : " .. totalHatches
             },
             ["thumbnail"] = {
                 ["url"] = image or fallbackImage
