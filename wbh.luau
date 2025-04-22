@@ -568,7 +568,7 @@ local function sendWebhook(name, rarity, shiny, image, chance)
     local data = {
         ["content"] = "<@" .. getgenv().Config.UserID .. ">", playername,
         ["embeds"] = {{
-            ["title"] = petTitle, playername,
+            ["title"] = petTitle,
             ["description"] = desc,
             ["color"] = 16711680,
             ["footer"] = {
@@ -616,4 +616,4 @@ local function monitorHatch()
 end
 
 runService.RenderStepped:Connect(monitorHatch)
-print("Hatches Webhook v1 turned on")
+print("Hatches Webhook v2 turned on")
