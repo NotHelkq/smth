@@ -564,15 +564,14 @@ local function sendWebhook(name, rarity, shiny, image, chance)
         end
     end
     
-    local playername = "|| " .. player.Name .. " ||"
     local data = {
-        ["content"] = "<@" .. getgenv().Config.UserID .. ">", playername,
+        ["content"] = "<@" .. getgenv().Config.UserID .. ">",
         ["embeds"] = {{
             ["title"] = petTitle,
             ["description"] = desc,
             ["color"] = 16711680,
             ["footer"] = {
-                ["text"] = "Hatched By : " .. playername .. " | 🥚 Total Hatches : " .. totalHatches .. " | 💰 Coins Left : " .. currentCoins
+                ["text"] = "Pet Hatched By : " .. player.Name .. " | 🥚 Total Hatches : " .. totalHatches .. " | 💰 Coins Left : " .. currentCoins
             },
             ["thumbnail"] = {
                 ["url"] = image or fallbackImage
@@ -616,4 +615,4 @@ local function monitorHatch()
 end
 
 runService.RenderStepped:Connect(monitorHatch)
-print("Hatches Webhook v2 turned on")
+print("Hatches Webhook turned on")
