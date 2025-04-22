@@ -571,7 +571,7 @@ local function sendWebhook(name, rarity, shiny, image, chance)
             ["description"] = desc,
             ["color"] = 16711680,
             ["footer"] = {
-                ["text"] = "Hatched By : ||" .. player.Name .. "||" .. " | 🥚 Total Hatches : " .. totalHatches .. " | 💰 Coins Left : " .. currentCoins
+                ["text"] = "Hatched By : || " .. player.Name .. " ||" .. " | 🥚 Total Hatches : " .. totalHatches .. " | 💰 Coins Left : " .. currentCoins
             },
             ["thumbnail"] = {
                 ["url"] = image or fallbackImage
