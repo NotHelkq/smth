@@ -564,14 +564,15 @@ local function sendWebhook(name, rarity, shiny, image, chance)
         end
     end
     
+    local playername = "|| " .. player.Name .. " ||"
     local data = {
-        ["content"] = "<@" .. getgenv().Config.UserID .. ">",
+        ["content"] = "<@" .. getgenv().Config.UserID .. ">", playername,
         ["embeds"] = {{
-            ["title"] = petTitle,
+            ["title"] = petTitle, playername.
             ["description"] = desc,
             ["color"] = 16711680,
             ["footer"] = {
-                ["text"] = "Hatched By : || " .. player.Name .. " ||" .. " | 🥚 Total Hatches : " .. totalHatches .. " | 💰 Coins Left : " .. currentCoins
+                ["text"] = "Hatched By : " .. playername .. " | 🥚 Total Hatches : " .. totalHatches .. " | 💰 Coins Left : " .. currentCoins
             },
             ["thumbnail"] = {
                 ["url"] = image or fallbackImage
