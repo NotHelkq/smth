@@ -554,7 +554,8 @@ local function sendWebhook(name, rarity, shiny, image, chance)
             local text = coins.Text
             local numberPart, suffix = text:match("([%d,.]+)([%a]*)")
             if numberPart then
-                local rawNumber = tonumber(numberPart:gsub(",", ""))
+                local cleanedNumberPart = numberPart:gsub(",", "") 
+                local rawNumber = tonumber(cleanedNumberPart)
                 if suffix:lower() == "b" then
                     rawNumber = rawNumber * 1e9
                 end
@@ -614,4 +615,4 @@ local function monitorHatch()
 end
 
 runService.RenderStepped:Connect(monitorHatch)
-print("Hatches Webhook turned on")
+print("Hatches Webhook v1 turned on")
