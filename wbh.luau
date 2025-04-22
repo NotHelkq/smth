@@ -520,7 +520,15 @@ local function sendWebhook(name, rarity, shiny, image, chance)
             totalHatches = tostring(hatches.Value)
         end
     end
-
+    local currentCoins = "N/A"
+    local coinsHud = player.PlayerGui.ScreenGui.HUD.Left.Currency.Coins:FindFirstChild("Frame")
+    if coinsHud then
+        local coins = coinsHud:FindFirstChild("Label")
+        if coins and coins:IsA("TextLabel") then
+            currentCoins = tostring(coins.Text)
+        end
+    end
+    
     local data = {
         ["content"] = "<@" .. getgenv().Config.UserID .. ">",
         ["embeds"] = {{
@@ -528,7 +536,7 @@ local function sendWebhook(name, rarity, shiny, image, chance)
             ["description"] = desc,
             ["color"] = 16711680,
             ["footer"] = {
-                ["text"] = "Pet Hatched By : " .. player.Name .. " | 🥚 Total Hatches : " .. totalHatches
+                ["text"] = "Pet Hatched By : " .. player.Name .. " | 🥚 Total Hatches : " .. totalHatches .. " | 💰 Money Left : " .. currentCoins
             },
             ["thumbnail"] = {
                 ["url"] = image or fallbackImage
