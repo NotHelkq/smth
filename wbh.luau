@@ -58,6 +58,32 @@ local function isRecentFrame(frame)
     return false
 end
 
+local function formatNumber(number)
+    local str = tostring(number)
+    local reversed = str:reverse()
+    local parts = {} 
+    for i = 1, #reversed, 3 do
+        local part = reversed:sub(i, math.min(i + 2, #reversed))
+        table.insert(parts, part)
+    end  
+    return table.concat(parts, ","):reverse()
+end
+
+local function abbreviateNumber(number)
+    if number >= 1e9 then
+        local value = number / 1e9
+        return string.format("%.1fb", value):gsub("%.0b", "b") 
+    elseif number >= 1e6 then 
+        local value = number / 1e6
+        return string.format("%.1fm", value):gsub("%.0m", "m")
+    elseif number >= 1e3 then 
+        local value = number / 1e3
+        return string.format("%.1fk", value):gsub("%.0k", "k")
+    else
+        return tostring(number) 
+    end
+end
+
 local petTitle = "Unknown Pet Hatched"
 local petChance = " Unknown"
 local isShiny = "Maybe"
@@ -517,7 +543,7 @@ local function sendWebhook(name, rarity, shiny, image, chance)
     if leaderstats then
         local hatches = leaderstats:FindFirstChild("🥚 Hatches")
         if hatches and hatches:IsA("IntValue") then
-            totalHatches = tostring(hatches.Value)
+            totalHatches = formatNumber(hatches.Value)
         end
     end
     local currentCoins = "N/A"
@@ -525,7 +551,15 @@ local function sendWebhook(name, rarity, shiny, image, chance)
     if coinsHud then
         local coins = coinsHud:FindFirstChild("Label")
         if coins and coins:IsA("TextLabel") then
-            currentCoins = tostring(coins.Text)
+            local text = coins.Text
+            local numberPart, suffix = text:match("([%d,.]+)([%a]*)")
+            if numberPart then
+                local rawNumber = tonumber(numberPart:gsub(",", ""))
+                if suffix:lower() == "b" then
+                    rawNumber = rawNumber * 1e9
+                end
+                currentCoins = abbreviateNumber(rawNumber)
+            end
         end
     end
     
@@ -536,7 +570,7 @@ local function sendWebhook(name, rarity, shiny, image, chance)
             ["description"] = desc,
             ["color"] = 16711680,
             ["footer"] = {
-                ["text"] = "Pet Hatched By : " .. player.Name .. " | 🥚 Total Hatches : " .. totalHatches .. " | 💰 Money Left : " .. currentCoins
+                ["text"] = "Hatched By : " .. player.Name .. " | 🥚 Total Hatches : " .. totalHatches .. " | 💰 Coins Left : " .. currentCoins
             },
             ["thumbnail"] = {
                 ["url"] = image or fallbackImage
