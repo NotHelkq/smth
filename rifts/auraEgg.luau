@@ -44,7 +44,7 @@ local function sendWebhook()
         despawntime = 0
     end
     local despawn = time + despawntime
-    desc = desc .. "🕛 ** Despawns : ** <t:" .. despawn .. ":f> 🕛"
+    desc = desc .. "🕛 ** Despawns : ** " .. despawn .. " 🕛"
 
     local data = {
         ["content"] = "@everyone",
