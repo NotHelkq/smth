@@ -47,7 +47,7 @@ local function sendWebhook()
     desc = desc .. "🕛 ** Despawns : ** <t:" .. despawn .. ":f> 🕛"
 
     local data = {
-        ["content"] = "<@" .. getgenv().Config.UserID .. ">",
+        ["content"] = "<@&1364511383487774720>",
         ["embeds"] = {{
             ["title"] = "🍀 " .. title .. " 🍀",
             ["description"] = desc,
