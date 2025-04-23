@@ -30,11 +30,11 @@ end
 
 local lTitle = "0"
 if luck == "x5" then
-    lTitle = "1364578880630820864"
+    lTitle = "1364578880630820864> | <@&1364675294014734439"
 elseif luck == "x10" then
-    lTitle = "1364578858162196490"
+    lTitle = "1364578858162196490> | <@&1364675216537550918"
 elseif luck == "x25" then
-    lTitle = "1364575710768922654"
+    lTitle = "1364575710768922654> | <@&1364675128818139146"
 end
 
 local function sendWebhook()
