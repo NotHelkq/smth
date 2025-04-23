@@ -1308,8 +1308,8 @@ local autombox = miscstuff:addToggle("Auto Open Mystery Box (Not auto)", false, 
 end)
 
 local Webhooks = Window:addPage("Webhook", 5012544693)
-local weble = Webhooks:addSection("Webhooks")
-webletoggle:AddToggle("Send Lucky Rift Webhooks", false, function(on)
+local webh = Webhooks:addSection("Webhooks")
+local webletoggle = webh:AddToggle("Send Lucky Rift Webhooks", false, function(on)
     if on then
         runService.RenderStepped:Connect(monitorRifts)
         print("Rifts Webhook turned on")
@@ -1319,7 +1319,7 @@ webletoggle:AddToggle("Send Lucky Rift Webhooks", false, function(on)
     end
 end)
 
-webhtoggle:AddToggle("Send Rare Hatches Webhooks", false, function(on)
+local webhtoggle = webh:AddToggle("Send Rare Hatches Webhooks", false, function(on)
     if on then
         runService.RenderStepped:Connect(monitorHatch)
         print("Hatches Webhook turned on")
