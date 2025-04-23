@@ -13,20 +13,19 @@ end
 local player = game.Players.LocalPlayer
 local httpService = game:GetService("HttpService")
 
-local islandName = "Lucky Crystal Egg"
+local islandName = " Crystal Egg"
 local rift = workspace.Rendered.Rifts:FindFirstChild("crystal-egg")
 local luck = rift.Display.SurfaceGui.Icon.Luck.Text
 local timer = rift.Display.SurfaceGui.Timer.Text
+local title = luck .. islandName
 local function sendWebhook()
-    local desc = string.format("💎 **Island Name :** %s 💎 \n🍀 **Luck : ** %s 🍀 \n", islandName, luck)
-
     local pos = rift.EggPlatformSpawn.WorldPivot.Position
     local rPos = Vector3.new(
         math.floor(pos.X + 0.5),
         math.floor(pos.Y + 0.5),
         math.floor(pos.Z + 0.5)
     )
-    desc = desc .. "❓ **Island Positon : **" .. "X =" .. rPos.X .. ", Y = " .. rPos.Y .. ", Z = " .. rPos.Z .. " ❓ \n"
+    local desc = string.format(" ❓** Island Position : ** X = %d, Y = %d, Z = %d ❓\n", rPos.X, rPos.Y, rPos.Z)
 
     local time = os.time()
     desc = desc .. "🕛 **Time Found : ** <t:" .. time .. ":f> 🕛 \n"
@@ -50,12 +49,9 @@ local function sendWebhook()
     local data = {
         ["content"] = "<@" .. getgenv().Config.UserID .. ">",
         ["embeds"] = {{
-            ["title"] = "Island Found!",
+            ["title"] = "🍀 " .. title .. " 🍀",
             ["description"] = desc,
-            ["color"] = 16711680,
-            ["footer"] = {
-                ["text"] = "Found By : " .. player.Name
-            }
+            ["color"] = 16711680
         }}
     }
 
