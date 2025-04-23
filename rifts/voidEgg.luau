@@ -56,7 +56,10 @@ local function sendWebhook()
         ["embeds"] = {{
             ["title"] = "🍀 " .. title .. " 🍀",
             ["description"] = desc,
-            ["color"] = 16711680
+            ["color"] = 16711680,
+            ["thumbnail"] = {
+                ["url"] = "https://static.wikia.nocookie.net/bgs-infinity/images/5/58/Void_Egg.png/revision/latest?cb=20250412180803"
+            }
         }}
     }
 
