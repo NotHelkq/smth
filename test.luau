@@ -1307,24 +1307,32 @@ local autombox = miscstuff:addToggle("Auto Open Mystery Box (Not auto)", false, 
     end
 end)
 
+local riftConnection = nil
+local hatchConnection = nil
 local Webhooks = Window:addPage("Webhook", 5012544693)
 local webh = Webhooks:addSection("Webhooks")
 local webletoggle = webh:addToggle("Send Lucky Rift Webhooks", false, function(on)
     if on then
-        runService.RenderStepped:Connect(monitorRifts)
+        riftConnection = runService.RenderStepped:Connect(monitorRifts)
         print("Rifts Webhook turned on")
     else
-        runService.RenderStepped:Disconnect(monitorRifts)
+        if riftConnection then
+            riftConnection:Disconnect()
+            riftConnection = nil
+        end
         print("Rifts Webhook turned off")
     end
 end)
 
 local webhtoggle = webh:addToggle("Send Rare Hatches Webhooks", false, function(on)
     if on then
-        runService.RenderStepped:Connect(monitorHatch)
+        hatchConnection = runService.RenderStepped:Connect(monitorHatch)
         print("Hatches Webhook turned on")
     else
-        runService.RenderStepped:Disconnect(monitorHatch)
+        if hatchConnection then
+            hatchConnection:Disconnect()
+            hatchConnection = nil
+        end
         print("Hatches Webhook turned off")
     end
 end)
@@ -1386,10 +1394,12 @@ SetSec2:addButton("Kill Hub", function()
     autoRoyalChest         = false
     royalChecked           = false
     royalPos               = nil
+    riftConnection = nil
+    hatchConnection = nil
+    riftConnection:Disconnect()
+    hatchConnection:Disconnect()
 
     automystery            = false
-
-    selectedEnchant        = nil
 
     Window.container:Destroy()
 end)
