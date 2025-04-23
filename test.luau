@@ -1309,7 +1309,7 @@ end)
 
 local Webhooks = Window:addPage("Webhook", 5012544693)
 local webh = Webhooks:addSection("Webhooks")
-local webletoggle = webh:AddToggle("Send Lucky Rift Webhooks", false, function(on)
+local webletoggle = webh:addToggle("Send Lucky Rift Webhooks", false, function(on)
     if on then
         runService.RenderStepped:Connect(monitorRifts)
         print("Rifts Webhook turned on")
@@ -1319,7 +1319,7 @@ local webletoggle = webh:AddToggle("Send Lucky Rift Webhooks", false, function(o
     end
 end)
 
-local webhtoggle = webh:AddToggle("Send Rare Hatches Webhooks", false, function(on)
+local webhtoggle = webh:addToggle("Send Rare Hatches Webhooks", false, function(on)
     if on then
         runService.RenderStepped:Connect(monitorHatch)
         print("Hatches Webhook turned on")
