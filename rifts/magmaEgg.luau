@@ -52,11 +52,14 @@ local function sendWebhook()
     desc = desc .. "🕛 ** Despawn : **in " .. timer .. " 🕛"
 
     local data = {
-        ["content"] = "<@&1364569281890750484> | <@&" .. lTitle .. ">",
+        ["content"] = "<@&1364569328535736390> | <@&" .. lTitle .. ">",
         ["embeds"] = {{
             ["title"] = "🍀 " .. title .. " 🍀",
             ["description"] = desc,
-            ["color"] = 16711680
+            ["color"] = 16711680,
+            ["thumbnail"] = {
+                ["url"] = "https://static.wikia.nocookie.net/bgs-infinity/images/6/63/Magma_Egg.png/revision/latest?cb=20250412180317"
+            }
         }}
     }
 
