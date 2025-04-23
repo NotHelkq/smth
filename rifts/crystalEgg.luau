@@ -49,7 +49,7 @@ local function sendWebhook()
     local time = os.time()
     desc = desc .. "🕛 **Time Found : ** <t:" .. time .. ":f> 🕛 \n"
 
-    desc = desc .. "🕛 ** Despawns : ** <t:" .. timer .. ":f> 🕛"
+    desc = desc .. "🕛 ** Despawns : ** " .. timer .. " 🕛"
 
     local data = {
         ["content"] = "<@&1364569246667116596> | <@&" .. lTitle .. ">",
