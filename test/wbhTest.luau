@@ -1,8 +1,8 @@
 local runService = game:GetService("RunService")
+local recentFrames = {}
 
-local function isRecentFrame(frame)
-    local id = tostring(frame)
-    if recentFrames[id] and tick() - recentFrames[id] < 10 then
+local function isRecentFrame(id)
+    if recentFrames[id] and (tick() - recentFrames[id] < 10) then
         return true
     end
     recentFrames[id] = tick()
@@ -28,7 +28,7 @@ local function monitorRifts()
     for _, riftData in ipairs(riftList) do
         local rift = riftsFolder:FindFirstChild(riftData.name)
         if rift and rift:FindFirstChild("Output") then
-            if not isRecentFrame(frame) then
+            if not isRecentFrame(riftData.name) then
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/rifts/" .. riftData.url))()
                 rift.Output:Destroy()
                 break 
