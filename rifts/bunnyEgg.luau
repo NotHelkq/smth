@@ -13,7 +13,6 @@ end
 local player = game.Players.LocalPlayer
 local httpService = game:GetService("HttpService")
 
-
 local islandName = "Lucky Bunny Egg"
 local rift = workspace.Rendered.Rifts:FindFirstChild("event-1")
 local luck = rift.Display.SurfaceGui.Icon.Luck.Text
@@ -49,7 +48,7 @@ local function sendWebhook()
     desc = desc .. "🕛 ** Despawns : ** <t:" .. despawn .. ":f> 🕛"
 
     local data = {
-        ["content"] = "e",
+        ["content"] = "<@" .. getgenv().Config.UserID .. ">",
         ["embeds"] = {{
             ["title"] = "Island Found!",
             ["description"] = desc,
