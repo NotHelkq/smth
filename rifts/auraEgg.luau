@@ -30,21 +30,7 @@ local function sendWebhook()
     local time = os.time()
     desc = desc .. "🕛 **Time Found : ** <t:" .. time .. ":f> 🕛 \n"
 
-    local despawntime = 0
-    local numStr, unit = string.match(timer, "^(%d+)[%s%p]*(%a*)")
-    if numStr then
-        local num = tonumber(numStr)
-        unit = unit and unit:lower() or ""  
-        if unit:find("minute") or unit == "" then
-            despawntime = num * 60
-        else
-            despawntime = 0
-        end
-    else
-        despawntime = 0
-    end
-    local despawn = time + despawntime
-    desc = desc .. "🕛 ** Despawns : ** " .. despawn .. " 🕛"
+    desc = desc .. "🕛 ** Despawn : in ** " .. timer .. " 🕛"
 
     local data = {
         ["content"] = "@everyone",
