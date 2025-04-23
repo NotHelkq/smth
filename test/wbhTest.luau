@@ -2,7 +2,7 @@ local runService = game:GetService("RunService")
 local recentFrames = {}
 
 local function isRecentFrame(id)
-    if recentFrames[id] and (tick() - recentFrames[id] < 10) then
+    if recentFrames[id] and (tick() - recentFrames[id] < 5) then
         return true
     end
     recentFrames[id] = tick()
@@ -29,9 +29,21 @@ local function monitorRifts()
         local rift = riftsFolder:FindFirstChild(riftData.name)
         if rift and rift:FindFirstChild("Output") then
             if not isRecentFrame(riftData.name) then
-                loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/rifts/" .. riftData.url))()
-                rift.Output:Destroy()
-                break 
+                local success, scriptContent = pcall(function()
+                    return game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/rifts/" .. riftData.url)
+                end)
+                if success then
+                    local loadedFunction = loadstring(scriptContent)
+                    if type(loadedFunction) == "function" then
+                        loadedFunction()
+                        rift.Output:Destroy()
+                    else
+                        warn("Failed to load script for", riftData.name)
+                    end
+                else
+                    warn("Failed to fetch script for", riftData.name, ":", scriptContent)
+                end
+                break
             end
         end
     end
