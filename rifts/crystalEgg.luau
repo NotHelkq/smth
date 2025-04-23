@@ -25,7 +25,7 @@ local function sendWebhook()
         math.floor(pos.Y + 0.5),
         math.floor(pos.Z + 0.5)
     )
-    local desc = string.format(" ❓** Island Position : ** X = %d, Y = %d, Z = %d ❓\n", rPos.X, rPos.Y, rPos.Z)
+    local desc = string.format("❓** Island Position : ** X = %d, Y = %d, Z = %d ❓\n", rPos.X, rPos.Y, rPos.Z)
 
     local time = os.time()
     desc = desc .. "🕛 **Time Found : ** <t:" .. time .. ":f> 🕛 \n"
