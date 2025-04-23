@@ -37,7 +37,10 @@ local function sendWebhook()
         ["embeds"] = {{
             ["title"] = "🍀 " .. title .. " 🍀",
             ["description"] = desc,
-            ["color"] = 16711680
+            ["color"] = 16711680,
+            ["thumbnail"] = {
+                ["url"] = "https://static.wikia.nocookie.net/bgs-infinity/images/2/2e/Aura_Egg.png/revision/latest?cb=20250420102104"
+            }
         }}
     }
 
