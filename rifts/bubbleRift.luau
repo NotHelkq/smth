@@ -60,7 +60,7 @@ local function sendWebhook()
     local data = {
         ["content"] = "<@&1364899729498177558>",
         ["embeds"] = {{
-            ["title"] = "💎 " .. title .. " 💎",
+            ["title"] = "💎" .. title .. " 💎",
             ["description"] = desc,
             ["color"] = 16711680,
             ["thumbnail"] = {
