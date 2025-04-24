@@ -44,12 +44,20 @@ local function sendWebhook()
         math.floor(pos.Y + 0.5),
         math.floor(pos.Z + 0.5)
     )
-    local desc = string.format("❓** Island Position : ** X = %d, Y = %d, Z = %d ❓\n", rPos.X, rPos.Y, rPos.Z)
+    local desc = string.format("❓** Rift Position : ** X = %d, Y = %d, Z = %d ❓\n", rPos.X, rPos.Y, rPos.Z)
 
     local time = os.time()
-    desc = desc .. "🕛 **Time Found : ** <t:" .. time .. ":f> 🕛 \n"
+    desc = desc .. "🕛 **Time Found :** <t:" .. time .. ":f> 🕛\n"
 
-    desc = desc .. "🕛 ** Despawn : **in " .. timer .. " 🕛"
+    local timeleft = "Nothing"
+    local timer2 = timer
+    if time2 == "5" .. " Minutes" then
+        wait(1)
+        timeleft = rift.Display.SurfaceGui.Timer.Text
+    else
+        timeleft = rift.Display.SurfaceGui.Timer.Text
+    end
+    desc = desc .. "🕛 ** Despawn : **in " .. timeleft .. " 🕛"
 
     local data = {
         ["content"] = "<@&1364569047148003328> | <@&" .. lTitle .. ">",
