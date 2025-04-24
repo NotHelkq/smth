@@ -249,7 +249,7 @@ local function sendWebhook(name, rarity, shiny, image)
         for i = #parts, 1, -1 do
             table.insert(reversedParts, parts[i])
         end
-        petTitle = table.concat(parts).." "..shinyStatus..(isMythic and " Mythic" or "")..petType.." Pet Hatched "..table.concat(reversedParts)
+        petTitle = table.concat(parts).." "..shinyStatus..(isMythic and " Mythic " or "")..petType.." Pet Hatched "..table.concat(reversedParts)
     end
 
     local time = os.time()
