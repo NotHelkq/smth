@@ -30,7 +30,14 @@ local function sendWebhook()
     local time = os.time()
     desc = desc .. "🕛 **Time Found : ** <t:" .. time .. ":f> 🕛 \n"
 
-    desc = desc .. "🕛 ** Despawn : **in " .. timer .. " 🕛"
+    local time2 = timer
+    if time2 == "5" .. " Minutes" then
+        wait(1)
+        timeleft = "9" .. " minutes"
+    else
+        timeleft = rift.Display.SurfaceGui.Timer.Text
+    end
+    desc = desc .. "🕛 ** Despawn : **in " .. timeleft .. " 🕛"
 
     local data = {
         ["content"] = "@everyone",
