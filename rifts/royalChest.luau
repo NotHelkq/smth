@@ -26,7 +26,7 @@ local function sendWebhook()
         math.floor(pos.Y + 0.5),
         math.floor(pos.Z + 0.5)
     )
-    local desc = string.format("❓** Rift Position : ** Y = %d ❓\n", rPos.Y)
+    local desc = string.format("❓** Rift Position :** Y = %dm ❓\n", rPos.Y)
 
     local time = os.time()
     desc = desc .. "🕛 **Time Found :** <t:" .. time .. ":f> 🕛\n"
