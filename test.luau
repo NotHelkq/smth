@@ -62,7 +62,10 @@ local function monitorRifts()
         {name = "void-egg", url = "voidEgg.luau"},
         {name = "hell-egg", url = "hellEgg.luau"},
         {name = "nightmare-egg", url = "nightmareEgg.luau"},
-        {name = "rainbow-egg", url = "rainbowEgg.luau"}
+        {name = "rainbow-egg", url = "rainbowEgg.luau"},
+        {name = "golden-chest", url = "goldenChest.luau"},
+        {name = "royal-chest", url = "royalChest.luau"},
+        {name = "bubble-rift", url = "bubbleRift.luau"}
     }
 
     for _, riftData in ipairs(riftList) do
