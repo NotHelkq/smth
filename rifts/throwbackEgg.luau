@@ -13,8 +13,8 @@ end
 local player = game.Players.LocalPlayer
 local httpService = game:GetService("HttpService")
 
-local islandName = " Bunny Egg"
-local rift = workspace.Rendered.Rifts:FindFirstChild("event-1")
+local islandName = " Throwback Egg"
+local rift = workspace.Rendered.Rifts:FindFirstChild("event-3")
 local luck = rift.Display.SurfaceGui.Icon.Luck.Text
 local timer = rift.Display.SurfaceGui.Timer.Text
 local title = luck .. islandName
