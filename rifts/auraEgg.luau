@@ -15,7 +15,6 @@ local httpService = game:GetService("HttpService")
 
 local islandName = " Aura Egg"
 local rift = workspace.Rendered.Rifts:FindFirstChild("aura-egg")
-local luck = rift.Display.SurfaceGui.Icon.Luck.Text
 local timer = rift.Display.SurfaceGui.Timer.Text
 local title = islandName
 local function sendWebhook()
