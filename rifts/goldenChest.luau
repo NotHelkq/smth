@@ -16,7 +16,6 @@ local httpService = game:GetService("HttpService")
 local islandName = " Golden Chest"
 local rift = workspace.Rendered.Rifts:FindFirstChild("golden-chest")
 local timer = rift.Display.SurfaceGui.Timer.Text
-local title = luck .. islandName
 
 local webhooklink = getgenv().Config.randomRiftWebhook
 local function sendWebhook()
