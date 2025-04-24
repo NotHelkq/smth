@@ -20,7 +20,7 @@ local title = islandName
 
 local webhooklink = getgenv().Config.randomRiftWebhook
 local function sendWebhook()
-    local pos = rift.Chest.WorldPivot.Position
+    local pos = rift.Board.WorldPivot.Position
     local rPos = Vector3.new(
         math.floor(pos.X + 0.5),
         math.floor(pos.Y + 0.5),
