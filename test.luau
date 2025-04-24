@@ -964,7 +964,7 @@ end)
 
 local Autoopeneggs = Window:addPage("Eggs", 5012544693)
 local eggstuff = Autoopeneggs:addSection("Hatch (You must be near egg!)")
-local egg = eggstuff:addDropdown("Eggs", {"Infinity Egg","Bunny Egg","Pastel Egg","Common Egg","Spotted Egg","Iceshard Egg","Spikey Egg","Magma Egg","Crystal Egg","Lunar Egg","Void Egg","Hell Egg","Nightmare Egg","Rainbow Egg"}, function(selected)
+local egg = eggstuff:addDropdown("Eggs", {"Infinity Egg","Throwback Egg","Bunny Egg","Pastel Egg","Common Egg","Spotted Egg","Iceshard Egg","Spikey Egg","Magma Egg","Crystal Egg","Lunar Egg","Void Egg","Hell Egg","Nightmare Egg","Rainbow Egg"}, function(selected)
     selectedEgg = selected
 end)
 local multiegg = eggstuff:addSlider("Open Amount", 1, 1, 6, function(multi)
