@@ -15,7 +15,6 @@ local httpService = game:GetService("HttpService")
 
 local islandName = " Golden Chest"
 local rift = workspace.Rendered.Rifts:FindFirstChild("golden-chest")
-local luck = rift.Display.SurfaceGui.Icon.Luck.Text
 local timer = rift.Display.SurfaceGui.Timer.Text
 local title = luck .. islandName
 
