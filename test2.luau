@@ -586,7 +586,7 @@ local tpEgg = eggstuff:addToggle("Teleport to Egg", false, function(on)
     if not on then return end
     local data = eggData[selectedEgg]
     if not data then return print("Egg not selected") end
-    data[1]()
+    data[1](tp)
     task.wait(1.5)   
     task.spawn(function()
         while tpToEggs do
