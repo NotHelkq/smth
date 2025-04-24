@@ -209,13 +209,24 @@ local function sendWebhook(name, rarity, shiny, image)
     local petType = table.find(petConfig.Secret, name) and "Secret" or table.find(petConfig.Legendary, name) and "Legendary"
     local isMythic = rarityLower:find("mythic")
     local emojis = {Secret = "🔥", Legendary = "⭐", Mythic = "💎", Shiny = "✨"}
-    
+    local parts = {}
+
     if petType then
-        local parts = {isMythic and emojis.Mythic or emojis[petType]}
-        if shiny then table.insert(parts, emojis.Shiny) end
-        if isMythic then table.insert(parts, "Mythic") end
-        if shiny then table.insert(parts, "Shiny") end
-        petTitle = table.concat(parts).." "..petType.." Pet Hatched "..table.concat(parts:reverse())
+        if isMythic then
+            table.insert(parts, emojis.Mythic)
+        else
+            table.insert(parts, emojis[petType])
+        end
+        if shiny then
+            table.insert(parts, emojis.Shiny)
+        end
+        local reversedParts = {}
+        for i = #parts, 1, -1 do
+            table.insert(reversedParts, parts[i])
+        end
+        petTitle = table.concat(parts).." "..petType..
+                   (isMythic and " Mythic" or "")..
+                   " Pet Hatched "..table.concat(reversedParts)
     end
 
     petChance = chances[name] and chances[name][rarity] and chances[name][rarity][shiny] or petChance
