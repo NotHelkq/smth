@@ -54,6 +54,7 @@ local function monitorRifts()
     local riftList = {
         {name = "event-1", url = "bunnyEgg.luau"},
         {name = "event-2", url = "pastelEgg.luau"},
+        {name = "event-3", url = "throwbackEgg.luau"},
         {name = "aura-egg", url = "auraEgg.luau"},
         {name = "spikey-egg", url = "spikeyEgg.luau"},
         {name = "magma-egg", url = "magmaEgg.luau"},
@@ -117,7 +118,12 @@ local petImages = {
     ["Easter Basket"] = "https://static.wikia.nocookie.net/bgs-infinity/images/0/00/Easter_Basket.png/revision/latest/scale-to-width-down/130?cb=20250419001802",
     ["Sweet Treat"] = "https://static.wikia.nocookie.net/bgs-infinity/images/0/0e/Sweet_Treat.png/revision/latest/scale-to-width-down/130?cb=20250418233529",
     ["Rainbow Marshmellow"] = "https://static.wikia.nocookie.net/bgs-infinity/images/1/14/Rainbow_Marshmellow.png/revision/latest/scale-to-width-down/130?cb=20250418232506",
-    ["Giant Chocolate Chicken"] = "https://static.wikia.nocookie.net/bgs-infinity/images/e/ef/Giant_Chocolate_Chicken.png/revision/latest/scale-to-width-down/130?cb=20250419001410"
+    ["Giant Chocolate Chicken"] = "https://static.wikia.nocookie.net/bgs-infinity/images/e/ef/Giant_Chocolate_Chicken.png/revision/latest/scale-to-width-down/130?cb=20250419001410",
+    ["Easter Seprent"] = "https://static.wikia.nocookie.net/bgs-infinity/images/c/cd/Easter_Serpent.png/revision/latest?cb=20250423223156",
+    ["Dualcorn"] = "https://static.wikia.nocookie.net/bgs-infinity/images/b/bc/Dualcorn.png/revision/latest?cb=20250423223401",
+    ["Holy Egg"] = "https://static.wikia.nocookie.net/bgs-infinity/images/d/d7/Holy_Egg.png/revision/latest?cb=20250423223522",
+    ["Godly Gem"] = "https://static.wikia.nocookie.net/bgs-infinity/images/1/18/Godly_Gem.png/revision/latest?cb=20250424031626",
+    ["Dementor"] = "https://static.wikia.nocookie.net/bgs-infinity/images/5/58/Dementor.png/revision/latest?cb=20250424030933"
 }
 
 local fallbackImage = "https://static.wikia.nocookie.net/bgs-infinity/images/7/73/Common_Pet.png"
@@ -377,6 +383,46 @@ local function sendWebhook(name, rarity, shiny, image, chance)
         petTitle = "🔥💎 Mythic Secret Pet Hatched 💎🔥"
     elseif name == "Easter Basket" and isShiny == "Yes" and rarity == "Mythic" then
         petTitle = "🔥💎✨ Shiny Mythic Secret Pet Hatched ✨💎🔥"
+    elseif name == "Easter Seprent" and isShiny == "No" and rarity == "Legendary" then
+        petTitle = "⭐ Legendary Pet Hatched ⭐"
+    elseif name == "Easter Seprent" and isShiny == "Yes" and rarity == "Legendary" then
+        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
+    elseif name == "Easter Seprent" and isShiny == "No" and rarity == "Mythic" then
+        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
+    elseif name == "Easter Seprent" and isShiny == "Yes" and rarity == "Mythic" then
+        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
+    elseif name == "Dualcorn" and isShiny == "No" and rarity == "Legendary" then
+        petTitle = "⭐ Legendary Pet Hatched ⭐"
+    elseif name == "Dualcorn" and isShiny == "Yes" and rarity == "Legendary" then
+        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
+    elseif name == "Dualcorn" and isShiny == "No" and rarity == "Mythic" then
+        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
+    elseif name == "Dualcorn" and isShiny == "Yes" and rarity == "Mythic" then
+        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
+    elseif name == "Holy Egg" and isShiny == "No" and rarity == "Legendary" then
+        petTitle = "⭐ Legendary Pet Hatched ⭐"
+    elseif name == "Holy Egg" and isShiny == "Yes" and rarity == "Legendary" then
+        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
+    elseif name == "Holy Egg" and isShiny == "No" and rarity == "Mythic" then
+        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
+    elseif name == "Holy Egg" and isShiny == "Yes" and rarity == "Mythic" then
+        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
+    elseif name == "Godly Gem" and isShiny == "No" and rarity == "Secret" then
+        petTitle = "🔥 Secret Pet Hatched 🔥"
+    elseif name == "Godly Gem" and isShiny == "Yes" and rarity == "Secret" then
+        petTitle = "🔥✨ Shiny Secret Pet Hatched ✨🔥"
+    elseif name == "Godly Gem" and isShiny == "No" and rarity == "Mythic" then
+        petTitle = "🔥💎 Mythic Secret Pet Hatched 💎🔥"
+    elseif name == "Godly Gem" and isShiny == "Yes" and rarity == "Mythic" then
+        petTitle = "🔥💎✨ Shiny Mythic Secret Pet Hatched ✨💎🔥"
+    elseif name == "Dementor" and isShiny == "No" and rarity == "Secret" then
+        petTitle = "🔥 Secret Pet Hatched 🔥"
+    elseif name == "Dementor" and isShiny == "Yes" and rarity == "Secret" then
+        petTitle = "🔥✨ Shiny Secret Pet Hatched ✨🔥"
+    elseif name == "Dementor" and isShiny == "No" and rarity == "Mythic" then
+        petTitle = "🔥💎 Mythic Secret Pet Hatched 💎🔥"
+    elseif name == "Dementor" and isShiny == "Yes" and rarity == "Mythic" then
+        petTitle = "🔥💎✨ Shiny Mythic Secret Pet Hatched ✨💎🔥"
     end
 
     local desc = string.format(" 🐾 **Pet Name :** %s 🐾 \n 💎 **Pet Rarity : ** %s 💎 \n", name, rarity)
@@ -596,6 +642,46 @@ local function sendWebhook(name, rarity, shiny, image, chance)
         petChance = " 1 in 10,000,000,000"
     elseif name == "Easter Basket" and isShiny == "Yes" and rarity == "Mythic" then
         petChance = " 1 in 400,000,000,000"
+    elseif name == "Easter Seprent" and isShiny == "No" and rarity == "Legendary" then
+        petChance = " 1 in 2,500"
+    elseif name == "Easter Seprent" and isShiny == "Yes" and rarity == "Legendary" then
+        petChance = " 1 in 100,000"
+    elseif name == "Easter Seprent" and isShiny == "No" and rarity == "Mythic" then
+        petChance = " 1 in 250,000"
+    elseif name == "Easter Seprent" and isShiny == "Yes" and rarity == "Mythic" then
+        petChance = " 1 in 10,000,000"
+    elseif name == "Dualcorn" and isShiny == "No" and rarity == "Legendary" then
+        petChance = " 1 in 50,000"
+    elseif name == "Dualcorn" and isShiny == "Yes" and rarity == "Legendary" then
+        petChance = " 1 in 2,000,000"
+    elseif name == "Dualcorn" and isShiny == "No" and rarity == "Mythic" then
+        petChance = " 1 in 5,000,000"
+    elseif name == "Dualcorn" and isShiny == "Yes" and rarity == "Mythic" then
+        petChance = " 1 in 200,000,000"
+    elseif name == "Holy Egg" and isShiny == "No" and rarity == "Legendary" then
+        petChance = " 1 in 500,000"
+    elseif name == "Holy Egg" and isShiny == "Yes" and rarity == "Legendary" then
+        petChance = " 1 in 20,000,000"
+    elseif name == "Holy Egg" and isShiny == "No" and rarity == "Mythic" then
+        petChance = " 1 in 50,000,000"
+    elseif name == "Holy Egg" and isShiny == "Yes" and rarity == "Mythic" then
+        petChance = " 1 in 2,000,000,000"
+    elseif name == "Godly Gem" and isShiny == "No" and rarity == "Secret" then
+        petChance = " 1 in 250,000,000"
+    elseif name == "Godly Gem" and isShiny == "Yes" and rarity == "Secret" then
+        petChance = " 1 in 10,000,000,000"
+    elseif name == "Godly Gem" and isShiny == "No" and rarity == "Mythic" then
+        petChance = " 1 in 25,000,000,000"
+    elseif name == "Godly Gem" and isShiny == "Yes" and rarity == "Mythic" then
+        petChance = " 1 in 1,000,000,000,000"
+    elseif name == "Dementor" and isShiny == "No" and rarity == "Legendary" then
+        petChance = " 1 in 1,000,000,000"
+    elseif name == "Dementor" and isShiny == "Yes" and rarity == "Legendary" then
+        petChance = " 1 in 40,000,000,000"
+    elseif name == "Dementor" and isShiny == "No" and rarity == "Mythic" then
+        petChance = " 1 in 100,000,000,000"
+    elseif name == "Dementor" and isShiny == "Yes" and rarity == "Mythic" then
+        petChance - " 1 in 4,000,000,000,000"
     end
     if chance and chance ~= "" then
         desc = desc .. " ❓ ** Chance :**" .. petChance .. " ❓ \n"
@@ -1394,10 +1480,6 @@ SetSec2:addButton("Kill Hub", function()
     autoRoyalChest         = false
     royalChecked           = false
     royalPos               = nil
-    riftConnection = nil
-    hatchConnection = nil
-    riftConnection:Disconnect()
-    hatchConnection:Disconnect()
 
     automystery            = false
 
