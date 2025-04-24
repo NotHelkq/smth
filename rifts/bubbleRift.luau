@@ -16,7 +16,6 @@ local httpService = game:GetService("HttpService")
 local islandName = " Gum Rift"
 local rift = workspace.Rendered.Rifts:FindFirstChild("bubble-rift")
 local timer = rift.Display.SurfaceGui.Timer.Text
-local title = luck .. islandName
 
 local webhooklink = getgenv().Config.randomRiftWebhook
 local function sendWebhook()
