@@ -23,7 +23,6 @@ local tppos = function(x, y, z)
 	if r then game:GetService("TweenService"):Create(r, TweenInfo.new(10), {CFrame = CFrame.new(x, y, z)}):Play() end
 end
 
-
 local httpRequest =
     (syn and syn.request) or
     (http and http.request) or
@@ -188,9 +187,9 @@ local chances = {
     ["Green Hydra"] = {Legendary = {[false] = " 1 in 25,000", [true] = " 1 in 1,000,000"}, Mythic = {[false] = " 1 in 2,500,000", [true] = " 1 in 100,000,000"}},
     ["Demonic Hydra"] = {Legendary = {[false] = " 1 in 100,000", [true] = " 1 in 4,000,000"}, Mythic = {[false] = " 1 in 10,000,000", [true] = " 1 in 400,000,000"}},
     ["Hexarium"] = {Legendary = {[false] = " 1 in 100,000", [true] = " 1 in 4,000,000"}, Mythic = {[false] = " 1 in 10,000,000", [true] = " 1 in 400,000,000"}},
-    ["Rainbow Shock"] = {Legendary = {[false] = " 1 in 100,000", [true] = " 1 in 4,000,000"}, Mythic = {[false] = " 1 in 10,000,000", [true] = " 1 in 400,000,000"}},
+    ["Rainbow Shock"] = {Legendary = {[false] = " 1 in 200,000", [true] = " 1 in 8,000,000"}, Mythic = {[false] = " 1 in 20,000,000", [true] = " 1 in 800,000,000"}},
     ["Sigma Serpent"] = {Legendary = {[false] = " 1 in 10,000", [true] = " 1 in 400,000"}, Mythic = {[false] = " 1 in 1,000,000", [true] = " 1 in 40,000,000"}},
-    ["Manarium"] = {Legendary = {[false] = " 1 in 10,000", [true] = " 1 in 400,000"}, Mythic = {[false] = " 1 in 1,000,000", [true] = " 1 in 40,000,000"}},
+    ["Manarium"] = {Legendary = {[false] = " 1 in 20,000", [true] = " 1 in 800,000"}, Mythic = {[false] = " 1 in 2,000,000", [true] = " 1 in 80,000,000"}},
     -- Event Legendary Pet List
     ["Seraphic Bunny"] = {Legendary = {[false] = " 1 in 5,000", [true] = " 1 in 200,000"}, Mythic = {[false] = " 1 in 500,000", [true] = " 1 in 20,000,000"}},
     ["Ethereal Bunny"] = {Legendary = {[false] = " 1 in 100,000", [true] = " 1 in 4,000,000"}, Mythic = {[false] = " 1 in 10,000,000", [true] = " 1 in 400,000,000"}},
@@ -202,7 +201,18 @@ local chances = {
     ["Holy Egg"] = {Legendary = {[false] = " 1 in 500,000", [true] = " 1 in 20,000,000"}, Mythic = {[false] = " 1 in 50,000,000", [true] = " 1 in 2,000,000,000"}},
 }
 
+local rolePing = "nothing"
 local function sendWebhook(name, rarity, shiny, image)
+    if name == "Emerald Golem" or name == "Inferno Dragon" or name == "Unicorn" or name == "Flying Pig" or name == "Lunar Serpent" or name == "Electra" or name == "Dark Phoenix" or name == "Inferno Cube" or name == "Easter Serpent" then
+        rolePing = "1364857484879073300"
+    elseif name == "Neon Elemental" or name == "Green Hydra" or name == "Sigma Serpent" or name == "Manarium" or name == "Sweet Treat" then
+        rolePing = "1364857737485357067"
+    elseif name == "NULLVoid" or name == "Virus" or name == "Demonic Hydra" or name == "Hexarium" or name == "Rainbow Shock" or name == "Ethereal Bunny" or name == "Cardinal Bunny" or name == "Rainbow Marshmellow" or name == "Dualcorn" or name == "Holy Egg" then
+        rolePing = "1364857776630923388"
+    elseif name == "King Doggy" or name == "The Overlord" or name == "MAN FACE GOD" or name == "Giant Chocolate Chicken" or name == "Easter Basket" or name == "Godly Gem" or name == "Dementor" then
+        rolePing = "1364881485827407912"
+    end
+
     local title, rarityLower = "🐾 Pet Hatched!", rarity:lower()
     isShiny = shiny and "Yes" or "No"
     
@@ -261,7 +271,7 @@ local function sendWebhook(name, rarity, shiny, image)
     end
     
     local data = {
-        ["content"] = "<@" .. getgenv().Config.UserID .. ">",
+        ["content"] = "<@&" .. rolePing .. ">",
         ["embeds"] = {{
             ["title"] = petTitle,
             ["description"] = desc,
