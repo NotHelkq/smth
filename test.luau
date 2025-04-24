@@ -383,13 +383,13 @@ local function sendWebhook(name, rarity, shiny, image, chance)
         petTitle = "🔥💎 Mythic Secret Pet Hatched 💎🔥"
     elseif name == "Easter Basket" and isShiny == "Yes" and rarity == "Mythic" then
         petTitle = "🔥💎✨ Shiny Mythic Secret Pet Hatched ✨💎🔥"
-    elseif name == "Easter Seprent" and isShiny == "No" and rarity == "Legendary" then
+    elseif name == "Easter Serpent" and isShiny == "No" and rarity == "Legendary" then
         petTitle = "⭐ Legendary Pet Hatched ⭐"
-    elseif name == "Easter Seprent" and isShiny == "Yes" and rarity == "Legendary" then
+    elseif name == "Easter Serpent" and isShiny == "Yes" and rarity == "Legendary" then
         petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
-    elseif name == "Easter Seprent" and isShiny == "No" and rarity == "Mythic" then
+    elseif name == "Easter Serpent" and isShiny == "No" and rarity == "Mythic" then
         petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
-    elseif name == "Easter Seprent" and isShiny == "Yes" and rarity == "Mythic" then
+    elseif name == "Easter Serpent" and isShiny == "Yes" and rarity == "Mythic" then
         petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
     elseif name == "Dualcorn" and isShiny == "No" and rarity == "Legendary" then
         petTitle = "⭐ Legendary Pet Hatched ⭐"
@@ -642,13 +642,13 @@ local function sendWebhook(name, rarity, shiny, image, chance)
         petChance = " 1 in 10,000,000,000"
     elseif name == "Easter Basket" and isShiny == "Yes" and rarity == "Mythic" then
         petChance = " 1 in 400,000,000,000"
-    elseif name == "Easter Seprent" and isShiny == "No" and rarity == "Legendary" then
+    elseif name == "Easter Serpent" and isShiny == "No" and rarity == "Legendary" then
         petChance = " 1 in 2,500"
-    elseif name == "Easter Seprent" and isShiny == "Yes" and rarity == "Legendary" then
+    elseif name == "Easter Serpent" and isShiny == "Yes" and rarity == "Legendary" then
         petChance = " 1 in 100,000"
-    elseif name == "Easter Seprent" and isShiny == "No" and rarity == "Mythic" then
+    elseif name == "Easter Serpent" and isShiny == "No" and rarity == "Mythic" then
         petChance = " 1 in 250,000"
-    elseif name == "Easter Seprent" and isShiny == "Yes" and rarity == "Mythic" then
+    elseif name == "Easter Serpent" and isShiny == "Yes" and rarity == "Mythic" then
         petChance = " 1 in 10,000,000"
     elseif name == "Dualcorn" and isShiny == "No" and rarity == "Legendary" then
         petChance = " 1 in 50,000"
