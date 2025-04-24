@@ -64,7 +64,7 @@ local function sendWebhook()
             ["description"] = desc,
             ["color"] = 16711680,
             ["thumbnail"] = {
-                ["url"] = "https://static.wikia.nocookie.net/bgs-infinity/images/5/58/Void_Egg.png/revision/latest?cb=20250412180803"
+                ["url"] = "https://static.wikia.nocookie.net/bgs-infinity/images/2/23/Rift_Chest.png/revision/latest?cb=20250419192922"
             }
         }}
     }
