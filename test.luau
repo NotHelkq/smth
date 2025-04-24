@@ -231,7 +231,7 @@ local function sendWebhook(name, rarity, shiny, image)
 
     local shinyStatus = ""
     if isShiny == "Yes" then
-        shinyStatus = "Shiny"
+        shinyStatus = "Shiny "
     else
         shinyStatus = ""
     end
