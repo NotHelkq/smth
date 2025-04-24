@@ -627,82 +627,46 @@ local function playerPos(plrCheck)
     print("Player Position: X=" .. plrPos.X .. ", Y=" .. plrPos.Y .. ", Z=" .. plrPos.Z)
 end
 
-local goldenPos = nil
-local function goldenCheck(gCheck)
-    local pos = workspace.Rendered.Rifts["golden-chest"].Chest.WorldPivot.Position 
-    local gPos = Vector3.new(
+local goldenPos, royalPos = nil, nil
+local function handleArea(y)
+    if y < 0 then
+        return nil
+    elseif y < 410 then return argArea1() or "a1"
+    elseif y < 2650 then return argArea2() or "a2"
+    elseif y < 6850 then return argArea3() or "a3"
+    elseif y < 10130 then return argArea4() or "a4"
+    elseif y <= 15960 then return argArea5() or "a5"
+    else
+        return nil
+    end
+end
+
+local function checkChest(chestType, label)
+    local pos = workspace.Rendered.Rifts[chestType].Chest.WorldPivot.Position
+    local rounded = Vector3.new(
         math.floor(pos.X + 0.5),
         math.floor(pos.Y + 0.5),
         math.floor(pos.Z + 0.5)
-    ) 
-    local y = pos.Y
-    local area = nil
-    if y >= 0 and y < 410 then
-        area = "a1"
-        argArea1()
-    elseif y >= 410 and y < 2650 then
-        area = "a2"
-        argArea2()
-    elseif y >= 2650 and y < 6850 then
-        area = "a3"
-        argArea3()
-    elseif y >= 6850 and y < 10130 then
-        area = "a4"
-        argArea4()
-    elseif y >= 10130 and y <= 15960 then
-        area = "a5"
-        argArea5()
-    else
-        area = nil
-        print("Position not within defined area ranges.")
-    end
-    if area ~= nil then
+    )   
+    if handleArea(pos.Y) then
         task.wait(2)
     end
-    goldenPos = Vector3.new(gPos.X, gPos.Y, gPos.Z)
-    print("Golden Chest Position: X=" .. goldenPos.X .. ", Y=" .. goldenPos.Y .. ", Z=" .. goldenPos.Z)
+    local position = Vector3.new(rounded.X, rounded.Y, rounded.Z)
+    local printr = string.format("%s Chest Position: X = %d, Y = %d, Z = %d", label, rounded.X, rounded.Y, rounded.Z)
+    print(printr)
+    return position
 end
 
-local royalPos = nil
-local function royalCheck(rCheck)
-    local pos = workspace.Rendered.Rifts["royal-chest"].Chest.WorldPivot.Position 
-    local rPos = Vector3.new(
-        math.floor(pos.X + 0.5),
-        math.floor(pos.Y + 0.5),
-        math.floor(pos.Z + 0.5)
-    ) 
-    local y = pos.Y
-    local area = nil
-    if y >= 0 and y < 410 then
-        area = "a1"
-        argArea1()
-    elseif y >= 410 and y < 2650 then
-        area = "a2"
-        argArea2()
-    elseif y >= 2650 and y < 6850 then
-        area = "a3"
-        argArea3()
-    elseif y >= 6850 and y < 10130 then
-        area = "a4"
-        argArea4()
-    elseif y >= 10130 and y <= 15960 then
-        area = "a5"
-        argArea5()
-    else
-        area = nil
-        print("Position not within defined area ranges.")
-    end
-    if area ~= nil then
-        task.wait(2)
-    end
-    royalPos = Vector3.new(rPos.X, rPos.Y, rPos.Z)
-    print("Royal Chest Position: X=" .. royalPos.X .. ", Y=" .. royalPos.Y .. ", Z=" .. royalPos.Z)
-end
+function goldenCheck() goldenPos = checkChest("golden-chest", "Golden") end
+function royalCheck() royalPos = checkChest("royal-chest", "Royal") end
 
+local chestConfigs = {
+    {name = "Golden", type = "golden-chest", key = "Golden Key", check = goldenCheck, getPos = function() return goldenPos end, checkedVar = goldenChecked, autoVar = autoGoldenChest, waitTime = 5},
+    {name = "Royal", type = "royal-chest", key = "Royal Key", check = royalCheck, getPos = function() return royalPos end, checkedVar = royalChecked, autoVar = autoRoyalChest, waitTime = 3}
+}
 
 local Misc = Window:addPage("Misc", 5012544693)
 local miscstuff = Misc:addSection("Misc")
-
 local allAreas = miscstuff:addButton("Unlock All Areas", function(tp)
     ttppos(-16, 423, 143)
     task.wait(3)
@@ -753,80 +717,37 @@ local autoClaimTickets = miscstuff:addToggle("Auto Claim Wheel Spin", false, fun
     end
 end)
 
-local autogChest = miscstuff:addToggle("Auto Open Golden Chest", false, function(on)
-    if on then
-        autoGoldenChest = true
-        task.spawn(function()
-            while autoGoldenChest do
-                local gchest = workspace.Rendered.Rifts["golden-chest"]:FindFirstChild("Chest")
-                local goldenKey = game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Inventory.Frame.Inner.Items.Main.ScrollingFrame.Powerups.Items:FindFirstChild("Golden Key")
-                if not goldenChecked and gchest and goldenKey.Visible then
-                    goldenCheck()
-                    print("Golden Chest Position: X=" .. goldenPos.X .. ", Y=" .. goldenPos.Y .. ", Z=" .. goldenPos.Z)
-                    playerPos()
-                    tppos(goldenPos.X, plrPos.Y, goldenPos.Z)
-                    wait(5)
-                    tppos(goldenPos.X, goldenPos.Y + 10, goldenPos.Z)
-                    goldenChecked = true
-                end
-                if gchest and goldenKey.Visible then
-                    local args = {
-                        [1] = "UnlockRiftChest",
-                        [2] = "golden-chest",
-                        [3] = false
-                    }
-                    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
-                    task.wait(5)
-                else
-                    print("Chest not found or no Golden Key")
-                    task.wait(10)
-                    goldenChecked = false
-                end
-            end
-        end)
-    else
-        autoGoldenChest = false
-        goldenChecked = false
-    end
-end)
 
-local autorChest = miscstuff:addToggle("Auto Open Royal Chest", false, function(on)
-    if on then
-        autoRoyalChest = true
+for _, cfg in pairs(chestConfigs) do
+    miscstuff:addToggle("Auto Open "..cfg.name.." Chest", false, function(on)
+        cfg.autoVar = on
+        cfg.checkedVar = false
         task.spawn(function()
-            while autoRoyalChest do
-                local rchest = workspace.Rendered.Rifts["royal-chest"]:FindFirstChild("Chest")
-                local royalKey = game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Inventory.Frame.Inner.Items.Main.ScrollingFrame.Powerups.Items:FindFirstChild("Royal Key")
-                if not royalChecked and rchest and royalKey.Visible then
-                    royalCheck()
-                    print("Royal Chest Position: X=" .. royalPos.X .. ", Y=" .. royalPos.Y .. ", Z=" .. royalPos.Z)
+            while cfg.autoVar do
+                local chest = workspace.Rendered.Rifts[cfg.type]:FindFirstChild("Chest")
+                if not cfg.checkedVar and chest then
+                    cfg.check()
+                    local pos = cfg.getPos()
+                    print(cfg.name.." Chest Position: X="..pos.X..", Y="..pos.Y..", Z="..pos.Z)
                     playerPos()
-                    tppos(royalPos.X, plrPos.Y, royalPos.Z)
+                    tppos(pos.X, plrPos.Y, pos.Z)
                     wait(5)
-                    tppos(royalPos.X, royalPos.Y + 10, royalPos.Z)
-                    royalChecked = true 
+                    tppos(pos.X, pos.Y + 10, pos.Z)
+                    cfg.checkedVar = true
                 end
-                if rchest and royalKey.Visible then
-                    local args = {
-                        [1] = "UnlockRiftChest",
-                        [2] = "royal-chest",
-                        [3] = false
-                    }
-                    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
-                    print("Royal Chest unlocked!")
-                    task.wait(3)
+                if chest then
+                    local args = {[1] = "UnlockRiftChest", [2] = cfg.type, [3] = false}
+                    game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
+                    task.wait(cfg.waitTime)
                 else
-                    print("Royal Chest or Royal Key missing!")
-                    task.wait(10) 
-                    royalChecked = false 
+                    print(cfg.name..(chest and " Key missing!" or " Chest not found!"))
+                    task.wait(10)
+                    cfg.checkedVar = false
                 end
             end
         end)
-    else
-        autoRoyalChest = false
-        royalChecked = false
-    end
-end)
+    end)
+end
 
 local autombox = miscstuff:addToggle("Auto Open Mystery Box (Not auto)", false, function(on)
     if on then
@@ -886,19 +807,9 @@ local SetSec2 = Settings:addSection("Others")
 
 local fpsboost = SetSec2:addButton("Boost FPS", function(fps)
     _G.Settings = {
-        Players = {
-            ["Ignore Me"] = true, 
-            ["Ignore Others"] = true
-        },
-        Meshes = {
-            Destroy = false,
-            LowDetail = true 
-        },
-        Images = {
-            Invisible = true, 
-            LowDetail = false,
-            Destroy = false, 
-        },
+        Players = {["Ignore Me"] = true, ["Ignore Others"] = true},
+        Meshes = {Destroy = false, LowDetail = true},
+        Images = {Invisible = true, LowDetail = false, Destroy = false},
         ["No Particles"] = true, 
         ["No Camera Effects"] = true, 
         ["No Explosions"] = true,
