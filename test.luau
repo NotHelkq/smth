@@ -3,42 +3,33 @@ if not game:IsLoaded() then
     game.Loaded:Wait()
     print("Loaded Game")
 end
-
-local Player = game:GetService("Players").LocalPlayer
-
-Player.Idled:connect(function()
-    game:GetService("VirtualUser"):Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
-    wait(1)
-    game:GetService("VirtualUser"):Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame) 
-end)
-
+local player = game:GetService("Players").LocalPlayer
+local httpService = game:GetService("HttpService")
+local runService = game:GetService("RunService")
+local remoteEvent = game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event")
+local remoteFunction = game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Function")
+local cg = require(game:GetService("ReplicatedStorage").Shared.Constants)
+local goldenPos, royalPos, plrPos, riftConnection, hatchConnection = nil, nil, nil, nil, nil
+local hatchingEggs = 1
+local recentFrames = {}
 local connections = {};
-local ttppos = function(x, y, z)
-	local r = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-	if r then game:GetService("TweenService"):Create(r, TweenInfo.new(3), {CFrame = CFrame.new(x, y, z)}):Play() end
-end
-
-local tppos = function(x, y, z)
-	local r = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-	if r then game:GetService("TweenService"):Create(r, TweenInfo.new(10), {CFrame = CFrame.new(x, y, z)}):Play() end
-end
-
+local webhLink = "nothing"
+local rolePing = "nothing"
+local rt = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+local function tp(d) return function(x,y,z)
+    if rt then game:GetService("TweenService"):Create(rt, TweenInfo.new(d), {CFrame = CFrame.new(x,y,z)}):Play() end
+end end
+local ttppos, tppos = tp(3), tp(10)
 local httpRequest =
     (syn and syn.request) or
     (http and http.request) or
     (http_request) or
     (fluxus and fluxus.request) or
     (request)
-
 if not httpRequest then
     warn("⚠️ No supported HTTP request method found!")
     return
 end
-
-local player = game.Players.LocalPlayer
-local httpService = game:GetService("HttpService")
-local runService = game:GetService("RunService")
-local recentFrames = {}
 
 local function isRecentFrame(id)
     if recentFrames[id] and (tick() - recentFrames[id] < 5) then
@@ -67,7 +58,6 @@ local function monitorRifts()
         {name = "royal-chest",   url = "royalChest.luau"  },
         {name = "bubble-rift",   url = "bubbleRift.luau"  }
     }
-
     for _, riftData in ipairs(riftList) do
         local rift = riftsFolder:FindFirstChild(riftData.name)
         if rift and rift:FindFirstChild("Output") then
@@ -91,7 +81,6 @@ local function monitorRifts()
         end
     end
 end
-
 local petImages = {
     -- Secret Pet List
     ["MAN FACE GOD"]            = "https://static.wikia.nocookie.net/bgs-infinity/images/1/1b/MAN_FACE_GOD.png",
@@ -130,9 +119,7 @@ local petImages = {
     ["Dualcorn"]                = "https://static.wikia.nocookie.net/bgs-infinity/images/b/bc/Dualcorn.png",
     ["Holy Egg"]                = "https://static.wikia.nocookie.net/bgs-infinity/images/d/d7/Holy_Egg.png"
 }
-
 local fallbackImage = "https://static.wikia.nocookie.net/bgs-infinity/images/7/73/Common_Pet.png"
-
 local function formatNumber(number)
     local str = tostring(number)
     local reversed = str:reverse()
@@ -143,7 +130,6 @@ local function formatNumber(number)
     end  
     return table.concat(parts, ","):reverse()
 end
-
 local function abbreviateNumber(number)
     if number >= 1e9 then
         local value = number / 1e9
@@ -158,13 +144,11 @@ local function abbreviateNumber(number)
         return tostring(number) 
     end
 end
-
 local petTitle, petChance, isShiny = "Unknown Pet Hatched", " Unknown", "Maybe"
 local petConfig = {
     ["Secret"] = {"King Doggy", "The Overlord", "MAN FACE GOD", "Giant Chocolate Chicken", "Easter Basket", "Godly Gem", "Dementor"},
     ["Legendary"] = {"Emerald Golem", "Inferno Dragon", "Unicorn", "Flying Pig", "Lunar Serpent", "Electra", "Dark Phoenix", "Neon Elemental", "NULLVoid", "Inferno Cube", "Virus", "Green Hydra", "Demonic Hydra", "Hexarium", "Rainbow Shock", "Sigma Serpent", "Manarium", "Seraphic Bunny", "Ethereal Bunny", "Cardinal Bunny", "Sweet Treat", "Rainbow Marshmellow", "Easter Serpent", "Dualcorn", "Holy Egg"}
 }
-
 local chances = {
     -- Secret Pet List
     ["MAN FACE GOD"]            = {Secret    = {[false] = " 1,000,000",     [true] = " 40,000,000"    },   Mythic = {[false] = " 100,000,000",     [true] = " 4,000,000,000"     }},
@@ -203,9 +187,6 @@ local chances = {
     ["Holy Egg"]                = {Legendary = {[false] = " 500,000",       [true] = " 20,000,000"    },   Mythic = {[false] = " 50,000,000",      [true] = " 2,000,000,000"     }},
     ["Cardinal Bunny"]          = {Legendary = {[false] = " 1,000,000",     [true] = " 40,000,000"    },   Mythic = {[false] = " 100,000,000",     [true] = " 4,000,000,000"     }},
 }
-
-local webhLink = "nothing"
-local rolePing = "nothing"
 local function sendWebhook(name, rarity, shiny, image)
     if name == "Emerald Golem" or name == "Inferno Dragon" or name == "Unicorn" or name == "Flying Pig" or name == "Lunar Serpent" or name == "Electra" or name == "Dark Phoenix" or name == "Inferno Cube" or name == "Easter Serpent" then
         rolePing = "1364857484879073300"
@@ -220,22 +201,18 @@ local function sendWebhook(name, rarity, shiny, image)
         rolePing = "1364881485827407912"
         webhLink = getgenv().Config.t3HatchWebhook
     end
-
     local title, rarityLower = "🐾 Pet Hatched!", rarity:lower()
     isShiny = shiny and "Yes" or "No"
-    
     local petType = table.find(petConfig.Secret, name) and "Secret" or table.find(petConfig.Legendary, name) and "Legendary"
     local isMythic = rarityLower:find("mythic")
     local emojis = {Secret = "🔥", Legendary = "⭐", Mythic = "💎", Shiny = "✨"}
     local parts = {}
-
     local shinyStatus = ""
     if isShiny == "Yes" then
         shinyStatus = "Shiny "
     else
         shinyStatus = ""
     end
-
     if petType then
         if isMythic then
             table.insert(parts, emojis.Mythic)
@@ -251,11 +228,9 @@ local function sendWebhook(name, rarity, shiny, image)
         end
         petTitle = table.concat(parts).." "..shinyStatus..(isMythic and " Mythic " or "")..petType.." Pet Hatched "..table.concat(reversedParts)
     end
-
     local time = os.time()
     petChance = chances[name] and chances[name][rarity] and chances[name][rarity][shiny] or petChance
     local desc = string.format("🐾 **Pet Name :** %s 🐾\n💎 **Rarity :** %s 💎\n❓ **Chance : **1 in%s ❓\n🕛 **Catch Date :** <t:%s:F>", name, rarity, petChance, time)
-
     local totalHatches = "N/A"
     local leaderstats = player:FindFirstChild("leaderstats")
     if leaderstats then
@@ -264,7 +239,6 @@ local function sendWebhook(name, rarity, shiny, image)
             totalHatches = formatNumber(hatches.Value)
         end
     end
-
     local currentCoins = "N/A"
     local coinsHud = player.PlayerGui.ScreenGui.HUD.Left.Currency.Coins:FindFirstChild("Frame")
     if coinsHud then
@@ -282,7 +256,6 @@ local function sendWebhook(name, rarity, shiny, image)
             end
         end
     end
-    
     local data = {
         ["content"] = "<@&" .. rolePing .. ">",
         ["embeds"] = {{
@@ -297,7 +270,6 @@ local function sendWebhook(name, rarity, shiny, image)
             }
         }}
     }
-
     httpRequest({
         Url = webhLink,
         Method = "POST",
@@ -307,14 +279,11 @@ local function sendWebhook(name, rarity, shiny, image)
         Body = httpService:JSONEncode(data)
     })
 end
-
 local function monitorHatch()
     local gui = player:FindFirstChild("PlayerGui") and player.PlayerGui:FindFirstChild("ScreenGui")
     if not gui then return end
-
     local hatch = gui:FindFirstChild("Hatching")
     if not hatch then return end
-
     for _, frame in ipairs(hatch:GetChildren()) do
         if frame:IsA("Frame") and frame:FindFirstChild("Label") and frame:FindFirstChild("Rarity") then
             local name = frame.Label.Text
@@ -322,7 +291,6 @@ local function monitorHatch()
             local shiny = frame.Shiny.Visible
             local chance = frame:FindFirstChild("Chance") and frame.Chance.Text or nil
             local rarityLower = rarity:lower()
-
             if rarityLower:find("legendary") or rarityLower:find("secret") or rarityLower:find("mythic") then
                 if not isRecentFrame(frame) then
                     local image = petImages[name] or fallbackImage
@@ -333,207 +301,58 @@ local function monitorHatch()
     end
 end
 
-local autochewbubble         = false
-local autoChests             = false
-local autoAlienShop          = false
-local autoshardShop          = false
-local openingEggs            = false
-local tpToEggs               = false
-local autoPlaytime           = false
-local autotickets            = false
-local autoGoldenChest        = false
-local goldenChecked          = false
-local autoRoyalChest         = false
-local royalChecked           = false
-local automystery            = false
-local goldenPos              = nil
-local royalPos               = nil
-local plrPos                 = nil
-local selectedEgg            = nil
-local hatchingEggs           = 1
-
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/idk.luau"))()
-
 local Window = library.new()
-
 local Main = Window:addPage("Auto Farm", 5012544693)
-local AutoFarm = Main:addSection("Auto Farm")
-
-local autobubble = AutoFarm:addToggle("Auto Bubble", false, function(on)
-    if on then
-        autochewbubble = true
-        task.spawn(function()
-            while autochewbubble do
-                local args = {
-                    [1] = "BlowBubble"
-                }   
-                game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
-                task.wait(0.25)
+local Farm = Main:addSection("Auto Farm")
+Farm:addToggle("Auto Bubble", false, function(t)
+    autobubbleRunning = t
+    while autobubbleRunning do
+        remoteEvent:FireServer("BlowBubble")
+        task.wait(0.25)
+    end
+end)
+Farm:addToggle("Auto Collect Coins/Gems", false, function(t)
+    cg.DefaultPickupRadius = t and 9999999999999999999999 or 10
+end)
+Farm:addToggle("Auto Claim Void/Giant Chest", false, function(t)
+    autovgcRunning = t
+    while autovgcRunning do
+        remoteEvent:FireServer("ClaimChest", "Void Chest", true)
+        task.wait(1)
+        remoteEvent:FireServer("ClaimChest", "Giant Chest", true)
+        task.wait(5)
+    end
+end)
+local function createShopToggle(name, shop, delay)
+    Farm:addToggle("Auto Buy "..name, false, function(t)
+        autobuymRunning = t
+        while autobuymRunning do
+            for i = 1, 3 do
+                remoteEvent:FireServer("BuyShopItem", shop, i)
+                task.wait(delay)
             end
-        end)
-    else
-        autochewbubble = false
-    end
-end)
-
-local cg = require(game:GetService("ReplicatedStorage").Shared.Constants)
-local autoCollectCoins = AutoFarm:addToggle("Auto Collect Coins/Gems", false, function(on)
-    if on then 
-        cg.DefaultPickupRadius = 9999999999999999999999
-    else
-        cg.DefaultPickupRadius = 10
-    end
-end)
-
-local autocollectChests = AutoFarm:addToggle("Auto Claim Void/Giant Chest", false, function(on)
-    if on then
-        autoChests = true
-        task.spawn(function()
-            while autoChests do
-                local args = {
-                    [1] = "ClaimChest",
-                    [2] = "Void Chest",
-                    [3] = true
-                }
-                game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
-                task.wait(1)
-                local args = {
-                    [1] = "ClaimChest",
-                    [2] = "Giant Chest",
-                    [3] = true
-                }
-                game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
-                task.wait(5)
-            end
-        end)
-    else
-        autoChests = false
-    end
-end)
-
-local autoBuyAlien = AutoFarm:addToggle("Auto Buy Alien Merchant", false, function(on)
-    if on then
-        autoAlienShop = true
-        task.spawn(function()
-            while autoAlienShop do
-                for i = 1, 3 do
-                    local args = {
-                        [1] = "BuyShopItem",
-                        [2] = "alien-shop",
-                        [3] = i
-                    }
-                    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
-                    task.wait(0.75)
-                end              
-            end
-        end)
-    else
-        autoAlienShop = false
-    end
-end)
-
-local autoBuyShard = AutoFarm:addToggle("Auto Buy Black Market", false, function(on)
-    if on then
-        autoshardShop = true
-        task.spawn(function()
-            while autoshardShop do
-                for i = 1, 3 do
-                    local args = {
-                        [1] = "BuyShopItem",
-                        [2] = "shard-shop",
-                        [3] = i
-                    }
-                    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
-                    task.wait(1.5)
-                end              
-            end
-        end)
-    else
-        autoshardShop = false
-    end
-end)
-
-
-local argspawn = function(tp)
-    local args = {
-        [1] = "Teleport",
-        [2] = "Workspace.Worlds.The Overworld.PortalSpawn"
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+        end
+    end)
 end
+createShopToggle("Alien Merchant", "alien-shop", 0.75)
+createShopToggle("Black Market", "shard-shop", 1.5)
 
-local argArea1 = function(tp)
-    local args = {
-        [1] = "Teleport",
-        [2] = "Workspace.Worlds.The Overworld.Islands.Floating Island.Island.Portal.Spawn"
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
+local function teleportTo(path)
+    remoteEvent:FireServer("Teleport", path)
 end
-
-local argArea2 = function(tp)
-    local args = {
-        [1] = "Teleport",
-        [2] = "Workspace.Worlds.The Overworld.Islands.Outer Space.Island.Portal.Spawn"
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
-end
-
-local argArea3 = function(tp)
-    local args = {
-        [1] = "Teleport",
-        [2] = "Workspace.Worlds.The Overworld.Islands.Twilight.Island.Portal.Spawn"
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
-end
-
-local argArea4 = function(tp)
-    local args = {
-        [1] = "Teleport",
-        [2] = "Workspace.Worlds.The Overworld.Islands.The Void.Island.Portal.Spawn"
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
-end
-
-local argArea5 = function(tp)
-    local args = {
-        [1] = "Teleport",
-        [2] = "Workspace.Worlds.The Overworld.Islands.Zen.Island.Portal.Spawn"
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
-end
-
-local argEaster = function(tp)
-    local args = {
-        [1] = "Teleport",
-        [2] = "Workspace.Event.Portal.Spawn"
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))    
-end
-
+local argspawn = function() teleportTo("Workspace.Worlds.The Overworld.PortalSpawn") end
+local argArea1 = function() teleportTo("Workspace.Worlds.The Overworld.Islands.Floating Island.Island.Portal.Spawn") end
+local argArea2 = function() teleportTo("Workspace.Worlds.The Overworld.Islands.Outer Space.Island.Portal.Spawn") end
+local argArea3 = function() teleportTo("Workspace.Worlds.The Overworld.Islands.Twilight.Island.Portal.Spawn") end
+local argArea4 = function() teleportTo("Workspace.Worlds.The Overworld.Islands.The Void.Island.Portal.Spawn") end
+local argArea5 = function() teleportTo("Workspace.Worlds.The Overworld.Islands.Zen.Island.Portal.Spawn") end
+local argEaster = function() teleportTo("Workspace.Event.Portal.Spawn") end
+local tpButtons = {{name = "Spawn", func = argspawn},{name = "Area 1 - Floating Island", func = argArea1},{name = "Area 2 - Outer Space", func = argArea2},{name = "Area 3 - Twilight", func = argArea3},{name = "Area 4 - The Void", func = argArea4},{name = "Area 5 - Zen", func = argArea5}}
 local Teleport = Main:addSection("Teleport")
-local spawn = Teleport:addButton("Spawn", function(tp)
-    argspawn() 
-end)
-
-local area1 = Teleport:addButton("Area 1 - Floating Island", function(tp) 
-    argArea1() 
-end)
-
-local area2 = Teleport:addButton("Area 2 - Outer Space", function(tp)
-    argArea2() 
-end)
-
-local area3 = Teleport:addButton("Area 3 - Twilight", function(tp)
-    argArea3()   
-end)
-
-local area4 = Teleport:addButton("Area 4 - The Void", function(tp)
-    argArea4()    
-end)
-
-local area5 = Teleport:addButton("Area 5 - Zen", function(tp)
-    argArea5() 
-end)
+for _, btn in ipairs(tpButtons) do
+    Teleport:addButton(btn.name, function() btn.func() end)
+end
 
 local eggData = {
     ["Infinity Egg"]  = {argspawn,  {-96, 10, -27    }},
@@ -552,86 +371,46 @@ local eggData = {
     ["Nightmare Egg"] = {argArea4,  {-20, 10149, 184 }},
     ["Rainbow Egg"]   = {argArea5,  {-35, 15974, 44  }}
 }
-
-local Autoopeneggs = Window:addPage("Eggs", 5012544693)
-local eggstuff = Autoopeneggs:addSection("Hatch (You must be near egg!)")
-local egg = eggstuff:addDropdown("Eggs", {"Infinity Egg","Throwback Egg","Bunny Egg","Pastel Egg","Common Egg","Spotted Egg","Iceshard Egg","Spikey Egg","Magma Egg","Crystal Egg","Lunar Egg","Void Egg","Hell Egg","Nightmare Egg","Rainbow Egg"}, function(selected)
-    selectedEgg = selected
+local eggStuff = Window:addPage("Eggs", 5012544693)
+local eggs = eggStuff:addSection("Hatch (You must be near egg!)")
+eggs:addDropdown("Eggs", {"Infinity Egg","Throwback Egg","Bunny Egg","Pastel Egg","Common Egg","Spotted Egg","Iceshard Egg","Spikey Egg","Magma Egg","Crystal Egg","Lunar Egg","Void Egg","Hell Egg","Nightmare Egg","Rainbow Egg"}, function(e)
+    selectedEgg = e
 end)
-local multiegg = eggstuff:addSlider("Open Amount", 1, 1, 6, function(multi)
-    hatchingEggs = multi
+eggs:addSlider("Open Amount", 1, 1, 6, function(n)
+    hatchingEggs = n
 end)
-
-local openEgg = eggstuff:addToggle("Open Eggs", false, function(on)
-    if on then 
-        openingEggs = true
-        task.spawn(function()
-            while openingEggs do
-                local args = {
-                    [1] = "HatchEgg",
-                    [2] = selectedEgg,
-                    [3] = hatchingEggs
-                }
-                game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))   
-                task.wait(0.1)
-            end
-        end)
-    else
-        openingEggs = false
+eggs:addToggle("Open Eggs", false, function(t)
+    openingEggs = t
+    while t and openingEggs do
+        remoteEvent:FireServer("HatchEgg", selectedEgg, hatchingEggs)
+        task.wait(0.1)
     end
 end)
-
-local tpEgg = eggstuff:addToggle("Teleport to Egg", false, function(on)
-    tpToEggs = on
-    if not on then return end
-    local data = eggData[selectedEgg]
-    if not data then return print("Egg not selected") end
-    data[1](tp)
-    task.wait(1.5)   
-    task.spawn(function()
-        while tpToEggs do
-            tppos(unpack(data[2]))
-            task.wait(1)
-        end
-    end)
-end)
-
-local function checkGiftsFolder(folderPath)
-    if folderPath then
-        local children = folderPath:GetChildren()
-        if #children > 0 then
-            print("Gifts found:")
-            for _, child in ipairs(children) do
-                print("Object found: " .. child.Name)
-            end
-            return true
-        else
-            print("No gifts found in the folder.")
-            return false
-        end
-    else
-        print("The Gifts folder does not exist.")
-        return false
+eggs:addToggle("Teleport to Egg", false, function(t)
+    tpToEggs = t
+    if not t or not eggData[selectedEgg] then return end
+    eggData[selectedEgg][1]()
+    task.wait(1.5)
+    while tpToEggs do
+        tppos(unpack(eggData[selectedEgg][2]))
+        task.wait(1)
     end
+end)
+local function checkGiftsFolder(f)
+    if not f then return print("Gifts folder missing") end
+    local names = {}
+    for _, child in ipairs(f:GetChildren()) do table.insert(names, child.Name) end
+    print(#names > 0 and "Gifts found: "..table.concat(names, ", ") or "No gifts found")
+    return #names > 0
 end
-
-local rtPart = game:GetService("Players").LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-local function playerPos(plrCheck)
-    local plarPos = rtPart.Position
-    local plPos = Vector3.new(
-        math.floor(plarPos.X + 0.5),
-        math.floor(plarPos.Y + 0.5),
-        math.floor(plarPos.Z + 0.5)
-    )
+local function playerPos()
+    local rp = rt.Position
+    local plPos = Vector3.new(math.floor(rp.X + 0.5), math.floor(rp.Y + 0.5), math.floor(rp.Z + 0.5))
     plrPos = Vector3.new(plPos.X, plPos.Y, plPos.Z)
-    print("Player Position: X=" .. plrPos.X .. ", Y=" .. plrPos.Y .. ", Z=" .. plrPos.Z)
+    print("Player Position: X = " .. plrPos.X .. ", Y = " .. plrPos.Y .. ", Z = " .. plrPos.Z)
 end
-
-local goldenPos, royalPos = nil, nil
 local function handleArea(y)
-    if y < 0 then
-        return nil
-    elseif y < 410 then return argArea1() or "a1"
+    if y < 410 then return argArea1() or "a1"
     elseif y < 2650 then return argArea2() or "a2"
     elseif y < 6850 then return argArea3() or "a3"
     elseif y < 10130 then return argArea4() or "a4"
@@ -640,86 +419,43 @@ local function handleArea(y)
         return nil
     end
 end
-
 local function checkChest(chestType, label)
     local pos = workspace.Rendered.Rifts[chestType].Chest.WorldPivot.Position
-    local rounded = Vector3.new(
-        math.floor(pos.X + 0.5),
-        math.floor(pos.Y + 0.5),
-        math.floor(pos.Z + 0.5)
-    )   
-    if handleArea(pos.Y) then
-        task.wait(2)
-    end
+    local rounded = Vector3.new(math.floor(pos.X + 0.5), math.floor(pos.Y + 0.5), math.floor(pos.Z + 0.5))   
+    handleArea(pos.Y)
     local position = Vector3.new(rounded.X, rounded.Y, rounded.Z)
-    local printr = string.format("%s Chest Position: X = %d, Y = %d, Z = %d", label, rounded.X, rounded.Y, rounded.Z)
-    print(printr)
     return position
 end
-
 function goldenCheck() goldenPos = checkChest("golden-chest", "Golden") end
 function royalCheck() royalPos = checkChest("royal-chest", "Royal") end
 
-local chestConfigs = {
-    {name = "Golden", type = "golden-chest", key = "Golden Key", check = goldenCheck, getPos = function() return goldenPos end, checkedVar = goldenChecked, autoVar = autoGoldenChest, waitTime = 5},
-    {name = "Royal", type = "royal-chest", key = "Royal Key", check = royalCheck, getPos = function() return royalPos end, checkedVar = royalChecked, autoVar = autoRoyalChest, waitTime = 3}
-}
-
+local chestConfigs = {{name = "Golden", type = "golden-chest", key = "Golden Key", check = goldenCheck, getPos = function() return goldenPos end, checkedVar = goldenChecked, autoVar = autoGoldenChest, waitTime = 5}, {name = "Royal", type = "royal-chest", key = "Royal Key", check = royalCheck, getPos = function() return royalPos end, checkedVar = royalChecked, autoVar = autoRoyalChest, waitTime = 3}}
 local Misc = Window:addPage("Misc", 5012544693)
-local miscstuff = Misc:addSection("Misc")
-local allAreas = miscstuff:addButton("Unlock All Areas", function(tp)
-    ttppos(-16, 423, 143)
-    task.wait(3)
-    ttppos(42, 2663, -6)
-    task.wait(3)
-    ttppos(-78, 6862, 88)
-    task.wait(3)
-    ttppos(16, 10146, 152)
-    task.wait(3)
-    ttppos(36, 15972, 42)
-    task.wait(3)
-end)
-
-local autoRewards = miscstuff:addToggle("Auto Claim Playtime Rewards", false, function(on)
-    if on then
-        autoPlaytime = true
-        task.spawn(function()
-            while autoPlaytime do
-                for i = 1, 9 do
-                    local args = {
-                        [1] = "ClaimPlaytime",
-                        [2] = i
-                    }            
-                    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Function"):InvokeServer(unpack(args))
-                    task.wait(3)
-                end
-            end
-        end)
-    else
-        autoPlaytime = false
+local misc = Misc:addSection("Misc")
+misc:addButton("Unlock All Areas", function()
+    for _, pos in ipairs({{-16,423,143}, {42,2663,-6}, {-78,6862,88}, {16,10146,152}, {36,15972,42}}) do
+        ttppos(unpack(pos))
+        task.wait(3)
     end
 end)
-
-local autoClaimTickets = miscstuff:addToggle("Auto Claim Wheel Spin", false, function(on)
-    if on then
-        autotickets = true
-        task.spawn(function()
-            while autotickets do
-                local args = {
-                    [1] = "ClaimFreeWheelSpin"
-                }
-                game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
-                task.wait(5)
-            end
-        end)
-    else
-        autotickets = false
+misc:addToggle("Auto Claim Playtime Rewards", false, function(t)
+    autoprRunning = t
+    while autoprRunning do
+        for i = 1, 9 do
+            remoteFunction:InvokeServer("ClaimPlaytime", i)
+            task.wait(3)
+        end
     end
 end)
-
-
+misc:addToggle("Auto Claim Wheel Spin", false, function(t)
+    autowpRunning = t
+    while autowpRunning do
+        remoteEvent:FireServer("ClaimFreeWheelSpin")
+        task.wait(10)
+    end
+end)
 for _, cfg in pairs(chestConfigs) do
-    miscstuff:addToggle("Auto Open "..cfg.name.." Chest", false, function(on)
+    misc:addToggle("Auto Open "..cfg.name.." Chest", false, function(on)
         cfg.autoVar = on
         cfg.checkedVar = false
         task.spawn(function()
@@ -728,7 +464,8 @@ for _, cfg in pairs(chestConfigs) do
                 if not cfg.checkedVar and chest then
                     cfg.check()
                     local pos = cfg.getPos()
-                    print(cfg.name.." Chest Position: X="..pos.X..", Y="..pos.Y..", Z="..pos.Z)
+                    print(cfg.name.." Chest Position: X = "..pos.X..", Y = "..pos.Y..", Z = "..pos.Z)
+                    wait(1)
                     playerPos()
                     tppos(pos.X, plrPos.Y, pos.Z)
                     wait(5)
@@ -736,8 +473,7 @@ for _, cfg in pairs(chestConfigs) do
                     cfg.checkedVar = true
                 end
                 if chest then
-                    local args = {[1] = "UnlockRiftChest", [2] = cfg.type, [3] = false}
-                    game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
+                    remoteEvent:FireServer("UnlockRiftChest", cfg.type, false)
                     task.wait(cfg.waitTime)
                 else
                     print(cfg.name..(chest and " Key missing!" or " Chest not found!"))
@@ -748,36 +484,21 @@ for _, cfg in pairs(chestConfigs) do
         end)
     end)
 end
-
-local autombox = miscstuff:addToggle("Auto Open Mystery Box (Not auto)", false, function(on)
-    if on then
-        automystery = true
-        task.spawn(function()
-            while automystery do
-                local args = {
-                    [1] = "UseGift",
-                    [2] = "Mystery Box",
-                    [3] = 10
-                }
-                game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
-                print("Mystery box used!")
-                task.wait(3)
-                if checkGiftsFolder(workspace.Rendered.Gifts) then
-                    -- make it click 10 times after gifts r uses.
-                end
-            end
-        end)
-    else
-        automystery = false
+misc:addToggle("Auto Open Mystery Box (Not auto)", false, function(t)
+    automboxRunning = t
+    while automboxRunning do
+        remoteEvent:FireServer("UseGift", "Mystery Box", 10)
+        task.wait(2)
+        if checkGiftsFolder(workspace.Rendered.Gifts) then
+            -- script to click 5-10 times. later
+        end
     end
 end)
 
-local riftConnection = nil
-local hatchConnection = nil
 local Webhooks = Window:addPage("Webhook", 5012544693)
 local webh = Webhooks:addSection("Webhooks")
-local webletoggle = webh:addToggle("Send Lucky Rift Webhooks", false, function(on)
-    if on then
+webh:addToggle("Send Lucky Rift Webhooks", false, function(t)
+    if t then
         riftConnection = runService.RenderStepped:Connect(monitorRifts)
         print("Rifts Webhook turned on")
     else
@@ -788,9 +509,8 @@ local webletoggle = webh:addToggle("Send Lucky Rift Webhooks", false, function(o
         print("Rifts Webhook turned off")
     end
 end)
-
-local webhtoggle = webh:addToggle("Send Rare Hatches Webhooks", false, function(on)
-    if on then
+webh:addToggle("Send Rare Hatches Webhooks", false, function(t)
+    if t then
         hatchConnection = runService.RenderStepped:Connect(monitorHatch)
         print("Hatches Webhook turned on")
     else
@@ -804,53 +524,34 @@ end)
 
 local Settings = Window:addPage("Settings", 5012544693)
 local SetSec2 = Settings:addSection("Others")
-
-local fpsboost = SetSec2:addButton("Boost FPS", function(fps)
-    _G.Settings = {
-        Players = {["Ignore Me"] = true, ["Ignore Others"] = true},
-        Meshes = {Destroy = false, LowDetail = true},
-        Images = {Invisible = true, LowDetail = false, Destroy = false},
-        ["No Particles"] = true, 
-        ["No Camera Effects"] = true, 
-        ["No Explosions"] = true,
-        ["No Clothes"] = true,
-        ["Low Water Graphics"] = true, 
-        ["No Shadows"] = true, 
-        ["Low Rendering"] = true, 
-        ["Low Quality Parts"] = true 
-    }
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/boost.luau"))()
-end)
-
 SetSec2:addKeybind("Toggle Hub", Enum.KeyCode.LeftControl, function()
 	Window:toggle()
 end)
-
+SetSec2:addButton("Boost FPS", function(fps)
+    _G.Settings = {Players = {["Ignore Me"] = true, ["Ignore Others"] = true}, Meshes = {Destroy = false, LowDetail = true}, Images = {Invisible = true, LowDetail = false, Destroy = false}, ["No Particles"] = true, ["No Camera Effects"] = true, ["No Explosions"] = true, ["No Clothes"] = true, ["Low Water Graphics"] = true, ["No Shadows"] = true, ["Low Rendering"] = true, ["Low Quality Parts"] = true}
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/boost.luau"))()
+end)
 SetSec2:addButton("Kill Hub", function()
     for _, conn in pairs(connections) do
         conn:Disconnect()
     end
-
-    autochewbubble         = false
-    autoChests             = false
-    autoAlienShop          = false
-    autoshardShop          = false
-    openingEggs            = false
-    tpToEggs               = false
-    autoPlaytime           = false
-    autotickets            = false
-    selectedEgg            = nil
-    hatchingEggs           = 1
-    cg.DefaultPickupRadius = 10
-    plrPos = nil
-    autoGoldenChest        = false
-    goldenChecked          = false
-    goldenPos              = nil
-    autoRoyalChest         = false
-    royalChecked           = false
-    royalPos               = nil
-
-    automystery            = false
-
+    if hatchConnection then
+        hatchConnection:Disconnect()
+        hatchConnection = nil
+    end
+    if riftConnection then
+        riftConnection:Disconnect()
+        riftConnection = nil
+    end
+    autobubbleRunning = false
+    autovgcRunning = false
+    autobuymRunning = false
+    openingEggs = false
+    tpToEggs = false
+    autoprRunning = false
+    autowpRunning = false
+    automboxRunning = false
+    autoGoldenChest = false
+    autoRoyalChest = false
     Window.container:Destroy()
 end)
