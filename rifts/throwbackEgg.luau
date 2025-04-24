@@ -50,10 +50,10 @@ local function sendWebhook()
     desc = desc .. "🕛 **Time Found :** <t:" .. time .. ":f> 🕛\n"
 
     local timeleft = "Nothing"
-    local timer2 = timer
+    local time2 = timer
     if time2 == "5" .. " Minutes" then
         wait(1)
-        timeleft = rift.Display.SurfaceGui.Timer.Text
+        timeleft = "9" .. " minutes"
     else
         timeleft = rift.Display.SurfaceGui.Timer.Text
     end
