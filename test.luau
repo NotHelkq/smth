@@ -681,7 +681,7 @@ local function sendWebhook(name, rarity, shiny, image, chance)
     elseif name == "Dementor" and isShiny == "No" and rarity == "Mythic" then
         petChance = " 1 in 100,000,000,000"
     elseif name == "Dementor" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance - " 1 in 4,000,000,000,000"
+        petChance = " 1 in 4,000,000,000,000"
     end
     if chance and chance ~= "" then
         desc = desc .. " ❓ ** Chance :**" .. petChance .. " ❓ \n"
