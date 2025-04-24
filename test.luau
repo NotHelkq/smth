@@ -42,7 +42,7 @@ local runService = game:GetService("RunService")
 local recentFrames = {}
 
 local function isRecentFrame(id)
-    if recentFrames[id] and (tick() - recentFrames[id] < 10) then
+    if recentFrames[id] and (tick() - recentFrames[id] < 5) then
         return true
     end
     recentFrames[id] = tick()
@@ -91,6 +91,16 @@ local function monitorRifts()
 end
 
 local petImages = {
+    -- Secret Pet List
+    ["MAN FACE GOD"] = "https://static.wikia.nocookie.net/bgs-infinity/images/1/1b/MAN_FACE_GOD.png/revision/latest?cb=20250414020316",
+    ["The Overlord"] = "https://static.wikia.nocookie.net/bgs-infinity/images/c/c0/The_Overlord.png/revision/latest?cb=20250413130318",
+    ["King Doggy"] = "https://static.wikia.nocookie.net/bgs-infinity/images/a/a8/King_Doggy.png/revision/latest?cb=20250412152038",
+    -- Event Secret Pet List
+    ["Godly Gem"] = "https://static.wikia.nocookie.net/bgs-infinity/images/1/18/Godly_Gem.png/revision/latest?cb=20250424031626",
+    ["Dementor"] = "https://static.wikia.nocookie.net/bgs-infinity/images/5/58/Dementor.png/revision/latest?cb=20250424030933",
+    ["Giant Chocolate Chicken"] = "https://static.wikia.nocookie.net/bgs-infinity/images/e/ef/Giant_Chocolate_Chicken.png/revision/latest?cb=20250419001410",
+    ["Easter Basket"] = "https://static.wikia.nocookie.net/bgs-infinity/images/0/00/Easter_Basket.png/revision/latest?cb=20250419001802",
+    -- Legendary Pet List
     ["Emerald Golem"] = "https://static.wikia.nocookie.net/bgs-infinity/images/8/8f/Emerald_Golem.png/revision/latest?cb=20250412234012",
     ["Inferno Dragon"] = "https://static.wikia.nocookie.net/bgs-infinity/images/0/06/Inferno_Dragon.png/revision/latest?cb=20250412205317",
     ["Flying Pig"] = "https://static.wikia.nocookie.net/bgs-infinity/images/1/18/Flying_Pig.png/revision/latest?cb=20250412142625",
@@ -108,22 +118,15 @@ local petImages = {
     ["Rainbow Shock"] = "https://static.wikia.nocookie.net/bgs-infinity/images/c/c6/Rainbow_Shock.png/revision/latest?cb=20250413010157",
     ["Sigma Serpent"] = "https://static.wikia.nocookie.net/bgs-infinity/images/3/3d/Sigma_Serpent.png/revision/latest?cb=20250414121909",
     ["Manarium"] = "https://static.wikia.nocookie.net/bgs-infinity/images/5/5d/Manarium.png/revision/latest?cb=20250414121813",
-    ["MAN FACE GOD"] = "https://static.wikia.nocookie.net/bgs-infinity/images/1/1b/MAN_FACE_GOD.png/revision/latest?cb=20250414020316",
-    ["The Overlord"] = "https://static.wikia.nocookie.net/bgs-infinity/images/c/c0/The_Overlord.png/revision/latest?cb=20250413130318",
-    ["King Doggy"] = "https://static.wikia.nocookie.net/bgs-infinity/images/a/a8/King_Doggy.png/revision/latest?cb=20250412152038",
-    --// Limited Edition Pets | Will be removed after update over //
-    ["Seraphic Bunny"] = "https://static.wikia.nocookie.net/bgs-infinity/images/d/d7/Seraphic_Bunny.png/revision/latest/scale-to-width-down/130?cb=20250418234258",
-    ["Ethereal Bunny"] = "https://static.wikia.nocookie.net/bgs-infinity/images/b/b9/Ethereal_Bunny.png/revision/latest/scale-to-width-down/130?cb=20250419000116",
-    ["Cardinal Bunny"] = "https://static.wikia.nocookie.net/bgs-infinity/images/3/33/Cardinal_Bunny.png/revision/latest/scale-to-width-down/130?cb=20250419014509",
-    ["Easter Basket"] = "https://static.wikia.nocookie.net/bgs-infinity/images/0/00/Easter_Basket.png/revision/latest/scale-to-width-down/130?cb=20250419001802",
-    ["Sweet Treat"] = "https://static.wikia.nocookie.net/bgs-infinity/images/0/0e/Sweet_Treat.png/revision/latest/scale-to-width-down/130?cb=20250418233529",
-    ["Rainbow Marshmellow"] = "https://static.wikia.nocookie.net/bgs-infinity/images/1/14/Rainbow_Marshmellow.png/revision/latest/scale-to-width-down/130?cb=20250418232506",
-    ["Giant Chocolate Chicken"] = "https://static.wikia.nocookie.net/bgs-infinity/images/e/ef/Giant_Chocolate_Chicken.png/revision/latest/scale-to-width-down/130?cb=20250419001410",
+    -- Event Legendary Pet List
+    ["Seraphic Bunny"] = "https://static.wikia.nocookie.net/bgs-infinity/images/d/d7/Seraphic_Bunny.png/revision/latest?cb=20250418234258",
+    ["Ethereal Bunny"] = "https://static.wikia.nocookie.net/bgs-infinity/images/b/b9/Ethereal_Bunny.png/revision/latest?cb=20250419000116",
+    ["Cardinal Bunny"] = "https://static.wikia.nocookie.net/bgs-infinity/images/3/33/Cardinal_Bunny.png/revision/latest?cb=20250419014509",
+    ["Sweet Treat"] = "https://static.wikia.nocookie.net/bgs-infinity/images/0/0e/Sweet_Treat.png/revision/latest?cb=20250418233529",
+    ["Rainbow Marshmellow"] = "https://static.wikia.nocookie.net/bgs-infinity/images/1/14/Rainbow_Marshmellow.png/revision/latest?cb=20250419011325",
     ["Easter Serpent"] = "https://static.wikia.nocookie.net/bgs-infinity/images/c/cd/Easter_Serpent.png/revision/latest?cb=20250423223156",
     ["Dualcorn"] = "https://static.wikia.nocookie.net/bgs-infinity/images/b/bc/Dualcorn.png/revision/latest?cb=20250423223401",
-    ["Holy Egg"] = "https://static.wikia.nocookie.net/bgs-infinity/images/d/d7/Holy_Egg.png/revision/latest?cb=20250423223522",
-    ["Godly Gem"] = "https://static.wikia.nocookie.net/bgs-infinity/images/1/18/Godly_Gem.png/revision/latest?cb=20250424031626",
-    ["Dementor"] = "https://static.wikia.nocookie.net/bgs-infinity/images/5/58/Dementor.png/revision/latest?cb=20250424030933"
+    ["Holy Egg"] = "https://static.wikia.nocookie.net/bgs-infinity/images/d/d7/Holy_Egg.png/revision/latest?cb=20250423223522"
 }
 
 local fallbackImage = "https://static.wikia.nocookie.net/bgs-infinity/images/7/73/Common_Pet.png"
@@ -154,540 +157,73 @@ local function abbreviateNumber(number)
     end
 end
 
-local petTitle = "Unknown Pet Hatched"
-local petChance = " Unknown"
-local isShiny = "Maybe"
-local function sendWebhook(name, rarity, shiny, image, chance)
-    local title = "🐾 Pet Hatched!"
-    local rarityLower = rarity:lower()
+local petTitle, petChance, isShiny = "Unknown Pet Hatched", " Unknown", "Maybe"
+local petConfig = {
+    ["Secret"] = {"King Doggy", "The Overlord", "MAN FACE GOD", "Giant Chocolate Chicken", "Easter Basket", "Godly Gem", "Dementor"},
+    ["Legendary"] = {"Emerald Golem", "Inferno Dragon", "Unicorn", "Flying Pig", "Lunar Serpent", "Electra", "Dark Phoenix", "Neon Elemental", "NULLVoid", "Inferno Cube", "Virus", "Green Hydra", "Demonic Hydra", "Hexarium", "Rainbow Shock", "Sigma Serpent", "Manarium", "Seraphic Bunny", "Ethereal Bunny", "Cardinal Bunny", "Sweet Treat", "Rainbow Marshmellow", "Easter Serpent", "Dualcorn", "Holy Egg"}
+}
 
-    if shiny == false then
-        isShiny = "No"
-    elseif shiny == true then
-        isShiny = "Yes"
-    end
+local chances = {
+    -- Secret Pet List
+    ["King Doggy"] = {Secret = {[false] = " 1 in 100,000,000", [true] = " 1 in 4,000,000,000"}, Mythic = {[false] = " 1 in 10,000,000,000", [true] = " 1 in 400,000,000,000"}},
+    ["The Overlord"] = {Secret = {[false] = " 1 in 50,000,000", [true] = " 1 in 2,000,000,000"}, Mythic = {[false] = " 1 in 5,000,000,000", [true] = " 1 in 200,000,000,000"}},
+    ["MAN FACE GOD"] = {Secret = {[false] = " 1 in 1,000,000", [true] = " 1 in 40,000,000"}, Mythic = {[false] = " 1 in 100,000,000", [true] = " 1 in 4,000,000,000"}},
+    -- Event Secret Pet List
+    ["Giant Chocolate Chicken"] = {Secret = {[false] = " 1 in 50,000,000", [true] = " 1 in 2,000,000,000"}, Mythic = {[false] = " 1 in 5,000,000,000", [true] = " 1 in 200,000,000,000"}},
+    ["Easter Basket"] = {Secret = {[false] = " 1 in 100,000,000", [true] = " 1 in 4,000,000,000"}, Mythic = {[false] = " 1 in 10,000,000,000", [true] = " 1 in 400,000,000,000"}},
+    ["Godly Gem"] = {Secret = {[false] = " 1 in 250,000,000", [true] = " 1 in 10,000,000,000"}, Mythic = {[false] = " 1 in 25,000,000,000", [true] = " 1 in 1,000,000,000,000"}},
+    ["Dementor"] = {Secret = {[false] = " 1 in 1,000,000,000", [true] = " 1 in 40,000,000,000"}, Mythic = {[false] = " 1 in 100,000,000,000", [true] = " 1 in 4,000,000,000,000"}},
+    -- Legendary Pet List
+    ["Emerald Golem"] = {Legendary = {[false] = " 1 in 200", [true] = " 1 in 8,000"}, Mythic = {[false] = " 1 in 20,000", [true] = " 1 in 800,000"}},
+    ["Inferno Dragon"] = {Legendary = {[false] = " 1 in 400", [true] = " 1 in 16,000"}, Mythic = {[false] = " 1 in 40,000", [true] = " 1 in 1,600,000"}},
+    ["Unicorn"] = {Legendary = {[false] = " 1 in 400", [true] = " 1 in 16,000"}, Mythic = {[false] = " 1 in 40,000", [true] = " 1 in 1,600,000"}},
+    ["Flying Pig"] = {Legendary = {[false] = " 1 in 1,000", [true] = " 1 in 40,000"}, Mythic = {[false] = " 1 in 100,000", [true] = " 1 in 4,000,000"}},
+    ["Lunar Serpent"] = {Legendary = {[false] = " 1 in 400", [true] = " 1 in 16,000"}, Mythic = {[false] = " 1 in 40,000", [true] = " 1 in 1,600,000"}},
+    ["Electra"] = {Legendary = {[false] = " 1 in 1,000", [true] = " 1 in 40,000"}, Mythic = {[false] = " 1 in 100,000", [true] = " 1 in 4,000,000"}},
+    ["Dark Phoenix"] = {Legendary = {[false] = " 1 in 2,000", [true] = " 1 in 80,000"}, Mythic = {[false] = " 1 in 200,000", [true] = " 1 in 8,000,000"}},
+    ["Neon Elemental"] = {Legendary = {[false] = " 1 in 5,000", [true] = " 1 in 200,000"}, Mythic = {[false] = " 1 in 500,000", [true] = " 1 in 20,000,000"}},
+    ["NULLVoid"] = {Legendary = {[false] = " 1 in 1,000,000", [true] = " 1 in 40,000,000"}, Mythic = {[false] = " 1 in 100,000,000", [true] = " 1 in 4,000,000,000"}},
+    ["Inferno Cube"] = {Legendary = {[false] = " 1 in 4,000", [true] = " 1 in 160,000"}, Mythic = {[false] = " 1 in 400,000", [true] = " 1 in 16,000,000"}},
+    ["Virus"] = {Legendary = {[false] = " 1 in 50,000", [true] = " 1 in 2,000,000"}, Mythic = {[false] = " 1 in 5,000,000", [true] = " 1 in 200,000,000"}},
+    ["Green Hydra"] = {Legendary = {[false] = " 1 in 25,000", [true] = " 1 in 1,000,000"}, Mythic = {[false] = " 1 in 2,500,000", [true] = " 1 in 100,000,000"}},
+    ["Demonic Hydra"] = {Legendary = {[false] = " 1 in 100,000", [true] = " 1 in 4,000,000"}, Mythic = {[false] = " 1 in 10,000,000", [true] = " 1 in 400,000,000"}},
+    ["Hexarium"] = {Legendary = {[false] = " 1 in 100,000", [true] = " 1 in 4,000,000"}, Mythic = {[false] = " 1 in 10,000,000", [true] = " 1 in 400,000,000"}},
+    ["Rainbow Shock"] = {Legendary = {[false] = " 1 in 100,000", [true] = " 1 in 4,000,000"}, Mythic = {[false] = " 1 in 10,000,000", [true] = " 1 in 400,000,000"}},
+    ["Sigma Serpent"] = {Legendary = {[false] = " 1 in 10,000", [true] = " 1 in 400,000"}, Mythic = {[false] = " 1 in 1,000,000", [true] = " 1 in 40,000,000"}},
+    ["Manarium"] = {Legendary = {[false] = " 1 in 10,000", [true] = " 1 in 400,000"}, Mythic = {[false] = " 1 in 1,000,000", [true] = " 1 in 40,000,000"}},
+    -- Event Legendary Pet List
+    ["Seraphic Bunny"] = {Legendary = {[false] = " 1 in 5,000", [true] = " 1 in 200,000"}, Mythic = {[false] = " 1 in 500,000", [true] = " 1 in 20,000,000"}},
+    ["Ethereal Bunny"] = {Legendary = {[false] = " 1 in 100,000", [true] = " 1 in 4,000,000"}, Mythic = {[false] = " 1 in 10,000,000", [true] = " 1 in 400,000,000"}},
+    ["Cardinal Bunny"] = {Legendary = {[false] = " 1 in 1,000,000", [true] = " 1 in 40,000,000"}, Mythic = {[false] = " 1 in 100,000,000", [true] = " 1 in 4,000,000,000"}},
+    ["Sweet Treat"] = {Legendary = {[false] = " 1 in 25,000", [true] = " 1 in 1,000,000"}, Mythic = {[false] = " 1 in 2,500,000", [true] = " 1 in 100,000,000"}},
+    ["Rainbow Marshmellow"] = {Legendary = {[false] = " 1 in 125,000", [true] = " 1 in 5,000,000"}, Mythic = {[false] = " 1 in 12,500,000", [true] = " 1 in 500,000,000"}},
+    ["Easter Serpent"] = {Legendary = {[false] = " 1 in 2,500", [true] = " 1 in 100,000"}, Mythic = {[false] = " 1 in 250,000", [true] = " 1 in 10,000,000"}},
+    ["Dualcorn"] = {Legendary = {[false] = " 1 in 50,000", [true] = " 1 in 2,000,000"}, Mythic = {[false] = " 1 in 5,000,000", [true] = " 1 in 200,000,000"}},
+    ["Holy Egg"] = {Legendary = {[false] = " 1 in 500,000", [true] = " 1 in 20,000,000"}, Mythic = {[false] = " 1 in 50,000,000", [true] = " 1 in 2,000,000,000"}},
+}
 
-    if name == "King Doggy" and isShiny == "No" and rarity == "Secret" then
-        petTitle = "🔥 Secret Pet Hatched 🔥"
-    elseif name == "King Doggy" and isShiny == "Yes" and rarity == "Secret" then
-        petTitle = "🔥✨ Shiny Secret Pet Hatched ✨🔥"
-    elseif name == "King Doggy" and isShiny == "No" and rarity == "Mythic" then
-        petTitle = "🔥💎✨ Mythic Secret Pet Hatched ✨💎🔥"
-    elseif name == "King Doggy" and isShiny == "Yes" and rarity == "Mythic" then
-        petTitle = "🔥💎✨ Shiny Mythic Secret Pet Hatched ✨💎🔥"
-    elseif name == "Emerald Golem" and isShiny == "No" and rarity == "Legendary" then
-        petTitle = "⭐ Legendary Pet Hatched ⭐"
-    elseif name == "Emerald Golem" and isShiny == "Yes" and rarity == "Legendary" then
-        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
-    elseif name == "Emerald Golem" and isShiny == "No" and rarity == "Mythic" then
-        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
-    elseif name == "Emerald Golem" and isShiny == "Yes" and rarity == "Mythic" then
-        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
-    elseif name == "Inferno Dragon" and isShiny == "No" and rarity == "Legendary" then
-        petTitle = "⭐ Legendary Pet Hatched ⭐"
-    elseif name == "Inferno Dragon" and isShiny == "Yes" and rarity == "Legendary" then
-        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
-    elseif name == "Inferno Dragon" and isShiny == "No" and rarity == "Mythic" then
-        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
-    elseif name == "Inferno Dragon" and isShiny == "Yes" and rarity == "Mythic" then
-        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
-    elseif name == "Unicorn" and isShiny == "No" and rarity == "Legendary" then
-        petTitle = "⭐ Legendary Pet Hatched ⭐"
-    elseif name == "Unicorn" and isShiny == "Yes" and rarity == "Legendary" then
-        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
-    elseif name == "Unicorn" and isShiny == "No" and rarity == "Mythic" then
-        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
-    elseif name == "Unicorn" and isShiny == "Yes" and rarity == "Mythic" then
-        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
-    elseif name == "Flying Pig" and isShiny == "No" and rarity == "Legendary" then
-        petTitle = "⭐ Legendary Pet Hatched ⭐"
-    elseif name == "Flying Pig" and isShiny == "Yes" and rarity == "Legendary" then
-        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
-    elseif name == "Flying Pig" and isShiny == "No" and rarity == "Mythic" then
-        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
-    elseif name == "Flying Pig" and isShiny == "Yes" and rarity == "Mythic" then
-        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
-    elseif name == "Lunar Serpent" and isShiny == "No" and rarity == "Legendary" then
-        petTitle = "⭐ Legendary Pet Hatched ⭐"
-    elseif name == "Lunar Serpent" and isShiny == "Yes" and rarity == "Legendary" then
-        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
-    elseif name == "Lunar Serpent" and isShiny == "No" and rarity == "Mythic" then
-        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
-    elseif name == "Lunar Serpent" and isShiny == "Yes" and rarity == "Mythic" then
-        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
-    elseif name == "Electra" and isShiny == "No" and rarity == "Legendary" then
-        petTitle = "⭐ Legendary Pet Hatched ⭐"
-    elseif name == "Electra" and isShiny == "Yes" and rarity == "Legendary" then
-        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
-    elseif name == "Electra" and isShiny == "No" and rarity == "Mythic" then
-        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
-    elseif name == "Electra" and isShiny == "Yes" and rarity == "Mythic" then
-        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
-    elseif name == "Dark Phoenix" and isShiny == "No" and rarity == "Legendary" then
-        petTitle = "⭐ Legendary Pet Hatched ⭐"
-    elseif name == "Dark Phoenix" and isShiny == "Yes" and rarity == "Legendary" then
-        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
-    elseif name == "Dark Phoenix" and isShiny == "No" and rarity == "Mythic" then
-        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
-    elseif name == "Dark Phoenix" and isShiny == "Yes" and rarity == "Mythic" then
-        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
-    elseif name == "Neon Elemental" and isShiny == "No" and rarity == "Legendary" then
-        petTitle = "⭐ Legendary Pet Hatched ⭐"
-    elseif name == "Neon Elemental" and isShiny == "Yes" and rarity == "Legendary" then
-        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
-    elseif name == "Neon Elemental" and isShiny == "No" and rarity == "Mythic" then
-        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
-    elseif name == "Neon Elemental" and isShiny == "Yes" and rarity == "Mythic" then
-        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
-    elseif name == "NULLVoid" and isShiny == "No" and rarity == "Legendary" then
-        petTitle = "⭐ Legendary Pet Hatched ⭐"
-    elseif name == "NULLVoid" and isShiny == "Yes" and rarity == "Legendary" then
-        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
-    elseif name == "NULLVoid" and isShiny == "No" and rarity == "Mythic" then
-        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
-    elseif name == "NULLVoid" and isShiny == "Yes" and rarity == "Mythic" then
-        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
-    elseif name == "Inferno Cube" and isShiny == "No" and rarity == "Legendary" then
-        petTitle = "⭐ Legendary Pet Hatched ⭐"
-    elseif name == "Inferno Cube" and isShiny == "Yes" and rarity == "Legendary" then
-        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
-    elseif name == "Inferno Cube" and isShiny == "No" and rarity == "Mythic" then
-        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
-    elseif name == "Inferno Cube" and isShiny == "Yes" and rarity == "Mythic" then
-        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
-    elseif name == "Virus" and isShiny == "No" and rarity == "Legendary" then
-        petTitle = "⭐ Legendary Pet Hatched ⭐"
-    elseif name == "Virus" and isShiny == "Yes" and rarity == "Legendary" then
-        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
-    elseif name == "Virus" and isShiny == "No" and rarity == "Mythic" then
-        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
-    elseif name == "Virus" and isShiny == "Yes" and rarity == "Mythic" then
-        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
-    elseif name == "Green Hydra" and isShiny == "No" and rarity == "Legendary" then
-        petTitle = "⭐ Legendary Pet Hatched ⭐"
-    elseif name == "Green Hydra" and isShiny == "Yes" and rarity == "Legendary" then
-        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
-    elseif name == "Green Hydra" and isShiny == "No" and rarity == "Mythic" then
-        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
-    elseif name == "Green Hydra" and isShiny == "Yes" and rarity == "Mythic" then
-        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
-    elseif name == "Demonic Hydra" and isShiny == "No" and rarity == "Legendary" then
-        petTitle = "⭐ Legendary Pet Hatched ⭐"
-    elseif name == "Demonic Hydra" and isShiny == "Yes" and rarity == "Legendary" then
-        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
-    elseif name == "Demonic Hydra" and isShiny == "No" and rarity == "Mythic" then
-        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
-    elseif name == "Demonic Hydra" and isShiny == "Yes" and rarity == "Mythic" then
-        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
-    elseif name == "The Overlord" and isShiny == "No" and rarity == "Secret" then
-        petTitle = "🔥 Secret Pet Hatched 🔥"
-    elseif name == "The Overlord" and isShiny == "Yes" and rarity == "Secret" then
-        petTitle = "🔥✨ Shiny Secret Pet Hatched ✨🔥"
-    elseif name == "The Overlord" and isShiny == "No" and rarity == "Mythic" then
-        petTitle = "🔥💎 Mythic Secret Pet Hatched 💎🔥"
-    elseif name == "The Overlord" and isShiny == "Yes" and rarity == "Mythic" then
-        petTitle = "🔥💎✨ Shiny Mythic Secret Pet Hatched ✨💎🔥"
-    elseif name == "Hexarium" and isShiny == "No" and rarity == "Legendary" then
-        petTitle = "⭐ Legendary Pet Hatched ⭐"
-    elseif name == "Hexarium" and isShiny == "Yes" and rarity == "Legendary" then
-        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
-    elseif name == "Hexarium" and isShiny == "No" and rarity == "Mythic" then
-        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
-    elseif name == "Hexarium" and isShiny == "Yes" and rarity == "Mythic" then
-        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
-    elseif name == "Rainbow Shock" and isShiny == "No" and rarity == "Legendary" then
-        petTitle = "⭐ Legendary Pet Hatched ⭐"
-    elseif name == "Rainbow Shock" and isShiny == "Yes" and rarity == "Legendary" then
-        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
-    elseif name == "Rainbow Shock" and isShiny == "No" and rarity == "Mythic" then
-        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
-    elseif name == "Rainbow Shock" and isShiny == "Yes" and rarity == "Mythic" then
-        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
-    elseif name == "Sigma Serpent" and isShiny == "No" and rarity == "Legendary" then
-        petTitle = "⭐ Legendary Pet Hatched ⭐"
-    elseif name == "Sigma Serpent" and isShiny == "Yes" and rarity == "Legendary" then
-        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
-    elseif name == "Sigma Serpent" and isShiny == "No" and rarity == "Mythic" then
-        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
-    elseif name == "Sigma Serpent" and isShiny == "Yes" and rarity == "Mythic" then
-        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
-    elseif name == "Manarium" and isShiny == "No" and rarity == "Legendary" then
-        petTitle = "⭐ Legendary Pet Hatched ⭐"
-    elseif name == "Manarium" and isShiny == "Yes" and rarity == "Legendary" then
-        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
-    elseif name == "Manarium" and isShiny == "No" and rarity == "Mythic" then
-        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
-    elseif name == "Manarium" and isShiny == "Yes" and rarity == "Mythic" then
-        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
-    elseif name == "MAN FACE GOD" and isShiny == "No" and rarity == "Secret" then
-        petTitle = "🔥 Secret Pet Hatched 🔥"
-    elseif name == "MAN FACE GOD" and isShiny == "Yes" and rarity == "Secret" then
-        petTitle = "🔥✨ Shiny Secret Pet Hatched ✨🔥"
-    elseif name == "MAN FACE GOD" and isShiny == "No" and rarity == "Mythic" then
-        petTitle = "🔥💎 Mythic Secret Pet Hatched 💎🔥"
-    elseif name == "MAN FACE GOD" and isShiny == "Yes" and rarity == "Mythic" then
-        petTitle = "🔥💎✨ Shiny Mythic Secret Pet Hatched ✨💎🔥"
-    elseif name == "Sweet Treat" and isShiny == "No" and rarity == "Legendary" then -- event pets
-        petTitle = "⭐ Legendary Pet Hatched ⭐"
-    elseif name == "Sweet Treat" and isShiny == "Yes" and rarity == "Legendary" then
-        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
-    elseif name == "Sweet Treat" and isShiny == "No" and rarity == "Mythic" then
-        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
-    elseif name == "Sweet Treat" and isShiny == "Yes" and rarity == "Mythic" then
-        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
-    elseif name == "Rainbow Marshmellow" and isShiny == "No" and rarity == "Legendary" then 
-        petTitle = "⭐ Legendary Pet Hatched ⭐"
-    elseif name == "Rainbow Marshmellow" and isShiny == "Yes" and rarity == "Legendary" then
-        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
-    elseif name == "Rainbow Marshmellow" and isShiny == "No" and rarity == "Mythic" then
-        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
-    elseif name == "Rainbow Marshmellow" and isShiny == "Yes" and rarity == "Mythic" then
-        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
-    elseif name == "Giant Chocolate Chicken" and isShiny == "No" and rarity == "Secret" then
-        petTitle = "🔥 Secret Pet Hatched 🔥"
-    elseif name == "Giant Chocolate Chicken" and isShiny == "Yes" and rarity == "Secret" then
-        petTitle = "🔥✨ Shiny Secret Pet Hatched ✨🔥"
-    elseif name == "Giant Chocolate Chicken" and isShiny == "No" and rarity == "Mythic" then
-        petTitle = "🔥💎 Mythic Secret Pet Hatched 💎🔥"
-    elseif name == "Giant Chocolate Chicken" and isShiny == "Yes" and rarity == "Mythic" then
-        petTitle = "🔥💎✨ Shiny Mythic Secret Pet Hatched ✨💎🔥"
-    elseif name == "Seraphic Bunny" and isShiny == "No" and rarity == "Legendary" then 
-        petTitle = "⭐ Legendary Pet Hatched ⭐"
-    elseif name == "Seraphic Bunny" and isShiny == "Yes" and rarity == "Legendary" then
-        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
-    elseif name == "Seraphic Bunny" and isShiny == "No" and rarity == "Mythic" then
-        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
-    elseif name == "Seraphic Bunny" and isShiny == "Yes" and rarity == "Mythic" then
-        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
-    elseif name == "Ethereal Bunny" and isShiny == "No" and rarity == "Legendary" then
-        petTitle = "⭐ Legendary Pet Hatched ⭐"
-    elseif name == "Ethereal Bunny" and isShiny == "Yes" and rarity == "Legendary" then
-        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
-    elseif name == "Ethereal Bunny" and isShiny == "No" and rarity == "Mythic" then
-        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
-    elseif name == "Ethereal Bunny" and isShiny == "Yes" and rarity == "Mythic" then
-        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
-    elseif name == "Cardinal Bunny" and isShiny == "No" and rarity == "Legendary" then
-        petTitle = "⭐ Legendary Pet Hatched ⭐"
-    elseif name == "Cardinal Bunny" and isShiny == "Yes" and rarity == "Legendary" then
-        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
-    elseif name == "Cardinal Bunny" and isShiny == "No" and rarity == "Mythic" then
-        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
-    elseif name == "Cardinal Bunny" and isShiny == "Yes" and rarity == "Mythic" then
-        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
-    elseif name == "Easter Basket" and isShiny == "No" and rarity == "Secret" then
-        petTitle = "🔥 Secret Pet Hatched 🔥"
-    elseif name == "Easter Basket" and isShiny == "Yes" and rarity == "Secret" then
-        petTitle = "🔥✨ Shiny Secret Pet Hatched ✨🔥"
-    elseif name == "Easter Basket" and isShiny == "No" and rarity == "Mythic" then
-        petTitle = "🔥💎 Mythic Secret Pet Hatched 💎🔥"
-    elseif name == "Easter Basket" and isShiny == "Yes" and rarity == "Mythic" then
-        petTitle = "🔥💎✨ Shiny Mythic Secret Pet Hatched ✨💎🔥"
-    elseif name == "Easter Serpent" and isShiny == "No" and rarity == "Legendary" then
-        petTitle = "⭐ Legendary Pet Hatched ⭐"
-    elseif name == "Easter Serpent" and isShiny == "Yes" and rarity == "Legendary" then
-        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
-    elseif name == "Easter Serpent" and isShiny == "No" and rarity == "Mythic" then
-        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
-    elseif name == "Easter Serpent" and isShiny == "Yes" and rarity == "Mythic" then
-        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
-    elseif name == "Dualcorn" and isShiny == "No" and rarity == "Legendary" then
-        petTitle = "⭐ Legendary Pet Hatched ⭐"
-    elseif name == "Dualcorn" and isShiny == "Yes" and rarity == "Legendary" then
-        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
-    elseif name == "Dualcorn" and isShiny == "No" and rarity == "Mythic" then
-        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
-    elseif name == "Dualcorn" and isShiny == "Yes" and rarity == "Mythic" then
-        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
-    elseif name == "Holy Egg" and isShiny == "No" and rarity == "Legendary" then
-        petTitle = "⭐ Legendary Pet Hatched ⭐"
-    elseif name == "Holy Egg" and isShiny == "Yes" and rarity == "Legendary" then
-        petTitle = "⭐✨ Shiny Legendary Pet Hatched ✨⭐"
-    elseif name == "Holy Egg" and isShiny == "No" and rarity == "Mythic" then
-        petTitle = "⭐💎 Mythic Legendary Pet Hatched 💎⭐"
-    elseif name == "Holy Egg" and isShiny == "Yes" and rarity == "Mythic" then
-        petTitle = "⭐💎✨ Mythic Legendary Pet Hatched ✨💎⭐"
-    elseif name == "Godly Gem" and isShiny == "No" and rarity == "Secret" then
-        petTitle = "🔥 Secret Pet Hatched 🔥"
-    elseif name == "Godly Gem" and isShiny == "Yes" and rarity == "Secret" then
-        petTitle = "🔥✨ Shiny Secret Pet Hatched ✨🔥"
-    elseif name == "Godly Gem" and isShiny == "No" and rarity == "Mythic" then
-        petTitle = "🔥💎 Mythic Secret Pet Hatched 💎🔥"
-    elseif name == "Godly Gem" and isShiny == "Yes" and rarity == "Mythic" then
-        petTitle = "🔥💎✨ Shiny Mythic Secret Pet Hatched ✨💎🔥"
-    elseif name == "Dementor" and isShiny == "No" and rarity == "Secret" then
-        petTitle = "🔥 Secret Pet Hatched 🔥"
-    elseif name == "Dementor" and isShiny == "Yes" and rarity == "Secret" then
-        petTitle = "🔥✨ Shiny Secret Pet Hatched ✨🔥"
-    elseif name == "Dementor" and isShiny == "No" and rarity == "Mythic" then
-        petTitle = "🔥💎 Mythic Secret Pet Hatched 💎🔥"
-    elseif name == "Dementor" and isShiny == "Yes" and rarity == "Mythic" then
-        petTitle = "🔥💎✨ Shiny Mythic Secret Pet Hatched ✨💎🔥"
+local function sendWebhook(name, rarity, shiny, image)
+    local title, rarityLower = "🐾 Pet Hatched!", rarity:lower()
+    isShiny = shiny and "Yes" or "No"
+    
+    local petType = table.find(petConfig.Secret, name) and "Secret" or table.find(petConfig.Legendary, name) and "Legendary"
+    local isMythic = rarityLower:find("mythic")
+    local emojis = {Secret = "🔥", Legendary = "⭐", Mythic = "💎", Shiny = "✨"}
+    
+    if petType then
+        local parts = {isMythic and emojis.Mythic or emojis[petType]}
+        if shiny then table.insert(parts, emojis.Shiny) end
+        if isMythic then table.insert(parts, "Mythic") end
+        if shiny then table.insert(parts, "Shiny") end
+        petTitle = table.concat(parts).." "..petType.." Pet Hatched "..table.concat(parts:reverse())
     end
 
-    local desc = string.format(" 🐾 **Pet Name :** %s 🐾 \n 💎 **Pet Rarity : ** %s 💎 \n", name, rarity)
-    if name == "King Doggy" and isShiny == "No" and rarity == "Secret" then
-        petChance = " 1 in 100,000,000"
-    elseif name == "King Doggy" and isShiny == "Yes" and rarity == "Secret" then
-        petChance = " 1 in 4,000,000,000"
-    elseif name == "King Doggy" and isShiny == "No" and rarity == "Mythic" then
-        petChance = " 1 in 10,000,000,000"
-    elseif name == "King Doggy" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance = " 1 in 400,000,000,000"
-    elseif name == "Emerald Golem" and isShiny == "No" and rarity == "Legendary" then
-        petChance = " 1 in 200"
-    elseif name == "Emerald Golem" and isShiny == "Yes" and rarity == "Legendary" then
-        petChance = " 1 in 8,000"
-    elseif name == "Emerald Golem" and isShiny == "No" and rarity == "Mythic" then
-        petChance = " 1 in 20,000"
-    elseif name == "Emerald Golem" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance = " 1 in 400,000"
-    elseif name == "Inferno Dragon" and isShiny == "No" and rarity == "Legendary" then
-        petChance = " 1 in 400"
-    elseif name == "Inferno Dragon" and isShiny == "Yes" and rarity == "Legendary" then
-        petChance = " 1 in 16,000"
-    elseif name == "Inferno Dragon" and isShiny == "No" and rarity == "Mythic" then
-        petChance = " 1 in 40,000"
-    elseif name == "Inferno Dragon" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance = " 1 in 800,000"
-    elseif name == "Unicorn" and isShiny == "No" and rarity == "Legendary" then
-        petChance = " 1 in 400"
-    elseif name == "Unicorn" and isShiny == "Yes" and rarity == "Legendary" then
-        petChance = " 1 in 16,000"
-    elseif name == "Unicorn" and isShiny == "No" and rarity == "Mythic" then
-        petChance = " 1 in 40,000"
-    elseif name == "Unicorn" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance = " 1 in 800,000"
-    elseif name == "Flying Pig" and isShiny == "No" and rarity == "Legendary" then
-        petChance = " 1 in 1,000"
-    elseif name == "Flying Pig" and isShiny == "Yes" and rarity == "Legendary" then
-        petChance = " 1 in 40,000"
-    elseif name == "Flying Pig" and isShiny == "No" and rarity == "Mythic" then
-        petChance = " 1 in 100,000"
-    elseif name == "Flying Pig" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance = " 1 in 4,000,000"
-    elseif name == "Lunar Serpent" and isShiny == "No" and rarity == "Legendary" then
-        petChance = " 1 in 400"
-    elseif name == "Lunar Serpent" and isShiny == "Yes" and rarity == "Legendary" then
-        petChance = " 1 in 16,000"
-    elseif name == "Lunar Serpent" and isShiny == "No" and rarity == "Mythic" then
-        petChance = " 1 in 40,000"
-    elseif name == "Lunar Serpent" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance = " 1 in 800,000"
-    elseif name == "Electra" and isShiny == "No" and rarity == "Legendary" then
-        petChance = " 1 in 1,000"
-    elseif name == "Electra" and isShiny == "Yes" and rarity == "Legendary" then
-        petChance = " 1 in 40,000"
-    elseif name == "Electra" and isShiny == "No" and rarity == "Mythic" then
-        petChance = " 1 in 100,000"
-    elseif name == "Electra" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance = " 1 in 4,000,000"
-    elseif name == "Dark Phoenix" and isShiny == "No" and rarity == "Legendary" then
-        petChance = " 1 in 2,000"
-    elseif name == "Dark Phoenix" and isShiny == "Yes" and rarity == "Legendary" then
-        petChance = " 1 in 80,000"
-    elseif name == "Dark Phoenix" and isShiny == "No" and rarity == "Mythic" then
-        petChance = " 1 in 200,000"
-    elseif name == "Dark Phoenix" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance = " 1 in 8,000,000"
-    elseif name == "Neon Elemental" and isShiny == "No" and rarity == "Legendary" then
-        petChance = " 1 in 5,000"
-    elseif name == "Neon Elemental" and isShiny == "Yes" and rarity == "Legendary" then
-        petChance = " 1 in 200,000"
-    elseif name == "Neon Elemental" and isShiny == "No" and rarity == "Mythic" then
-        petChance = " 1 in 500,000"
-    elseif name == "Neon Elemental" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance = " 1 in 20,000,000"
-    elseif name == "NULLVoid" and isShiny == "No" and rarity == "Legendary" then
-        petChance = " 1 in 1,000,000"
-    elseif name == "NULLVoid" and isShiny == "Yes" and rarity == "Legendary" then
-        petChance = " 1 in 40,000,000"
-    elseif name == "NULLVoid" and isShiny == "No" and rarity == "Mythic" then
-        petChance = " 1 in 100,000,000"
-    elseif name == "NULLVoid" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance = " 1 in 4,000,000,000"
-    elseif name == "Inferno Cube" and isShiny == "No" and rarity == "Legendary" then
-        petChance = " 1 in 4,000"
-    elseif name == "Inferno Cube" and isShiny == "Yes" and rarity == "Legendary" then
-        petChance = " 1 in 160,000"
-    elseif name == "Inferno Cube" and isShiny == "No" and rarity == "Mythic" then
-        petChance = " 1 in 400,000"
-    elseif name == "Inferno Cube" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance = " 1 in 16,000,000"
-    elseif name == "Virus" and isShiny == "No" and rarity == "Legendary" then
-        petChance = " 1 in 50,000"
-    elseif name == "Virus" and isShiny == "Yes" and rarity == "Legendary" then
-        petChance = " 1 in 2,000,000"
-    elseif name == "Virus" and isShiny == "No" and rarity == "Mythic" then
-        petChance = " 1 in 5,000,000"
-    elseif name == "Virus" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance = " 1 in 200,000,000"
-    elseif name == "Green Hydra" and isShiny == "No" and rarity == "Legendary" then
-        petChance = " 1 in 25,000"
-    elseif name == "Green Hydra" and isShiny == "Yes" and rarity == "Legendary" then
-        petChance = " 1 in 1,000,000"
-    elseif name == "Green Hydra" and isShiny == "No" and rarity == "Mythic" then
-        petChance = " 1 in 2,500,000"
-    elseif name == "Green Hydra" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance = " 1 in 100,000,000"
-    elseif name == "Demonic Hydra" and isShiny == "No" and rarity == "Legendary" then
-        petChance = " 1 in 100,000"
-    elseif name == "Demonic Hydra" and isShiny == "Yes" and rarity == "Legendary" then
-        petChance = " 1 in 4,000,000"
-    elseif name == "Demonic Hydra" and isShiny == "No" and rarity == "Mythic" then
-        petChance = " 1 in 10,000,000"
-    elseif name == "Demonic Hydra" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance = " 1 in 400,000,000"
-    elseif name == "The Overlord" and isShiny == "No" and rarity == "Secret" then
-        petChance = " 1 in 50,000,000"
-    elseif name == "The Overlord" and isShiny == "Yes" and rarity == "Secret" then
-        petChance = " 1 in 2,000,000,000"
-    elseif name == "The Overlord" and isShiny == "No" and rarity == "Mythic" then
-        petChance = " 1 in 5,000,000,000"
-    elseif name == "The Overlord" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance = " 1 in 200,000,000,000"
-    elseif name == "Hexarium" and isShiny == "No" and rarity == "Legendary" then
-        petChance = " 1 in 100,000"
-    elseif name == "Hexarium" and isShiny == "Yes" and rarity == "Legendary" then
-        petChance = " 1 in 4,000,000"
-    elseif name == "Hexarium" and isShiny == "No" and rarity == "Mythic" then
-        petChance = " 1 in 10,000,000"
-    elseif name == "Hexarium" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance = " 1 in 400,000,000"
-    elseif name == "Rainbow Shock" and isShiny == "No" and rarity == "Legendary" then
-        petChance = " 1 in 200,000"
-    elseif name == "Rainbow Shock" and isShiny == "Yes" and rarity == "Legendary" then
-        petChance = " 1 in 8,000,000"
-    elseif name == "Rainbow Shock" and isShiny == "No" and rarity == "Mythic" then
-        petChance = " 1 in 20,000,000"
-    elseif name == "Rainbow Shock" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance = " 1 in 800,000,000"
-    elseif name == "Sigma Serpent" and isShiny == "No" and rarity == "Legendary" then
-        petChance = " 1 in 10,000"
-    elseif name == "Sigma Serpent" and isShiny == "Yes" and rarity == "Legendary" then
-        petChance = " 1 in 400,000"
-    elseif name == "Sigma Serpent" and isShiny == "No" and rarity == "Mythic" then
-        petChance = " 1 in 2,000,000"
-    elseif name == "Sigma Serpent" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance = " 1 in 40,000,000"
-    elseif name == "Manarium" and isShiny == "No" and rarity == "Legendary" then
-        petChance = " 1 in 20,000"
-    elseif name == "Manarium" and isShiny == "Yes" and rarity == "Legendary" then
-        petChance = " 1 in 800,000"
-    elseif name == "Manarium" and isShiny == "No" and rarity == "Mythic" then
-        petChance = " 1 in 10,000,000"
-    elseif name == "Manarium" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance = " 1 in 80,000,000"
-    elseif name == "MAN FACE GOD" and isShiny == "No" and rarity == "Secret" then
-        petChance = " 1 in 1,000,000"
-    elseif name == "MAN FACE GOD" and isShiny == "Yes" and rarity == "Secret" then
-        petChance = " 1 in 40,000,000"
-    elseif name == "MAN FACE GOD" and isShiny == "No" and rarity == "Mythic" then
-        petChance = " 1 in 100,000,000"
-    elseif name == "MAN FACE GOD" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance = " 1 in 4,000,000,000"
-    elseif name == "Sweet Treat" and isShiny == "No" and rarity == "Legendary" then -- event pets
-        petChance = " 1 in 25,000"
-    elseif name == "Sweet Treat" and isShiny == "Yes" and rarity == "Legendary" then
-        petChance = " 1 in 1,000,000"
-    elseif name == "Sweet Treat" and isShiny == "No" and rarity == "Mythic" then
-        petChance = " 1 in 2,500,000"
-    elseif name == "Sweet Treat" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance = " 1 in 100,000,000"
-    elseif name == "Rainbow Marshmellow" and isShiny == "No" and rarity == "Legendary" then 
-        petChance = " 1 in 125,000"
-    elseif name == "Rainbow Marshmellow" and isShiny == "Yes" and rarity == "Legendary" then
-        petChance = " 1 in 5,000,000"
-    elseif name == "Rainbow Marshmellow" and isShiny == "No" and rarity == "Mythic" then
-        petChance = " 1 in 12,500,000"
-    elseif name == "Rainbow Marshmellow" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance = " 1 in 500,000,000"
-    elseif name == "Giant Chocolate Chicken" and isShiny == "No" and rarity == "Secret" then
-        petChance = " 1 in 50,000,000"
-    elseif name == "Giant Chocolate Chicken" and isShiny == "Yes" and rarity == "Secret" then
-        petChance = " 1 in 2,000,000,000"
-    elseif name == "Giant Chocolate Chicken" and isShiny == "No" and rarity == "Mythic" then
-        petChance = " 1 in 5,000,000,000"
-    elseif name == "Giant Chocolate Chicken" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance = " 1 in 200,000,000,000"
-    elseif name == "Seraphic Bunny" and isShiny == "No" and rarity == "Legendary" then 
-        petChance = " 1 in 5,000"
-    elseif name == "Seraphic Bunny" and isShiny == "Yes" and rarity == "Legendary" then
-        petChance = " 1 in 200,000"
-    elseif name == "Seraphic Bunny" and isShiny == "No" and rarity == "Mythic" then
-        petChance = " 1 in 500,000"
-    elseif name == "Seraphic Bunny" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance = " 1 in 20,000,000"
-    elseif name == "Ethereal Bunny" and isShiny == "No" and rarity == "Legendary" then
-        petChance = " 1 in 100,000"
-    elseif name == "Ethereal Bunny" and isShiny == "Yes" and rarity == "Legendary" then
-        petChance = " 1 in 4,000,000"
-    elseif name == "Ethereal Bunny" and isShiny == "No" and rarity == "Mythic" then
-        petChance = " 1 in 10,000,000"
-    elseif name == "Ethereal Bunny" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance = " 1 in 400,000,000"
-    elseif name == "Cardinal Bunny" and isShiny == "No" and rarity == "Legendary" then
-        petChance = " 1 in 1,000,000"
-    elseif name == "Cardinal Bunny" and isShiny == "Yes" and rarity == "Legendary" then
-        petChance = " 1 in 40,000,000"
-    elseif name == "Cardinal Bunny" and isShiny == "No" and rarity == "Mythic" then
-        petChance = " 1 in 100,000,000"
-    elseif name == "Cardinal Bunny" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance = " 1 in 4,000,000,000"
-    elseif name == "Easter Basket" and isShiny == "No" and rarity == "Secret" then
-        petChance = " 1 in 100,000,000"
-    elseif name == "Easter Basket" and isShiny == "Yes" and rarity == "Secret" then
-        petChance = " 1 in 4,000,000,000"
-    elseif name == "Easter Basket" and isShiny == "No" and rarity == "Mythic" then
-        petChance = " 1 in 10,000,000,000"
-    elseif name == "Easter Basket" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance = " 1 in 400,000,000,000"
-    elseif name == "Easter Serpent" and isShiny == "No" and rarity == "Legendary" then
-        petChance = " 1 in 2,500"
-    elseif name == "Easter Serpent" and isShiny == "Yes" and rarity == "Legendary" then
-        petChance = " 1 in 100,000"
-    elseif name == "Easter Serpent" and isShiny == "No" and rarity == "Mythic" then
-        petChance = " 1 in 250,000"
-    elseif name == "Easter Serpent" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance = " 1 in 10,000,000"
-    elseif name == "Dualcorn" and isShiny == "No" and rarity == "Legendary" then
-        petChance = " 1 in 50,000"
-    elseif name == "Dualcorn" and isShiny == "Yes" and rarity == "Legendary" then
-        petChance = " 1 in 2,000,000"
-    elseif name == "Dualcorn" and isShiny == "No" and rarity == "Mythic" then
-        petChance = " 1 in 5,000,000"
-    elseif name == "Dualcorn" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance = " 1 in 200,000,000"
-    elseif name == "Holy Egg" and isShiny == "No" and rarity == "Legendary" then
-        petChance = " 1 in 500,000"
-    elseif name == "Holy Egg" and isShiny == "Yes" and rarity == "Legendary" then
-        petChance = " 1 in 20,000,000"
-    elseif name == "Holy Egg" and isShiny == "No" and rarity == "Mythic" then
-        petChance = " 1 in 50,000,000"
-    elseif name == "Holy Egg" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance = " 1 in 2,000,000,000"
-    elseif name == "Godly Gem" and isShiny == "No" and rarity == "Secret" then
-        petChance = " 1 in 250,000,000"
-    elseif name == "Godly Gem" and isShiny == "Yes" and rarity == "Secret" then
-        petChance = " 1 in 10,000,000,000"
-    elseif name == "Godly Gem" and isShiny == "No" and rarity == "Mythic" then
-        petChance = " 1 in 25,000,000,000"
-    elseif name == "Godly Gem" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance = " 1 in 1,000,000,000,000"
-    elseif name == "Dementor" and isShiny == "No" and rarity == "Legendary" then
-        petChance = " 1 in 1,000,000,000"
-    elseif name == "Dementor" and isShiny == "Yes" and rarity == "Legendary" then
-        petChance = " 1 in 40,000,000,000"
-    elseif name == "Dementor" and isShiny == "No" and rarity == "Mythic" then
-        petChance = " 1 in 100,000,000,000"
-    elseif name == "Dementor" and isShiny == "Yes" and rarity == "Mythic" then
-        petChance = " 1 in 4,000,000,000,000"
-    end
-    if chance and chance ~= "" then
-        desc = desc .. " ❓ ** Chance :**" .. petChance .. " ❓ \n"
-    end
+    petChance = chances[name] and chances[name][rarity] and chances[name][rarity][shiny] or petChance
+    local desc = string.format("🐾 **Pet Name:** %s\n💎 **Rarity:** %s\n❓ **Chance:**%s\n", name, rarity, petChance)
+    
     local time = os.time()
     desc = desc .. " 🕛** Catch Date : ** <t:" .. time .. ":F> 🕛"
+
     local totalHatches = "N/A"
     local leaderstats = player:FindFirstChild("leaderstats")
     if leaderstats then
@@ -696,6 +232,7 @@ local function sendWebhook(name, rarity, shiny, image, chance)
             totalHatches = formatNumber(hatches.Value)
         end
     end
+
     local currentCoins = "N/A"
     local coinsHud = player.PlayerGui.ScreenGui.HUD.Left.Currency.Coins:FindFirstChild("Frame")
     if coinsHud then
