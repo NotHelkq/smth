@@ -164,53 +164,58 @@ local petConfig = {
 
 local chances = {
     -- Secret Pet List
-    ["King Doggy"] = {Secret = {[false] = " 1 in 100,000,000", [true] = " 1 in 4,000,000,000"}, Mythic = {[false] = " 1 in 10,000,000,000", [true] = " 1 in 400,000,000,000"}},
-    ["The Overlord"] = {Secret = {[false] = " 1 in 50,000,000", [true] = " 1 in 2,000,000,000"}, Mythic = {[false] = " 1 in 5,000,000,000", [true] = " 1 in 200,000,000,000"}},
-    ["MAN FACE GOD"] = {Secret = {[false] = " 1 in 1,000,000", [true] = " 1 in 40,000,000"}, Mythic = {[false] = " 1 in 100,000,000", [true] = " 1 in 4,000,000,000"}},
+    ["King Doggy"] = {Secret = {[false] = " 100,000,000", [true] = " 4,000,000,000"}, Mythic = {[false] = " 10,000,000,000", [true] = " 400,000,000,000"}},
+    ["The Overlord"] = {Secret = {[false] = " 50,000,000", [true] = " 2,000,000,000"}, Mythic = {[false] = " 5,000,000,000", [true] = " 200,000,000,000"}},
+    ["MAN FACE GOD"] = {Secret = {[false] = " 1,000,000", [true] = " 40,000,000"}, Mythic = {[false] = " 100,000,000", [true] = " 4,000,000,000"}},
     -- Event Secret Pet List
-    ["Giant Chocolate Chicken"] = {Secret = {[false] = " 1 in 50,000,000", [true] = " 1 in 2,000,000,000"}, Mythic = {[false] = " 1 in 5,000,000,000", [true] = " 1 in 200,000,000,000"}},
-    ["Easter Basket"] = {Secret = {[false] = " 1 in 100,000,000", [true] = " 1 in 4,000,000,000"}, Mythic = {[false] = " 1 in 10,000,000,000", [true] = " 1 in 400,000,000,000"}},
-    ["Godly Gem"] = {Secret = {[false] = " 1 in 250,000,000", [true] = " 1 in 10,000,000,000"}, Mythic = {[false] = " 1 in 25,000,000,000", [true] = " 1 in 1,000,000,000,000"}},
-    ["Dementor"] = {Secret = {[false] = " 1 in 1,000,000,000", [true] = " 1 in 40,000,000,000"}, Mythic = {[false] = " 1 in 100,000,000,000", [true] = " 1 in 4,000,000,000,000"}},
+    ["Giant Chocolate Chicken"] = {Secret = {[false] = " 50,000,000", [true] = " 2,000,000,000"}, Mythic = {[false] = " 5,000,000,000", [true] = " 200,000,000,000"}},
+    ["Easter Basket"] = {Secret = {[false] = " 100,000,000", [true] = " 4,000,000,000"}, Mythic = {[false] = " 10,000,000,000", [true] = " 400,000,000,000"}},
+    ["Godly Gem"] = {Secret = {[false] = " 250,000,000", [true] = " 10,000,000,000"}, Mythic = {[false] = " 25,000,000,000", [true] = " 1,000,000,000,000"}},
+    ["Dementor"] = {Secret = {[false] = " 1,000,000,000", [true] = " 40,000,000,000"}, Mythic = {[false] = " 100,000,000,000", [true] = " 4,000,000,000,000"}},
     -- Legendary Pet List
-    ["Emerald Golem"] = {Legendary = {[false] = " 1 in 200", [true] = " 1 in 8,000"}, Mythic = {[false] = " 1 in 20,000", [true] = " 1 in 800,000"}},
-    ["Inferno Dragon"] = {Legendary = {[false] = " 1 in 400", [true] = " 1 in 16,000"}, Mythic = {[false] = " 1 in 40,000", [true] = " 1 in 1,600,000"}},
-    ["Unicorn"] = {Legendary = {[false] = " 1 in 400", [true] = " 1 in 16,000"}, Mythic = {[false] = " 1 in 40,000", [true] = " 1 in 1,600,000"}},
-    ["Flying Pig"] = {Legendary = {[false] = " 1 in 1,000", [true] = " 1 in 40,000"}, Mythic = {[false] = " 1 in 100,000", [true] = " 1 in 4,000,000"}},
-    ["Lunar Serpent"] = {Legendary = {[false] = " 1 in 400", [true] = " 1 in 16,000"}, Mythic = {[false] = " 1 in 40,000", [true] = " 1 in 1,600,000"}},
-    ["Electra"] = {Legendary = {[false] = " 1 in 1,000", [true] = " 1 in 40,000"}, Mythic = {[false] = " 1 in 100,000", [true] = " 1 in 4,000,000"}},
-    ["Dark Phoenix"] = {Legendary = {[false] = " 1 in 2,000", [true] = " 1 in 80,000"}, Mythic = {[false] = " 1 in 200,000", [true] = " 1 in 8,000,000"}},
-    ["Neon Elemental"] = {Legendary = {[false] = " 1 in 5,000", [true] = " 1 in 200,000"}, Mythic = {[false] = " 1 in 500,000", [true] = " 1 in 20,000,000"}},
-    ["NULLVoid"] = {Legendary = {[false] = " 1 in 1,000,000", [true] = " 1 in 40,000,000"}, Mythic = {[false] = " 1 in 100,000,000", [true] = " 1 in 4,000,000,000"}},
-    ["Inferno Cube"] = {Legendary = {[false] = " 1 in 4,000", [true] = " 1 in 160,000"}, Mythic = {[false] = " 1 in 400,000", [true] = " 1 in 16,000,000"}},
-    ["Virus"] = {Legendary = {[false] = " 1 in 50,000", [true] = " 1 in 2,000,000"}, Mythic = {[false] = " 1 in 5,000,000", [true] = " 1 in 200,000,000"}},
-    ["Green Hydra"] = {Legendary = {[false] = " 1 in 25,000", [true] = " 1 in 1,000,000"}, Mythic = {[false] = " 1 in 2,500,000", [true] = " 1 in 100,000,000"}},
-    ["Demonic Hydra"] = {Legendary = {[false] = " 1 in 100,000", [true] = " 1 in 4,000,000"}, Mythic = {[false] = " 1 in 10,000,000", [true] = " 1 in 400,000,000"}},
-    ["Hexarium"] = {Legendary = {[false] = " 1 in 100,000", [true] = " 1 in 4,000,000"}, Mythic = {[false] = " 1 in 10,000,000", [true] = " 1 in 400,000,000"}},
-    ["Rainbow Shock"] = {Legendary = {[false] = " 1 in 200,000", [true] = " 1 in 8,000,000"}, Mythic = {[false] = " 1 in 20,000,000", [true] = " 1 in 800,000,000"}},
-    ["Sigma Serpent"] = {Legendary = {[false] = " 1 in 10,000", [true] = " 1 in 400,000"}, Mythic = {[false] = " 1 in 1,000,000", [true] = " 1 in 40,000,000"}},
-    ["Manarium"] = {Legendary = {[false] = " 1 in 20,000", [true] = " 1 in 800,000"}, Mythic = {[false] = " 1 in 2,000,000", [true] = " 1 in 80,000,000"}},
+    ["Emerald Golem"] = {Legendary = {[false] = " 200", [true] = " 8,000"}, Mythic = {[false] = " 20,000", [true] = " 800,000"}},
+    ["Inferno Dragon"] = {Legendary = {[false] = " 400", [true] = " 16,000"}, Mythic = {[false] = " 40,000", [true] = " 1,600,000"}},
+    ["Unicorn"] = {Legendary = {[false] = " 400", [true] = " 16,000"}, Mythic = {[false] = " 40,000", [true] = " 1,600,000"}},
+    ["Flying Pig"] = {Legendary = {[false] = " 1,000", [true] = " 40,000"}, Mythic = {[false] = " 100,000", [true] = " 4,000,000"}},
+    ["Lunar Serpent"] = {Legendary = {[false] = " 400", [true] = " 16,000"}, Mythic = {[false] = " 40,000", [true] = " 1,600,000"}},
+    ["Electra"] = {Legendary = {[false] = " 1,000", [true] = " 40,000"}, Mythic = {[false] = " 100,000", [true] = " 4,000,000"}},
+    ["Dark Phoenix"] = {Legendary = {[false] = " 2,000", [true] = " 80,000"}, Mythic = {[false] = " 200,000", [true] = " 8,000,000"}},
+    ["Neon Elemental"] = {Legendary = {[false] = " 5,000", [true] = " 200,000"}, Mythic = {[false] = " 500,000", [true] = " 20,000,000"}},
+    ["NULLVoid"] = {Legendary = {[false] = " 1,000,000", [true] = " 40,000,000"}, Mythic = {[false] = " 100,000,000", [true] = " 4,000,000,000"}},
+    ["Inferno Cube"] = {Legendary = {[false] = " 4,000", [true] = " 160,000"}, Mythic = {[false] = " 400,000", [true] = " 16,000,000"}},
+    ["Virus"] = {Legendary = {[false] = " 50,000", [true] = " 2,000,000"}, Mythic = {[false] = " 5,000,000", [true] = " 200,000,000"}},
+    ["Green Hydra"] = {Legendary = {[false] = " 25,000", [true] = " 1,000,000"}, Mythic = {[false] = " 2,500,000", [true] = " 100,000,000"}},
+    ["Demonic Hydra"] = {Legendary = {[false] = " 100,000", [true] = " 4,000,000"}, Mythic = {[false] = " 10,000,000", [true] = " 400,000,000"}},
+    ["Hexarium"] = {Legendary = {[false] = " 100,000", [true] = " 4,000,000"}, Mythic = {[false] = " 10,000,000", [true] = " 400,000,000"}},
+    ["Rainbow Shock"] = {Legendary = {[false] = " 200,000", [true] = " 8,000,000"}, Mythic = {[false] = " 20,000,000", [true] = " 800,000,000"}},
+    ["Sigma Serpent"] = {Legendary = {[false] = " 10,000", [true] = " 400,000"}, Mythic = {[false] = " 1,000,000", [true] = " 40,000,000"}},
+    ["Manarium"] = {Legendary = {[false] = " 20,000", [true] = " 800,000"}, Mythic = {[false] = " 2,000,000", [true] = " 80,000,000"}},
     -- Event Legendary Pet List
-    ["Seraphic Bunny"] = {Legendary = {[false] = " 1 in 5,000", [true] = " 1 in 200,000"}, Mythic = {[false] = " 1 in 500,000", [true] = " 1 in 20,000,000"}},
-    ["Ethereal Bunny"] = {Legendary = {[false] = " 1 in 100,000", [true] = " 1 in 4,000,000"}, Mythic = {[false] = " 1 in 10,000,000", [true] = " 1 in 400,000,000"}},
-    ["Cardinal Bunny"] = {Legendary = {[false] = " 1 in 1,000,000", [true] = " 1 in 40,000,000"}, Mythic = {[false] = " 1 in 100,000,000", [true] = " 1 in 4,000,000,000"}},
-    ["Sweet Treat"] = {Legendary = {[false] = " 1 in 25,000", [true] = " 1 in 1,000,000"}, Mythic = {[false] = " 1 in 2,500,000", [true] = " 1 in 100,000,000"}},
-    ["Rainbow Marshmellow"] = {Legendary = {[false] = " 1 in 125,000", [true] = " 1 in 5,000,000"}, Mythic = {[false] = " 1 in 12,500,000", [true] = " 1 in 500,000,000"}},
-    ["Easter Serpent"] = {Legendary = {[false] = " 1 in 2,500", [true] = " 1 in 100,000"}, Mythic = {[false] = " 1 in 250,000", [true] = " 1 in 10,000,000"}},
-    ["Dualcorn"] = {Legendary = {[false] = " 1 in 50,000", [true] = " 1 in 2,000,000"}, Mythic = {[false] = " 1 in 5,000,000", [true] = " 1 in 200,000,000"}},
-    ["Holy Egg"] = {Legendary = {[false] = " 1 in 500,000", [true] = " 1 in 20,000,000"}, Mythic = {[false] = " 1 in 50,000,000", [true] = " 1 in 2,000,000,000"}},
+    ["Seraphic Bunny"] = {Legendary = {[false] = " 5,000", [true] = " 200,000"}, Mythic = {[false] = " 500,000", [true] = " 20,000,000"}},
+    ["Ethereal Bunny"] = {Legendary = {[false] = " 100,000", [true] = " 4,000,000"}, Mythic = {[false] = " 10,000,000", [true] = " 400,000,000"}},
+    ["Cardinal Bunny"] = {Legendary = {[false] = " 1,000,000", [true] = " 40,000,000"}, Mythic = {[false] = " 100,000,000", [true] = " 4,000,000,000"}},
+    ["Sweet Treat"] = {Legendary = {[false] = " 25,000", [true] = " 1,000,000"}, Mythic = {[false] = " 2,500,000", [true] = " 100,000,000"}},
+    ["Rainbow Marshmellow"] = {Legendary = {[false] = " 125,000", [true] = " 5,000,000"}, Mythic = {[false] = " 12,500,000", [true] = " 500,000,000"}},
+    ["Easter Serpent"] = {Legendary = {[false] = " 2,500", [true] = " 100,000"}, Mythic = {[false] = " 250,000", [true] = " 10,000,000"}},
+    ["Dualcorn"] = {Legendary = {[false] = " 50,000", [true] = " 2,000,000"}, Mythic = {[false] = " 5,000,000", [true] = " 200,000,000"}},
+    ["Holy Egg"] = {Legendary = {[false] = " 500,000", [true] = " 20,000,000"}, Mythic = {[false] = " 50,000,000", [true] = " 2,000,000,000"}},
 }
 
+local webhLink = "nothing"
 local rolePing = "nothing"
 local function sendWebhook(name, rarity, shiny, image)
     if name == "Emerald Golem" or name == "Inferno Dragon" or name == "Unicorn" or name == "Flying Pig" or name == "Lunar Serpent" or name == "Electra" or name == "Dark Phoenix" or name == "Inferno Cube" or name == "Easter Serpent" then
         rolePing = "1364857484879073300"
+        webhLink = getgenv().Config.t1HatchWebhook
     elseif name == "Neon Elemental" or name == "Green Hydra" or name == "Sigma Serpent" or name == "Manarium" or name == "Sweet Treat" then
         rolePing = "1364857737485357067"
+        webhLink = getgenv().Config.t2HatchWebhook
     elseif name == "NULLVoid" or name == "Virus" or name == "Demonic Hydra" or name == "Hexarium" or name == "Rainbow Shock" or name == "Ethereal Bunny" or name == "Cardinal Bunny" or name == "Rainbow Marshmellow" or name == "Dualcorn" or name == "Holy Egg" then
         rolePing = "1364857776630923388"
+        webhLink = getgenv().Config.t3HatchWebhook
     elseif name == "King Doggy" or name == "The Overlord" or name == "MAN FACE GOD" or name == "Giant Chocolate Chicken" or name == "Easter Basket" or name == "Godly Gem" or name == "Dementor" then
         rolePing = "1364881485827407912"
+        webhLink = getgenv().Config.t3HatchWebhook
     end
 
     local title, rarityLower = "🐾 Pet Hatched!", rarity:lower()
@@ -241,7 +246,7 @@ local function sendWebhook(name, rarity, shiny, image)
 
     local time = os.time()
     petChance = chances[name] and chances[name][rarity] and chances[name][rarity][shiny] or petChance
-    local desc = string.format("🐾 **Pet Name :** %s 🐾\n💎 **Rarity :** %s 💎\n❓ **Chance :**%s ❓\n🕛 **Catch Date :** <t:%s:F>", name, rarity, petChance, time)
+    local desc = string.format("🐾 **Pet Name :** %s 🐾\n💎 **Rarity :** %s 💎\n❓ **Chance : **1 in%s ❓\n🕛 **Catch Date :** <t:%s:F>", name, rarity, petChance, time)
 
     local totalHatches = "N/A"
     local leaderstats = player:FindFirstChild("leaderstats")
@@ -286,7 +291,7 @@ local function sendWebhook(name, rarity, shiny, image)
     }
 
     httpRequest({
-        Url = getgenv().Config.HatchWebhookLink,
+        Url = webhLink,
         Method = "POST",
         Headers = {
             ["Content-Type"] = "application/json"
