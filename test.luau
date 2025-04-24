@@ -229,11 +229,9 @@ local function sendWebhook(name, rarity, shiny, image)
                    " Pet Hatched "..table.concat(reversedParts)
     end
 
-    petChance = chances[name] and chances[name][rarity] and chances[name][rarity][shiny] or petChance
-    local desc = string.format("🐾 **Pet Name:** %s\n💎 **Rarity:** %s\n❓ **Chance:**%s\n", name, rarity, petChance)
-    
     local time = os.time()
-    desc = desc .. " 🕛** Catch Date : ** <t:" .. time .. ":F> 🕛"
+    petChance = chances[name] and chances[name][rarity] and chances[name][rarity][shiny] or petChance
+    local desc = string.format("🐾 **Pet Name :** %s 🐾\n💎 **Rarity :** %s 💎\n❓ **Chance :**%s ❓\n🕛 **Catch Date :** <t:%s:F>", name, rarity, petChance, time)
 
     local totalHatches = "N/A"
     local leaderstats = player:FindFirstChild("leaderstats")
