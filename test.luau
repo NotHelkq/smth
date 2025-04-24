@@ -51,21 +51,21 @@ end
 local function monitorRifts()
     local riftsFolder = workspace.Rendered.Rifts
     local riftList = {
-        {name = "event-1", url = "bunnyEgg.luau"},
-        {name = "event-2", url = "pastelEgg.luau"},
-        {name = "event-3", url = "throwbackEgg.luau"},
-        {name = "aura-egg", url = "auraEgg.luau"},
-        {name = "spikey-egg", url = "spikeyEgg.luau"},
-        {name = "magma-egg", url = "magmaEgg.luau"},
-        {name = "crystal-egg", url = "crystalEgg.luau"},
-        {name = "lunar-egg", url = "lunarEgg.luau"},
-        {name = "void-egg", url = "voidEgg.luau"},
-        {name = "hell-egg", url = "hellEgg.luau"},
+        {name = "event-1",       url = "bunnyEgg.luau"    },
+        {name = "event-2",       url = "pastelEgg.luau"   },
+        {name = "event-3",       url = "throwbackEgg.luau"},
+        {name = "aura-egg",      url = "auraEgg.luau"     },
+        {name = "spikey-egg",    url = "spikeyEgg.luau"   },
+        {name = "magma-egg",     url = "magmaEgg.luau"    },
+        {name = "crystal-egg",   url = "crystalEgg.luau"  },
+        {name = "lunar-egg",     url = "lunarEgg.luau"    },
+        {name = "void-egg",      url = "voidEgg.luau"     },
+        {name = "hell-egg",      url = "hellEgg.luau"     },
         {name = "nightmare-egg", url = "nightmareEgg.luau"},
-        {name = "rainbow-egg", url = "rainbowEgg.luau"},
-        {name = "golden-chest", url = "goldenChest.luau"},
-        {name = "royal-chest", url = "royalChest.luau"},
-        {name = "bubble-rift", url = "bubbleRift.luau"}
+        {name = "rainbow-egg",   url = "rainbowEgg.luau"  },
+        {name = "golden-chest",  url = "goldenChest.luau" },
+        {name = "royal-chest",   url = "royalChest.luau"  },
+        {name = "bubble-rift",   url = "bubbleRift.luau"  }
     }
 
     for _, riftData in ipairs(riftList) do
@@ -94,41 +94,41 @@ end
 
 local petImages = {
     -- Secret Pet List
-    ["MAN FACE GOD"] = "https://static.wikia.nocookie.net/bgs-infinity/images/1/1b/MAN_FACE_GOD.png/revision/latest?cb=20250414020316",
-    ["The Overlord"] = "https://static.wikia.nocookie.net/bgs-infinity/images/c/c0/The_Overlord.png/revision/latest?cb=20250413130318",
-    ["King Doggy"] = "https://static.wikia.nocookie.net/bgs-infinity/images/a/a8/King_Doggy.png/revision/latest?cb=20250412152038",
+    ["MAN FACE GOD"]            = "https://static.wikia.nocookie.net/bgs-infinity/images/1/1b/MAN_FACE_GOD.png",
+    ["The Overlord"]            = "https://static.wikia.nocookie.net/bgs-infinity/images/c/c0/The_Overlord.png",
+    ["King Doggy"]              = "https://static.wikia.nocookie.net/bgs-infinity/images/a/a8/King_Doggy.png",
     -- Event Secret Pet List
-    ["Godly Gem"] = "https://static.wikia.nocookie.net/bgs-infinity/images/1/18/Godly_Gem.png/revision/latest?cb=20250424031626",
-    ["Dementor"] = "https://static.wikia.nocookie.net/bgs-infinity/images/5/58/Dementor.png/revision/latest?cb=20250424030933",
-    ["Giant Chocolate Chicken"] = "https://static.wikia.nocookie.net/bgs-infinity/images/e/ef/Giant_Chocolate_Chicken.png/revision/latest?cb=20250419001410",
-    ["Easter Basket"] = "https://static.wikia.nocookie.net/bgs-infinity/images/0/00/Easter_Basket.png/revision/latest?cb=20250419001802",
+    ["Godly Gem"]               = "https://static.wikia.nocookie.net/bgs-infinity/images/1/18/Godly_Gem.png",
+    ["Dementor"]                = "https://static.wikia.nocookie.net/bgs-infinity/images/5/58/Dementor.png",
+    ["Giant Chocolate Chicken"] = "https://static.wikia.nocookie.net/bgs-infinity/images/e/ef/Giant_Chocolate_Chicken.png",
+    ["Easter Basket"]           = "https://static.wikia.nocookie.net/bgs-infinity/images/0/00/Easter_Basket.png",
     -- Legendary Pet List
-    ["Emerald Golem"] = "https://static.wikia.nocookie.net/bgs-infinity/images/8/8f/Emerald_Golem.png/revision/latest?cb=20250412234012",
-    ["Inferno Dragon"] = "https://static.wikia.nocookie.net/bgs-infinity/images/0/06/Inferno_Dragon.png/revision/latest?cb=20250412205317",
-    ["Flying Pig"] = "https://static.wikia.nocookie.net/bgs-infinity/images/1/18/Flying_Pig.png/revision/latest?cb=20250412142625",
-    ["Unicorn"] = "https://static.wikia.nocookie.net/bgs-infinity/images/7/7e/Unicorn.png/revision/latest?cb=20250412233524",
-    ["Lunar Serpent"] = "https://static.wikia.nocookie.net/bgs-infinity/images/5/50/Lunar_Serpent.png/revision/latest?cb=20250413002818",
-    ["Electra"] = "https://static.wikia.nocookie.net/bgs-infinity/images/a/a0/Electra.png/revision/latest?cb=20250412204328",
-    ["Dark Phoenix"] = "https://static.wikia.nocookie.net/bgs-infinity/images/1/1c/Dark_Phoenix.png/revision/latest?cb=20250413001114",
-    ["Neon Elemental"] = "https://static.wikia.nocookie.net/bgs-infinity/images/1/11/Neon_Elemental.png/revision/latest?cb=20250413001526",
-    ["NULLVoid"] = "https://static.wikia.nocookie.net/bgs-infinity/images/9/98/NULLVoid.png/revision/latest?cb=20250413001555",
-    ["Inferno Cube"] = "https://static.wikia.nocookie.net/bgs-infinity/images/0/0d/Inferno_Cube.png/revision/latest?cb=20250413010729",
-    ["Virus"] = "https://static.wikia.nocookie.net/bgs-infinity/images/1/1d/Virus.png/revision/latest?cb=20250412214808",
-    ["Green Hydra"] = "https://static.wikia.nocookie.net/bgs-infinity/images/b/bc/Green_Hydra.png/revision/latest?cb=20250412170659",
-    ["Demonic Hydra"] = "https://static.wikia.nocookie.net/bgs-infinity/images/1/17/Demonic_Hydra.png/revision/latest?cb=20250412170659",
-    ["Hexarium"] = "https://static.wikia.nocookie.net/bgs-infinity/images/8/89/Hexarium.png/revision/latest?cb=20250413010434",
-    ["Rainbow Shock"] = "https://static.wikia.nocookie.net/bgs-infinity/images/c/c6/Rainbow_Shock.png/revision/latest?cb=20250413010157",
-    ["Sigma Serpent"] = "https://static.wikia.nocookie.net/bgs-infinity/images/3/3d/Sigma_Serpent.png/revision/latest?cb=20250414121909",
-    ["Manarium"] = "https://static.wikia.nocookie.net/bgs-infinity/images/5/5d/Manarium.png/revision/latest?cb=20250414121813",
+    ["Emerald Golem"]           = "https://static.wikia.nocookie.net/bgs-infinity/images/8/8f/Emerald_Golem.png",
+    ["Inferno Dragon"]          = "https://static.wikia.nocookie.net/bgs-infinity/images/0/06/Inferno_Dragon.png",
+    ["Flying Pig"]              = "https://static.wikia.nocookie.net/bgs-infinity/images/1/18/Flying_Pig.png",
+    ["Unicorn"]                 = "https://static.wikia.nocookie.net/bgs-infinity/images/7/7e/Unicorn.png",
+    ["Lunar Serpent"]           = "https://static.wikia.nocookie.net/bgs-infinity/images/5/50/Lunar_Serpent.png",
+    ["Electra"]                 = "https://static.wikia.nocookie.net/bgs-infinity/images/a/a0/Electra.png",
+    ["Dark Phoenix"]            = "https://static.wikia.nocookie.net/bgs-infinity/images/1/1c/Dark_Phoenix.png",
+    ["Neon Elemental"]          = "https://static.wikia.nocookie.net/bgs-infinity/images/1/11/Neon_Elemental.png",
+    ["NULLVoid"]                = "https://static.wikia.nocookie.net/bgs-infinity/images/9/98/NULLVoid.png",
+    ["Inferno Cube"]            = "https://static.wikia.nocookie.net/bgs-infinity/images/0/0d/Inferno_Cube.png",
+    ["Virus"]                   = "https://static.wikia.nocookie.net/bgs-infinity/images/1/1d/Virus.png",
+    ["Green Hydra"]             = "https://static.wikia.nocookie.net/bgs-infinity/images/b/bc/Green_Hydra.png",
+    ["Demonic Hydra"]           = "https://static.wikia.nocookie.net/bgs-infinity/images/1/17/Demonic_Hydra.png",
+    ["Hexarium"]                = "https://static.wikia.nocookie.net/bgs-infinity/images/8/89/Hexarium.png",
+    ["Rainbow Shock"]           = "https://static.wikia.nocookie.net/bgs-infinity/images/c/c6/Rainbow_Shock.png",
+    ["Sigma Serpent"]           = "https://static.wikia.nocookie.net/bgs-infinity/images/3/3d/Sigma_Serpent.png",
+    ["Manarium"]                = "https://static.wikia.nocookie.net/bgs-infinity/images/5/5d/Manarium.png",
     -- Event Legendary Pet List
-    ["Seraphic Bunny"] = "https://static.wikia.nocookie.net/bgs-infinity/images/d/d7/Seraphic_Bunny.png/revision/latest?cb=20250418234258",
-    ["Ethereal Bunny"] = "https://static.wikia.nocookie.net/bgs-infinity/images/b/b9/Ethereal_Bunny.png/revision/latest?cb=20250419000116",
-    ["Cardinal Bunny"] = "https://static.wikia.nocookie.net/bgs-infinity/images/3/33/Cardinal_Bunny.png/revision/latest?cb=20250419014509",
-    ["Sweet Treat"] = "https://static.wikia.nocookie.net/bgs-infinity/images/0/0e/Sweet_Treat.png/revision/latest?cb=20250418233529",
-    ["Rainbow Marshmellow"] = "https://static.wikia.nocookie.net/bgs-infinity/images/1/14/Rainbow_Marshmellow.png/revision/latest?cb=20250419011325",
-    ["Easter Serpent"] = "https://static.wikia.nocookie.net/bgs-infinity/images/c/cd/Easter_Serpent.png/revision/latest?cb=20250423223156",
-    ["Dualcorn"] = "https://static.wikia.nocookie.net/bgs-infinity/images/b/bc/Dualcorn.png/revision/latest?cb=20250423223401",
-    ["Holy Egg"] = "https://static.wikia.nocookie.net/bgs-infinity/images/d/d7/Holy_Egg.png/revision/latest?cb=20250423223522"
+    ["Seraphic Bunny"]          = "https://static.wikia.nocookie.net/bgs-infinity/images/d/d7/Seraphic_Bunny.png",
+    ["Ethereal Bunny"]          = "https://static.wikia.nocookie.net/bgs-infinity/images/b/b9/Ethereal_Bunny.png",
+    ["Cardinal Bunny"]          = "https://static.wikia.nocookie.net/bgs-infinity/images/3/33/Cardinal_Bunny.png",
+    ["Sweet Treat"]             = "https://static.wikia.nocookie.net/bgs-infinity/images/0/0e/Sweet_Treat.png",
+    ["Rainbow Marshmellow"]     = "https://static.wikia.nocookie.net/bgs-infinity/images/1/14/Rainbow_Marshmellow.png",
+    ["Easter Serpent"]          = "https://static.wikia.nocookie.net/bgs-infinity/images/c/cd/Easter_Serpent.png",
+    ["Dualcorn"]                = "https://static.wikia.nocookie.net/bgs-infinity/images/b/bc/Dualcorn.png",
+    ["Holy Egg"]                = "https://static.wikia.nocookie.net/bgs-infinity/images/d/d7/Holy_Egg.png"
 }
 
 local fallbackImage = "https://static.wikia.nocookie.net/bgs-infinity/images/7/73/Common_Pet.png"
@@ -167,41 +167,41 @@ local petConfig = {
 
 local chances = {
     -- Secret Pet List
-    ["King Doggy"] = {Secret = {[false] = " 100,000,000", [true] = " 4,000,000,000"}, Mythic = {[false] = " 10,000,000,000", [true] = " 400,000,000,000"}},
-    ["The Overlord"] = {Secret = {[false] = " 50,000,000", [true] = " 2,000,000,000"}, Mythic = {[false] = " 5,000,000,000", [true] = " 200,000,000,000"}},
-    ["MAN FACE GOD"] = {Secret = {[false] = " 1,000,000", [true] = " 40,000,000"}, Mythic = {[false] = " 100,000,000", [true] = " 4,000,000,000"}},
+    ["MAN FACE GOD"]            = {Secret    = {[false] = " 1,000,000",     [true] = " 40,000,000"    },   Mythic = {[false] = " 100,000,000",     [true] = " 4,000,000,000"     }},
+    ["The Overlord"]            = {Secret    = {[false] = " 50,000,000",    [true] = " 2,000,000,000" },   Mythic = {[false] = " 5,000,000,000",   [true] = " 200,000,000,000"   }},
+    ["King Doggy"]              = {Secret    = {[false] = " 100,000,000",   [true] = " 4,000,000,000" },   Mythic = {[false] = " 10,000,000,000",  [true] = " 400,000,000,000"   }},
     -- Event Secret Pet List
-    ["Giant Chocolate Chicken"] = {Secret = {[false] = " 50,000,000", [true] = " 2,000,000,000"}, Mythic = {[false] = " 5,000,000,000", [true] = " 200,000,000,000"}},
-    ["Easter Basket"] = {Secret = {[false] = " 100,000,000", [true] = " 4,000,000,000"}, Mythic = {[false] = " 10,000,000,000", [true] = " 400,000,000,000"}},
-    ["Godly Gem"] = {Secret = {[false] = " 250,000,000", [true] = " 10,000,000,000"}, Mythic = {[false] = " 25,000,000,000", [true] = " 1,000,000,000,000"}},
-    ["Dementor"] = {Secret = {[false] = " 1,000,000,000", [true] = " 40,000,000,000"}, Mythic = {[false] = " 100,000,000,000", [true] = " 4,000,000,000,000"}},
+    ["Giant Chocolate Chicken"] = {Secret    = {[false] = " 50,000,000",    [true] = " 2,000,000,000" },   Mythic = {[false] = " 5,000,000,000",   [true] = " 200,000,000,000"   }},
+    ["Easter Basket"]           = {Secret    = {[false] = " 100,000,000",   [true] = " 4,000,000,000" },   Mythic = {[false] = " 10,000,000,000",  [true] = " 400,000,000,000"   }},
+    ["Godly Gem"]               = {Secret    = {[false] = " 250,000,000",   [true] = " 10,000,000,000"},   Mythic = {[false] = " 25,000,000,000",  [true] = " 1,000,000,000,000" }},
+    ["Dementor"]                = {Secret    = {[false] = " 1,000,000,000", [true] = " 40,000,000,000"},   Mythic = {[false] = " 100,000,000,000", [true] = " 4,000,000,000,000" }},
     -- Legendary Pet List
-    ["Emerald Golem"] = {Legendary = {[false] = " 200", [true] = " 8,000"}, Mythic = {[false] = " 20,000", [true] = " 800,000"}},
-    ["Inferno Dragon"] = {Legendary = {[false] = " 400", [true] = " 16,000"}, Mythic = {[false] = " 40,000", [true] = " 1,600,000"}},
-    ["Unicorn"] = {Legendary = {[false] = " 400", [true] = " 16,000"}, Mythic = {[false] = " 40,000", [true] = " 1,600,000"}},
-    ["Flying Pig"] = {Legendary = {[false] = " 1,000", [true] = " 40,000"}, Mythic = {[false] = " 100,000", [true] = " 4,000,000"}},
-    ["Lunar Serpent"] = {Legendary = {[false] = " 400", [true] = " 16,000"}, Mythic = {[false] = " 40,000", [true] = " 1,600,000"}},
-    ["Electra"] = {Legendary = {[false] = " 1,000", [true] = " 40,000"}, Mythic = {[false] = " 100,000", [true] = " 4,000,000"}},
-    ["Dark Phoenix"] = {Legendary = {[false] = " 2,000", [true] = " 80,000"}, Mythic = {[false] = " 200,000", [true] = " 8,000,000"}},
-    ["Neon Elemental"] = {Legendary = {[false] = " 5,000", [true] = " 200,000"}, Mythic = {[false] = " 500,000", [true] = " 20,000,000"}},
-    ["NULLVoid"] = {Legendary = {[false] = " 1,000,000", [true] = " 40,000,000"}, Mythic = {[false] = " 100,000,000", [true] = " 4,000,000,000"}},
-    ["Inferno Cube"] = {Legendary = {[false] = " 4,000", [true] = " 160,000"}, Mythic = {[false] = " 400,000", [true] = " 16,000,000"}},
-    ["Virus"] = {Legendary = {[false] = " 50,000", [true] = " 2,000,000"}, Mythic = {[false] = " 5,000,000", [true] = " 200,000,000"}},
-    ["Green Hydra"] = {Legendary = {[false] = " 25,000", [true] = " 1,000,000"}, Mythic = {[false] = " 2,500,000", [true] = " 100,000,000"}},
-    ["Demonic Hydra"] = {Legendary = {[false] = " 100,000", [true] = " 4,000,000"}, Mythic = {[false] = " 10,000,000", [true] = " 400,000,000"}},
-    ["Hexarium"] = {Legendary = {[false] = " 100,000", [true] = " 4,000,000"}, Mythic = {[false] = " 10,000,000", [true] = " 400,000,000"}},
-    ["Rainbow Shock"] = {Legendary = {[false] = " 200,000", [true] = " 8,000,000"}, Mythic = {[false] = " 20,000,000", [true] = " 800,000,000"}},
-    ["Sigma Serpent"] = {Legendary = {[false] = " 10,000", [true] = " 400,000"}, Mythic = {[false] = " 1,000,000", [true] = " 40,000,000"}},
-    ["Manarium"] = {Legendary = {[false] = " 20,000", [true] = " 800,000"}, Mythic = {[false] = " 2,000,000", [true] = " 80,000,000"}},
+    ["Emerald Golem"]           = {Legendary = {[false] = " 200",           [true] = " 8,000"         },   Mythic = {[false] = " 20,000",          [true] = " 800,000"           }},
+    ["Inferno Dragon"]          = {Legendary = {[false] = " 400",           [true] = " 16,000"        },   Mythic = {[false] = " 40,000",          [true] = " 1,600,000"         }},
+    ["Unicorn"]                 = {Legendary = {[false] = " 400",           [true] = " 16,000"        },   Mythic = {[false] = " 40,000",          [true] = " 1,600,000"         }},
+    ["Lunar Serpent"]           = {Legendary = {[false] = " 400",           [true] = " 16,000"        },   Mythic = {[false] = " 40,000",          [true] = " 1,600,000"         }},
+    ["Flying Pig"]              = {Legendary = {[false] = " 1,000",         [true] = " 40,000"        },   Mythic = {[false] = " 100,000",         [true] = " 4,000,000"         }},
+    ["Electra"]                 = {Legendary = {[false] = " 1,000",         [true] = " 40,000"        },   Mythic = {[false] = " 100,000",         [true] = " 4,000,000"         }},
+    ["Dark Phoenix"]            = {Legendary = {[false] = " 2,000",         [true] = " 80,000"        },   Mythic = {[false] = " 200,000",         [true] = " 8,000,000"         }},
+    ["Inferno Cube"]            = {Legendary = {[false] = " 4,000",         [true] = " 160,000"       },   Mythic = {[false] = " 400,000",         [true] = " 16,000,000"        }},
+    ["Neon Elemental"]          = {Legendary = {[false] = " 5,000",         [true] = " 200,000"       },   Mythic = {[false] = " 500,000",         [true] = " 20,000,000"        }},
+    ["Sigma Serpent"]           = {Legendary = {[false] = " 10,000",        [true] = " 400,000"       },   Mythic = {[false] = " 1,000,000",       [true] = " 40,000,000"        }},
+    ["Manarium"]                = {Legendary = {[false] = " 20,000",        [true] = " 800,000"       },   Mythic = {[false] = " 2,000,000",       [true] = " 80,000,000"        }},
+    ["Green Hydra"]             = {Legendary = {[false] = " 25,000",        [true] = " 1,000,000"     },   Mythic = {[false] = " 2,500,000",       [true] = " 100,000,000"       }},
+    ["Virus"]                   = {Legendary = {[false] = " 50,000",        [true] = " 2,000,000"     },   Mythic = {[false] = " 5,000,000",       [true] = " 200,000,000"       }},
+    ["Demonic Hydra"]           = {Legendary = {[false] = " 100,000",       [true] = " 4,000,000"     },   Mythic = {[false] = " 10,000,000",      [true] = " 400,000,000"       }},
+    ["Hexarium"]                = {Legendary = {[false] = " 100,000",       [true] = " 4,000,000"     },   Mythic = {[false] = " 10,000,000",      [true] = " 400,000,000"       }},
+    ["Rainbow Shock"]           = {Legendary = {[false] = " 200,000",       [true] = " 8,000,000"     },   Mythic = {[false] = " 20,000,000",      [true] = " 800,000,000"       }},
+    ["NULLVoid"]                = {Legendary = {[false] = " 1,000,000",     [true] = " 40,000,000"    },   Mythic = {[false] = " 100,000,000",     [true] = " 4,000,000,000"     }},
     -- Event Legendary Pet List
-    ["Seraphic Bunny"] = {Legendary = {[false] = " 5,000", [true] = " 200,000"}, Mythic = {[false] = " 500,000", [true] = " 20,000,000"}},
-    ["Ethereal Bunny"] = {Legendary = {[false] = " 100,000", [true] = " 4,000,000"}, Mythic = {[false] = " 10,000,000", [true] = " 400,000,000"}},
-    ["Cardinal Bunny"] = {Legendary = {[false] = " 1,000,000", [true] = " 40,000,000"}, Mythic = {[false] = " 100,000,000", [true] = " 4,000,000,000"}},
-    ["Sweet Treat"] = {Legendary = {[false] = " 25,000", [true] = " 1,000,000"}, Mythic = {[false] = " 2,500,000", [true] = " 100,000,000"}},
-    ["Rainbow Marshmellow"] = {Legendary = {[false] = " 125,000", [true] = " 5,000,000"}, Mythic = {[false] = " 12,500,000", [true] = " 500,000,000"}},
-    ["Easter Serpent"] = {Legendary = {[false] = " 2,500", [true] = " 100,000"}, Mythic = {[false] = " 250,000", [true] = " 10,000,000"}},
-    ["Dualcorn"] = {Legendary = {[false] = " 50,000", [true] = " 2,000,000"}, Mythic = {[false] = " 5,000,000", [true] = " 200,000,000"}},
-    ["Holy Egg"] = {Legendary = {[false] = " 500,000", [true] = " 20,000,000"}, Mythic = {[false] = " 50,000,000", [true] = " 2,000,000,000"}},
+    ["Easter Serpent"]          = {Legendary = {[false] = " 2,500",         [true] = " 100,000"       },   Mythic = {[false] = " 250,000",         [true] = " 10,000,000"        }},
+    ["Seraphic Bunny"]          = {Legendary = {[false] = " 5,000",         [true] = " 200,000"       },   Mythic = {[false] = " 500,000",         [true] = " 20,000,000"        }},
+    ["Sweet Treat"]             = {Legendary = {[false] = " 25,000",        [true] = " 1,000,000"     },   Mythic = {[false] = " 2,500,000",       [true] = " 100,000,000"       }},
+    ["Dualcorn"]                = {Legendary = {[false] = " 50,000",        [true] = " 2,000,000"     },   Mythic = {[false] = " 5,000,000",       [true] = " 200,000,000"       }},
+    ["Ethereal Bunny"]          = {Legendary = {[false] = " 100,000",       [true] = " 4,000,000"     },   Mythic = {[false] = " 10,000,000",      [true] = " 400,000,000"       }},
+    ["Rainbow Marshmellow"]     = {Legendary = {[false] = " 125,000",       [true] = " 5,000,000"     },   Mythic = {[false] = " 12,500,000",      [true] = " 500,000,000"       }},
+    ["Holy Egg"]                = {Legendary = {[false] = " 500,000",       [true] = " 20,000,000"    },   Mythic = {[false] = " 50,000,000",      [true] = " 2,000,000,000"     }},
+    ["Cardinal Bunny"]          = {Legendary = {[false] = " 1,000,000",     [true] = " 40,000,000"    },   Mythic = {[false] = " 100,000,000",     [true] = " 4,000,000,000"     }},
 }
 
 local webhLink = "nothing"
@@ -341,19 +341,16 @@ local openingEggs            = false
 local tpToEggs               = false
 local autoPlaytime           = false
 local autotickets            = false
-local selectedEgg            = nil
-local hatchingEggs           = 1
-local plrPos = nil
 local autoGoldenChest        = false
 local goldenChecked          = false
-local goldenPos              = nil
 local autoRoyalChest         = false
 local royalChecked           = false
-local royalPos               = nil
-
 local automystery            = false
-
-local selectedEnchant        = nil
+local goldenPos              = nil
+local royalPos               = nil
+local plrPos                 = nil
+local selectedEgg            = nil
+local hatchingEggs           = 1
 
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/idk.luau"))()
 
@@ -505,6 +502,14 @@ local argArea5 = function(tp)
     game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))
 end
 
+local argEaster = function(tp)
+    local args = {
+        [1] = "Teleport",
+        [2] = "Workspace.Event.Portal.Spawn"
+    }
+    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event"):FireServer(unpack(args))    
+end
+
 local Teleport = Main:addSection("Teleport")
 local spawn = Teleport:addButton("Spawn", function(tp)
     argspawn() 
@@ -530,6 +535,23 @@ local area5 = Teleport:addButton("Area 5 - Zen", function(tp)
     argArea5() 
 end)
 
+local eggData = {
+    ["Infinity Egg"]  = {argspawn,  {-96, 10, -27    }},
+    ["Throwback Egg"] = {argEaster, {-385, 12013, -58}},
+    ["Bunny Egg"]     = {argEaster, {-396, 12013, -58}},
+    ["Pastel Egg"]    = {argEaster, {-408, 12013, -58}},
+    ["Common Egg"]    = {argspawn,  {-7, 11, -82     }},
+    ["Spotted Egg"]   = {argspawn,  {-7, 11, -71     }},
+    ["Iceshard Egg"]  = {argspawn,  {-7, 11, -60     }},
+    ["Spikey Egg"]    = {argArea1,  {-8, 424, 158    }},
+    ["Magma Egg"]     = {argArea2,  {-17, 2666, 9    }},
+    ["Crystal Egg"]   = {argArea2,  {-19, 2666, 19   }},
+    ["Lunar Egg"]     = {argArea3,  {-58, 6865, 81   }},
+    ["Void Egg"]      = {argArea4,  {6, 10149, 188   }},
+    ["Hell Egg"]      = {argArea4,  {-6, 10149, 192  }},
+    ["Nightmare Egg"] = {argArea4,  {-20, 10149, 184 }},
+    ["Rainbow Egg"]   = {argArea5,  {-35, 15974, 44  }}
+}
 
 local Autoopeneggs = Window:addPage("Eggs", 5012544693)
 local eggstuff = Autoopeneggs:addSection("Hatch (You must be near egg!)")
@@ -560,152 +582,19 @@ local openEgg = eggstuff:addToggle("Open Eggs", false, function(on)
 end)
 
 local tpEgg = eggstuff:addToggle("Teleport to Egg", false, function(on)
-    if on then 
-        tpToEggs = true
-        if selectedEgg == "Infinity Egg" then
-            argspawn()
-            task.wait(1.5)
-            task.spawn(function()
-                while tpToEggs do
-                    tppos(-96, 10, -27)
-                    task.wait(1)
-                end
-            end)
-        elseif selectedEgg == "Bunny Egg" then
-            argspawn()
-            task.wait(1.5)
-            task.spawn(function()
-                while tpToEggs do
-                    tppos(-405, 12013, -59)
-                    task.wait(1)
-                end
-            end)
-        elseif selectedEgg == "Pastel Egg" then
-            argspawn()
-            task.wait(1.5)
-            task.spawn(function()
-                while tpToEggs do
-                    tppos(-390, 12013, -59)
-                    task.wait(1)
-                end
-            end)
-        elseif selectedEgg == "Common Egg" then
-            argspawn()
-            task.wait(1.5)
-            task.spawn(function()
-                while tpToEggs do
-                    tppos(-7, 11, -82)
-                    task.wait(1)
-                end
-            end)
-        elseif selectedEgg == "Spotted Egg" then
-            argspawn()
-            task.wait(1.5)
-            task.spawn(function()
-                while tpToEggs do
-                    tppos(-7, 11, -71)
-                    task.wait(1)
-                end
-            end)
-        elseif selectedEgg == "Iceshard Egg" then
-            argspawn()
-            task.wait(1.5)
-            task.spawn(function()
-                while tpToEggs do
-                    tppos(-7, 11, -60)
-                    task.wait(1)
-                end
-            end)
-        elseif selectedEgg == "Spikey Egg" then
-            argArea1()
-            task.wait(1.5)
-            task.spawn(function()
-                while tpToEggs do
-                    tppos(-8, 424, 158)
-                    task.wait(1)
-                end
-            end)
-        elseif selectedEgg == "Magma Egg" then
-            argArea2()
-            task.wait(1.5)
-            task.spawn(function()
-                while tpToEggs do
-                    tppos(-17, 2666, 9)
-                    task.wait(1)
-                end
-            end)
-        elseif selectedEgg == "Crystal Egg" then
-            argArea2()
-            task.wait(1.5)
-            task.spawn(function()
-                while tpToEggs do
-                    tppos(-19, 2666, 19)
-                    task.wait(1)
-                end
-            end)
-        elseif selectedEgg == "Lunar Egg" then
-            argArea3()
-            task.wait(1.5)
-            task.spawn(function()
-                while tpToEggs do
-                    tppos(-58, 6865, 81)
-                    task.wait(1)
-                end
-            end)
-        elseif selectedEgg == "Void Egg" then
-            argArea4()
-            task.wait(1.5)
-            task.spawn(function()
-                while tpToEggs do
-                    tppos(6, 10149, 188)
-                    task.wait(1)
-                end
-            end)
-        elseif selectedEgg == "Hell Egg" then
-            argArea4()
-            task.wait(1.5)
-            task.spawn(function()
-                while tpToEggs do
-                    tppos(-6, 10149, 192)
-                    task.wait(1)
-                end
-            end)
-        elseif selectedEgg == "Nightmare Egg" then
-            argArea4()
-            task.wait(1.5)
-            task.spawn(function()
-                while tpToEggs do
-                    tppos(-20, 10149, 184)
-                    task.wait(1)
-                end
-            end)
-        elseif selectedEgg == "Rainbow Egg" then
-            argArea5()
-            task.wait(1.5)
-            task.spawn(function()
-                while tpToEggs do
-                    tppos(-35, 15974, 44)
-                    task.wait(1)
-                end
-            end)
-        else
-            print("Egg is not selected")
+    tpToEggs = on
+    if not on then return end
+    local data = eggData[selectedEgg]
+    if not data then return print("Egg not selected") end
+    data[1]()
+    task.wait(1.5)   
+    task.spawn(function()
+        while tpToEggs do
+            tppos(unpack(data[2]))
             task.wait(1)
         end
-    else
-        tpToEggs = false
-    end
+    end)
 end)
-
------------------------------------
-
---local Enchants = Window:addPage("Enchants", 5012544693)
---local enchanting = Enchants:addSection("Enchanting")
---local enchantlist = enchanting:addDropdown("Enchantment list", {"⚡ Team Up I","⚡ Team Up II","⚡ Team Up III","⚡ Team Up IV","⚡ Team Up V","💰 Looter I","💰 Looter II","💰 Looter III","💰 Looter IV","💰 Looter V","🫧 Bubbler I","🫧 Bubbler II","🫧 Bubbler III","🫧 Bubbler IV","🫧 Bubbler V","✨ Gleaming I","✨ Gleaming II", "✨ Gleaming III"}, function(eSelected)
---    selectedEnchant = eSelected
---end)
-
----------------------------------
 
 local function checkGiftsFolder(folderPath)
     if folderPath then
@@ -776,7 +665,7 @@ end
 
 local royalPos = nil
 local function royalCheck(rCheck)
-    local pos = workspace.Rendered.Rifts["golden-chest"].Chest.WorldPivot.Position 
+    local pos = workspace.Rendered.Rifts["royal-chest"].Chest.WorldPivot.Position 
     local rPos = Vector3.new(
         math.floor(pos.X + 0.5),
         math.floor(pos.Y + 0.5),
