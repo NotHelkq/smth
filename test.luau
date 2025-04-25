@@ -390,7 +390,7 @@ eggs:addToggle("Teleport to Egg", false, function(t)
     tpToEggs = t
     if not t or not eggData[selectedEgg] then return end
     eggData[selectedEgg][1]()
-    task.wait(1.5)
+    wait(2)
     while tpToEggs do
         tppos(unpack(eggData[selectedEgg][2]))
         task.wait(1)
