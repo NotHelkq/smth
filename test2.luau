@@ -338,6 +338,17 @@ local function createShopToggle(name, shop, delay)
 end
 createShopToggle("Alien Merchant", "alien-shop", 0.75)
 createShopToggle("Black Market", "shard-shop", 1.5)
+Farm:addToggle("Auto Craft Potions", false, function(t)
+    autocpot = t
+    while autocpot do
+        for i = 1, 5 do
+            for _, p in pairs{"Lucky", "Speed", "Coins", "Mythic"} do
+                remoteEvent:FireServer("Craft Potion", p, i, true)
+                task.wait(2)
+            end
+        end
+    end
+end)
 
 local function teleportTo(path)
     remoteEvent:FireServer("Teleport", path)
@@ -547,6 +558,7 @@ SetSec2:addButton("Kill Hub", function()
     autobubbleRunning = false
     autovgcRunning = false
     autobuymRunning = false
+    autocpot = false
     openingEggs = false
     tpToEggs = false
     autoprRunning = false
