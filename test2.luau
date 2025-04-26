@@ -301,7 +301,6 @@ local function monitorHatch()
     end
 end
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/antiAfk.luau"))()
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/idk.luau"))()
 local Window = library.new()
 local Main = Window:addPage("Auto Farm", 5012544693)
@@ -527,6 +526,10 @@ local Settings = Window:addPage("Settings", 5012544693)
 local SetSec2 = Settings:addSection("Others")
 SetSec2:addKeybind("Toggle Hub", Enum.KeyCode.LeftControl, function()
 	Window:toggle()
+end)
+SetSec2:addButton("Turn On Anti AFK", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/antiAfk.luau"))()
+    print("Anti AFK turned on")
 end)
 SetSec2:addButton("Boost FPS", function(fps)
     _G.Settings = {Players = {["Ignore Me"] = true, ["Ignore Others"] = true}, Meshes = {Destroy = false, LowDetail = true}, Images = {Invisible = true, LowDetail = false, Destroy = false}, ["No Particles"] = true, ["No Camera Effects"] = true, ["No Explosions"] = true, ["No Clothes"] = true, ["Low Water Graphics"] = true, ["No Shadows"] = true, ["Low Rendering"] = true, ["Low Quality Parts"] = true}
