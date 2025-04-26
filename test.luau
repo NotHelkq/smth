@@ -191,7 +191,7 @@ local function sendWebhook(name, rarity, shiny, image)
     if name == "Emerald Golem" or name == "Inferno Dragon" or name == "Unicorn" or name == "Flying Pig" or name == "Lunar Serpent" or name == "Electra" or name == "Dark Phoenix" or name == "Inferno Cube" or name == "Easter Serpent" then
         rolePing = "1364857484879073300"
         webhLink = getgenv().Config.t1HatchWebhook
-    elseif name == "Neon Elemental" or name == "Green Hydra" or name == "Sigma Serpent" or name == "Manarium" or name == "Sweet Treat" then
+    elseif name == "Neon Elemental" or name == "Green Hydra" or name == "Sigma Serpent" or name == "Manarium" or name == "Sweet Treat" or name == "Seraphic Bunny" then
         rolePing = "1364857737485357067"
         webhLink = getgenv().Config.t2HatchWebhook
     elseif name == "NULLVoid" or name == "Virus" or name == "Demonic Hydra" or name == "Hexarium" or name == "Rainbow Shock" or name == "Ethereal Bunny" or name == "Cardinal Bunny" or name == "Rainbow Marshmellow" or name == "Dualcorn" or name == "Holy Egg" then
@@ -301,6 +301,7 @@ local function monitorHatch()
     end
 end
 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/antiAfk.luau"))()
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/idk.luau"))()
 local Window = library.new()
 local Main = Window:addPage("Auto Farm", 5012544693)
@@ -341,13 +342,13 @@ createShopToggle("Black Market", "shard-shop", 1.5)
 local function teleportTo(path)
     remoteEvent:FireServer("Teleport", path)
 end
-local argspawn = function() teleportTo("Workspace.Worlds.The Overworld.PortalSpawn") end
-local argArea1 = function() teleportTo("Workspace.Worlds.The Overworld.Islands.Floating Island.Island.Portal.Spawn") end
-local argArea2 = function() teleportTo("Workspace.Worlds.The Overworld.Islands.Outer Space.Island.Portal.Spawn") end
-local argArea3 = function() teleportTo("Workspace.Worlds.The Overworld.Islands.Twilight.Island.Portal.Spawn") end
-local argArea4 = function() teleportTo("Workspace.Worlds.The Overworld.Islands.The Void.Island.Portal.Spawn") end
-local argArea5 = function() teleportTo("Workspace.Worlds.The Overworld.Islands.Zen.Island.Portal.Spawn") end
-local argEaster = function() teleportTo("Workspace.Event.Portal.Spawn") end
+local argspawn = function(tp) teleportTo("Workspace.Worlds.The Overworld.PortalSpawn") end
+local argArea1 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands.Floating Island.Island.Portal.Spawn") end
+local argArea2 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands.Outer Space.Island.Portal.Spawn") end
+local argArea3 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands.Twilight.Island.Portal.Spawn") end
+local argArea4 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands.The Void.Island.Portal.Spawn") end
+local argArea5 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands.Zen.Island.Portal.Spawn") end
+local argEaster = function(tp) teleportTo("Workspace.Event.Portal.Spawn") end
 local tpButtons = {{name = "Spawn", func = argspawn},{name = "Area 1 - Floating Island", func = argArea1},{name = "Area 2 - Outer Space", func = argArea2},{name = "Area 3 - Twilight", func = argArea3},{name = "Area 4 - The Void", func = argArea4},{name = "Area 5 - Zen", func = argArea5}}
 local Teleport = Main:addSection("Teleport")
 for _, btn in ipairs(tpButtons) do
@@ -389,8 +390,8 @@ end)
 eggs:addToggle("Teleport to Egg", false, function(t)
     tpToEggs = t
     if not t or not eggData[selectedEgg] then return end
-    eggData[selectedEgg][1]()
-    wait(2)
+    eggData[selectedEgg][1](tp)
+    task.wait(2)
     while tpToEggs do
         tppos(unpack(eggData[selectedEgg][2]))
         task.wait(1)
@@ -476,7 +477,7 @@ for _, cfg in pairs(chestConfigs) do
                     remoteEvent:FireServer("UnlockRiftChest", cfg.type, false)
                     task.wait(cfg.waitTime)
                 else
-                    print(cfg.name..(chest and " Key missing!" or " Chest not found!"))
+                    print(cfg.name..(chest and " Chest not found!"))
                     task.wait(10)
                     cfg.checkedVar = false
                 end
