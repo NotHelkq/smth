@@ -191,7 +191,7 @@ local function sendWebhook(name, rarity, shiny, image)
     if name == "Emerald Golem" or name == "Inferno Dragon" or name == "Unicorn" or name == "Flying Pig" or name == "Lunar Serpent" or name == "Electra" or name == "Dark Phoenix" or name == "Inferno Cube" or name == "Easter Serpent" then
         rolePing = "1364988111549108234"
         webhLink = getgenv().Config.t1HatchWebhook
-    elseif name == "Neon Elemental" or name == "Green Hydra" or name == "Sigma Serpent" or name == "Manarium" or name == "Sweet Treat" then
+    elseif name == "Neon Elemental" or name == "Green Hydra" or name == "Sigma Serpent" or name == "Manarium" or name == "Sweet Treat" or name == "Seraphic Bunny" then
         rolePing = "1364988196521246782"
         webhLink = getgenv().Config.t2HatchWebhook
     elseif name == "NULLVoid" or name == "Virus" or name == "Demonic Hydra" or name == "Hexarium" or name == "Rainbow Shock" or name == "Ethereal Bunny" or name == "Cardinal Bunny" or name == "Rainbow Marshmellow" or name == "Dualcorn" or name == "Holy Egg" then
@@ -301,6 +301,7 @@ local function monitorHatch()
     end
 end
 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/antiAfk.luau"))()
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/idk.luau"))()
 local Window = library.new()
 local Main = Window:addPage("Auto Farm", 5012544693)
