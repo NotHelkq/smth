@@ -338,17 +338,28 @@ local function createShopToggle(name, shop, delay)
 end
 createShopToggle("Alien Merchant", "alien-shop", 0.75)
 createShopToggle("Black Market", "shard-shop", 1.5)
+Farm:addToggle("Auto Craft Potions", false, function(t)
+    autocpot = t
+    while autocpot do
+        for i = 1, 5 do
+            for _, p in pairs{"Lucky", "Speed", "Coins", "Mythic"} do
+                remoteEvent:FireServer("Craft Potion", p, i, true)
+                task.wait(2)
+            end
+        end
+    end
+end)
 
 local function teleportTo(path)
     remoteEvent:FireServer("Teleport", path)
 end
-local argspawn = function(tp) teleportTo("Workspace.Worlds.The Overworld.PortalSpawn") end
-local argArea1 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands.Floating Island.Island.Portal.Spawn") end
-local argArea2 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands.Outer Space.Island.Portal.Spawn") end
-local argArea3 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands.Twilight.Island.Portal.Spawn") end
-local argArea4 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands.The Void.Island.Portal.Spawn") end
-local argArea5 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands.Zen.Island.Portal.Spawn") end
-local argEaster = function(tp) teleportTo("Workspace.Event.Portal.Spawn") end
+local argspawn = function() teleportTo("Workspace.Worlds.The Overworld.PortalSpawn") end
+local argArea1 = function() teleportTo("Workspace.Worlds.The Overworld.Islands.Floating Island.Island.Portal.Spawn") end
+local argArea2 = function() teleportTo("Workspace.Worlds.The Overworld.Islands.Outer Space.Island.Portal.Spawn") end
+local argArea3 = function() teleportTo("Workspace.Worlds.The Overworld.Islands.Twilight.Island.Portal.Spawn") end
+local argArea4 = function() teleportTo("Workspace.Worlds.The Overworld.Islands.The Void.Island.Portal.Spawn") end
+local argArea5 = function() teleportTo("Workspace.Worlds.The Overworld.Islands.Zen.Island.Portal.Spawn") end
+local argEaster = function() teleportTo("Workspace.Event.Portal.Spawn") end
 local tpButtons = {{name = "Spawn", func = argspawn},{name = "Area 1 - Floating Island", func = argArea1},{name = "Area 2 - Outer Space", func = argArea2},{name = "Area 3 - Twilight", func = argArea3},{name = "Area 4 - The Void", func = argArea4},{name = "Area 5 - Zen", func = argArea5}}
 local Teleport = Main:addSection("Teleport")
 for _, btn in ipairs(tpButtons) do
@@ -390,8 +401,8 @@ end)
 eggs:addToggle("Teleport to Egg", false, function(t)
     tpToEggs = t
     if not t or not eggData[selectedEgg] then return end
-    eggData[selectedEgg][1](tp)
-    task.wait(2)
+    eggData[selectedEgg][1]()
+    task.wait(1.5)
     while tpToEggs do
         tppos(unpack(eggData[selectedEgg][2]))
         task.wait(1)
@@ -477,7 +488,7 @@ for _, cfg in pairs(chestConfigs) do
                     remoteEvent:FireServer("UnlockRiftChest", cfg.type, false)
                     task.wait(cfg.waitTime)
                 else
-                    print(cfg.name..(chest and " Chest not found!"))
+                    print(cfg.name..(chest and " Key missing!" or " Chest not found!"))
                     task.wait(10)
                     cfg.checkedVar = false
                 end
@@ -547,6 +558,7 @@ SetSec2:addButton("Kill Hub", function()
     autobubbleRunning = false
     autovgcRunning = false
     autobuymRunning = false
+    autocpot = false
     openingEggs = false
     tpToEggs = false
     autoprRunning = false
