@@ -3,7 +3,6 @@ if not game:IsLoaded() then
     game.Loaded:Wait()
     print("Loaded Game")
 end
-wait(3)
 local player = game:GetService("Players").LocalPlayer
 local httpService = game:GetService("HttpService")
 local runService = game:GetService("RunService")
@@ -43,10 +42,8 @@ end
 local function monitorRifts()
     local riftsFolder = workspace.Rendered.Rifts
     local riftList = {
-        {name = "event-1",       url = "bunnyEgg.luau"    },
-        {name = "event-2",       url = "pastelEgg.luau"   },
         {name = "event-3",       url = "throwbackEgg.luau"},
-        {name = "aura-egg",      url = "auraEgg.luau"     },
+        {name = "silly-egg"      url = "auraEgg.luau"     },
         {name = "spikey-egg",    url = "spikeyEgg.luau"   },
         {name = "magma-egg",     url = "magmaEgg.luau"    },
         {name = "crystal-egg",   url = "crystalEgg.luau"  },
@@ -84,14 +81,14 @@ local function monitorRifts()
 end
 local petImages = {
     -- Secret Pet List
-    ["MAN FACE GOD"]            = "https://static.wikia.nocookie.net/bgs-infinity/images/1/1b/MAN_FACE_GOD.png",
     ["The Overlord"]            = "https://static.wikia.nocookie.net/bgs-infinity/images/c/c0/The_Overlord.png",
     ["King Doggy"]              = "https://static.wikia.nocookie.net/bgs-infinity/images/a/a8/King_Doggy.png",
     -- Event Secret Pet List
     ["Godly Gem"]               = "https://static.wikia.nocookie.net/bgs-infinity/images/1/18/Godly_Gem.png",
     ["Dementor"]                = "https://static.wikia.nocookie.net/bgs-infinity/images/5/58/Dementor.png",
-    ["Giant Chocolate Chicken"] = "https://static.wikia.nocookie.net/bgs-infinity/images/e/ef/Giant_Chocolate_Chicken.png",
-    ["Easter Basket"]           = "https://static.wikia.nocookie.net/bgs-infinity/images/0/00/Easter_Basket.png",
+    ["Silly Doggy :)"]          = "https://static.wikia.nocookie.net/bgs-infinity/images/1/1d/Silly-doggy.png",
+    ["Silly Doggy"]          = "https://static.wikia.nocookie.net/bgs-infinity/images/1/1d/Silly-doggy.png",
+    ["Royal Trophy"]            = "https://static.wikia.nocookie.net/bgs-infinity/images/3/32/Royal_Trophy.png",
     -- Legendary Pet List
     ["Emerald Golem"]           = "https://static.wikia.nocookie.net/bgs-infinity/images/8/8f/Emerald_Golem.png",
     ["Inferno Dragon"]          = "https://static.wikia.nocookie.net/bgs-infinity/images/0/06/Inferno_Dragon.png",
@@ -108,17 +105,15 @@ local petImages = {
     ["Demonic Hydra"]           = "https://static.wikia.nocookie.net/bgs-infinity/images/1/17/Demonic_Hydra.png",
     ["Hexarium"]                = "https://static.wikia.nocookie.net/bgs-infinity/images/8/89/Hexarium.png",
     ["Rainbow Shock"]           = "https://static.wikia.nocookie.net/bgs-infinity/images/c/c6/Rainbow_Shock.png",
-    ["Sigma Serpent"]           = "https://static.wikia.nocookie.net/bgs-infinity/images/3/3d/Sigma_Serpent.png",
-    ["Manarium"]                = "https://static.wikia.nocookie.net/bgs-infinity/images/5/5d/Manarium.png",
     -- Event Legendary Pet List
-    ["Seraphic Bunny"]          = "https://static.wikia.nocookie.net/bgs-infinity/images/d/d7/Seraphic_Bunny.png",
-    ["Ethereal Bunny"]          = "https://static.wikia.nocookie.net/bgs-infinity/images/b/b9/Ethereal_Bunny.png",
-    ["Cardinal Bunny"]          = "https://static.wikia.nocookie.net/bgs-infinity/images/3/33/Cardinal_Bunny.png",
-    ["Sweet Treat"]             = "https://static.wikia.nocookie.net/bgs-infinity/images/0/0e/Sweet_Treat.png",
-    ["Rainbow Marshmellow"]     = "https://static.wikia.nocookie.net/bgs-infinity/images/1/14/Rainbow_Marshmellow.png",
+    ["DOOF"]                    = "https://static.wikia.nocookie.net/bgs-infinity/images/3/34/DOOF.png",
+    ["ROUND"]                   = "https://static.wikia.nocookie.net/bgs-infinity/images/2/24/ROUND.png",
     ["Easter Serpent"]          = "https://static.wikia.nocookie.net/bgs-infinity/images/c/cd/Easter_Serpent.png",
     ["Dualcorn"]                = "https://static.wikia.nocookie.net/bgs-infinity/images/b/bc/Dualcorn.png",
-    ["Holy Egg"]                = "https://static.wikia.nocookie.net/bgs-infinity/images/d/d7/Holy_Egg.png"
+    ["Holy Egg"]                = "https://static.wikia.nocookie.net/bgs-infinity/images/d/d7/Holy_Egg.png",
+    ["Diamond Serpent"]         = "https://static.wikia.nocookie.net/bgs-infinity/images/0/00/Diamond_Serpent.png",
+    ["Diamond Hexarium"]        = "https://static.wikia.nocookie.net/bgs-infinity/images/2/2a/Diamond_Hexarium.png",
+    ["King Pufferfish"]         = "https://static.wikia.nocookie.net/bgs-infinity/images/c/c9/King_Pufferfish.png"
 }
 local fallbackImage = "https://static.wikia.nocookie.net/bgs-infinity/images/7/73/Common_Pet.png"
 local function formatNumber(number)
@@ -147,20 +142,20 @@ local function abbreviateNumber(number)
 end
 local petTitle, petChance, isShiny = "Unknown Pet Hatched", " Unknown", "Maybe"
 local petConfig = {
-    ["Secret"] = {"King Doggy", "The Overlord", "MAN FACE GOD", "Giant Chocolate Chicken", "Easter Basket", "Godly Gem", "Dementor"},
-    ["Legendary"] = {"Emerald Golem", "Inferno Dragon", "Unicorn", "Flying Pig", "Lunar Serpent", "Electra", "Dark Phoenix", "Neon Elemental", "NULLVoid", "Inferno Cube", "Virus", "Green Hydra", "Demonic Hydra", "Hexarium", "Rainbow Shock", "Sigma Serpent", "Manarium", "Seraphic Bunny", "Ethereal Bunny", "Cardinal Bunny", "Sweet Treat", "Rainbow Marshmellow", "Easter Serpent", "Dualcorn", "Holy Egg"}
+    ["Secret"] = {"King Doggy", "The Overlord", "Silly Doggy :)", "Godly Gem", "Dementor", "Royal Trophy"},
+    ["Legendary"] = {"Emerald Golem", "Inferno Dragon", "Unicorn", "Flying Pig", "Lunar Serpent", "Electra", "Dark Phoenix", "Neon Elemental", "NULLVoid", "Inferno Cube", "Virus", "Green Hydra", "Demonic Hydra", "Hexarium", "Rainbow Shock", "ROUND", "DOOF", "Easter Serpent", "Dualcorn", "Holy Egg", "Diamond Serpent", "Diamond Hexarium", "King Pufferfish"}
 }
 local chances = {
     -- Secret Pet List
-    ["MAN FACE GOD"]            = {Secret    = {[false] = " 1,000,000",     [true] = " 40,000,000"    },   Mythic = {[false] = " 100,000,000",     [true] = " 4,000,000,000"     }},
     ["The Overlord"]            = {Secret    = {[false] = " 50,000,000",    [true] = " 2,000,000,000" },   Mythic = {[false] = " 5,000,000,000",   [true] = " 200,000,000,000"   }},
     ["King Doggy"]              = {Secret    = {[false] = " 100,000,000",   [true] = " 4,000,000,000" },   Mythic = {[false] = " 10,000,000,000",  [true] = " 400,000,000,000"   }},
     -- Event Secret Pet List
-    ["Giant Chocolate Chicken"] = {Secret    = {[false] = " 50,000,000",    [true] = " 2,000,000,000" },   Mythic = {[false] = " 5,000,000,000",   [true] = " 200,000,000,000"   }},
-    ["Easter Basket"]           = {Secret    = {[false] = " 100,000,000",   [true] = " 4,000,000,000" },   Mythic = {[false] = " 10,000,000,000",  [true] = " 400,000,000,000"   }},
+    ["Silly Doggy"]             = {Secret    = {[false] = " 1,000,000",     [true] = " 40,000,000"    },   Mythic = {[false] = " 100,000,000",     [true] = " 4,000,000,000"     }},
+    ["Silly Doggy :)"]          = {Secret    = {[false] = " 1,000,000",     [true] = " 40,000,000"    },   Mythic = {[false] = " 100,000,000",     [true] = " 4,000,000,000"     }},
+    ["Royal Trophy"]            = {Secret    = {[false] = " 50,000,000",    [true] = " 2,000,000,000" },   Mythic = {[false] = " 5,000,000,000",   [true] = " 200,000,000,000"   }},
     ["Godly Gem"]               = {Secret    = {[false] = " 250,000,000",   [true] = " 10,000,000,000"},   Mythic = {[false] = " 25,000,000,000",  [true] = " 1,000,000,000,000" }},
     ["Dementor"]                = {Secret    = {[false] = " 1,000,000,000", [true] = " 40,000,000,000"},   Mythic = {[false] = " 100,000,000,000", [true] = " 4,000,000,000,000" }},
-    -- Legendary Pet List
+    -- Tier 1 Legendary Pet List
     ["Emerald Golem"]           = {Legendary = {[false] = " 200",           [true] = " 8,000"         },   Mythic = {[false] = " 20,000",          [true] = " 800,000"           }},
     ["Inferno Dragon"]          = {Legendary = {[false] = " 400",           [true] = " 16,000"        },   Mythic = {[false] = " 40,000",          [true] = " 1,600,000"         }},
     ["Unicorn"]                 = {Legendary = {[false] = " 400",           [true] = " 16,000"        },   Mythic = {[false] = " 40,000",          [true] = " 1,600,000"         }},
@@ -169,36 +164,38 @@ local chances = {
     ["Electra"]                 = {Legendary = {[false] = " 1,000",         [true] = " 40,000"        },   Mythic = {[false] = " 100,000",         [true] = " 4,000,000"         }},
     ["Dark Phoenix"]            = {Legendary = {[false] = " 2,000",         [true] = " 80,000"        },   Mythic = {[false] = " 200,000",         [true] = " 8,000,000"         }},
     ["Inferno Cube"]            = {Legendary = {[false] = " 4,000",         [true] = " 160,000"       },   Mythic = {[false] = " 400,000",         [true] = " 16,000,000"        }},
+    -- Tier 2 Legendary Pet List
     ["Neon Elemental"]          = {Legendary = {[false] = " 5,000",         [true] = " 200,000"       },   Mythic = {[false] = " 500,000",         [true] = " 20,000,000"        }},
-    ["Sigma Serpent"]           = {Legendary = {[false] = " 10,000",        [true] = " 400,000"       },   Mythic = {[false] = " 1,000,000",       [true] = " 40,000,000"        }},
-    ["Manarium"]                = {Legendary = {[false] = " 20,000",        [true] = " 800,000"       },   Mythic = {[false] = " 2,000,000",       [true] = " 80,000,000"        }},
     ["Green Hydra"]             = {Legendary = {[false] = " 25,000",        [true] = " 1,000,000"     },   Mythic = {[false] = " 2,500,000",       [true] = " 100,000,000"       }},
+    -- Tier 3 Legendary Pet List
     ["Virus"]                   = {Legendary = {[false] = " 50,000",        [true] = " 2,000,000"     },   Mythic = {[false] = " 5,000,000",       [true] = " 200,000,000"       }},
     ["Demonic Hydra"]           = {Legendary = {[false] = " 100,000",       [true] = " 4,000,000"     },   Mythic = {[false] = " 10,000,000",      [true] = " 400,000,000"       }},
     ["Hexarium"]                = {Legendary = {[false] = " 100,000",       [true] = " 4,000,000"     },   Mythic = {[false] = " 10,000,000",      [true] = " 400,000,000"       }},
     ["Rainbow Shock"]           = {Legendary = {[false] = " 200,000",       [true] = " 8,000,000"     },   Mythic = {[false] = " 20,000,000",      [true] = " 800,000,000"       }},
     ["NULLVoid"]                = {Legendary = {[false] = " 1,000,000",     [true] = " 40,000,000"    },   Mythic = {[false] = " 100,000,000",     [true] = " 4,000,000,000"     }},
-    -- Event Legendary Pet List
+    -- Event Tier 1 Legendary Pet List
     ["Easter Serpent"]          = {Legendary = {[false] = " 2,500",         [true] = " 100,000"       },   Mythic = {[false] = " 250,000",         [true] = " 10,000,000"        }},
-    ["Seraphic Bunny"]          = {Legendary = {[false] = " 5,000",         [true] = " 200,000"       },   Mythic = {[false] = " 500,000",         [true] = " 20,000,000"        }},
-    ["Sweet Treat"]             = {Legendary = {[false] = " 25,000",        [true] = " 1,000,000"     },   Mythic = {[false] = " 2,500,000",       [true] = " 100,000,000"       }},
+    ["Diamond Serpent"]         = {Legendary = {[false] = " 2,500",         [true] = " 100,000"       },   Mythic = {[false] = " 250,000",         [true] = " 10,000,000"        }},
+    -- Event Tier 2 Legendary Pet List
+    ["DOOF"]                    = {Legendary = {[false] = " 10,000",        [true] = " 400,000"       },   Mythic = {[false] = " 1,000,000",       [true] = " 40,000,000"        }},
+    ["Diamond Hexarium"]        = {Legendary = {[false] = " 50,000",        [true] = " 2,000,000"     },   Mythic = {[false] = " 5,000,000",       [true] = " 200,000,000"       }},
+    -- Event Tier 3 Legendary Pet List 
     ["Dualcorn"]                = {Legendary = {[false] = " 50,000",        [true] = " 2,000,000"     },   Mythic = {[false] = " 5,000,000",       [true] = " 200,000,000"       }},
-    ["Ethereal Bunny"]          = {Legendary = {[false] = " 100,000",       [true] = " 4,000,000"     },   Mythic = {[false] = " 10,000,000",      [true] = " 400,000,000"       }},
-    ["Rainbow Marshmellow"]     = {Legendary = {[false] = " 125,000",       [true] = " 5,000,000"     },   Mythic = {[false] = " 12,500,000",      [true] = " 500,000,000"       }},
+    ["ROUND"]                   = {Legendary = {[false] = " 250,000",       [true] = " 10,000,000"    },   Mythic = {[false] = " 25,000,000",      [true] = " 1,000,000,000"     }},
     ["Holy Egg"]                = {Legendary = {[false] = " 500,000",       [true] = " 20,000,000"    },   Mythic = {[false] = " 50,000,000",      [true] = " 2,000,000,000"     }},
-    ["Cardinal Bunny"]          = {Legendary = {[false] = " 1,000,000",     [true] = " 40,000,000"    },   Mythic = {[false] = " 100,000,000",     [true] = " 4,000,000,000"     }},
+    ["King Pufferfish"]         = {Legendary = {[false] = " 800,000",       [true] = " 24,000,000"    },   Mythic = {[false] = " 80,000,000",      [true] = " 2,400,000,000"     }},
 }
 local function sendWebhook(name, rarity, shiny, image)
-    if name == "Emerald Golem" or name == "Inferno Dragon" or name == "Unicorn" or name == "Flying Pig" or name == "Lunar Serpent" or name == "Electra" or name == "Dark Phoenix" or name == "Inferno Cube" or name == "Easter Serpent" then
+    if name == "Emerald Golem" or name == "Inferno Dragon" or name == "Unicorn" or name == "Flying Pig" or name == "Lunar Serpent" or name == "Electra" or name == "Dark Phoenix" or name == "Inferno Cube" or name == "Easter Serpent" or name == "Diamond Serpent" then
         rolePing = "1364988111549108234"
         webhLink = getgenv().Config.t1HatchWebhook
-    elseif name == "Neon Elemental" or name == "Green Hydra" or name == "Sigma Serpent" or name == "Manarium" or name == "Sweet Treat" or name == "Seraphic Bunny" then
+    elseif name == "Neon Elemental" or name == "Green Hydra" or name == "DOOF" or name == "Diamond Hexarium" then
         rolePing = "1364988196521246782"
         webhLink = getgenv().Config.t2HatchWebhook
-    elseif name == "NULLVoid" or name == "Virus" or name == "Demonic Hydra" or name == "Hexarium" or name == "Rainbow Shock" or name == "Ethereal Bunny" or name == "Cardinal Bunny" or name == "Rainbow Marshmellow" or name == "Dualcorn" or name == "Holy Egg" then
+    elseif name == "NULLVoid" or name == "Virus" or name == "Demonic Hydra" or name == "Hexarium" or name == "Rainbow Shock" or name == "Dualcorn" or name == "Holy Egg" or name == "King Pufferfish" then
         rolePing = "1364988212115931236"
         webhLink = getgenv().Config.t3HatchWebhook
-    elseif name == "King Doggy" or name == "The Overlord" or name == "MAN FACE GOD" or name == "Giant Chocolate Chicken" or name == "Easter Basket" or name == "Godly Gem" or name == "Dementor" then
+    elseif name == "King Doggy" or name == "The Overlord" or name == "Godly Gem" or name == "Dementor" or name == "Royal Trophy" or name == "Silly Doggy" or name == "Silly Doggy :)" then
         rolePing = "1364988235000057926"
         webhLink = getgenv().Config.t3HatchWebhook
     end
@@ -338,28 +335,16 @@ local function createShopToggle(name, shop, delay)
 end
 createShopToggle("Alien Merchant", "alien-shop", 0.75)
 createShopToggle("Black Market", "shard-shop", 1.5)
-Farm:addToggle("Auto Craft Potions", false, function(t)
-    autocpot = t
-    while autocpot do
-        for i = 1, 5 do
-            for _, p in pairs{"Lucky", "Speed", "Coins", "Mythic"} do
-                remoteEvent:FireServer("Craft Potion", p, i, true)
-                task.wait(2)
-            end
-        end
-    end
-end)
 
 local function teleportTo(path)
     remoteEvent:FireServer("Teleport", path)
 end
-local argspawn = function() teleportTo("Workspace.Worlds.The Overworld.PortalSpawn") end
-local argArea1 = function() teleportTo("Workspace.Worlds.The Overworld.Islands.Floating Island.Island.Portal.Spawn") end
-local argArea2 = function() teleportTo("Workspace.Worlds.The Overworld.Islands.Outer Space.Island.Portal.Spawn") end
-local argArea3 = function() teleportTo("Workspace.Worlds.The Overworld.Islands.Twilight.Island.Portal.Spawn") end
-local argArea4 = function() teleportTo("Workspace.Worlds.The Overworld.Islands.The Void.Island.Portal.Spawn") end
-local argArea5 = function() teleportTo("Workspace.Worlds.The Overworld.Islands.Zen.Island.Portal.Spawn") end
-local argEaster = function() teleportTo("Workspace.Event.Portal.Spawn") end
+local argspawn = function(tp) teleportTo("Workspace.Worlds.The Overworld.PortalSpawn") end
+local argArea1 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands.Floating Island.Island.Portal.Spawn") end
+local argArea2 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands.Outer Space.Island.Portal.Spawn") end
+local argArea3 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands.Twilight.Island.Portal.Spawn") end
+local argArea4 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands.The Void.Island.Portal.Spawn") end
+local argArea5 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands.Zen.Island.Portal.Spawn") end
 local tpButtons = {{name = "Spawn", func = argspawn},{name = "Area 1 - Floating Island", func = argArea1},{name = "Area 2 - Outer Space", func = argArea2},{name = "Area 3 - Twilight", func = argArea3},{name = "Area 4 - The Void", func = argArea4},{name = "Area 5 - Zen", func = argArea5}}
 local Teleport = Main:addSection("Teleport")
 for _, btn in ipairs(tpButtons) do
@@ -368,9 +353,8 @@ end
 
 local eggData = {
     ["Infinity Egg"]  = {argspawn,  {-96, 10, -27    }},
-    ["Throwback Egg"] = {argEaster, {-385, 12013, -58}},
-    ["Bunny Egg"]     = {argEaster, {-396, 12013, -58}},
-    ["Pastel Egg"]    = {argEaster, {-408, 12013, -58}},
+    ["100M Egg"]      = {argspawn,  {16, 10, -4      }}
+    ["Throwback Egg"] = {argspawn, {-128, 11, -60   }},
     ["Common Egg"]    = {argspawn,  {-7, 11, -82     }},
     ["Spotted Egg"]   = {argspawn,  {-7, 11, -71     }},
     ["Iceshard Egg"]  = {argspawn,  {-7, 11, -60     }},
@@ -385,7 +369,7 @@ local eggData = {
 }
 local eggStuff = Window:addPage("Eggs", 5012544693)
 local eggs = eggStuff:addSection("Hatch (You must be near egg!)")
-eggs:addDropdown("Eggs", {"Infinity Egg","Throwback Egg","Bunny Egg","Pastel Egg","Common Egg","Spotted Egg","Iceshard Egg","Spikey Egg","Magma Egg","Crystal Egg","Lunar Egg","Void Egg","Hell Egg","Nightmare Egg","Rainbow Egg"}, function(e)
+eggs:addDropdown("Eggs", {"Infinity Egg","100M Egg","Throwback Egg","Common Egg","Spotted Egg","Iceshard Egg","Spikey Egg","Magma Egg","Crystal Egg","Lunar Egg","Void Egg","Hell Egg","Nightmare Egg","Rainbow Egg"}, function(e)
     selectedEgg = e
 end)
 eggs:addSlider("Open Amount", 1, 1, 6, function(n)
@@ -401,8 +385,8 @@ end)
 eggs:addToggle("Teleport to Egg", false, function(t)
     tpToEggs = t
     if not t or not eggData[selectedEgg] then return end
-    eggData[selectedEgg][1]()
-    task.wait(1.5)
+    eggData[selectedEgg][1](tp)
+    task.wait(2)
     while tpToEggs do
         tppos(unpack(eggData[selectedEgg][2]))
         task.wait(1)
@@ -488,7 +472,7 @@ for _, cfg in pairs(chestConfigs) do
                     remoteEvent:FireServer("UnlockRiftChest", cfg.type, false)
                     task.wait(cfg.waitTime)
                 else
-                    print(cfg.name..(chest and " Key missing!" or " Chest not found!"))
+                    print(cfg.name..(chest and " Chest not found!"))
                     task.wait(10)
                     cfg.checkedVar = false
                 end
@@ -558,7 +542,6 @@ SetSec2:addButton("Kill Hub", function()
     autobubbleRunning = false
     autovgcRunning = false
     autobuymRunning = false
-    autocpot = false
     openingEggs = false
     tpToEggs = false
     autoprRunning = false
