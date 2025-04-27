@@ -189,10 +189,10 @@ local function sendWebhook(name, rarity, shiny, image)
     if name == "Emerald Golem" or name == "Inferno Dragon" or name == "Unicorn" or name == "Flying Pig" or name == "Lunar Serpent" or name == "Electra" or name == "Dark Phoenix" or name == "Inferno Cube" or name == "Easter Serpent" or name == "Diamond Serpent" then
         rolePing = "1364988111549108234"
         webhLink = getgenv().Config.t1HatchWebhook
-    elseif name == "Neon Elemental" or name == "Green Hydra" or name == "DOOF" or name == "Diamond Hexarium" then
+    elseif name == "Neon Elemental" or name == "Green Hydra" or name == "DOOF" then
         rolePing = "1364988196521246782"
         webhLink = getgenv().Config.t2HatchWebhook
-    elseif name == "NULLVoid" or name == "Virus" or name == "Demonic Hydra" or name == "Hexarium" or name == "Rainbow Shock" or name == "Dualcorn" or name == "Holy Egg" or name == "King Pufferfish" then
+    elseif name == "NULLVoid" or name == "Virus" or name == "Demonic Hydra" or name == "Hexarium" or name == "Rainbow Shock" or name == "Dualcorn" or name == "Holy Egg" or name == "Diamond Hexarium" or name == "King Pufferfish" then
         rolePing = "1364988212115931236"
         webhLink = getgenv().Config.t3HatchWebhook
     elseif name == "King Doggy" or name == "The Overlord" or name == "Godly Gem" or name == "Dementor" or name == "Royal Trophy" or name == "Silly Doggy" or name == "Silly Doggy :)" then
