@@ -43,7 +43,7 @@ local function monitorRifts()
     local riftsFolder = workspace.Rendered.Rifts
     local riftList = {
         {name = "event-3",       url = "throwbackEgg.luau"},
-        {name = "silly-egg"      url = "auraEgg.luau"     },
+        {name = "silly-egg",     url = "auraEgg.luau"     },
         {name = "spikey-egg",    url = "spikeyEgg.luau"   },
         {name = "magma-egg",     url = "magmaEgg.luau"    },
         {name = "crystal-egg",   url = "crystalEgg.luau"  },
@@ -353,8 +353,8 @@ end
 
 local eggData = {
     ["Infinity Egg"]  = {argspawn,  {-96, 10, -27    }},
-    ["100M Egg"]      = {argspawn,  {16, 10, -4      }}
-    ["Throwback Egg"] = {argspawn, {-128, 11, -60   }},
+    ["100M Egg"]      = {argspawn,  {16, 10, -4      }},
+    ["Throwback Egg"] = {argspawn,  {-128, 11, -60   }},
     ["Common Egg"]    = {argspawn,  {-7, 11, -82     }},
     ["Spotted Egg"]   = {argspawn,  {-7, 11, -71     }},
     ["Iceshard Egg"]  = {argspawn,  {-7, 11, -60     }},
