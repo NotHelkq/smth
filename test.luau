@@ -204,16 +204,19 @@ local function getPetImage(name, isShiny, isMythic)
 end
 
 local function sendWebhook(name, rarity, shiny, image)
-    local tierMap = {
-        ["Emerald Golem"]  = 1, ["Inferno Dragon"] = 1, ["Unicorn"]       = 1, ["Flying Pig"] = 1, ["Lunar Serpent"] = 1, ["Electra"]     = 1, ["Dark Phoenix"]   = 1, ["Inferno Cube"]     = 1, ["Easter Serpent"]  = 1, ["Diamond Serpent"] = 1,
-        ["Neon Elemental"] = 2, ["Green Hydra"]    = 2, ["DOOF"]          = 2, 
-        ["NULLVoid"]       = 3, ["Virus"]          = 3, ["Demonic Hydra"] = 3, ["Hexarium"]   = 3, ["Rainbow Shock"] = 3, ["Dualcorn"]    = 3, ["Holy Egg"]       = 3, ["Diamond Hexarium"] = 3, ["King Pufferfish"] = 3,
-        ["King Doggy"]     = 4, ["The Overlord"]   = 4, ["Godly Gem"]     = 4, ["Dementor"]   = 4, ["Royal Trophy"]  = 4, ["Silly Doggy"] = 4, ["Silly Doggy :)"] = 4
-    }
-    local tier = tierMap[name] or 3
-    rolePing = {"1364857484879073300", "1364857737485357067", "1364857776630923388", "1364881485827407912"}[tier]
-    webhLink = getgenv().Config[{"t1HatchWebhook", "t2HatchWebhook", "t3HatchWebhook", "t3HatchWebhook"}[tier]]
-    
+    if name == "Emerald Golem" or name == "Inferno Dragon" or name == "Unicorn" or name == "Flying Pig" or name == "Lunar Serpent" or name == "Electra" or name == "Dark Phoenix" or name == "Inferno Cube" or name == "Easter Serpent" or name == "Diamond Serpent" then
+        rolePing = "1364988111549108234"
+        webhLink = getgenv().Config.t1HatchWebhook
+    elseif name == "Neon Elemental" or name == "Green Hydra" or name == "DOOF" then
+        rolePing = "1364988196521246782"
+        webhLink = getgenv().Config.t2HatchWebhook
+    elseif name == "NULLVoid" or name == "Virus" or name == "Demonic Hydra" or name == "Hexarium" or name == "Rainbow Shock" or name == "Dualcorn" or name == "Holy Egg" or name == "Diamond Hexarium" or name == "King Pufferfish" then
+        rolePing = "1364988212115931236"
+        webhLink = getgenv().Config.t3HatchWebhook
+    elseif name == "King Doggy" or name == "The Overlord" or name == "Godly Gem" or name == "Dementor" or name == "Royal Trophy" or name == "Silly Doggy" or name == "Silly Doggy :)" then
+        rolePing = "1364988235000057926"
+        webhLink = getgenv().Config.t3HatchWebhook
+    end
     local title, rarityLower = "🐾 Pet Hatched!", rarity:lower()
     local petType = table.find(petConfig.Secret, name) and "Secret" or table.find(petConfig.Legendary, name) and "Legendary"
     local isMythic = rarityLower:find("mythic")
