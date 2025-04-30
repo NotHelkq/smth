@@ -4,29 +4,25 @@ if not game:IsLoaded() then
     print("Loaded Game")
 end
 local player = game:GetService("Players").LocalPlayer
-local httpService = game:GetService("HttpService")
 local runService = game:GetService("RunService")
+local httpService = game:GetService("HttpService")
+local cg = require(game:GetService("ReplicatedStorage").Shared.Constants)
 local remoteEvent = game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event")
 local remoteFunction = game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Function")
-local cg = require(game:GetService("ReplicatedStorage").Shared.Constants)
+local httpRequest = (syn and syn.request) or (http and http.request) or (http_request) or (fluxus and fluxus.request) or (request)
 local goldenPos, royalPos, plrPos, riftConnection, hatchConnection = nil, nil, nil, nil, nil
+local petTitle, petChance, isShiny = "Unknown Pet Hatched", " Unknown", "Maybe"
+local webhLink, rolePing, shinyStatus = "nothing", "nothing", ""
 local hatchingEggs = 1
 local recentFrames = {}
 local connections = {};
-local webhLink = "nothing"
-local rolePing = "nothing"
 local rt = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
 local function tp(d) return function(x,y,z)
     if rt then game:GetService("TweenService"):Create(rt, TweenInfo.new(d), {CFrame = CFrame.new(x,y,z)}):Play() end
 end end
 local fallbackImage = "https://static.wikia.nocookie.net/bgs-infinity/images/7/73/Common_Pet.png"
 local ttppos, tppos = tp(3), tp(10)
-local httpRequest =
-    (syn and syn.request) or
-    (http and http.request) or
-    (http_request) or
-    (fluxus and fluxus.request) or
-    (request)
+
 if not httpRequest then
     warn("⚠️ No supported HTTP request method found!")
     return
@@ -107,7 +103,6 @@ local function abbreviateNumber(number)
     end
 end
 
-local petTitle, petChance, isShiny = "Unknown Pet Hatched", " Unknown", "Maybe"
 local petConfig = {
     ["Secret"]    = {"King Doggy", "The Overlord", "Silly Doggy :)", "Silly Doggy", "Godly Gem", "Dementor", "Royal Trophy"},
     ["Legendary"] = {"Emerald Golem", "Inferno Dragon", "Unicorn", "Flying Pig", "Lunar Serpent", "Electra", "Dark Phoenix", "Neon Elemental", "NULLVoid", "Inferno Cube", "Virus", "Green Hydra", "Demonic Hydra", "Hexarium", "Rainbow Shock", "ROUND", "DOOF", "Easter Serpent", "Dualcorn", "Holy Egg", "Diamond Serpent", "Diamond Hexarium", "King Pufferfish"}
@@ -212,41 +207,27 @@ local function sendWebhook(name, rarity, shiny, image)
     local tier = tierMap[name] or 3
     rolePing = ({"1364988111549108234", "1364988196521246782", "1364988212115931236", "1364988235000057926"})[tier]
     webhLink = getgenv().Config[({"t1HatchWebhook", "t2HatchWebhook", "t3HatchWebhook", "t3HatchWebhook"})[tier]]
-    
+
     local title, rarityLower = "🐾 Pet Hatched!", rarity:lower()
+    local emojis = {Secret = "🔥", Legendary = "⭐", Mythic = "💎", Shiny = "✨"}
     local petType = table.find(petConfig.Secret, name) and "Secret" or table.find(petConfig.Legendary, name) and "Legendary"
     local isMythic = rarityLower:find("mythic")
     local isShiny = shiny and "Yes" or "No"
-    local image = getPetImage(name, shiny, isMythic)
-    local emojis = {Secret = "🔥", Legendary = "⭐", Mythic = "💎", Shiny = "✨"}
-    local parts = {}
+    local titleParts = {}
 
-    local shinyStatus = ""
-    if isShiny == "Yes" then
-        shinyStatus = "Shiny "
-    else
-        shinyStatus = ""
-    end
+    if isShiny == "Yes" then shinyStatus = "Shiny " else shinyStatus = "" end
 
     if petType then
-        if isMythic then
-            table.insert(parts, emojis.Mythic)
-        else
-            table.insert(parts, emojis[petType])
-        end
-        if shiny then
-            table.insert(parts, emojis.Shiny)
-        end
         local reversedParts = {}
-        for i = #parts, 1, -1 do
-            table.insert(reversedParts, parts[i])
+        table.insert(titleParts, isMythic and emojis.Mythic or emojis[petType])
+        if shiny then table.insert(titleParts, emojis.Shiny) end
+        for i = #titleParts, 1, -1 do
+            table.insert(reversedParts, titleParts[i])
         end
-        petTitle = table.concat(parts).." "..shinyStatus..(isMythic and " Mythic " or "")..petType.." Pet Hatched "..table.concat(reversedParts)
+        petTitle = table.concat(titleParts).." "..shinyStatus..(isMythic and "Mythic " or "")..petType.." Pet Hatched "..table.concat(reversedParts)
+    else
+        petTitle = "🐾 Pet Hatched!"
     end
-
-    petChance = chances[name] and chances[name][rarity] and chances[name][rarity][shiny] or petChance
-    local time = os.time()
-    local desc = string.format("🐾 **Pet Name :** %s 🐾\n💎 **Rarity :** %s 💎\n❓ **Chance : **1 in%s ❓\n🕛 **Catch Date :** <t:%s:F>", name, rarity, petChance, time)
 
     local totalHatches = "N/A"
     local leaderstats = player:FindFirstChild("leaderstats")
@@ -274,29 +255,18 @@ local function sendWebhook(name, rarity, shiny, image)
             end
         end
     end
-    
+
     local data = {
         ["content"] = "<@&" .. rolePing .. ">",
         ["embeds"] = {{
             ["title"] = petTitle,
-            ["description"] = desc,
+            ["description"] = string.format("🐾 **Pet Name : **%s 🐾\n💎 **Rarity : **%s 💎\n❓ **Chance : **1 in %s ❓\n🕛 **Hatch Date : **<t:%s:F> 🕛", name, rarity, chances[name] and chances[name][rarity] and chances[name][rarity][shiny] or "N/A", os.time()),
             ["color"] = 16711680,
-            ["footer"] = {
-                ["text"] = "Pet Hatched By : " .. player.Name .. " | 🥚 Total Hatches : " .. totalHatches .. " | 💰 Coins Left : " .. currentCoins
-            },
-            ["thumbnail"] = {
-                ["url"] = image or fallbackImage
-            }
+            ["footer"] = {["text"] = "Pet Hatched By : " .. player.Name .. " | 🥚 Total Hatches : " .. totalHatches .. " | 💰 Coins Left : " .. currentCoins},
+            ["thumbnail"] = {["url"] = getPetImage(name, shiny, isMythic) or fallbackImage}
         }}
     }
-    httpRequest({
-        Url = webhLink,
-        Method = "POST",
-        Headers = {
-            ["Content-Type"] = "application/json"
-        },
-        Body = httpService:JSONEncode(data)
-    })
+    httpRequest({Url = webhLink, Method = "POST", Headers = {["Content-Type"] = "application/json"}, Body = httpService:JSONEncode(data)})
 end
 
 local function monitorHatch()
