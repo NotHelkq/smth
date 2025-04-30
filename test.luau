@@ -260,7 +260,7 @@ local function sendWebhook(name, rarity, shiny, image)
         ["content"] = "<@&" .. rolePing .. ">",
         ["embeds"] = {{
             ["title"] = petTitle,
-            ["description"] = string.format("🐾 **Pet Name :** %s\n💎 **Rarity :** %s\n❓ **Chance :** 1 in %s\n🕛 **Hatch Date :** <t:%s:F>", name, rarity, chances[name] and chances[name][rarity] and chances[name][rarity][shiny] or "N/A", os.time()),
+            ["description"] = string.format("🐾 **Pet Name : **%s 🐾\n💎 **Rarity : **%s 💎\n❓ **Chance : **1 in %s ❓\n🕛 **Hatch Date : **<t:%s:F> 🕛", name, rarity, chances[name] and chances[name][rarity] and chances[name][rarity][shiny] or "N/A", os.time()),
             ["color"] = 16711680,
             ["footer"] = {["text"] = "Pet Hatched By : " .. player.Name .. " | 🥚 Total Hatches : " .. totalHatches .. " | 💰 Coins Left : " .. currentCoins},
             ["thumbnail"] = {["url"] = getPetImage(name, shiny, isMythic) or fallbackImage}
