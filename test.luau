@@ -23,11 +23,6 @@ end end
 local fallbackImage = "https://static.wikia.nocookie.net/bgs-infinity/images/7/73/Common_Pet.png"
 local ttppos, tppos = tp(3), tp(10)
 
-if not httpRequest then
-    warn("⚠️ No supported HTTP request method found!")
-    return
-end
-
 local function isRecentFrame(id)
     if recentFrames[id] and (tick() - recentFrames[id] < 5) then
         return true
@@ -107,7 +102,6 @@ local petConfig = {
     ["Secret"]    = {"King Doggy", "The Overlord", "Silly Doggy :)", "Silly Doggy", "Godly Gem", "Dementor", "Royal Trophy"},
     ["Legendary"] = {"Emerald Golem", "Inferno Dragon", "Unicorn", "Flying Pig", "Lunar Serpent", "Electra", "Dark Phoenix", "Neon Elemental", "NULLVoid", "Inferno Cube", "Virus", "Green Hydra", "Demonic Hydra", "Hexarium", "Rainbow Shock", "ROUND", "DOOF", "Easter Serpent", "Dualcorn", "Holy Egg", "Diamond Serpent", "Diamond Hexarium", "King Pufferfish"}
 }
-
 local chances = {
     -- Secret Pet List
     ["The Overlord"]            = {Secret    = {[false] = " 50,000,000",    [true] = " 2,000,000,000" },   Mythic = {[false] = " 5,000,000,000",   [true] = " 200,000,000,000"   }},
@@ -189,12 +183,7 @@ local petImages = {
 local function getPetImage(name, isShiny, isMythic)
     local variants = petImages[name]
     if not variants then return fallbackImage end
-    
-    return variants.ShinyMythic and isShiny and isMythic and variants.ShinyMythic
-        or variants.Mythic and isMythic and variants.Mythic
-        or variants.Shiny and isShiny and variants.Shiny
-        or variants.Normal
-        or fallbackImage
+    return variants.ShinyMythic and isShiny and isMythic and variants.ShinyMythic or variants.Mythic and isMythic and variants.Mythic or variants.Shiny and isShiny and variants.Shiny or variants.Normal or fallbackImage
 end
 
 local function sendWebhook(name, rarity, shiny, image)
@@ -216,7 +205,6 @@ local function sendWebhook(name, rarity, shiny, image)
     local titleParts = {}
 
     if isShiny == "Yes" then shinyStatus = "Shiny " else shinyStatus = "" end
-
     if petType then
         local reversedParts = {}
         table.insert(titleParts, isMythic and emojis.Mythic or emojis[petType])
