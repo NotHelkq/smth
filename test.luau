@@ -3,6 +3,7 @@ if not game:IsLoaded() then
     game.Loaded:Wait()
     print("Loaded Game")
 end
+wait(3)
 local player = game:GetService("Players").LocalPlayer
 local httpService = game:GetService("HttpService")
 local runService = game:GetService("RunService")
