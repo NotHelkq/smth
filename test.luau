@@ -19,6 +19,7 @@ local rt = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
 local function tp(d) return function(x,y,z)
     if rt then game:GetService("TweenService"):Create(rt, TweenInfo.new(d), {CFrame = CFrame.new(x,y,z)}):Play() end
 end end
+local fallbackImage = "https://static.wikia.nocookie.net/bgs-infinity/images/7/73/Common_Pet.png"
 local ttppos, tppos = tp(3), tp(10)
 local httpRequest =
     (syn and syn.request) or
@@ -79,43 +80,7 @@ local function monitorRifts()
         end
     end
 end
-local petImages = {
-    -- Secret Pet List
-    ["The Overlord"]            = "https://static.wikia.nocookie.net/bgs-infinity/images/c/c0/The_Overlord.png",
-    ["King Doggy"]              = "https://static.wikia.nocookie.net/bgs-infinity/images/a/a8/King_Doggy.png",
-    -- Event Secret Pet List
-    ["Godly Gem"]               = "https://static.wikia.nocookie.net/bgs-infinity/images/1/18/Godly_Gem.png",
-    ["Dementor"]                = "https://static.wikia.nocookie.net/bgs-infinity/images/5/58/Dementor.png",
-    ["Silly Doggy :)"]          = "https://static.wikia.nocookie.net/bgs-infinity/images/1/1d/Silly-doggy.png",
-    ["Silly Doggy"]          = "https://static.wikia.nocookie.net/bgs-infinity/images/1/1d/Silly-doggy.png",
-    ["Royal Trophy"]            = "https://static.wikia.nocookie.net/bgs-infinity/images/3/32/Royal_Trophy.png",
-    -- Legendary Pet List
-    ["Emerald Golem"]           = "https://static.wikia.nocookie.net/bgs-infinity/images/8/8f/Emerald_Golem.png",
-    ["Inferno Dragon"]          = "https://static.wikia.nocookie.net/bgs-infinity/images/0/06/Inferno_Dragon.png",
-    ["Flying Pig"]              = "https://static.wikia.nocookie.net/bgs-infinity/images/1/18/Flying_Pig.png",
-    ["Unicorn"]                 = "https://static.wikia.nocookie.net/bgs-infinity/images/7/7e/Unicorn.png",
-    ["Lunar Serpent"]           = "https://static.wikia.nocookie.net/bgs-infinity/images/5/50/Lunar_Serpent.png",
-    ["Electra"]                 = "https://static.wikia.nocookie.net/bgs-infinity/images/a/a0/Electra.png",
-    ["Dark Phoenix"]            = "https://static.wikia.nocookie.net/bgs-infinity/images/1/1c/Dark_Phoenix.png",
-    ["Neon Elemental"]          = "https://static.wikia.nocookie.net/bgs-infinity/images/1/11/Neon_Elemental.png",
-    ["NULLVoid"]                = "https://static.wikia.nocookie.net/bgs-infinity/images/9/98/NULLVoid.png",
-    ["Inferno Cube"]            = "https://static.wikia.nocookie.net/bgs-infinity/images/0/0d/Inferno_Cube.png",
-    ["Virus"]                   = "https://static.wikia.nocookie.net/bgs-infinity/images/1/1d/Virus.png",
-    ["Green Hydra"]             = "https://static.wikia.nocookie.net/bgs-infinity/images/b/bc/Green_Hydra.png",
-    ["Demonic Hydra"]           = "https://static.wikia.nocookie.net/bgs-infinity/images/1/17/Demonic_Hydra.png",
-    ["Hexarium"]                = "https://static.wikia.nocookie.net/bgs-infinity/images/8/89/Hexarium.png",
-    ["Rainbow Shock"]           = "https://static.wikia.nocookie.net/bgs-infinity/images/c/c6/Rainbow_Shock.png",
-    -- Event Legendary Pet List
-    ["DOOF"]                    = "https://static.wikia.nocookie.net/bgs-infinity/images/3/34/DOOF.png",
-    ["ROUND"]                   = "https://static.wikia.nocookie.net/bgs-infinity/images/2/24/ROUND.png",
-    ["Easter Serpent"]          = "https://static.wikia.nocookie.net/bgs-infinity/images/c/cd/Easter_Serpent.png",
-    ["Dualcorn"]                = "https://static.wikia.nocookie.net/bgs-infinity/images/b/bc/Dualcorn.png",
-    ["Holy Egg"]                = "https://static.wikia.nocookie.net/bgs-infinity/images/d/d7/Holy_Egg.png",
-    ["Diamond Serpent"]         = "https://static.wikia.nocookie.net/bgs-infinity/images/0/00/Diamond_Serpent.png",
-    ["Diamond Hexarium"]        = "https://static.wikia.nocookie.net/bgs-infinity/images/2/2a/Diamond_Hexarium.png",
-    ["King Pufferfish"]         = "https://static.wikia.nocookie.net/bgs-infinity/images/c/c9/King_Pufferfish.png"
-}
-local fallbackImage = "https://static.wikia.nocookie.net/bgs-infinity/images/7/73/Common_Pet.png"
+
 local function formatNumber(number)
     local str = tostring(number)
     local reversed = str:reverse()
@@ -126,6 +91,7 @@ local function formatNumber(number)
     end  
     return table.concat(parts, ","):reverse()
 end
+
 local function abbreviateNumber(number)
     if number >= 1e9 then
         local value = number / 1e9
@@ -140,11 +106,13 @@ local function abbreviateNumber(number)
         return tostring(number) 
     end
 end
+
 local petTitle, petChance, isShiny = "Unknown Pet Hatched", " Unknown", "Maybe"
 local petConfig = {
-    ["Secret"] = {"King Doggy", "The Overlord", "Silly Doggy :)", "Godly Gem", "Dementor", "Royal Trophy"},
+    ["Secret"]    = {"King Doggy", "The Overlord", "Silly Doggy :)", "Silly Doggy", "Godly Gem", "Dementor", "Royal Trophy"},
     ["Legendary"] = {"Emerald Golem", "Inferno Dragon", "Unicorn", "Flying Pig", "Lunar Serpent", "Electra", "Dark Phoenix", "Neon Elemental", "NULLVoid", "Inferno Cube", "Virus", "Green Hydra", "Demonic Hydra", "Hexarium", "Rainbow Shock", "ROUND", "DOOF", "Easter Serpent", "Dualcorn", "Holy Egg", "Diamond Serpent", "Diamond Hexarium", "King Pufferfish"}
 }
+
 local chances = {
     -- Secret Pet List
     ["The Overlord"]            = {Secret    = {[false] = " 50,000,000",    [true] = " 2,000,000,000" },   Mythic = {[false] = " 5,000,000,000",   [true] = " 200,000,000,000"   }},
@@ -178,39 +146,88 @@ local chances = {
     ["Diamond Serpent"]         = {Legendary = {[false] = " 2,500",         [true] = " 100,000"       },   Mythic = {[false] = " 250,000",         [true] = " 10,000,000"        }},
     -- Event Tier 2 Legendary Pet List
     ["DOOF"]                    = {Legendary = {[false] = " 10,000",        [true] = " 400,000"       },   Mythic = {[false] = " 1,000,000",       [true] = " 40,000,000"        }},
-    ["Diamond Hexarium"]        = {Legendary = {[false] = " 50,000",        [true] = " 2,000,000"     },   Mythic = {[false] = " 5,000,000",       [true] = " 200,000,000"       }},
     -- Event Tier 3 Legendary Pet List 
     ["Dualcorn"]                = {Legendary = {[false] = " 50,000",        [true] = " 2,000,000"     },   Mythic = {[false] = " 5,000,000",       [true] = " 200,000,000"       }},
+    ["Diamond Hexarium"]        = {Legendary = {[false] = " 50,000",        [true] = " 2,000,000"     },   Mythic = {[false] = " 5,000,000",       [true] = " 200,000,000"       }},
     ["ROUND"]                   = {Legendary = {[false] = " 250,000",       [true] = " 10,000,000"    },   Mythic = {[false] = " 25,000,000",      [true] = " 1,000,000,000"     }},
     ["Holy Egg"]                = {Legendary = {[false] = " 500,000",       [true] = " 20,000,000"    },   Mythic = {[false] = " 50,000,000",      [true] = " 2,000,000,000"     }},
     ["King Pufferfish"]         = {Legendary = {[false] = " 800,000",       [true] = " 24,000,000"    },   Mythic = {[false] = " 80,000,000",      [true] = " 2,400,000,000"     }},
 }
+local imageUrl = "https://static.wikia.nocookie.net/bgs-infinity/images/"
+local petImages = {
+    -- Secret Pet List
+    ["The Overlord"]     = {Normal = imageUrl.."c/c0/The_Overlord.png",     Shiny = imageUrl.."e/ed/Shiny_The_Overlord.png",     Mythic = imageUrl.."a/aa/Mythic_The_Overlord.png",     ShinyMythic = imageUrl.."3/36/Shiny_Mythic_The_Overlord.png"     },
+    ["King Doggy"]       = {Normal = imageUrl.."a/a8/King_Doggy.png",       Shiny = imageUrl.."5/5b/Shiny_King_Doggy.png",       Mythic = imageUrl.."7/78/Mythic_King_Doggy.png",       ShinyMythic = imageUrl.."5/52/Shiny_Mythic_King_Doggy.png"       },
+    -- Event Secret Pet List
+    ["Godly Gem"]        = {Normal = imageUrl.."1/18/Godly_Gem.png",        Shiny = imageUrl.."5/52/Shiny_Godly_Gem.png",        Mythic = imageUrl.."0/00/Mythic_Godly_Gem.png",        ShinyMythic = imageUrl.."8/8e/Shiny_Mythic_Godly_Gem.png"        },
+    ["Dementor"]         = {Normal = imageUrl.."5/58/Dementor.png",         Shiny = imageUrl.."0/08/Shiny_Dementor.png",         Mythic = imageUrl.."f/f4/Mythic_Dementor.png",         ShinyMythic = imageUrl.."3/3b/Shiny_Mythic_Dementor.png"         },
+    ["Silly Doggy :)"]   = {Normal = imageUrl.."1/1d/Silly-doggy.png",      Shiny = imageUrl.."1/1d/Silly-doggy.png",            Mythic = imageUrl.."7/76/Mythic_Silly_Doggy.png",      ShinyMythic = imageUrl.."7/76/Mythic_Silly_Doggy.png"            },
+    ["Silly Doggy"]      = {Normal = imageUrl.."1/1d/Silly-doggy.png",      Shiny = imageUrl.."1/1d/Silly-doggy.png",            Mythic = imageUrl.."7/76/Mythic_Silly_Doggy.png",      ShinyMythic = imageUrl.."7/76/Mythic_Silly_Doggy.png"            },
+    ["Royal Trophy"]     = {Normal = imageUrl.."3/32/Royal_Trophy.png",     Shiny = imageUrl.."8/81/Shiny_Royal_Trophy.png",     Mythic = imageUrl.."1/16/Mythic_Royal_Trophy.png",     ShinyMythic = imageUrl.."6/6a/Shiny_Mythic_Royal_Trophy.png"     },
+    -- Legendary Pet List
+    ["Emerald Golem"]    = {Normal = imageUrl.."8/8f/Emerald_Golem.png",    Shiny = imageUrl.."1/1a/Shiny_Emerald_Golem.png",    Mythic = imageUrl.."5/53/Mythic_Emerald_Golem.png",    ShinyMythic = imageUrl.."5/59/Shiny_Mythic_Emerald_Golem.png"    },
+    ["Inferno Dragon"]   = {Normal = imageUrl.."0/06/Inferno_Dragon.png",   Shiny = imageUrl.."3/35/Shiny_Inferno_Dragon.png",   Mythic = imageUrl.."4/41/Mythic_Inferno_Dragon.png",   ShinyMythic = imageUrl.."c/cd/ShinyMythicInfernoDragon.png"      },
+    ["Flying Pig"]       = {Normal = imageUrl.."1/18/Flying_Pig.png",       Shiny = imageUrl.."d/dd/Shiny_Flying_Pig.png",       Mythic = imageUrl.."4/45/Mythic_Flying_Pig.png",       ShinyMythic = imageUrl.."c/c6/Shiny_Mythic_Flying_Pig.png"       },
+    ["Unicorn"]          = {Normal = imageUrl.."7/7e/Unicorn.png",          Shiny = imageUrl.."8/80/Shiny_Unicorn.png",          Mythic = imageUrl.."d/dc/Mythic_Unicorn.png",          ShinyMythic = imageUrl.."5/57/Shiny_Mythic_Unicorn.png"          },
+    ["Lunar Serpent"]    = {Normal = imageUrl.."5/50/Lunar_Serpent.png",    Shiny = imageUrl.."9/93/Shiny_Lunar_Serpent.png",    Mythic = imageUrl.."f/f5/Mythic_Lunar_Serpent.png",    ShinyMythic = imageUrl.."0/08/Shiny_Mythic_Lunar_Serpent.png"    },
+    ["Electra"]          = {Normal = imageUrl.."a/a0/Electra.png",          Shiny = imageUrl.."9/94/Shiny_Electra.png",          Mythic = imageUrl.."d/df/Mythic_Electra.png",          ShinyMythic = imageUrl.."3/38/Shiny_Mythic_Electra.png"          },
+    ["Dark Phoenix"]     = {Normal = imageUrl.."1/1c/Dark_Phoenix.png",     Shiny = imageUrl.."c/cf/Shiny_Dark_Phoenix.png",     Mythic = imageUrl.."b/b0/Mythic_Dark_Phoenix.png",     ShinyMythic = imageUrl.."f/fc/Shiny_Mythic_Dark_Phoenix.png"     },
+    ["Neon Elemental"]   = {Normal = imageUrl.."1/11/Neon_Elemental.png",   Shiny = imageUrl.."d/db/Shiny_Neon_Elemental.png",   Mythic = imageUrl.."b/ba/Mythic_Neon_Elemental.png",   ShinyMythic = imageUrl.."c/c1/Shiny_Mythic_Neon_Elemental.png"   },
+    ["NULLVoid"]         = {Normal = imageUrl.."9/98/NULLVoid.png",         Shiny = imageUrl.."0/0c/Shiny_NULLVoid.png",         Mythic = imageUrl.."8/8e/Mythic_NULLVoid.png",         ShinyMythic = imageUrl.."1/18/Shiny_Mythic_NULLVoid.png"         },
+    ["Inferno Cube"]     = {Normal = imageUrl.."0/0d/Inferno_Cube.png",     Shiny = imageUrl.."c/cc/Shiny_Inferno_Cube.png",     Mythic = imageUrl.."9/99/Mythic_Inferno_Cube.png",     ShinyMythic = imageUrl.."3/30/Shiny_Mythic_Inferno_Cube.png"     },
+    ["Virus"]            = {Normal = imageUrl.."1/1d/Virus.png",            Shiny = imageUrl.."c/cf/Shiny_Virus.png",            Mythic = imageUrl.."7/71/Mythic_Virus.png",            ShinyMythic = imageUrl.."d/dd/Shiny_Mythic_Virus.png"            },
+    ["Green Hydra"]      = {Normal = imageUrl.."b/bc/Green_Hydra.png",      Shiny = imageUrl.."4/40/Shiny_Green_Hydra.png",      Mythic = imageUrl.."6/6a/Mythic_Green_Hydra.png",      ShinyMythic = imageUrl.."0/06/Shiny_Mythic_Green_Hydra.png"      },
+    ["Demonic Hydra"]    = {Normal = imageUrl.."1/17/Demonic_Hydra.png",    Shiny = imageUrl.."1/10/Shiny_Demonic_Hydra.png",    Mythic = imageUrl.."3/33/Mythic_Demonic_Hydra.png",    ShinyMythic = imageUrl.."f/f9/Shiny_Mythic_Demonic_Hydra.png"    },
+    ["Hexarium"]         = {Normal = imageUrl.."8/89/Hexarium.png",         Shiny = imageUrl.."2/2f/Shiny_Hexarium.png",         Mythic = imageUrl.."0/02/Mythic_Hexarium.png",         ShinyMythic = imageUrl.."e/ea/Shiny_Mythic_Hexarium.png"         },
+    ["Rainbow Shock"]    = {Normal = imageUrl.."c/c6/Rainbow_Shock.png",    Shiny = imageUrl.."8/8b/Shiny_Rainbow_Shock.png",    Mythic = imageUrl.."b/b8/Mythic_Rainbow_Shock.png",    ShinyMythic = imageUrl.."7/71/Shiny_Mythic_Rainbow_Shock.png"    },
+    -- Event Legendary Pet List
+    ["DOOF"]             = {Normal = imageUrl.."3/34/DOOF.png",             Shiny = imageUrl.."7/77/Shiny_DOOF.png",             Mythic = imageUrl.."f/f1/Mythic_DOOF.png",             ShinyMythic = imageUrl.."1/1c/Shiny_Mythic_DOOF.png"             },
+    ["ROUND"]            = {Normal = imageUrl.."2/24/ROUND.png",            Shiny = imageUrl.."f/fb/Shiny_ROUND.png",            Mythic = imageUrl.."b/b0/Mythic_ROUND.png",            ShinyMythic = imageUrl.."a/a6/Shiny_Mythic_ROUND.png"            },
+    ["Easter Serpent"]   = {Normal = imageUrl.."c/cd/Easter_Serpent.png",   Shiny = imageUrl.."8/84/Shiny_Easter_Serpent.png",   Mythic = imageUrl.."9/99/Mythic_Easter_Serpent.png",   ShinyMythic = imageUrl.."8/8d/Shiny_Mythic_Easter_Serpent.png"   },
+    ["Dualcorn"]         = {Normal = imageUrl.."b/bc/Dualcorn.png",         Shiny = imageUrl.."e/e8/Shiny_Dualcorn.png",         Mythic = imageUrl.."3/3f/Mythic_Dualcorn.png",         ShinyMythic = imageUrl.."4/40/Shiny_Mythic_Dualcorn.png"         },
+    ["Holy Egg"]         = {Normal = imageUrl.."d/d7/Holy_Egg.png",         Shiny = imageUrl.."1/18/Shiny_Holy_Egg.png",         Mythic = imageUrl.."a/a4/Mythic_Holy_Egg.png",         ShinyMythic = imageUrl.."d/d4/Shiny_Mythic_Holy_Egg.png"         },
+    ["Diamond Serpent"]  = {Normal = imageUrl.."0/00/Diamond_Serpent.png",  Shiny = imageUrl.."d/d3/Shiny_Diamond_Serpent.png",  Mythic = imageUrl.."e/e2/Mythic_Diamond_Serpent.png",  ShinyMythic = imageUrl.."b/b8/Shiny_Mythic_Diamond_Serpent.png"  },
+    ["Diamond Hexarium"] = {Normal = imageUrl.."2/2a/Diamond_Hexarium.png", Shiny = imageUrl.."8/86/Shiny_Diamond_Hexarium.png", Mythic = imageUrl.."8/8a/Mythic_Diamond_Hexarium.png", ShinyMythic = imageUrl.."b/b0/Shiny_Mythic_Diamond_Hexarium.png" },
+    ["King Pufferfish"]  = {Normal = imageUrl.."c/c9/King_Pufferfish.png",  Shiny = imageUrl.."6/66/Shiny_King_Pufferfish.png",  Mythic = imageUrl.."2/2a/Mythic_King_Pufferfish.png",  ShinyMythic = imageUrl.."e/e0/Shiny_Mythic_King_Pufferfish.png"  }
+}
+
+local function getPetImage(name, isShiny, isMythic)
+    local variants = petImages[name]
+    if not variants then return fallbackImage end
+    
+    return variants.ShinyMythic and isShiny and isMythic and variants.ShinyMythic
+        or variants.Mythic and isMythic and variants.Mythic
+        or variants.Shiny and isShiny and variants.Shiny
+        or variants.Normal
+        or fallbackImage
+end
+
 local function sendWebhook(name, rarity, shiny, image)
-    if name == "Emerald Golem" or name == "Inferno Dragon" or name == "Unicorn" or name == "Flying Pig" or name == "Lunar Serpent" or name == "Electra" or name == "Dark Phoenix" or name == "Inferno Cube" or name == "Easter Serpent" or name == "Diamond Serpent" then
-        rolePing = "1364857484879073300"
-        webhLink = getgenv().Config.t1HatchWebhook
-    elseif name == "Neon Elemental" or name == "Green Hydra" or name == "DOOF" then
-        rolePing = "1364857737485357067"
-        webhLink = getgenv().Config.t2HatchWebhook
-    elseif name == "NULLVoid" or name == "Virus" or name == "Demonic Hydra" or name == "Hexarium" or name == "Rainbow Shock" or name == "Dualcorn" or name == "Holy Egg" or name == "Diamond Hexarium" or name == "King Pufferfish" then
-        rolePing = "1364857776630923388"
-        webhLink = getgenv().Config.t3HatchWebhook
-    elseif name == "King Doggy" or name == "The Overlord" or name == "Godly Gem" or name == "Dementor" or name == "Royal Trophy" or name == "Silly Doggy" or name == "Silly Doggy :)" then
-        rolePing = "1364881485827407912"
-        webhLink = getgenv().Config.t3HatchWebhook
-    end
+    local tierMap = {
+        ["Emerald Golem"]  = 1, ["Inferno Dragon"] = 1, ["Unicorn"]       = 1, ["Flying Pig"] = 1, ["Lunar Serpent"] = 1, ["Electra"]     = 1, ["Dark Phoenix"]   = 1, ["Inferno Cube"]     = 1, ["Easter Serpent"]  = 1, ["Diamond Serpent"] = 1,
+        ["Neon Elemental"] = 2, ["Green Hydra"]    = 2, ["DOOF"]          = 2, 
+        ["NULLVoid"]       = 3, ["Virus"]          = 3, ["Demonic Hydra"] = 3, ["Hexarium"]   = 3, ["Rainbow Shock"] = 3, ["Dualcorn"]    = 3, ["Holy Egg"]       = 3, ["Diamond Hexarium"] = 3, ["King Pufferfish"] = 3,
+        ["King Doggy"]     = 4, ["The Overlord"]   = 4, ["Godly Gem"]     = 4, ["Dementor"]   = 4, ["Royal Trophy"]  = 4, ["Silly Doggy"] = 4, ["Silly Doggy :)"] = 4
+    }
+    local tier = tierMap[name] or 3
+    rolePing = {"1364857484879073300", "1364857737485357067", "1364857776630923388", "1364881485827407912"}[tier]
+    webhLink = getgenv().Config[{"t1HatchWebhook", "t2HatchWebhook", "t3HatchWebhook", "t3HatchWebhook"}[tier]]
+    
     local title, rarityLower = "🐾 Pet Hatched!", rarity:lower()
-    isShiny = shiny and "Yes" or "No"
     local petType = table.find(petConfig.Secret, name) and "Secret" or table.find(petConfig.Legendary, name) and "Legendary"
     local isMythic = rarityLower:find("mythic")
+    local isShiny = shiny and "Yes" or "No"
+    local image = getPetImage(name, shiny, isMythic)
     local emojis = {Secret = "🔥", Legendary = "⭐", Mythic = "💎", Shiny = "✨"}
     local parts = {}
+
     local shinyStatus = ""
     if isShiny == "Yes" then
         shinyStatus = "Shiny "
     else
         shinyStatus = ""
     end
+
     if petType then
         if isMythic then
             table.insert(parts, emojis.Mythic)
@@ -226,9 +243,11 @@ local function sendWebhook(name, rarity, shiny, image)
         end
         petTitle = table.concat(parts).." "..shinyStatus..(isMythic and " Mythic " or "")..petType.." Pet Hatched "..table.concat(reversedParts)
     end
-    local time = os.time()
+
     petChance = chances[name] and chances[name][rarity] and chances[name][rarity][shiny] or petChance
+    local time = os.time()
     local desc = string.format("🐾 **Pet Name :** %s 🐾\n💎 **Rarity :** %s 💎\n❓ **Chance : **1 in%s ❓\n🕛 **Catch Date :** <t:%s:F>", name, rarity, petChance, time)
+
     local totalHatches = "N/A"
     local leaderstats = player:FindFirstChild("leaderstats")
     if leaderstats then
@@ -237,6 +256,7 @@ local function sendWebhook(name, rarity, shiny, image)
             totalHatches = formatNumber(hatches.Value)
         end
     end
+
     local currentCoins = "N/A"
     local coinsHud = player.PlayerGui.ScreenGui.HUD.Left.Currency.Coins:FindFirstChild("Frame")
     if coinsHud then
@@ -254,6 +274,7 @@ local function sendWebhook(name, rarity, shiny, image)
             end
         end
     end
+    
     local data = {
         ["content"] = "<@&" .. rolePing .. ">",
         ["embeds"] = {{
@@ -277,6 +298,7 @@ local function sendWebhook(name, rarity, shiny, image)
         Body = httpService:JSONEncode(data)
     })
 end
+
 local function monitorHatch()
     local gui = player:FindFirstChild("PlayerGui") and player.PlayerGui:FindFirstChild("ScreenGui")
     if not gui then return end
