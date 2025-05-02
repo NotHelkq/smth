@@ -206,7 +206,7 @@ do
 
 	function library.new(title)
 		local container = utility:Create("ScreenGui", {
-			Name = title or "Bubble Gum Simulator Infinity",
+			Name = title or "Some Random Script",
 			Parent = game.CoreGui;
 		}, {
 			utility:Create("Frame", {
@@ -241,7 +241,7 @@ do
 						Size = UDim2.new(1, 0, 1, 0),
 						ZIndex = 5,
 						Font = Enum.Font.SourceSansSemibold,
-						Text = title or "Bubble Gum Simulator Infinity",
+						Text = title or "Some Random Script",
 						TextColor3 = themes.TextColor,
 						TextSize = 16,
 						TextXAlignment = Enum.TextXAlignment.Center
