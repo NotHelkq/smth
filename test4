@@ -780,21 +780,22 @@ do
 
 		local active = default
 		self:updateToggle(toggle, nil, active)
-
+		
+		if callback and default ~= nil then
+			callback(active)
+		end
+	
 		toggle.MouseButton1Click:Connect(function()
 			active = not active
 			self:updateToggle(toggle, nil, active)
-
+	
 			if callback then
-				callback(active, function(...)
-					self:updateToggle(toggle, ...)
-				end)
+				callback(active)
 			end
 		end)
-
+	
 		return toggle
 	end
-
 	function section:addTextbox(title, default, callback)
 		local textbox = utility:Create("ImageButton", {
 			Name = "Textbox",
