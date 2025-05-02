@@ -274,6 +274,7 @@ local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHe
 local Window = library.new("Bubble Gum Simulator Infinity")
 local Main = Window:addPage("Auto Farm", 5012544693, true)
 local Farm = Main:addSection("Auto Farm")
+local Teleport = Main:addSection("Teleport")
 Farm:addToggle("Auto Bubble", getgenv().Config.auto_Bubble, function(t)
     autobubbleRunning = t
     while autobubbleRunning do
@@ -322,7 +323,6 @@ local argArea3 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands
 local argArea4 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands.The Void.Island.Portal.Spawn") end
 local argArea5 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands.Zen.Island.Portal.Spawn") end
 local tpButtons = {{name = "Spawn", func = argspawn},{name = "Area 1 - Floating Island", func = argArea1},{name = "Area 2 - Outer Space", func = argArea2},{name = "Area 3 - Twilight", func = argArea3},{name = "Area 4 - The Void", func = argArea4},{name = "Area 5 - Zen", func = argArea5}}
-local Teleport = Main:addSection("Teleport")
 for _, btn in ipairs(tpButtons) do
     Teleport:addButton(btn.name, function() btn.func() end)
 end
