@@ -1,4 +1,4 @@
-print("v1")
+print("v2")
 
 local player = game.Players.LocalPlayer
 local mouse = player:GetMouse()
@@ -206,6 +206,15 @@ do
 	page.__index = page
 	section.__index = section
 
+	function utility:ForceLayoutRecalculate(instance)
+		local Layout = instance:FindFirstChildOfClass("UIListLayout") or instance:FindFirstChildOfClass("UIGridLayout")
+		if Layout then
+			Layout:ApplyLayout()
+		end
+		game:GetService("RunService").Heartbeat:Wait()
+		game:GetService("RunService").Heartbeat:Wait()
+	end
+
 	function library.new(title)
 		local container = utility:Create("ScreenGui", {
 			Name = title or "Bubble Gum Simulator Infinity",
@@ -379,13 +388,14 @@ do
 		})
 
 		local UIListLayout = container:FindFirstChildOfClass("UIListLayout")
-    
+
 		return setmetatable({
 			library = library,
 			container = container,
 			button = button,
 			sections = {},
-			UIListLayout = UIListLayout 
+			needsRefresh = true,
+			UIListLayout = UIListLayout
 		}, page)
 	end
 
@@ -440,7 +450,13 @@ do
 		})
 
 		local scrollingFrame = container.Container.ScrollingFrame
-		local UIListLayout = scrollingFrame:FindFirstChildOfClass("UIListLayout")
+	local UIListLayout = scrollingFrame:FindFirstChildOfClass("UIListLayout")
+
+	if UIListLayout then
+		UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+			scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, UIListLayout.AbsoluteContentSize.Y + 10)
+		end)
+	end
 		
 		return setmetatable({
 			page = page,
@@ -457,20 +473,21 @@ do
 	function library:addPage(title, icon, isDefault)
 		local page = page.new(self, title, icon)
 		local button = page.button
-
+	
 		table.insert(self.pages, page)
-
+	
 		if isDefault or #self.pages == 1 then
 			task.defer(function()
-				for _ = 1, 10 do task.wait() end
+				for _ = 1, 3 do game:GetService("RunService").Heartbeat:Wait() end
 				self:SelectPage(page, true)
 			end)
 		end
-
+	
 		button.MouseButton1Click:Connect(function()
+			page.needsRefresh = true
 			self:SelectPage(page, true)
 		end)
-
+	
 		return page
 	end
 
@@ -484,39 +501,53 @@ do
 			utility:Tween(self.selectedPage.button.Title, {TextTransparency = 0.65}, instant and 0 or 0.2)
 			utility:Tween(self.selectedPage.button.Icon, {ImageTransparency = 0.64}, instant and 0 or 0.2)
 		end
-		
+	
 		selectedPage.container.Visible = true
-		game:GetService("RunService").Heartbeat:Wait()
-
-		if selectedPage.UIListLayout then
-			selectedPage.container.CanvasSize = UDim2.new(
-				0, 0,
-				0, selectedPage.UIListLayout.AbsoluteContentSize.Y + 20
-			)
-		end
-
-		for _, section in ipairs(selectedPage.sections) do
-			if section.UIListLayout then
-				section.scrollingFrame.CanvasSize = UDim2.new(
+		
+		if selectedPage.needsRefresh then
+			game:GetService("RunService").Heartbeat:Wait()
+			game:GetService("RunService").Heartbeat:Wait()
+			
+			if selectedPage.UIListLayout then
+				utility:ForceLayoutRecalculate(selectedPage.container)
+				selectedPage.container.CanvasSize = UDim2.new(
 					0, 0,
-					0, section.UIListLayout.AbsoluteContentSize.Y + 10
+					0, selectedPage.UIListLayout.AbsoluteContentSize.Y + 20
 				)
 			end
+			
+			for _, section in ipairs(selectedPage.sections) do
+				if section.UIListLayout then
+					utility:ForceLayoutRecalculate(section.scrollingFrame)
+					section.scrollingFrame.CanvasSize = UDim2.new(
+						0, 0,
+						0, section.UIListLayout.AbsoluteContentSize.Y + 10
+					)
+				end
+			end
+			
+			selectedPage.needsRefresh = false
 		end
+	
 		utility:Tween(selectedPage.button.Title, {TextTransparency = 0}, instant and 0 or 0.2)
 		utility:Tween(selectedPage.button.Icon, {ImageTransparency = 0}, instant and 0 or 0.2)
 		
-	    self.selectedPage = selectedPage
+		self.selectedPage = selectedPage
 	end
 
 	function page:addSection(...)
 		local section = section.new(self, ...)
-
 		table.insert(self.sections, section)
-
+		
+		self.needsRefresh = true
+		
+		if self.library.selectedPage == self then
+			self.library:SelectPage(self, true)
+		end
+		
 		return section
 	end
-
+	
 	function library:setTheme(theme, color3)
 		themes[theme] = color3
 
