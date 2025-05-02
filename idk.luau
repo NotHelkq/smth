@@ -451,7 +451,11 @@ do
 		table.insert(self.pages, page)
 	
 		if isDefault or #self.pages == 1 then
-			self:SelectPage(page, true)
+			task.defer(function()
+				self:SelectPage(page, true)
+				utility:Wait() 
+				page.container.CanvasSize = page.container.CanvasSize
+			end)
 		end
 	
 		button.MouseButton1Click:Connect(function()
@@ -459,6 +463,10 @@ do
 		end)
 	
 		return page
+	end
+
+	function utility:Wait()
+    	return game:GetService("RunService").Heartbeat:Wait()
 	end
 	
 	function library:SelectPage(selectedPage, instant)
