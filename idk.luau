@@ -780,21 +780,23 @@ do
 
 		local active = default
 		self:updateToggle(toggle, nil, active)
-
+	
+		if callback and default ~= nil then
+			task.defer(function()
+				pcall(callback, active)
+			end)
+		end
+	
 		toggle.MouseButton1Click:Connect(function()
 			active = not active
 			self:updateToggle(toggle, nil, active)
-
 			if callback then
-				callback(active, function(...)
-					self:updateToggle(toggle, ...)
-				end)
+				pcall(callback, active)
 			end
 		end)
-
+	
 		return toggle
 	end
-
 	function section:addTextbox(title, default, callback)
 		local textbox = utility:Create("ImageButton", {
 			Name = "Textbox",
@@ -1667,7 +1669,7 @@ do
 		return slider
 	end
 
-	function section:addDropdown(title, list, callback)
+	function section:addDropdown(title, list, callback, default)
 		local dropdown = utility:Create("Frame", {
 			Name = "Dropdown",
 			Parent = self.container.ScrollingFrame,
@@ -1751,11 +1753,21 @@ do
 
 		table.insert(self.modules, dropdown)
 
-
 		local search = dropdown.Search
 		local focused
-
-		list = list or {}
+	
+		list = list or {} 
+		
+		if default then
+			if table.find(list, default) then
+				search.TextBox.Text = default
+				if callback then
+					callback(default)
+				end
+			else
+				warn("Default value '"..tostring(default).."' not found in list")
+			end
+		end
 
 		search.Button.MouseButton1Click:Connect(function()
 			if search.Button.Rotation == 0 then
