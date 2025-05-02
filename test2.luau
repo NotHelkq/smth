@@ -13,7 +13,7 @@ local httpRequest = (syn and syn.request) or (http and http.request) or (http_re
 local goldenPos, royalPos, plrPos, riftConnection, hatchConnection = nil, nil, nil, nil, nil
 local petTitle, petChance, isShiny = "Unknown Pet Hatched", " Unknown", "Maybe"
 local webhLink, rolePing, shinyStatus = "nothing", "nothing", ""
-local hatchingEggs = 1
+local hatchingEggs = getgenv().Config.open_Amount
 local recentFrames = {}
 local connections = {};
 local rt = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
@@ -274,17 +274,17 @@ local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHe
 local Window = library.new()
 local Main = Window:addPage("Auto Farm", 5012544693)
 local Farm = Main:addSection("Auto Farm")
-Farm:addToggle("Auto Bubble", false, function(t)
+Farm:addToggle("Auto Bubble", getgenv().Config.auto_Bubble, function(t)
     autobubbleRunning = t
     while autobubbleRunning do
         remoteEvent:FireServer("BlowBubble")
         task.wait(0.25)
     end
 end)
-Farm:addToggle("Auto Collect Coins/Gems", false, function(t)
+Farm:addToggle("Auto Collect Coins/Gems", getgenv().Config.auto_Collect_Coins, function(t)
     cg.DefaultPickupRadius = t and 9999999999999999999999 or 10
 end)
-Farm:addToggle("Auto Claim Void/Giant Chest", false, function(t)
+Farm:addToggle("Auto Claim Void/Giant Chest", getgenv().Config.auto_Collect_Chests, function(t)
     autovgcRunning = t
     while autovgcRunning do
         remoteEvent:FireServer("ClaimChest", "Void Chest", true)
@@ -293,19 +293,24 @@ Farm:addToggle("Auto Claim Void/Giant Chest", false, function(t)
         task.wait(5)
     end
 end)
-local function createShopToggle(name, shop, delay)
-    Farm:addToggle("Auto Buy "..name, false, function(t)
-        autobuymRunning = t
-        while autobuymRunning do
-            for i = 1, 3 do
-                remoteEvent:FireServer("BuyShopItem", shop, i)
-                task.wait(delay)
-            end
+Farm:addToggle("Auto Buy Alien Merchant", getgenv().Config.auto_Buy_Alien, function(t)
+    autobuyAMRunning = t
+    while autobuyAMRunning do
+        for i = 1, 3 do
+            remoteEvent:FireServer("BuyShopItem", "alien-shop", i)
+            task.wait(1)
         end
-    end)
-end
-createShopToggle("Alien Merchant", "alien-shop", 0.75)
-createShopToggle("Black Market", "shard-shop", 1.5)
+    end
+end)
+Farm:addToggle("Auto Buy Black Market", getgenv().Config.auto_Buy_Black_Market, function(t)
+    autobuyBMRunning = t
+    while autobuyBMRunning do
+        for i = 1, 3 do
+            remoteEvent:FireServer("BuyShopItem", "shard-shop", i)
+            task.wait(2)
+        end
+    end
+end)
 
 local function teleportTo(path)
     remoteEvent:FireServer("Teleport", path)
@@ -339,20 +344,16 @@ local eggData = {
 }
 local eggStuff = Window:addPage("Eggs", 5012544693)
 local eggs = eggStuff:addSection("Hatch (You must be near egg!)")
-eggs:addDropdown("Eggs", {"Infinity Egg","100M Egg","Common Egg","Spotted Egg","Iceshard Egg","Spikey Egg","Magma Egg","Crystal Egg","Lunar Egg","Void Egg","Hell Egg","Nightmare Egg","Rainbow Egg"}, function(e)
-    selectedEgg = e
-end)
-eggs:addSlider("Open Amount", 1, 1, 6, function(n)
-    hatchingEggs = n
-end)
-eggs:addToggle("Open Eggs", false, function(t)
+eggs:addDropdown("Eggs", {"Infinity Egg","100M Egg","Common Egg","Spotted Egg","Iceshard Egg","Spikey Egg","Magma Egg","Crystal Egg","Lunar Egg","Void Egg","Hell Egg","Nightmare Egg","Rainbow Egg"}, function(e) selectedEgg = e end, getgenv().Config.open_Egg)
+eggs:addSlider("Open Amount", getgenv().Config.open_Amount, 1, 6, function(n) hatchingEggs = n end)
+eggs:addToggle("Open Eggs", getgenv().Config.auto_Open_Eggs, function(t)
     openingEggs = t
     while t and openingEggs do
         remoteEvent:FireServer("HatchEgg", selectedEgg, hatchingEggs)
         task.wait(0.1)
     end
 end)
-eggs:addToggle("Teleport to Egg", false, function(t)
+eggs:addToggle("Teleport to Egg", getgenv().Config.teleport_to_Egg, function(t)
     tpToEggs = t
     if not t or not eggData[selectedEgg] then return end
     eggData[selectedEgg][1](tp)
@@ -362,6 +363,7 @@ eggs:addToggle("Teleport to Egg", false, function(t)
         task.wait(1)
     end
 end)
+
 local function playerPos()
     local rp = rt.Position
     local plPos = Vector3.new(math.floor(rp.X + 0.5), math.floor(rp.Y + 0.5), math.floor(rp.Z + 0.5))
@@ -399,7 +401,7 @@ misc:addButton("Unlock All Areas", function()
         task.wait(0.3);
     end
 end)
-misc:addToggle("Auto Claim Playtime Rewards", false, function(t)
+misc:addToggle("Auto Claim Playtime Rewards", getgenv().Config.auto_Claim_Playtime, function(t)
     autoprRunning = t
     while autoprRunning do
         for i = 1, 9 do
@@ -408,11 +410,23 @@ misc:addToggle("Auto Claim Playtime Rewards", false, function(t)
         end
     end
 end)
-misc:addToggle("Auto Claim Wheel Spin", false, function(t)
+misc:addToggle("Auto Claim Wheel Spin", getgenv().Config.auto_Claim_Wheel_Spin, function(t)
     autowpRunning = t
     while autowpRunning do
         remoteEvent:FireServer("ClaimFreeWheelSpin")
         task.wait(10)
+    end
+end)
+misc:addToggle("Auto Open Mystery Box", false, function(t)
+    automboxRunning = t
+    while automboxRunning do
+        remoteEvent:FireServer("UseGift", "Mystery Box", 10)
+        task.wait(2)
+        for i, v in next, game:GetService("Workspace").Rendered.Gifts:GetChildren() do
+            remoteEvent:FireServer("ClaimGift", v.Name);
+            task.wait();
+            v:Destroy();
+        end;
     end
 end)
 for _, cfg in pairs(chestConfigs) do
@@ -445,43 +459,31 @@ for _, cfg in pairs(chestConfigs) do
         end)
     end)
 end
-misc:addToggle("Auto Open Mystery Box", false, function(t)
-    automboxRunning = t
-    while automboxRunning do
-        remoteEvent:FireServer("UseGift", "Mystery Box", 10)
-        task.wait(2)
-        for i, v in next, game:GetService("Workspace").Rendered.Gifts:GetChildren() do
-            remoteEvent:FireServer("ClaimGift", v.Name);
-            task.wait();
-            v:Destroy();
-        end;
-    end
-end)
 
 local Webhooks = Window:addPage("Webhook", 5012544693)
 local webh = Webhooks:addSection("Webhooks")
-webh:addToggle("Send Lucky Rift Webhooks", false, function(t)
+webh:addToggle("Send Lucky Rift Webhooks", getgenv().Config.send_Rift_Webhook, function(t)
     if t then
         riftConnection = runService.RenderStepped:Connect(monitorRifts)
-        print("Rifts Webhook turned on")
+        print("Rifts Webhook Turned On for : "..player.Name)
     else
         if riftConnection then
             riftConnection:Disconnect()
             riftConnection = nil
         end
-        print("Rifts Webhook turned off")
+        print("Rifts Webhook Turned Off for : "..player.Name)
     end
 end)
-webh:addToggle("Send Rare Hatches Webhooks", false, function(t)
+webh:addToggle("Send Rare Hatches Webhooks", getgenv().Config.send_Hatch_Webhook, function(t)
     if t then
         hatchConnection = runService.RenderStepped:Connect(monitorHatch)
-        print("Hatches Webhook turned on")
+        print("Hatches Webhook Turned On for : "..player.Name)
     else
         if hatchConnection then
             hatchConnection:Disconnect()
             hatchConnection = nil
         end
-        print("Hatches Webhook turned off")
+        print("Hatches Webhook Turned Off for : "..player.Name)
     end
 end)
 
@@ -507,14 +509,15 @@ SetSec2:addButton("Kill Hub", function()
         riftConnection = nil
     end
     autobubbleRunning = false
-    autovgcRunning = false
-    autobuymRunning = false
-    openingEggs = false
-    tpToEggs = false
-    autoprRunning = false
-    autowpRunning = false
-    automboxRunning = false
-    autoGoldenChest = false
-    autoRoyalChest = false
+    autovgcRunning    = false
+    autobuyAMRunning  = false
+    autobuyBMRunning  = false
+    openingEggs       = false
+    tpToEggs          = false
+    autoprRunning     = false
+    autowpRunning     = false
+    automboxRunning   = false
+    autoGoldenChest   = false
+    autoRoyalChest    = false
     Window.container:Destroy()
 end)
