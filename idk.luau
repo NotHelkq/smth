@@ -1,3 +1,5 @@
+print("v1")
+
 local player = game.Players.LocalPlayer
 local mouse = player:GetMouse()
 
