@@ -3,6 +3,7 @@ if not game:IsLoaded() then
     game.Loaded:Wait()
     print("Loaded Game")
 end
+print("Loading")
 local player = game:GetService("Players").LocalPlayer
 local runService = game:GetService("RunService")
 local httpService = game:GetService("HttpService")
@@ -269,7 +270,7 @@ local function monitorHatch()
         end
     end
 end
-
+print("loaded functions")
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/idk.luau"))()
 local Window = library.new()
 local Main = Window:addPage("Auto Farm", 5012544693)
@@ -311,7 +312,7 @@ Farm:addToggle("Auto Buy Black Market", getgenv().Config.auto_Buy_Black_Market, 
         end
     end
 end)
-
+print("loaded auto farm")
 local function teleportTo(path)
     remoteEvent:FireServer("Teleport", path)
 end
@@ -363,7 +364,7 @@ eggs:addToggle("Teleport to Egg", getgenv().Config.teleport_to_Egg, function(t)
         task.wait(1)
     end
 end)
-
+print("loaded eggs")
 local function playerPos()
     local rp = rt.Position
     local plPos = Vector3.new(math.floor(rp.X + 0.5), math.floor(rp.Y + 0.5), math.floor(rp.Z + 0.5))
@@ -459,7 +460,7 @@ for _, cfg in pairs(chestConfigs) do
         end)
     end)
 end
-
+print("loaded miscs")
 local Webhooks = Window:addPage("Webhook", 5012544693)
 local webh = Webhooks:addSection("Webhooks")
 webh:addToggle("Send Lucky Rift Webhooks", getgenv().Config.send_Rift_Webhook, function(t)
@@ -486,7 +487,7 @@ webh:addToggle("Send Rare Hatches Webhooks", getgenv().Config.send_Hatch_Webhook
         print("Hatches Webhook Turned Off for : "..player.Name)
     end
 end)
-
+print("loaded webhooks")
 local Settings = Window:addPage("Settings", 5012544693)
 local SetSec2 = Settings:addSection("Others")
 SetSec2:addKeybind("Toggle Hub", Enum.KeyCode.LeftControl, function()
@@ -521,3 +522,4 @@ SetSec2:addButton("Kill Hub", function()
     autoRoyalChest    = false
     Window.container:Destroy()
 end)
+print("script is loaded")
