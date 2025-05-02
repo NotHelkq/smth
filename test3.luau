@@ -344,9 +344,9 @@ local eggData = {
 }
 local eggStuff = Window:addPage("Eggs", 5012544693)
 local eggs = eggStuff:addSection("Hatch (You must be near egg!)")
-eggs:addDropdown("Eggs", {"Infinity Egg","100M Egg","Common Egg","Spotted Egg","Iceshard Egg","Spikey Egg","Magma Egg","Crystal Egg","Lunar Egg","Void Egg","Hell Egg","Nightmare Egg","Rainbow Egg"}, function(e), getgenv().Config.open_Egg
+eggs:addDropdown("Eggs", {"Infinity Egg","100M Egg","Common Egg","Spotted Egg","Iceshard Egg","Spikey Egg","Magma Egg","Crystal Egg","Lunar Egg","Void Egg","Hell Egg","Nightmare Egg","Rainbow Egg"}, function(e)
     selectedEgg = e
-end)
+end, getgenv().Config.open_Egg)
 eggs:addSlider("Open Amount", getgenv().Config.open_Amount, 1, 6, function(n)
     hatchingEggs = n
 end)
