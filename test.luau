@@ -14,6 +14,7 @@ local goldenPos, royalPos, plrPos, riftConnection, hatchConnection = nil, nil, n
 local petTitle, petChance, isShiny = "Unknown Pet Hatched", " Unknown", "Maybe"
 local webhLink, rolePing, shinyStatus = "nothing", "nothing", ""
 local hatchingEggs = getgenv().Config.open_Amount
+local royalChecked, goldenChecked = false, false
 local recentFrames = {}
 local connections = {};
 local rt = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
@@ -22,7 +23,51 @@ local function tp(d) return function(x,y,z)
 end end
 local fallbackImage = "https://static.wikia.nocookie.net/bgs-infinity/images/7/73/Common_Pet.png"
 local ttppos, tppos = tp(3), tp(10)
-
+local function teleportTo(path) remoteEvent:FireServer("Teleport", path) end
+local argspawn = function(tp) teleportTo("Workspace.Worlds.The Overworld.PortalSpawn") end
+local argArea1 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands.Floating Island.Island.Portal.Spawn") end
+local argArea2 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands.Outer Space.Island.Portal.Spawn") end
+local argArea3 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands.Twilight.Island.Portal.Spawn") end
+local argArea4 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands.The Void.Island.Portal.Spawn") end
+local argArea5 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands.Zen.Island.Portal.Spawn") end
+local tpButtons = {{name = "Spawn", func = argspawn},{name = "Area 1 - Floating Island", func = argArea1},{name = "Area 2 - Outer Space", func = argArea2},{name = "Area 3 - Twilight", func = argArea3},{name = "Area 4 - The Void", func = argArea4},{name = "Area 5 - Zen", func = argArea5}}
+local function playerPos()
+    local rp = rt.Position
+    local plPos = Vector3.new(math.floor(rp.X + 0.5), math.floor(rp.Y + 0.5), math.floor(rp.Z + 0.5))
+    plrPos = Vector3.new(plPos.X, plPos.Y, plPos.Z)
+end
+local function handleArea(y)
+    if y < 410 then return argArea1() or "a1"
+    elseif y < 2650 then return argArea2() or "a2"
+    elseif y < 6850 then return argArea3() or "a3"
+    elseif y < 10130 then return argArea4() or "a4"
+    elseif y <= 15960 then return argArea5() or "a5"
+    else return nil end
+end
+local function checkChest(chestType, label)
+    local pos = workspace.Rendered.Rifts[chestType].Chest.WorldPivot.Position
+    local rounded = Vector3.new(math.floor(pos.X + 0.5), math.floor(pos.Y + 0.5), math.floor(pos.Z + 0.5))   
+    handleArea(pos.Y)
+    local position = Vector3.new(rounded.X, rounded.Y, rounded.Z)
+    return position
+end
+function goldenCheck() goldenPos = checkChest("golden-chest", "Golden") end
+function royalCheck()  royalPos  = checkChest("royal-chest", "Royal") end
+local eggData = {
+    ["Infinity Egg"]  = {argspawn,  {-96, 10, -27    }},
+    ["100M Egg"]      = {argspawn,  {16, 10, -4      }},
+    ["Common Egg"]    = {argspawn,  {-7, 11, -82     }},
+    ["Spotted Egg"]   = {argspawn,  {-7, 11, -71     }},
+    ["Iceshard Egg"]  = {argspawn,  {-7, 11, -60     }},
+    ["Spikey Egg"]    = {argArea1,  {-8, 424, 158    }},
+    ["Magma Egg"]     = {argArea2,  {-17, 2666, 9    }},
+    ["Crystal Egg"]   = {argArea2,  {-19, 2666, 19   }},
+    ["Lunar Egg"]     = {argArea3,  {-58, 6865, 81   }},
+    ["Void Egg"]      = {argArea4,  {6, 10149, 188   }},
+    ["Hell Egg"]      = {argArea4,  {-6, 10149, 192  }},
+    ["Nightmare Egg"] = {argArea4,  {-20, 10149, 184 }},
+    ["Rainbow Egg"]   = {argArea5,  {-35, 15974, 44  }}
+}
 local function isRecentFrame(id)
     if recentFrames[id] and (tick() - recentFrames[id] < 5) then
         return true
@@ -30,47 +75,6 @@ local function isRecentFrame(id)
     recentFrames[id] = tick()
     return false
 end
-
-local function monitorRifts()
-    local riftsFolder = workspace.Rendered.Rifts
-    local riftList = {
-        {name = "silly-egg",     url = "auraEgg.luau"     },
-        {name = "spikey-egg",    url = "spikeyEgg.luau"   },
-        {name = "magma-egg",     url = "magmaEgg.luau"    },
-        {name = "crystal-egg",   url = "crystalEgg.luau"  },
-        {name = "lunar-egg",     url = "lunarEgg.luau"    },
-        {name = "void-egg",      url = "voidEgg.luau"     },
-        {name = "hell-egg",      url = "hellEgg.luau"     },
-        {name = "nightmare-egg", url = "nightmareEgg.luau"},
-        {name = "rainbow-egg",   url = "rainbowEgg.luau"  },
-        {name = "golden-chest",  url = "goldenChest.luau" },
-        {name = "royal-chest",   url = "royalChest.luau"  },
-        {name = "bubble-rift",   url = "bubbleRift.luau"  }
-    }
-    for _, riftData in ipairs(riftList) do
-        local rift = riftsFolder:FindFirstChild(riftData.name)
-        if rift and rift:FindFirstChild("Output") then
-            if not isRecentFrame(riftData.name) then
-                local success, scriptContent = pcall(function()
-                    return game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/rifts/" .. riftData.url)
-                end)
-                if success then
-                    local loadedFunction = loadstring(scriptContent)
-                    if type(loadedFunction) == "function" then
-                        loadedFunction()
-                        rift.Output:Destroy()
-                    else
-                        warn("Failed to send webhook for", riftData.name)
-                    end
-                else
-                    warn("Failed to fetch script for", riftData.name, ":", scriptContent)
-                end
-                break
-            end
-        end
-    end
-end
-
 local function formatNumber(number)
     local str = tostring(number)
     local reversed = str:reverse()
@@ -81,7 +85,6 @@ local function formatNumber(number)
     end  
     return table.concat(parts, ","):reverse()
 end
-
 local function abbreviateNumber(number)
     if number >= 1e9 then
         local value = number / 1e9
@@ -92,11 +95,8 @@ local function abbreviateNumber(number)
     elseif number >= 1e3 then 
         local value = number / 1e3
         return string.format("%.1fk", value):gsub("%.0k", "k")
-    else
-        return tostring(number) 
-    end
+    else return tostring(number) end
 end
-
 local petConfig = {
     ["Secret"]    = {"King Doggy", "The Overlord", "Silly Doggy :)", "Silly Doggy", "Godly Gem", "Dementor", "Royal Trophy"},
     ["Legendary"] = {"Emerald Golem", "Inferno Dragon", "Unicorn", "Flying Pig", "Lunar Serpent", "Electra", "Dark Phoenix", "Neon Elemental", "NULLVoid", "Inferno Cube", "Virus", "Green Hydra", "Demonic Hydra", "Hexarium", "Rainbow Shock", "ROUND", "DOOF", "Easter Serpent", "Dualcorn", "Holy Egg", "Diamond Serpent", "Diamond Hexarium", "King Pufferfish"}
@@ -170,13 +170,11 @@ local petImages = {
     ["Diamond Hexarium"] = {Normal = imageUrl.."2/2a/Diamond_Hexarium.png", Shiny = imageUrl.."8/86/Shiny_Diamond_Hexarium.png", Mythic = imageUrl.."8/8a/Mythic_Diamond_Hexarium.png", ShinyMythic = imageUrl.."b/b0/Shiny_Mythic_Diamond_Hexarium.png" },
     ["King Pufferfish"]  = {Normal = imageUrl.."c/c9/King_Pufferfish.png",  Shiny = imageUrl.."6/66/Shiny_King_Pufferfish.png",  Mythic = imageUrl.."2/2a/Mythic_King_Pufferfish.png",  ShinyMythic = imageUrl.."e/e0/Shiny_Mythic_King_Pufferfish.png"  }
 }
-
 local function getPetImage(name, isShiny, isMythic)
     local variants = petImages[name]
     if not variants then return fallbackImage end
     return variants.ShinyMythic and isShiny and isMythic and variants.ShinyMythic or variants.Mythic and isMythic and variants.Mythic or variants.Shiny and isShiny and variants.Shiny or variants.Normal or fallbackImage
 end
-
 local function sendWebhook(name, rarity, shiny, image)
     local tierMap = {
         ["Emerald Golem"]  = 1, ["Inferno Dragon"] = 1, ["Unicorn"]       = 1, ["Flying Pig"]  = 1, ["Lunar Serpent"]  = 1, ["Electra"]          = 1, ["Dark Phoenix"]    = 1, ["Inferno Cube"]     = 1, ["Diamond Serpent"] = 1,
@@ -247,7 +245,6 @@ local function sendWebhook(name, rarity, shiny, image)
     }
     httpRequest({Url = webhLink, Method = "POST", Headers = {["Content-Type"] = "application/json"}, Body = httpService:JSONEncode(data)})
 end
-
 local function monitorHatch()
     local gui = player:FindFirstChild("PlayerGui") and player.PlayerGui:FindFirstChild("ScreenGui")
     if not gui then return end
@@ -269,12 +266,56 @@ local function monitorHatch()
         end
     end
 end
-
+local function monitorRifts()
+    local riftsFolder = workspace.Rendered.Rifts
+    local riftList = {
+        {name = "silly-egg",     url = "auraEgg.luau"     },
+        {name = "spikey-egg",    url = "spikeyEgg.luau"   },
+        {name = "magma-egg",     url = "magmaEgg.luau"    },
+        {name = "crystal-egg",   url = "crystalEgg.luau"  },
+        {name = "lunar-egg",     url = "lunarEgg.luau"    },
+        {name = "void-egg",      url = "voidEgg.luau"     },
+        {name = "hell-egg",      url = "hellEgg.luau"     },
+        {name = "nightmare-egg", url = "nightmareEgg.luau"},
+        {name = "rainbow-egg",   url = "rainbowEgg.luau"  },
+        {name = "golden-chest",  url = "goldenChest.luau" },
+        {name = "royal-chest",   url = "royalChest.luau"  },
+        {name = "bubble-rift",   url = "bubbleRift.luau"  }
+    }
+    for _, riftData in ipairs(riftList) do
+        local rift = riftsFolder:FindFirstChild(riftData.name)
+        if rift and rift:FindFirstChild("Output") then
+            if not isRecentFrame(riftData.name) then
+                local success, scriptContent = pcall(function()
+                    return game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/rifts/" .. riftData.url)
+                end)
+                if success then
+                    local loadedFunction = loadstring(scriptContent)
+                    if type(loadedFunction) == "function" then
+                        loadedFunction()
+                        rift.Output:Destroy()
+                    end
+                end
+                break
+            end
+        end
+    end
+end
+-- lib stuff
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/idk.luau"))()
-local Window = library.new("Bubble Gum Simulator Infinity")
-local Main = Window:addPage("Auto Farm", 5012544693, true)
-local Farm = Main:addSection("Auto Farm")
-local Teleport = Main:addSection("Teleport")
+local Window  = library.new("Bubble Gum Simulator Infinity")
+local Main      = Window:addPage("Auto Farm", 5012544693, true)
+local eggStuff  = Window:addPage("Eggs", 5012544693)
+local MiscStuff = Window:addPage("Misc", 5012544693)
+local Webhooks  = Window:addPage("Webhook", 5012544693)
+local Settings  = Window:addPage("Settings", 5012544693)
+local Farm      = Main:addSection("Auto Farm")
+local Teleport  = Main:addSection("Teleport")
+local eggs  = eggStuff:addSection("Hatch (You must be near egg!)")
+local misc = MiscStuff:addSection("Misc")
+local webh  = Webhooks:addSection("Webhooks")
+local sett  = Settings:addSection("Others")
+-- Auto Farm 
 Farm:addToggle("Auto Bubble", getgenv().Config.auto_Bubble, function(t)
     autobubbleRunning = t
     while autobubbleRunning do
@@ -312,38 +353,10 @@ Farm:addToggle("Auto Buy Black Market", getgenv().Config.auto_Buy_Black_Market, 
         end
     end
 end)
-
-local function teleportTo(path)
-    remoteEvent:FireServer("Teleport", path)
-end
-local argspawn = function(tp) teleportTo("Workspace.Worlds.The Overworld.PortalSpawn") end
-local argArea1 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands.Floating Island.Island.Portal.Spawn") end
-local argArea2 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands.Outer Space.Island.Portal.Spawn") end
-local argArea3 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands.Twilight.Island.Portal.Spawn") end
-local argArea4 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands.The Void.Island.Portal.Spawn") end
-local argArea5 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands.Zen.Island.Portal.Spawn") end
-local tpButtons = {{name = "Spawn", func = argspawn},{name = "Area 1 - Floating Island", func = argArea1},{name = "Area 2 - Outer Space", func = argArea2},{name = "Area 3 - Twilight", func = argArea3},{name = "Area 4 - The Void", func = argArea4},{name = "Area 5 - Zen", func = argArea5}}
 for _, btn in ipairs(tpButtons) do
     Teleport:addButton(btn.name, function() btn.func() end)
 end
-
-local eggData = {
-    ["Infinity Egg"]  = {argspawn,  {-96, 10, -27    }},
-    ["100M Egg"]      = {argspawn,  {16, 10, -4      }},
-    ["Common Egg"]    = {argspawn,  {-7, 11, -82     }},
-    ["Spotted Egg"]   = {argspawn,  {-7, 11, -71     }},
-    ["Iceshard Egg"]  = {argspawn,  {-7, 11, -60     }},
-    ["Spikey Egg"]    = {argArea1,  {-8, 424, 158    }},
-    ["Magma Egg"]     = {argArea2,  {-17, 2666, 9    }},
-    ["Crystal Egg"]   = {argArea2,  {-19, 2666, 19   }},
-    ["Lunar Egg"]     = {argArea3,  {-58, 6865, 81   }},
-    ["Void Egg"]      = {argArea4,  {6, 10149, 188   }},
-    ["Hell Egg"]      = {argArea4,  {-6, 10149, 192  }},
-    ["Nightmare Egg"] = {argArea4,  {-20, 10149, 184 }},
-    ["Rainbow Egg"]   = {argArea5,  {-35, 15974, 44  }}
-}
-local eggStuff = Window:addPage("Eggs", 5012544693)
-local eggs = eggStuff:addSection("Hatch (You must be near egg!)")
+-- Eggs Stuff
 eggs:addDropdown("Eggs", {"Infinity Egg","100M Egg","Common Egg","Spotted Egg","Iceshard Egg","Spikey Egg","Magma Egg","Crystal Egg","Lunar Egg","Void Egg","Hell Egg","Nightmare Egg","Rainbow Egg"}, function(e) selectedEgg = e end, getgenv().Config.open_Egg)
 eggs:addSlider("Open Amount", getgenv().Config.open_Amount, 1, 6, function(n) hatchingEggs = n end)
 eggs:addToggle("Open Eggs", getgenv().Config.auto_Open_Eggs, function(t)
@@ -363,36 +376,7 @@ eggs:addToggle("Teleport to Egg", getgenv().Config.teleport_to_Egg, function(t)
         task.wait(1)
     end
 end)
-
-local function playerPos()
-    local rp = rt.Position
-    local plPos = Vector3.new(math.floor(rp.X + 0.5), math.floor(rp.Y + 0.5), math.floor(rp.Z + 0.5))
-    plrPos = Vector3.new(plPos.X, plPos.Y, plPos.Z)
-    print("Player Position: X = " .. plrPos.X .. ", Y = " .. plrPos.Y .. ", Z = " .. plrPos.Z)
-end
-local function handleArea(y)
-    if y < 410 then return argArea1() or "a1"
-    elseif y < 2650 then return argArea2() or "a2"
-    elseif y < 6850 then return argArea3() or "a3"
-    elseif y < 10130 then return argArea4() or "a4"
-    elseif y <= 15960 then return argArea5() or "a5"
-    else
-        return nil
-    end
-end
-local function checkChest(chestType, label)
-    local pos = workspace.Rendered.Rifts[chestType].Chest.WorldPivot.Position
-    local rounded = Vector3.new(math.floor(pos.X + 0.5), math.floor(pos.Y + 0.5), math.floor(pos.Z + 0.5))   
-    handleArea(pos.Y)
-    local position = Vector3.new(rounded.X, rounded.Y, rounded.Z)
-    return position
-end
-function goldenCheck() goldenPos = checkChest("golden-chest", "Golden") end
-function royalCheck() royalPos = checkChest("royal-chest", "Royal") end
-
-local chestConfigs = {{name = "Golden", type = "golden-chest", key = "Golden Key", check = goldenCheck, getPos = function() return goldenPos end, checkedVar = goldenChecked, autoVar = autoGoldenChest, waitTime = 5}, {name = "Royal", type = "royal-chest", key = "Royal Key", check = royalCheck, getPos = function() return royalPos end, checkedVar = royalChecked, autoVar = autoRoyalChest, waitTime = 3}}
-local Misc = Window:addPage("Misc", 5012544693)
-local misc = Misc:addSection("Misc")
+-- Misc Stuff
 misc:addButton("Unlock All Areas", function()
     for i, v in next, game:GetService("Workspace").Worlds["The Overworld"].Islands:GetChildren() do
         firetouchinterest(v.Island.UnlockHitbox, player.Character.HumanoidRootPart, 0);
@@ -429,74 +413,84 @@ misc:addToggle("Auto Open Mystery Box", false, function(t)
         end;
     end
 end)
-for _, cfg in pairs(chestConfigs) do
-    misc:addToggle("Auto Open "..cfg.name.." Chest", false, function(on)
-        cfg.autoVar = on
-        cfg.checkedVar = false
-        task.spawn(function()
-            while cfg.autoVar do
-                local chest = workspace.Rendered.Rifts[cfg.type]:FindFirstChild("Chest")
-                if not cfg.checkedVar and chest then
-                    cfg.check()
-                    local pos = cfg.getPos()
-                    print(cfg.name.." Chest Position: X = "..pos.X..", Y = "..pos.Y..", Z = "..pos.Z)
-                    wait(1)
-                    playerPos()
-                    tppos(pos.X, plrPos.Y, pos.Z)
-                    wait(5)
-                    tppos(pos.X, pos.Y + 10, pos.Z)
-                    cfg.checkedVar = true
-                end
-                if chest then
-                    remoteEvent:FireServer("UnlockRiftChest", cfg.type, false)
-                    task.wait(cfg.waitTime)
-                else
-                    print(cfg.name..(chest and " Chest not found!"))
-                    task.wait(10)
-                    cfg.checkedVar = false
-                end
-            end
-        end)
-    end)
-end
-
-local Webhooks = Window:addPage("Webhook", 5012544693)
-local webh = Webhooks:addSection("Webhooks")
+misc:addToggle("Auto Open Golden Chest", false, function(t)
+    autoGoldenChest = t
+    goldenChecked = false
+    wait(1)
+    while autoGoldenChest do
+        local gchest = workspace.Rendered.Rifts["golden-chest"]:FindFirstChild("Chest")
+        if not goldenChecked and gchest then
+            goldenCheck()
+            wait(2)
+            playerPos()
+            tppos(goldenPos.X, plrPos.Y, goldenPos.Z)
+            wait(5)
+            tppos(goldenPos.X, goldenPos.Y + 10, goldenPos.Z)
+            goldenChecked = true
+        end
+        if goldenChecked and gchest then
+            remoteEvent:FireServer("UnlockRiftChest", "golden-chest", false)
+            task.wait(2)
+        else
+            task.wait(10)
+            goldenChecked = false
+        end
+    end
+end)
+misc:addToggle("Auto Open Royal Chest", false, function(t)
+    autoGoldenChest = t
+    royalChecked = false
+    wait(1)
+    while autoGoldenChest do
+        local rchest = workspace.Rendered.Rifts["royal-chest"]:FindFirstChild("Chest")
+        if not royalChecked and rchest then
+            royalCheck()
+            wait(2)
+            playerPos()
+            tppos(royalPos.X, plrPos.Y, royalPos.Z)
+            wait(5)
+            tppos(royalPos.X, royalPos.Y + 10, royalPos.Z)
+            royalChecked = true
+        end
+        if royalChecked and rchest then
+            remoteEvent:FireServer("UnlockRiftChest", "royal-chest", false)
+            task.wait(2)
+        else
+            task.wait(10)
+            royalChecked = false
+        end
+    end
+end)
+-- Webhooks
 webh:addToggle("Send Lucky Rift Webhooks", getgenv().Config.send_Rift_Webhook, function(t)
     if t then
         riftConnection = runService.RenderStepped:Connect(monitorRifts)
-        print("Rifts Webhook Turned On for : "..player.Name)
     else
         if riftConnection then
             riftConnection:Disconnect()
             riftConnection = nil
         end
-        print("Rifts Webhook Turned Off for : "..player.Name)
     end
 end)
 webh:addToggle("Send Rare Hatches Webhooks", getgenv().Config.send_Hatch_Webhook, function(t)
     if t then
         hatchConnection = runService.RenderStepped:Connect(monitorHatch)
-        print("Hatches Webhook Turned On for : "..player.Name)
     else
         if hatchConnection then
             hatchConnection:Disconnect()
             hatchConnection = nil
         end
-        print("Hatches Webhook Turned Off for : "..player.Name)
     end
 end)
-
-local Settings = Window:addPage("Settings", 5012544693)
-local SetSec2 = Settings:addSection("Others")
-SetSec2:addKeybind("Toggle Hub", Enum.KeyCode.LeftControl, function()
+-- Settings
+sett:addKeybind("Toggle Hub", Enum.KeyCode.LeftControl, function()
 	Window:toggle()
 end)
-SetSec2:addButton("Boost FPS", function(fps)
+sett:addButton("Boost FPS", function(fps)
     _G.Settings = {Players = {["Ignore Me"] = true, ["Ignore Others"] = true}, Meshes = {Destroy = false, LowDetail = true}, Images = {Invisible = true, LowDetail = false, Destroy = false}, ["No Particles"] = true, ["No Camera Effects"] = true, ["No Explosions"] = true, ["No Clothes"] = true, ["Low Water Graphics"] = true, ["No Shadows"] = true, ["Low Rendering"] = true, ["Low Quality Parts"] = true}
     loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/boost.luau"))()
 end)
-SetSec2:addButton("Kill Hub", function()
+sett:addButton("Kill Hub", function()
     for _, conn in pairs(connections) do
         conn:Disconnect()
     end
