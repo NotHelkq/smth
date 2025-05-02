@@ -204,7 +204,7 @@ do
 	page.__index = page
 	section.__index = section
 
-	function library.new(title : string)
+	function library.new(title)
 		local container = utility:Create("ScreenGui", {
 			Name = title or "Bubble Gum Simulator Infinity",
 			Parent = game.CoreGui;
@@ -316,7 +316,8 @@ do
 		return setmetatable({
 			container = container,
 			pagesContainer = container.Main.Sections.ScrollingFrame,
-			pages = {}
+			pages = {},
+			selectedPage = nil 
 		}, library)
 	end
 
@@ -443,18 +444,35 @@ do
 		}, section) 
 	end
 
-	function library:addPage(...)
-
-		local page = page.new(self, ...)
+	function library:addPage(title, icon, isDefault)
+		local page = page.new(self, title, icon)
 		local button = page.button
-
+	
 		table.insert(self.pages, page)
-
+	
+		if isDefault or #self.pages == 1 then
+			self:SelectPage(page, true)
+		end
+	
 		button.MouseButton1Click:Connect(function()
 			self:SelectPage(page, true)
 		end)
-
+	
 		return page
+	end
+	
+	function library:SelectPage(selectedPage, instant)
+		if self.selectedPage then
+			self.selectedPage.container.Visible = false
+			utility:Tween(self.selectedPage.button.Title, {TextTransparency = 0.65}, instant and 0 or 0.2)
+			utility:Tween(self.selectedPage.button.Icon, {ImageTransparency = 0.64}, instant and 0 or 0.2)
+		end
+		
+		selectedPage.container.Visible = true
+		utility:Tween(selectedPage.button.Title, {TextTransparency = 0}, instant and 0 or 0.2)
+		utility:Tween(selectedPage.button.Icon, {ImageTransparency = 0}, instant and 0 or 0.2)
+		
+		self.selectedPage = selectedPage
 	end
 
 	function page:addSection(...)
