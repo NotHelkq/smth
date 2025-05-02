@@ -271,8 +271,8 @@ local function monitorHatch()
 end
 
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/idk.luau"))()
-local Window = library.new()
-local Main = Window:addPage("Auto Farm", 5012544693)
+local Window = library.new("Bubble Gum Simulator Infinity")
+local Main = Window:addPage("Auto Farm", 5012544693, true)
 local Farm = Main:addSection("Auto Farm")
 Farm:addToggle("Auto Bubble", getgenv().Config.auto_Bubble, function(t)
     autobubbleRunning = t
