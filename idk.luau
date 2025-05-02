@@ -206,7 +206,7 @@ do
 
 	function library.new(title)
 		local container = utility:Create("ScreenGui", {
-			Name = title or "Some Random Script",
+			Name = title or "Bubble Gum Simulator Infinity",
 			Parent = game.CoreGui;
 		}, {
 			utility:Create("Frame", {
@@ -241,7 +241,7 @@ do
 						Size = UDim2.new(1, 0, 1, 0),
 						ZIndex = 5,
 						Font = Enum.Font.SourceSansSemibold,
-						Text = title or "Some Random Script",
+						Text = title or "Bubble Gum Simulator Infinity",
 						TextColor3 = themes.TextColor,
 						TextSize = 16,
 						TextXAlignment = Enum.TextXAlignment.Center
@@ -376,11 +376,14 @@ do
 			Visible = false
 		})
 
+		local UIListLayout = container:FindFirstChildOfClass("UIListLayout")
+    
 		return setmetatable({
 			library = library,
 			container = container,
 			button = button,
-			sections = {}
+			sections = {},
+			UIListLayout = UIListLayout 
 		}, page)
 	end
 
@@ -434,9 +437,14 @@ do
 			})
 		})
 
+		local scrollingFrame = container.Container.ScrollingFrame
+		local UIListLayout = scrollingFrame:FindFirstChildOfClass("UIListLayout")
+		
 		return setmetatable({
 			page = page,
 			container = container.Container,
+			scrollingFrame = scrollingFrame,
+			UIListLayout = UIListLayout,
 			colorpickers = {},
 			modules = {},
 			binds = {},
@@ -447,21 +455,20 @@ do
 	function library:addPage(title, icon, isDefault)
 		local page = page.new(self, title, icon)
 		local button = page.button
-	
+
 		table.insert(self.pages, page)
-	
+
 		if isDefault or #self.pages == 1 then
 			task.defer(function()
+				for _ = 1, 10 do task.wait() end
 				self:SelectPage(page, true)
-				utility:Wait() 
-				page.container.CanvasSize = page.container.CanvasSize
 			end)
 		end
-	
+
 		button.MouseButton1Click:Connect(function()
 			self:SelectPage(page, true)
 		end)
-	
+
 		return page
 	end
 
@@ -477,10 +484,27 @@ do
 		end
 		
 		selectedPage.container.Visible = true
+		game:GetService("RunService").Heartbeat:Wait()
+
+		if selectedPage.UIListLayout then
+			selectedPage.container.CanvasSize = UDim2.new(
+				0, 0,
+				0, selectedPage.UIListLayout.AbsoluteContentSize.Y + 20
+			)
+		end
+
+		for _, section in ipairs(selectedPage.sections) do
+			if section.UIListLayout then
+				section.scrollingFrame.CanvasSize = UDim2.new(
+					0, 0,
+					0, section.UIListLayout.AbsoluteContentSize.Y + 10
+				)
+			end
+		end
 		utility:Tween(selectedPage.button.Title, {TextTransparency = 0}, instant and 0 or 0.2)
 		utility:Tween(selectedPage.button.Icon, {ImageTransparency = 0}, instant and 0 or 0.2)
 		
-		self.selectedPage = selectedPage
+	    self.selectedPage = selectedPage
 	end
 
 	function page:addSection(...)
