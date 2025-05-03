@@ -502,7 +502,7 @@ misc:addToggle("Auto Open Royal Chest", false, function(t)
     end
 end)
 -- Webhooks
-webh:addToggle("Send Current Rifts Webhooks", getgenv().Config.send_Rift_Webhook, function(t)
+webh:addToggle("Send Current Rifts Webhooks", getgenv().Config.send_cRift_Webhook, function(t)
     sendCRW = t
     while sendCRW do
         for _, rift in ipairs(allRifts) do
@@ -559,6 +559,7 @@ sett:addButton("Kill Hub", function()
         riftConnection:Disconnect()
         riftConnection = nil
     end
+    sendCRW           = false
     autobubbleRunning = false
     autovgcRunning    = false
     autobuyAMRunning  = false
