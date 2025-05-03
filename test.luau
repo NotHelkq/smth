@@ -1,8 +1,4 @@
-if not game:IsLoaded() then
-    print("Waiting for game to load...")
-    game.Loaded:Wait()
-    print("Loaded Game")
-end
+if not game:IsLoaded() then game.Loaded:Wait() end
 local player = game:GetService("Players").LocalPlayer
 local runService = game:GetService("RunService")
 local httpService = game:GetService("HttpService")
@@ -12,9 +8,12 @@ local remoteFunction = game:GetService("ReplicatedStorage"):WaitForChild("Shared
 local httpRequest = (syn and syn.request) or (http and http.request) or (http_request) or (fluxus and fluxus.request) or (request)
 local goldenPos, royalPos, plrPos, riftConnection, hatchConnection = nil, nil, nil, nil, nil
 local petTitle, petChance, isShiny = "Unknown Pet Hatched", " Unknown", "Maybe"
-local webhLink, rolePing, shinyStatus = "nothing", "nothing", ""
+local webhLink, webhrLink, rolePing, shinyStatus = "nothing", "nothing", "nothing", ""
 local hatchingEggs = getgenv().Config.open_Amount
 local royalChecked, goldenChecked = false, false
+local riftsFolder = workspace.Rendered.Rifts
+local allRifts = riftsFolder:GetChildren()
+local validRifts = {}
 local recentFrames = {}
 local connections = {};
 local rt = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
@@ -97,6 +96,9 @@ local function abbreviateNumber(number)
         return string.format("%.1fk", value):gsub("%.0k", "k")
     else return tostring(number) end
 end
+local eggNames = {"spikey-egg", "magma-egg", "crystal-egg", "lunar-egg", "void-egg", "hell-egg", "nightmare-egg", "rainbow-egg"}
+local eggColors = {["spikey-egg"] = 0x00FF00,["magma-egg"] = 0xFF4500,["crystal-egg"] = 0x00BFFF,["lunar-egg"] = 0x4B0082,["void-egg"] = 0x9400D3,["hell-egg"] = 0xFF0000,["nightmare-egg"] = 0x36393F,["rainbow-egg"] = 0xFF69B4}
+local eggEmojis = {["spikey-egg"] = "🌵",["magma-egg"] = "🌋",["crystal-egg"] = "🔮",["lunar-egg"] = "🌙",["void-egg"] = "🌀",["hell-egg"] = "🔥",["nightmare-egg"] = "💀",["rainbow-egg"] = "🌈"}
 local petConfig = {
     ["Secret"]    = {"King Doggy", "The Overlord", "Silly Doggy :)", "Silly Doggy", "Godly Gem", "Dementor", "Royal Trophy"},
     ["Legendary"] = {"Emerald Golem", "Inferno Dragon", "Unicorn", "Flying Pig", "Lunar Serpent", "Electra", "Dark Phoenix", "Neon Elemental", "NULLVoid", "Inferno Cube", "Virus", "Green Hydra", "Demonic Hydra", "Hexarium", "Rainbow Shock", "ROUND", "DOOF", "Easter Serpent", "Dualcorn", "Holy Egg", "Diamond Serpent", "Diamond Hexarium", "King Pufferfish"}
@@ -106,11 +108,7 @@ local chances = {
     -- Secret Pet List
     ["The Overlord"]            = {Secret    = {[false] = " 50,000,000",    [true] = " 2,000,000,000" },   Mythic = {[false] = " 5,000,000,000",   [true] = " 200,000,000,000"   }},
     ["King Doggy"]              = {Secret    = {[false] = " 100,000,000",   [true] = " 4,000,000,000" },   Mythic = {[false] = " 10,000,000,000",  [true] = " 400,000,000,000"   }},
-    -- Event Secret Pet List
-    ["Silly Doggy"]             = {Secret    = {[false] = " 1,000,000",     [true] = " 40,000,000"    },   Mythic = {[false] = " 100,000,000",     [true] = " 4,000,000,000"     }},
-    ["Silly Doggy :)"]          = {Secret    = {[false] = " 1,000,000",     [true] = " 40,000,000"    },   Mythic = {[false] = " 100,000,000",     [true] = " 4,000,000,000"     }},
-    ["Royal Trophy"]            = {Secret    = {[false] = " 50,000,000",    [true] = " 2,000,000,000" },   Mythic = {[false] = " 5,000,000,000",   [true] = " 200,000,000,000"   }},
-    -- Tier 1 Legendary Pet List
+    -- Legendary Pet List
     ["Emerald Golem"]           = {Legendary = {[false] = " 200",           [true] = " 8,000"         },   Mythic = {[false] = " 20,000",          [true] = " 800,000"           }},
     ["Inferno Dragon"]          = {Legendary = {[false] = " 400",           [true] = " 16,000"        },   Mythic = {[false] = " 40,000",          [true] = " 1,600,000"         }},
     ["Unicorn"]                 = {Legendary = {[false] = " 400",           [true] = " 16,000"        },   Mythic = {[false] = " 40,000",          [true] = " 1,600,000"         }},
@@ -119,34 +117,30 @@ local chances = {
     ["Electra"]                 = {Legendary = {[false] = " 1,000",         [true] = " 40,000"        },   Mythic = {[false] = " 100,000",         [true] = " 4,000,000"         }},
     ["Dark Phoenix"]            = {Legendary = {[false] = " 2,000",         [true] = " 80,000"        },   Mythic = {[false] = " 200,000",         [true] = " 8,000,000"         }},
     ["Inferno Cube"]            = {Legendary = {[false] = " 4,000",         [true] = " 160,000"       },   Mythic = {[false] = " 400,000",         [true] = " 16,000,000"        }},
-    -- Tier 2 Legendary Pet List
     ["Neon Elemental"]          = {Legendary = {[false] = " 5,000",         [true] = " 200,000"       },   Mythic = {[false] = " 500,000",         [true] = " 20,000,000"        }},
     ["Green Hydra"]             = {Legendary = {[false] = " 25,000",        [true] = " 1,000,000"     },   Mythic = {[false] = " 2,500,000",       [true] = " 100,000,000"       }},
-    -- Tier 3 Legendary Pet List
     ["Virus"]                   = {Legendary = {[false] = " 50,000",        [true] = " 2,000,000"     },   Mythic = {[false] = " 5,000,000",       [true] = " 200,000,000"       }},
     ["Demonic Hydra"]           = {Legendary = {[false] = " 100,000",       [true] = " 4,000,000"     },   Mythic = {[false] = " 10,000,000",      [true] = " 400,000,000"       }},
     ["Hexarium"]                = {Legendary = {[false] = " 100,000",       [true] = " 4,000,000"     },   Mythic = {[false] = " 10,000,000",      [true] = " 400,000,000"       }},
     ["Rainbow Shock"]           = {Legendary = {[false] = " 200,000",       [true] = " 8,000,000"     },   Mythic = {[false] = " 20,000,000",      [true] = " 800,000,000"       }},
     ["NULLVoid"]                = {Legendary = {[false] = " 1,000,000",     [true] = " 40,000,000"    },   Mythic = {[false] = " 100,000,000",     [true] = " 4,000,000,000"     }},
     -- Event Pets
-    -- Event Tier 1 Legendary Pet List
+    -- Event Secret Pet List
+    ["Silly Doggy"]             = {Secret    = {[false] = " 1,000,000",     [true] = " 40,000,000"    },   Mythic = {[false] = " 100,000,000",     [true] = " 4,000,000,000"     }},
+    ["Silly Doggy :)"]          = {Secret    = {[false] = " 1,000,000",     [true] = " 40,000,000"    },   Mythic = {[false] = " 100,000,000",     [true] = " 4,000,000,000"     }},
+    ["Royal Trophy"]            = {Secret    = {[false] = " 50,000,000",    [true] = " 2,000,000,000" },   Mythic = {[false] = " 5,000,000,000",   [true] = " 200,000,000,000"   }},
+    -- Event Legendary Pet List
     ["Diamond Serpent"]         = {Legendary = {[false] = " 2,500",         [true] = " 100,000"       },   Mythic = {[false] = " 250,000",         [true] = " 10,000,000"        }},
-    -- Event Tier 2 Legendary Pet List
     ["DOOF"]                    = {Legendary = {[false] = " 10,000",        [true] = " 400,000"       },   Mythic = {[false] = " 1,000,000",       [true] = " 40,000,000"        }},
-    -- Event Tier 3 Legendary Pet List 
     ["Diamond Hexarium"]        = {Legendary = {[false] = " 50,000",        [true] = " 2,000,000"     },   Mythic = {[false] = " 5,000,000",       [true] = " 200,000,000"       }},
     ["ROUND"]                   = {Legendary = {[false] = " 250,000",       [true] = " 10,000,000"    },   Mythic = {[false] = " 25,000,000",      [true] = " 1,000,000,000"     }},
-    ["King Pufferfish"]         = {Legendary = {[false] = " 800,000",       [true] = " 24,000,000"    },   Mythic = {[false] = " 80,000,000",      [true] = " 2,400,000,000"     }},
+    ["King Pufferfish"]         = {Legendary = {[false] = " 800,000",       [true] = " 32,000,000"    },   Mythic = {[false] = " 80,000,000",      [true] = " 3,200,000,000"     }},
 }
 local imageUrl = "https://static.wikia.nocookie.net/bgs-infinity/images/"
 local petImages = {
     -- Secret Pet List
     ["The Overlord"]     = {Normal = imageUrl.."c/c0/The_Overlord.png",     Shiny = imageUrl.."e/ed/Shiny_The_Overlord.png",     Mythic = imageUrl.."a/aa/Mythic_The_Overlord.png",     ShinyMythic = imageUrl.."3/36/Shiny_Mythic_The_Overlord.png"     },
     ["King Doggy"]       = {Normal = imageUrl.."a/a8/King_Doggy.png",       Shiny = imageUrl.."5/5b/Shiny_King_Doggy.png",       Mythic = imageUrl.."7/78/Mythic_King_Doggy.png",       ShinyMythic = imageUrl.."5/52/Shiny_Mythic_King_Doggy.png"       },
-    -- Event Secret Pet List
-    ["Silly Doggy :)"]   = {Normal = imageUrl.."1/1d/Silly-doggy.png",      Shiny = imageUrl.."1/1d/Silly-doggy.png",            Mythic = imageUrl.."7/76/Mythic_Silly_Doggy.png",      ShinyMythic = imageUrl.."7/76/Mythic_Silly_Doggy.png"            },
-    ["Silly Doggy"]      = {Normal = imageUrl.."1/1d/Silly-doggy.png",      Shiny = imageUrl.."1/1d/Silly-doggy.png",            Mythic = imageUrl.."7/76/Mythic_Silly_Doggy.png",      ShinyMythic = imageUrl.."7/76/Mythic_Silly_Doggy.png"            },
-    ["Royal Trophy"]     = {Normal = imageUrl.."3/32/Royal_Trophy.png",     Shiny = imageUrl.."8/81/Shiny_Royal_Trophy.png",     Mythic = imageUrl.."1/16/Mythic_Royal_Trophy.png",     ShinyMythic = imageUrl.."6/6a/Shiny_Mythic_Royal_Trophy.png"     },
     -- Legendary Pet List
     ["Emerald Golem"]    = {Normal = imageUrl.."8/8f/Emerald_Golem.png",    Shiny = imageUrl.."1/1a/Shiny_Emerald_Golem.png",    Mythic = imageUrl.."5/53/Mythic_Emerald_Golem.png",    ShinyMythic = imageUrl.."5/59/Shiny_Mythic_Emerald_Golem.png"    },
     ["Inferno Dragon"]   = {Normal = imageUrl.."0/06/Inferno_Dragon.png",   Shiny = imageUrl.."3/35/Shiny_Inferno_Dragon.png",   Mythic = imageUrl.."4/41/Mythic_Inferno_Dragon.png",   ShinyMythic = imageUrl.."c/cd/ShinyMythicInfernoDragon.png"      },
@@ -163,6 +157,10 @@ local petImages = {
     ["Demonic Hydra"]    = {Normal = imageUrl.."1/17/Demonic_Hydra.png",    Shiny = imageUrl.."1/10/Shiny_Demonic_Hydra.png",    Mythic = imageUrl.."3/33/Mythic_Demonic_Hydra.png",    ShinyMythic = imageUrl.."f/f9/Shiny_Mythic_Demonic_Hydra.png"    },
     ["Hexarium"]         = {Normal = imageUrl.."8/89/Hexarium.png",         Shiny = imageUrl.."2/2f/Shiny_Hexarium.png",         Mythic = imageUrl.."0/02/Mythic_Hexarium.png",         ShinyMythic = imageUrl.."e/ea/Shiny_Mythic_Hexarium.png"         },
     ["Rainbow Shock"]    = {Normal = imageUrl.."c/c6/Rainbow_Shock.png",    Shiny = imageUrl.."8/8b/Shiny_Rainbow_Shock.png",    Mythic = imageUrl.."b/b8/Mythic_Rainbow_Shock.png",    ShinyMythic = imageUrl.."7/71/Shiny_Mythic_Rainbow_Shock.png"    },
+    -- Event Secret Pet List
+    ["Silly Doggy :)"]   = {Normal = imageUrl.."1/1d/Silly-doggy.png",      Shiny = imageUrl.."1/1d/Silly-doggy.png",            Mythic = imageUrl.."7/76/Mythic_Silly_Doggy.png",      ShinyMythic = imageUrl.."7/76/Mythic_Silly_Doggy.png"            },
+    ["Silly Doggy"]      = {Normal = imageUrl.."1/1d/Silly-doggy.png",      Shiny = imageUrl.."1/1d/Silly-doggy.png",            Mythic = imageUrl.."7/76/Mythic_Silly_Doggy.png",      ShinyMythic = imageUrl.."7/76/Mythic_Silly_Doggy.png"            },
+    ["Royal Trophy"]     = {Normal = imageUrl.."3/32/Royal_Trophy.png",     Shiny = imageUrl.."8/81/Shiny_Royal_Trophy.png",     Mythic = imageUrl.."1/16/Mythic_Royal_Trophy.png",     ShinyMythic = imageUrl.."6/6a/Shiny_Mythic_Royal_Trophy.png"     },
     -- Event Legendary Pet List
     ["DOOF"]             = {Normal = imageUrl.."3/34/DOOF.png",             Shiny = imageUrl.."7/77/Shiny_DOOF.png",             Mythic = imageUrl.."f/f1/Mythic_DOOF.png",             ShinyMythic = imageUrl.."1/1c/Shiny_Mythic_DOOF.png"             },
     ["ROUND"]            = {Normal = imageUrl.."2/24/ROUND.png",            Shiny = imageUrl.."f/fb/Shiny_ROUND.png",            Mythic = imageUrl.."b/b0/Mythic_ROUND.png",            ShinyMythic = imageUrl.."a/a6/Shiny_Mythic_ROUND.png"            },
@@ -189,6 +187,8 @@ local function sendWebhook(name, rarity, shiny, image)
     local title, rarityLower = "🐾 Pet Hatched!", rarity:lower()
     local emojis = {Secret = "🔥", Legendary = "⭐", Mythic = "💎", Shiny = "✨"}
     local petType = table.find(petConfig.Secret, name) and "Secret" or table.find(petConfig.Legendary, name) and "Legendary"
+    local leaderstats,coinsHud = player:FindFirstChild("leaderstats"),player.PlayerGui.ScreenGui.HUD.Left.Currency.Coins:FindFirstChild("Frame")
+    local totalHatches,currentCoins = "N/A","N/A"
     local isMythic = rarityLower:find("mythic")
     local isShiny = shiny and "Yes" or "No"
     local titleParts = {}
@@ -202,21 +202,13 @@ local function sendWebhook(name, rarity, shiny, image)
             table.insert(reversedParts, titleParts[i])
         end
         petTitle = table.concat(titleParts).." "..shinyStatus..(isMythic and "Mythic " or "")..petType.." Pet Hatched "..table.concat(reversedParts)
-    else
-        petTitle = "🐾 Pet Hatched!"
-    end
-
-    local totalHatches = "N/A"
-    local leaderstats = player:FindFirstChild("leaderstats")
+    else petTitle = "🐾 Pet Hatched!" end
     if leaderstats then
         local hatches = leaderstats:FindFirstChild("🥚 Hatches")
         if hatches and hatches:IsA("IntValue") then
             totalHatches = formatNumber(hatches.Value)
         end
     end
-
-    local currentCoins = "N/A"
-    local coinsHud = player.PlayerGui.ScreenGui.HUD.Left.Currency.Coins:FindFirstChild("Frame")
     if coinsHud then
         local coins = coinsHud:FindFirstChild("Label")
         if coins and coins:IsA("TextLabel") then
@@ -282,9 +274,13 @@ local function monitorRifts()
         {name = "royal-chest",   url = "royalChest.luau"  },
         {name = "bubble-rift",   url = "bubbleRift.luau"  }
     }
-    for _, riftData in ipairs(riftList) do
-        local rift = riftsFolder:FindFirstChild(riftData.name)
-        if rift and rift:FindFirstChild("Output") then
+    local riftDict = {}
+    for _, data in ipairs(riftList) do
+        riftDict[data.name] = data
+    end
+    for _, rift in ipairs(riftsFolder:GetChildren()) do
+        local riftData = riftDict[rift.Name]
+        if riftData and rift:FindFirstChild("Output") then
             if not isRecentFrame(riftData.name) then
                 local success, scriptContent = pcall(function()
                     return game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/rifts/" .. riftData.url)
@@ -296,10 +292,54 @@ local function monitorRifts()
                         rift.Output:Destroy()
                     end
                 end
-                break
             end
         end
     end
+end
+local function getRiftData(rift)
+    local data = {}
+    data.originalName = rift.Name 
+    local nameParts = {}
+    for part in rift.Name:gsub("-", " "):gmatch("%S+") do 
+        table.insert(nameParts, part:sub(1,1):upper()..part:sub(2)) 
+    end
+    data.islandName = " "..table.concat(nameParts, " ")
+    local platform = rift:FindFirstChild("EggPlatformSpawn")
+    if not platform then return nil end
+    local pos = platform.WorldPivot.Position
+    data.rPos = Vector3.new(math.floor(pos.X + 0.5), math.floor(pos.Y + 0.5), math.floor(pos.Z + 0.5))
+    local y = data.rPos.Y
+    data.areaPos = if y >= 0 and y < 410 then "Area 0-1"
+        elseif y >= 410 and y < 2650 then "Area 1-2"
+        elseif y >= 2650 and y < 6850 then "Area 2-3"
+        elseif y >= 6850 and y < 10130 then "Area 3-4"
+        elseif y >= 10130 and y <= 15960 then "Area 4-5"
+        else "Unknown Area"
+    data.detectedTime = os.time()
+    data.timeleft = "Unknown"
+    local display = rift:FindFirstChild("Display")
+    if display then
+        local surfaceGui = display:FindFirstChild("SurfaceGui")
+        if surfaceGui then
+            data.luckText = surfaceGui:FindFirstChild("Icon") and surfaceGui.Icon:FindFirstChild("Luck")
+            local timerText = surfaceGui:FindFirstChild("Timer")
+            if timerText then
+                data.timeleft = timerText.Text == "5".." Minutes" and "9".." minutes" or timerText.Text
+            end
+        end
+    end
+    return data
+end
+local function sendSingleEmbedWebhook(rifts)
+    local embed = {title = "🥚 Active Egg Rifts 🥚",color = 0x00FFFF,description = string.format("**Total Rifts Found :** %d\n\n", #rifts),fields = {},}
+    for _, riftData in ipairs(rifts) do
+        local mainEmoji = eggEmojis[riftData.originalName:lower()] or "🥚"
+        local fieldText = string.format("🍀 **Luck :** x%s 🍀\n".."❓ **Position :** %dm | %s ❓\n".."🕒 **Found :** <t:%d:T> 🕒\n".."⏳ **Despawn :** %s ⏳\n".."──────────────────────────",riftData.luckText and riftData.luckText.Text:gsub("x", "") or "??",riftData.rPos.Y,riftData.areaPos,riftData.detectedTime,riftData.timeleft)
+        table.insert(embed.fields, {name = string.format("%s %s", mainEmoji, riftData.islandName),value = fieldText,inline = false})
+    end
+    if #rifts > 0 then embed.color = eggColors[rifts[1].originalName:lower()] or embed.color end
+    local data = {["content"] = "",["embeds"] = {embed},}
+    httpRequest({Url = webhrLink,Method = "POST",Headers = {["Content-Type"] = "application/json"},Body = httpService:JSONEncode(data)})
 end
 -- lib stuff
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/idk.luau"))()
@@ -462,6 +502,23 @@ misc:addToggle("Auto Open Royal Chest", false, function(t)
     end
 end)
 -- Webhooks
+webh:addToggle("Send Current Rifts Webhooks", getgenv().Config.send_Rift_Webhook, function(t)
+    sendCRW = t
+    while sendCRW do
+        for _, rift in ipairs(allRifts) do
+            if table.find(eggNames, rift.Name) then
+                local riftData = getRiftData(rift)
+                if riftData then
+                    table.insert(validRifts, riftData)
+                end
+            end
+        end
+        if #validRifts > 0 then
+            sendSingleEmbedWebhook(validRifts)
+        end
+        wait(60)
+    end
+end)
 webh:addToggle("Send Lucky Rift Webhooks", getgenv().Config.send_Rift_Webhook, function(t)
     if t then
         riftConnection = runService.RenderStepped:Connect(monitorRifts)
