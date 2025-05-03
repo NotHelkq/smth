@@ -503,6 +503,9 @@ misc:addToggle("Auto Open Royal Chest", false, function(t)
 end)
 -- Webhooks
 webh:addToggle("Send Current Rifts Webhooks", getgenv().Config.send_cRift_Webhook, function(t)
+    local riftsFolder = workspace.Rendered.Rifts
+    local allRifts = riftsFolder:GetChildren()
+    local validRifts = {}
     sendCRW = t
     while sendCRW do
         for _, rift in ipairs(allRifts) do
