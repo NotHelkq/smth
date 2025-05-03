@@ -8,12 +8,9 @@ local remoteFunction = game:GetService("ReplicatedStorage"):WaitForChild("Shared
 local httpRequest = (syn and syn.request) or (http and http.request) or (http_request) or (fluxus and fluxus.request) or (request)
 local goldenPos, royalPos, plrPos, riftConnection, hatchConnection = nil, nil, nil, nil, nil
 local petTitle, petChance, isShiny = "Unknown Pet Hatched", " Unknown", "Maybe"
-local webhLink, webhrLink, rolePing, shinyStatus = "nothing", "nothing", "nothing", ""
+local webhLink, rolePing, shinyStatus = "nothing", "nothing", ""
 local hatchingEggs = getgenv().Config.open_Amount
 local royalChecked, goldenChecked = false, false
-local riftsFolder = workspace.Rendered.Rifts
-local allRifts = riftsFolder:GetChildren()
-local validRifts = {}
 local recentFrames = {}
 local connections = {};
 local rt = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
@@ -296,51 +293,6 @@ local function monitorRifts()
         end
     end
 end
-local function getRiftData(rift)
-    local data = {}
-    data.originalName = rift.Name 
-    local nameParts = {}
-    for part in rift.Name:gsub("-", " "):gmatch("%S+") do 
-        table.insert(nameParts, part:sub(1,1):upper()..part:sub(2)) 
-    end
-    data.islandName = " "..table.concat(nameParts, " ")
-    local platform = rift:FindFirstChild("EggPlatformSpawn")
-    if not platform then return nil end
-    local pos = platform.WorldPivot.Position
-    data.rPos = Vector3.new(math.floor(pos.X + 0.5), math.floor(pos.Y + 0.5), math.floor(pos.Z + 0.5))
-    local y = data.rPos.Y
-    data.areaPos = if y >= 0 and y < 410 then "Area 0-1"
-        elseif y >= 410 and y < 2650 then "Area 1-2"
-        elseif y >= 2650 and y < 6850 then "Area 2-3"
-        elseif y >= 6850 and y < 10130 then "Area 3-4"
-        elseif y >= 10130 and y <= 15960 then "Area 4-5"
-        else "Unknown Area"
-    data.detectedTime = os.time()
-    data.timeleft = "Unknown"
-    local display = rift:FindFirstChild("Display")
-    if display then
-        local surfaceGui = display:FindFirstChild("SurfaceGui")
-        if surfaceGui then
-            data.luckText = surfaceGui:FindFirstChild("Icon") and surfaceGui.Icon:FindFirstChild("Luck")
-            local timerText = surfaceGui:FindFirstChild("Timer")
-            if timerText then
-                data.timeleft = timerText.Text == "5".." Minutes" and "9".." minutes" or timerText.Text
-            end
-        end
-    end
-    return data
-end
-local function sendSingleEmbedWebhook(rifts)
-    local embed = {title = "🥚 Active Egg Rifts 🥚",color = 0x00FFFF,description = string.format("**Total Rifts Found :** %d\n\n", #rifts),fields = {},}
-    for _, riftData in ipairs(rifts) do
-        local mainEmoji = eggEmojis[riftData.originalName:lower()] or "🥚"
-        local fieldText = string.format("🍀 **Luck :** x%s 🍀\n".."❓ **Position :** %dm | %s ❓\n".."🕒 **Found :** <t:%d:T> 🕒\n".."⏳ **Despawn :** %s ⏳\n".."──────────────────────────",riftData.luckText and riftData.luckText.Text:gsub("x", "") or "??",riftData.rPos.Y,riftData.areaPos,riftData.detectedTime,riftData.timeleft)
-        table.insert(embed.fields, {name = string.format("%s %s", mainEmoji, riftData.islandName),value = fieldText,inline = false})
-    end
-    if #rifts > 0 then embed.color = eggColors[rifts[1].originalName:lower()] or embed.color end
-    local data = {["content"] = "",["embeds"] = {embed},}
-    httpRequest({Url = webhrLink,Method = "POST",Headers = {["Content-Type"] = "application/json"},Body = httpService:JSONEncode(data)})
-end
 -- lib stuff
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/idk.luau"))()
 local Window  = library.new("Bubble Gum Simulator Infinity")
@@ -502,26 +454,6 @@ misc:addToggle("Auto Open Royal Chest", false, function(t)
     end
 end)
 -- Webhooks
-webh:addToggle("Send Current Rifts Webhooks", getgenv().Config.send_cRift_Webhook, function(t)
-    local riftsFolder = workspace.Rendered.Rifts
-    local allRifts = riftsFolder:GetChildren()
-    local validRifts = {}
-    sendCRW = t
-    while sendCRW do
-        for _, rift in ipairs(allRifts) do
-            if table.find(eggNames, rift.Name) then
-                local riftData = getRiftData(rift)
-                if riftData then
-                    table.insert(validRifts, riftData)
-                end
-            end
-        end
-        if #validRifts > 0 then
-            sendSingleEmbedWebhook(validRifts)
-        end
-        wait(60)
-    end
-end)
 webh:addToggle("Send Lucky Rift Webhooks", getgenv().Config.send_Rift_Webhook, function(t)
     if t then
         riftConnection = runService.RenderStepped:Connect(monitorRifts)
@@ -562,7 +494,6 @@ sett:addButton("Kill Hub", function()
         riftConnection:Disconnect()
         riftConnection = nil
     end
-    sendCRW           = false
     autobubbleRunning = false
     autovgcRunning    = false
     autobuyAMRunning  = false
