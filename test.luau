@@ -26,7 +26,12 @@ local argArea2 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands
 local argArea3 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands.Twilight.Island.Portal.Spawn") end
 local argArea4 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands.The Void.Island.Portal.Spawn") end
 local argArea5 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands.Zen.Island.Portal.Spawn") end
-local tpButtons = {{name = "Spawn", func = argspawn},{name = "Area 1 - Floating Island", func = argArea1},{name = "Area 2 - Outer Space", func = argArea2},{name = "Area 3 - Twilight", func = argArea3},{name = "Area 4 - The Void", func = argArea4},{name = "Area 5 - Zen", func = argArea5}}
+local arg2_spawn = function(tp) teleportTo("Workspace.Worlds.Minigame Paradise.PortalSpawn") end
+local argArea2_1 = function(tp) teleportTo("Workspace.Worlds.Minigame Paradise.Islands.Dice Island.Island.Portal.Spawn") end
+local argArea2_2 = function(tp) teleportTo("Workspace.Worlds.Minigame Paradise.Islands.Minecart Forest.Island.Portal.Spawn") end
+local argArea2_3 = function(tp) teleportTo("Workspace.Worlds.Minigame Paradise.Islands.Robot Factory.Island.Portal.Spawn") end
+local tpButtons  = {{name = "Spawn (World 1)", func = argspawn},{name = "Area 1 - Floating Island", func = argArea1},{name = "Area 2 - Outer Space", func = argArea2},{name = "Area 3 - Twilight", func = argArea3},{name = "Area 4 - The Void", func = argArea4},{name = "Area 5 - Zen", func = argArea5}}
+local tpButtons2 = {{name = "Spawn (World 2)", func = arg2_spawn},{name = "Area 1 - Dice Island", func = argArea2_1},{name = "Area 2 - Minecart Forest", func = argArea2_2},{name = "Area 3 - Robot Factory", func = argArea2_3}}
 local function playerPos()
     local rp = rt.Position
     local plPos = Vector3.new(math.floor(rp.X + 0.5), math.floor(rp.Y + 0.5), math.floor(rp.Z + 0.5))
@@ -51,7 +56,6 @@ function goldenCheck() goldenPos = checkChest("golden-chest", "Golden") end
 function royalCheck()  royalPos  = checkChest("royal-chest", "Royal") end
 local eggData = {
     ["Infinity Egg"]  = {argspawn,  {-96, 10, -27    }},
-    ["100M Egg"]      = {argspawn,  {16, 10, -4      }},
     ["Common Egg"]    = {argspawn,  {-7, 11, -82     }},
     ["Spotted Egg"]   = {argspawn,  {-7, 11, -71     }},
     ["Iceshard Egg"]  = {argspawn,  {-7, 11, -60     }},
@@ -62,7 +66,10 @@ local eggData = {
     ["Void Egg"]      = {argArea4,  {6, 10149, 188   }},
     ["Hell Egg"]      = {argArea4,  {-6, 10149, 192  }},
     ["Nightmare Egg"] = {argArea4,  {-20, 10149, 184 }},
-    ["Rainbow Egg"]   = {argArea5,  {-35, 15974, 44  }}
+    ["Rainbow Egg"]   = {argArea5,  {-35, 15974, 44  }},
+    ["Showman Egg"]   = {arg2_spawn,{9941, 26, 211   }},
+    ["Mining Egg"]    = {argArea2_2,{9920, 7682, 243 }},
+    ["Cyber Egg"]     = {argArea2_3,{9914, 13410, 243}}
 }
 local function isRecentFrame(id)
     if recentFrames[id] and (tick() - recentFrames[id] < 5) then
@@ -93,15 +100,13 @@ local function abbreviateNumber(number)
         return string.format("%.1fk", value):gsub("%.0k", "k")
     else return tostring(number) end
 end
-local eggNames = {"spikey-egg", "magma-egg", "crystal-egg", "lunar-egg", "void-egg", "hell-egg", "nightmare-egg", "rainbow-egg"}
-local eggColors = {["spikey-egg"] = 0x00FF00,["magma-egg"] = 0xFF4500,["crystal-egg"] = 0x00BFFF,["lunar-egg"] = 0x4B0082,["void-egg"] = 0x9400D3,["hell-egg"] = 0xFF0000,["nightmare-egg"] = 0x36393F,["rainbow-egg"] = 0xFF69B4}
-local eggEmojis = {["spikey-egg"] = "🌵",["magma-egg"] = "🌋",["crystal-egg"] = "🔮",["lunar-egg"] = "🌙",["void-egg"] = "🌀",["hell-egg"] = "🔥",["nightmare-egg"] = "💀",["rainbow-egg"] = "🌈"}
 local petConfig = {
-    ["Secret"]    = {"King Doggy", "The Overlord", "Silly Doggy :)", "Silly Doggy", "Godly Gem", "Dementor", "Royal Trophy"},
-    ["Legendary"] = {"Emerald Golem", "Inferno Dragon", "Unicorn", "Flying Pig", "Lunar Serpent", "Electra", "Dark Phoenix", "Neon Elemental", "NULLVoid", "Inferno Cube", "Virus", "Green Hydra", "Demonic Hydra", "Hexarium", "Rainbow Shock", "ROUND", "DOOF", "Easter Serpent", "Dualcorn", "Holy Egg", "Diamond Serpent", "Diamond Hexarium", "King Pufferfish"}
+    ["Secret"]    = {"King Doggy", "The Overlord", "Silly Doggy :)", "Silly Doggy","Mech Robot"},
+    ["Legendary"] = {"Emerald Golem", "Inferno Dragon", "Unicorn", "Flying Pig", "Lunar Serpent", "Electra", "Dark Phoenix", "Neon Elemental", "NULLVoid", "Inferno Cube", "Virus", "Green Hydra", "Demonic Hydra", "Hexarium", "Rainbow Shock", "ROUND", "DOOF", "Cyborg Phoenix", "Crystal Unicorn", "Stone Gargoyle", "Space Invader", "Bionic Shard"}
 }
 local chances = {
     -- Perm Pets
+    -- World 1
     -- Secret Pet List
     ["The Overlord"]            = {Secret    = {[false] = " 50,000,000",    [true] = " 2,000,000,000" },   Mythic = {[false] = " 5,000,000,000",   [true] = " 200,000,000,000"   }},
     ["King Doggy"]              = {Secret    = {[false] = " 100,000,000",   [true] = " 4,000,000,000" },   Mythic = {[false] = " 10,000,000,000",  [true] = " 400,000,000,000"   }},
@@ -121,20 +126,26 @@ local chances = {
     ["Hexarium"]                = {Legendary = {[false] = " 100,000",       [true] = " 4,000,000"     },   Mythic = {[false] = " 10,000,000",      [true] = " 400,000,000"       }},
     ["Rainbow Shock"]           = {Legendary = {[false] = " 200,000",       [true] = " 8,000,000"     },   Mythic = {[false] = " 20,000,000",      [true] = " 800,000,000"       }},
     ["NULLVoid"]                = {Legendary = {[false] = " 1,000,000",     [true] = " 40,000,000"    },   Mythic = {[false] = " 100,000,000",     [true] = " 4,000,000,000"     }},
+    -- World 2
+    -- Secret Pet List
+    ["Mech Robot"]              = {Secret    = {[false] = " 66,666,667",    [true] = " 2,666,666,680" },   Mythic = {[false] = " 6,666,666,700",   [true] = " 266,666,668,000"   }},
+    -- Legendary Pet List
+    ["Cyborg Phoenix"]          = {Legendary = {[false] = " 2,500",         [true] = " 100,000"       },   Mythic = {[false] = " 250,000",         [true] = " 10,000,000"        }},
+    ["Crystal Unicorn"]         = {Legendary = {[false] = " 10,000",        [true] = " 400,000"       },   Mythic = {[false] = " 1,000,000",       [true] = " 40,000,000"        }},
+    ["Stone Gargoyle"]          = {Legendary = {[false] = " 20,000",        [true] = " 800,000"       },   Mythic = {[false] = " 2,000,000",       [true] = " 80,000,000"        }},
+    ["Space Invader"]           = {Legendary = {[false] = " 50,000",        [true] = " 2,000,000"     },   Mythic = {[false] = " 5,000,000",       [true] = " 200,000,000"       }},
+    ["Bionic Shard"]            = {Legendary = {[false] = " 750,000",       [true] = " 30,000,000"    },   Mythic = {[false] = " 75,000,000",      [true] = " 3,000,000,000"     }},
     -- Event Pets
     -- Event Secret Pet List
     ["Silly Doggy"]             = {Secret    = {[false] = " 1,000,000",     [true] = " 40,000,000"    },   Mythic = {[false] = " 100,000,000",     [true] = " 4,000,000,000"     }},
     ["Silly Doggy :)"]          = {Secret    = {[false] = " 1,000,000",     [true] = " 40,000,000"    },   Mythic = {[false] = " 100,000,000",     [true] = " 4,000,000,000"     }},
-    ["Royal Trophy"]            = {Secret    = {[false] = " 50,000,000",    [true] = " 2,000,000,000" },   Mythic = {[false] = " 5,000,000,000",   [true] = " 200,000,000,000"   }},
     -- Event Legendary Pet List
-    ["Diamond Serpent"]         = {Legendary = {[false] = " 2,500",         [true] = " 100,000"       },   Mythic = {[false] = " 250,000",         [true] = " 10,000,000"        }},
     ["DOOF"]                    = {Legendary = {[false] = " 10,000",        [true] = " 400,000"       },   Mythic = {[false] = " 1,000,000",       [true] = " 40,000,000"        }},
-    ["Diamond Hexarium"]        = {Legendary = {[false] = " 50,000",        [true] = " 2,000,000"     },   Mythic = {[false] = " 5,000,000",       [true] = " 200,000,000"       }},
     ["ROUND"]                   = {Legendary = {[false] = " 250,000",       [true] = " 10,000,000"    },   Mythic = {[false] = " 25,000,000",      [true] = " 1,000,000,000"     }},
-    ["King Pufferfish"]         = {Legendary = {[false] = " 800,000",       [true] = " 32,000,000"    },   Mythic = {[false] = " 80,000,000",      [true] = " 3,200,000,000"     }},
 }
 local imageUrl = "https://static.wikia.nocookie.net/bgs-infinity/images/"
 local petImages = {
+    -- World 1
     -- Secret Pet List
     ["The Overlord"]     = {Normal = imageUrl.."c/c0/The_Overlord.png",     Shiny = imageUrl.."e/ed/Shiny_The_Overlord.png",     Mythic = imageUrl.."a/aa/Mythic_The_Overlord.png",     ShinyMythic = imageUrl.."3/36/Shiny_Mythic_The_Overlord.png"     },
     ["King Doggy"]       = {Normal = imageUrl.."a/a8/King_Doggy.png",       Shiny = imageUrl.."5/5b/Shiny_King_Doggy.png",       Mythic = imageUrl.."7/78/Mythic_King_Doggy.png",       ShinyMythic = imageUrl.."5/52/Shiny_Mythic_King_Doggy.png"       },
@@ -154,16 +165,21 @@ local petImages = {
     ["Demonic Hydra"]    = {Normal = imageUrl.."1/17/Demonic_Hydra.png",    Shiny = imageUrl.."1/10/Shiny_Demonic_Hydra.png",    Mythic = imageUrl.."3/33/Mythic_Demonic_Hydra.png",    ShinyMythic = imageUrl.."f/f9/Shiny_Mythic_Demonic_Hydra.png"    },
     ["Hexarium"]         = {Normal = imageUrl.."8/89/Hexarium.png",         Shiny = imageUrl.."2/2f/Shiny_Hexarium.png",         Mythic = imageUrl.."0/02/Mythic_Hexarium.png",         ShinyMythic = imageUrl.."e/ea/Shiny_Mythic_Hexarium.png"         },
     ["Rainbow Shock"]    = {Normal = imageUrl.."c/c6/Rainbow_Shock.png",    Shiny = imageUrl.."8/8b/Shiny_Rainbow_Shock.png",    Mythic = imageUrl.."b/b8/Mythic_Rainbow_Shock.png",    ShinyMythic = imageUrl.."7/71/Shiny_Mythic_Rainbow_Shock.png"    },
+    -- World 2
+    -- Secret Pet List
+    ["Mech Robot"]       = {Normal = fallbackImage, Shiny = fallbackImage, Mythic = fallbackImage, ShinyMythic = fallbackImage},
+    -- Legendary Pet List
+    ["Cyborg Phoenix"]   = {Normal = fallbackImage, Shiny = fallbackImage, Mythic = fallbackImage, ShinyMythic = fallbackImage},
+    ["Crystal Unicorn"]  = {Normal = fallbackImage, Shiny = fallbackImage, Mythic = fallbackImage, ShinyMythic = fallbackImage},
+    ["Stone Gargoyle"]   = {Normal = fallbackImage, Shiny = fallbackImage, Mythic = fallbackImage, ShinyMythic = fallbackImage},
+    ["Space Invader"]    = {Normal = fallbackImage, Shiny = fallbackImage, Mythic = fallbackImage, ShinyMythic = fallbackImage},
+    ["Bionic Shard"]     = {Normal = fallbackImage, Shiny = fallbackImage, Mythic = fallbackImage, ShinyMythic = fallbackImage},
     -- Event Secret Pet List
     ["Silly Doggy :)"]   = {Normal = imageUrl.."1/1d/Silly-doggy.png",      Shiny = imageUrl.."1/1d/Silly-doggy.png",            Mythic = imageUrl.."7/76/Mythic_Silly_Doggy.png",      ShinyMythic = imageUrl.."7/76/Mythic_Silly_Doggy.png"            },
     ["Silly Doggy"]      = {Normal = imageUrl.."1/1d/Silly-doggy.png",      Shiny = imageUrl.."1/1d/Silly-doggy.png",            Mythic = imageUrl.."7/76/Mythic_Silly_Doggy.png",      ShinyMythic = imageUrl.."7/76/Mythic_Silly_Doggy.png"            },
-    ["Royal Trophy"]     = {Normal = imageUrl.."3/32/Royal_Trophy.png",     Shiny = imageUrl.."8/81/Shiny_Royal_Trophy.png",     Mythic = imageUrl.."1/16/Mythic_Royal_Trophy.png",     ShinyMythic = imageUrl.."6/6a/Shiny_Mythic_Royal_Trophy.png"     },
     -- Event Legendary Pet List
     ["DOOF"]             = {Normal = imageUrl.."3/34/DOOF.png",             Shiny = imageUrl.."7/77/Shiny_DOOF.png",             Mythic = imageUrl.."f/f1/Mythic_DOOF.png",             ShinyMythic = imageUrl.."1/1c/Shiny_Mythic_DOOF.png"             },
-    ["ROUND"]            = {Normal = imageUrl.."2/24/ROUND.png",            Shiny = imageUrl.."f/fb/Shiny_ROUND.png",            Mythic = imageUrl.."b/b0/Mythic_ROUND.png",            ShinyMythic = imageUrl.."a/a6/Shiny_Mythic_ROUND.png"            },
-    ["Diamond Serpent"]  = {Normal = imageUrl.."0/00/Diamond_Serpent.png",  Shiny = imageUrl.."d/d3/Shiny_Diamond_Serpent.png",  Mythic = imageUrl.."e/e2/Mythic_Diamond_Serpent.png",  ShinyMythic = imageUrl.."b/b8/Shiny_Mythic_Diamond_Serpent.png"  },
-    ["Diamond Hexarium"] = {Normal = imageUrl.."2/2a/Diamond_Hexarium.png", Shiny = imageUrl.."8/86/Shiny_Diamond_Hexarium.png", Mythic = imageUrl.."8/8a/Mythic_Diamond_Hexarium.png", ShinyMythic = imageUrl.."b/b0/Shiny_Mythic_Diamond_Hexarium.png" },
-    ["King Pufferfish"]  = {Normal = imageUrl.."c/c9/King_Pufferfish.png",  Shiny = imageUrl.."6/66/Shiny_King_Pufferfish.png",  Mythic = imageUrl.."2/2a/Mythic_King_Pufferfish.png",  ShinyMythic = imageUrl.."e/e0/Shiny_Mythic_King_Pufferfish.png"  }
+    ["ROUND"]            = {Normal = imageUrl.."2/24/ROUND.png",            Shiny = imageUrl.."f/fb/Shiny_ROUND.png",            Mythic = imageUrl.."b/b0/Mythic_ROUND.png",            ShinyMythic = imageUrl.."a/a6/Shiny_Mythic_ROUND.png"            }
 }
 local function getPetImage(name, isShiny, isMythic)
     local variants = petImages[name]
@@ -172,10 +188,10 @@ local function getPetImage(name, isShiny, isMythic)
 end
 local function sendWebhook(name, rarity, shiny, image)
     local tierMap = {
-        ["Emerald Golem"]  = 1, ["Inferno Dragon"] = 1, ["Unicorn"]       = 1, ["Flying Pig"]  = 1, ["Lunar Serpent"]  = 1, ["Electra"]          = 1, ["Dark Phoenix"]    = 1, ["Inferno Cube"]     = 1, ["Diamond Serpent"] = 1,
-        ["Neon Elemental"] = 2, ["Green Hydra"]    = 2, ["DOOF"]          = 2, 
-        ["NULLVoid"]       = 3, ["Virus"]          = 3, ["Demonic Hydra"] = 3, ["Hexarium"]    = 3, ["Rainbow Shock"]  = 3, ["Diamond Hexarium"] = 3, ["King Pufferfish"] = 3,
-        ["King Doggy"]     = 4, ["The Overlord"]   = 4, ["Royal Trophy"]  = 4, ["Silly Doggy"] = 4, ["Silly Doggy :)"] = 4
+        ["Emerald Golem"]  = 1, ["Inferno Dragon"] = 1, ["Unicorn"]       = 1, ["Flying Pig"]      = 1, ["Lunar Serpent"]  = 1, ["Electra"]       = 1, ["Dark Phoenix"] = 1, ["Inferno Cube"] = 1, ["Cyborg Phoenix"] = 1,
+        ["Neon Elemental"] = 2, ["Green Hydra"]    = 2, ["DOOF"]          = 2, ["Crystal Unicorn"] = 2, ["Stone Gargoyle"] = 2,
+        ["NULLVoid"]       = 3, ["Virus"]          = 3, ["Demonic Hydra"] = 3, ["Hexarium"]        = 3, ["Rainbow Shock"]  = 3, ["Space Invader"] = 3, ["Bionic Shard"] = 3,
+        ["King Doggy"]     = 4, ["The Overlord"]   = 4, ["Silly Doggy"]   = 4, ["Silly Doggy :)"]  = 4, ["Mech Robot"]     = 4
     }
     local tier = tierMap[name] or 3
     rolePing = ({"1364857484879073300", "1364857737485357067", "1364857776630923388", "1364881485827407912"})[tier]
@@ -184,7 +200,7 @@ local function sendWebhook(name, rarity, shiny, image)
     local title, rarityLower = "🐾 Pet Hatched!", rarity:lower()
     local emojis = {Secret = "🔥", Legendary = "⭐", Mythic = "💎", Shiny = "✨"}
     local petType = table.find(petConfig.Secret, name) and "Secret" or table.find(petConfig.Legendary, name) and "Legendary"
-    local leaderstats,coinsHud = player:FindFirstChild("leaderstats"),player.PlayerGui.ScreenGui.HUD.Left.Currency.Coins:FindFirstChild("Frame")
+    local leaderstats,coinsHud,ticketsHud = player:FindFirstChild("leaderstats"),player.PlayerGui.ScreenGui.HUD.Left.Currency.Coins:FindFirstChild("Frame"),game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.HUD.Left.Currency.Tickets:FindFirstChild("Frame")
     local totalHatches,currentCoins = "N/A","N/A"
     local isMythic = rarityLower:find("mythic")
     local isShiny = shiny and "Yes" or "No"
@@ -221,6 +237,22 @@ local function sendWebhook(name, rarity, shiny, image)
             end
         end
     end
+    if ticketsHud then
+        local tickets = ticketsHud:FindFirstChild("Label")
+        if tickets and tickets:IsA("TextLabel") then
+            local text = tickets.Text
+            local numberPart, suffix = text:match("([%d,.]+)([%a]*)")
+            if numberPart then
+                local cleanedNumberPart = numberPart:gsub(",", "") 
+                local rawNumber = tonumber(cleanedNumberPart)
+                if suffix:lower() == "b" then
+                    rawNumber = rawNumber * 1e9
+                end
+                currentTickets = abbreviateNumber(rawNumber)
+            end
+        end
+    end
+
 
     local data = {
         ["content"] = "<@&" .. rolePing .. ">",
@@ -228,7 +260,7 @@ local function sendWebhook(name, rarity, shiny, image)
             ["title"] = petTitle,
             ["description"] = string.format("🐾 **Pet Name : **%s 🐾\n💎 **Pet Rarity : **%s 💎\n❓ **Chance : **1 in %s ❓\n🕛 **Hatch Date : **<t:%s:F> 🕛", name, rarity, chances[name] and chances[name][rarity] and chances[name][rarity][shiny] or "N/A", os.time()),
             ["color"] = 16711680,
-            ["footer"] = {["text"] = "Pet Hatched By : " .. player.Name .. " | 🥚 Total Hatches : " .. totalHatches .. " | 💰 Coins Left : " .. currentCoins},
+            ["footer"] = {["text"] = "Pet Hatched By : " .. player.Name .. " | 🥚 Total Hatches : " .. totalHatches .. " | 💰 Coins Left : " .. currentCoins .. " | 🎫 Tickets Left : " .. currentTickets},
             ["thumbnail"] = {["url"] = getPetImage(name, shiny, isMythic) or fallbackImage}
         }}
     }
@@ -267,6 +299,9 @@ local function monitorRifts()
         {name = "hell-egg",      url = "hellEgg.luau"     },
         {name = "nightmare-egg", url = "nightmareEgg.luau"},
         {name = "rainbow-egg",   url = "rainbowEgg.luau"  },
+        {name = "showman-egg",   url = "showmanEgg.luau"  },
+        {name = "mining-egg",    url = "miningEgg.luau"   },
+        {name = "cyber-egg",     url = "cyberEgg.luau"    },
         {name = "golden-chest",  url = "goldenChest.luau" },
         {name = "royal-chest",   url = "royalChest.luau"  },
         {name = "bubble-rift",   url = "bubbleRift.luau"  }
@@ -275,9 +310,9 @@ local function monitorRifts()
     for _, data in ipairs(riftList) do
         riftDict[data.name] = data
     end
-    for _, rift in ipairs(riftsFolder:GetChildren()) do
-        local riftData = riftDict[rift.Name]
-        if riftData and rift:FindFirstChild("Output") then
+    for _, riftData in ipairs(riftList) do
+        local rift = riftsFolder:FindFirstChild(riftData.name)
+        if rift and rift:FindFirstChild("Output") then
             if not isRecentFrame(riftData.name) then
                 local success, scriptContent = pcall(function()
                     return game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/rifts/" .. riftData.url)
@@ -289,6 +324,7 @@ local function monitorRifts()
                         rift.Output:Destroy()
                     end
                 end
+                break
             end
         end
     end
@@ -301,12 +337,13 @@ local eggStuff  = Window:addPage("Eggs", 5012544693)
 local MiscStuff = Window:addPage("Misc", 5012544693)
 local Webhooks  = Window:addPage("Webhook", 5012544693)
 local Settings  = Window:addPage("Settings", 5012544693)
-local Farm      = Main:addSection("Auto Farm")
-local Teleport  = Main:addSection("Teleport")
-local eggs  = eggStuff:addSection("Hatch (You must be near egg!)")
-local misc = MiscStuff:addSection("Misc")
-local webh  = Webhooks:addSection("Webhooks")
-local sett  = Settings:addSection("Others")
+local Farm       = Main:addSection("Auto Farm")
+local Teleport1  = Main:addSection("Teleport (World 1)")
+local Teleport2  = Main:addSection("Teleport (World 2)")
+local eggs   = eggStuff:addSection("Hatch (You must be near egg!)")
+local misc  = MiscStuff:addSection("Misc")
+local webh   = Webhooks:addSection("Webhooks")
+local sett   = Settings:addSection("Others")
 -- Auto Farm 
 Farm:addToggle("Auto Bubble", getgenv().Config.auto_Bubble, function(t)
     autobubbleRunning = t
@@ -324,6 +361,8 @@ Farm:addToggle("Auto Claim Void/Giant Chest", getgenv().Config.auto_Collect_Ches
         remoteEvent:FireServer("ClaimChest", "Void Chest", true)
         task.wait(1)
         remoteEvent:FireServer("ClaimChest", "Giant Chest", true)
+        task.wait(1)
+        remoteEvent:FireServer("ClaimChest", "Ticket Chest", true)
         task.wait(5)
     end
 end)
@@ -345,11 +384,23 @@ Farm:addToggle("Auto Buy Black Market", getgenv().Config.auto_Buy_Black_Market, 
         end
     end
 end)
+Farm:addToggle("Auto Buy Dice Merchant", getgenv().Config.auto_Buy_Dice, function(t)
+    autobuyBDRunning = t
+    while autobuyBDRunning do
+        for i = 1, 3 do
+            remoteEvent:FireServer("BuyShopItem", "dice-shop", i)
+            task.wait(2)
+        end
+    end
+end)
 for _, btn in ipairs(tpButtons) do
-    Teleport:addButton(btn.name, function() btn.func() end)
+    Teleport1:addButton(btn.name, function() btn.func() end)
+end
+for _, btn in ipairs(tpButtons2) do
+    Teleport2:addButton(btn.name, function() btn.func() end)
 end
 -- Eggs Stuff
-eggs:addDropdown("Eggs", {"Infinity Egg","100M Egg","Common Egg","Spotted Egg","Iceshard Egg","Spikey Egg","Magma Egg","Crystal Egg","Lunar Egg","Void Egg","Hell Egg","Nightmare Egg","Rainbow Egg"}, function(e) selectedEgg = e end, getgenv().Config.open_Egg)
+eggs:addDropdown("Eggs", {"Infinity Egg","Cyber Egg","Mining Egg","Showman Egg","Rainbow Egg","Nightmare Egg","Hell Egg","Void Egg","Lunar Egg","Crystal Egg","Magma Egg","Spikey Egg","Iceshard Egg","Spotted Egg","Common Egg"}, function(e) selectedEgg = e end, getgenv().Config.open_Egg)
 eggs:addSlider("Open Amount", getgenv().Config.open_Amount, 1, 6, function(n) hatchingEggs = n end)
 eggs:addToggle("Open Eggs", getgenv().Config.auto_Open_Eggs, function(t)
     openingEggs = t
@@ -371,6 +422,12 @@ end)
 -- Misc Stuff
 misc:addButton("Unlock All Areas", function()
     for i, v in next, game:GetService("Workspace").Worlds["The Overworld"].Islands:GetChildren() do
+        firetouchinterest(v.Island.UnlockHitbox, player.Character.HumanoidRootPart, 0);
+        task.wait();
+        firetouchinterest(v.Island.UnlockHitbox, player.Character.HumanoidRootPart, 1);
+        task.wait(0.3);
+    end
+    for i, v in next, game:GetService("Workspace").Worlds["Minigame Paradise"].Islands:GetChildren() do
         firetouchinterest(v.Island.UnlockHitbox, player.Character.HumanoidRootPart, 0);
         task.wait();
         firetouchinterest(v.Island.UnlockHitbox, player.Character.HumanoidRootPart, 1);
@@ -498,6 +555,7 @@ sett:addButton("Kill Hub", function()
     autovgcRunning    = false
     autobuyAMRunning  = false
     autobuyBMRunning  = false
+    autobuyBDRunning  = false
     openingEggs       = false
     tpToEggs          = false
     autoprRunning     = false
