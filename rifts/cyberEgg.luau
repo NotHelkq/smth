@@ -78,7 +78,7 @@ local function sendWebhook()
             ["description"] = desc,
             ["color"] = 16711680,
             ["thumbnail"] = {
-                ["url"] = "https://static.wikia.nocookie.net/bgs-infinity/images/7/7b/Cyber_Egg.png/revision/latest?cb=20250505010121"
+                ["url"] = "https://static.wikia.nocookie.net/bgs-infinity/images/6/65/Mining_Egg.png/revision/latest?cb=20250504214757"
             }
         }}
     }
