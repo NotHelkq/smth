@@ -17,6 +17,7 @@ local rt = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
 local function tp(d) return function(x,y,z)
     if rt then game:GetService("TweenService"):Create(rt, TweenInfo.new(d), {CFrame = CFrame.new(x,y,z)}):Play() end
 end end
+local imageUrl = "https://static.wikia.nocookie.net/bgs-infinity/images/"
 local fallbackImage = "https://static.wikia.nocookie.net/bgs-infinity/images/2/2a/Pet_Placeholder.png"
 local ttppos, tppos = tp(3), tp(10)
 local function teleportTo(path) remoteEvent:FireServer("Teleport", path) end
@@ -131,22 +132,20 @@ local chances = {
     -- Secret Pet List
     ["Mech Robot"]              = {Secret    = {[false] = " 66,666,667",    [true] = " 2,666,666,680" },   Mythic = {[false] = " 6,666,666,700",   [true] = " 266,666,668,000"   }},
     -- Legendary Pet List
-    ["Crystal Unicorn"]         = {Legendary = {[false] = " 2,000",         [true] = " 80,000"        },   Mythic = {[false] = " 200,000",         [true] = " 8,000,000"         }},
+    ["Crystal Unicorn"]         = {Legendary = {[false] = " 200",           [true] = " 8,000"         },   Mythic = {[false] = " 20,000",          [true] = " 800,000"           }},
     ["Cyborg Phoenix"]          = {Legendary = {[false] = " 2,500",         [true] = " 100,000"       },   Mythic = {[false] = " 250,000",         [true] = " 10,000,000"        }},
     ["Stone Gargoyle"]          = {Legendary = {[false] = " 20,000",        [true] = " 800,000"       },   Mythic = {[false] = " 2,000,000",       [true] = " 80,000,000"        }},
-    ["Game Master"]             = {Legendary = {[false] = " 20,000",        [true] = " 800,000"       },   Mythic = {[false] = " 2,000,000",       [true] = " 80,000,000"        }},
     ["Space Invader"]           = {Legendary = {[false] = " 50,000",        [true] = " 2,000,000"     },   Mythic = {[false] = " 5,000,000",       [true] = " 200,000,000"       }},
     ["Bionic Shard"]            = {Legendary = {[false] = " 666,667",       [true] = " 26,666,680"    },   Mythic = {[false] = " 66,666,700",      [true] = " 2,666,668,000"     }},
-    ["Jackpot"]                 = {Legendary = {[false] = " 20,000,000",    [true] = " 800,000,000"   },   Mythic = {[false] = " 2,000,000,000",   [true] = " 80,000,000,000"    }},
     -- Event Pets
     -- Event Secret Pet List
-    ["Silly Doggy"]             = {Secret    = {[false] = " 1,000,000",     [true] = " 40,000,000"    },   Mythic = {[false] = " 100,000,000",     [true] = " 4,000,000,000"     }},
     ["Silly Doggy :)"]          = {Secret    = {[false] = " 1,000,000",     [true] = " 40,000,000"    },   Mythic = {[false] = " 100,000,000",     [true] = " 4,000,000,000"     }},
     -- Event Legendary Pet List
     ["DOOF"]                    = {Legendary = {[false] = " 10,000",        [true] = " 400,000"       },   Mythic = {[false] = " 1,000,000",       [true] = " 40,000,000"        }},
+    ["Game Master"]             = {Legendary = {[false] = " 20,000",        [true] = " 800,000"       },   Mythic = {[false] = " 2,000,000",       [true] = " 80,000,000"        }},
     ["ROUND"]                   = {Legendary = {[false] = " 250,000",       [true] = " 10,000,000"    },   Mythic = {[false] = " 25,000,000",      [true] = " 1,000,000,000"     }},
+    ["Jackpot"]                 = {Legendary = {[false] = " 20,000,000",    [true] = " 800,000,000"   },   Mythic = {[false] = " 2,000,000,000",   [true] = " 80,000,000,000"    }},
 }
-local imageUrl = "https://static.wikia.nocookie.net/bgs-infinity/images/"
 local petImages = {
     -- World 1
     -- Secret Pet List
@@ -173,18 +172,17 @@ local petImages = {
     ["Mech Robot"]       = {Normal = imageUrl.."1/1d/Mech_Robot.png",       Shiny = imageUrl.."4/4b/Shiny_Mech_Robot.png",       Mythic = imageUrl.."7/7b/Mythic_Mech_Robot.png",       ShinyMythic = imageUrl.."4/44/Shiny_Mythic_Mech_Robot.png"       },
     -- Legendary Pet List
     ["Crystal Unicorn"]  = {Normal = imageUrl.."a/a3/Crystal_Unicorn.png",  Shiny = imageUrl.."c/c4/Shiny_Crystal_Unicorn.png",  Mythic = imageUrl.."d/d5/Mythic_Crystal_Unicorn.png",  ShinyMythic = imageUrl.."4/4e/Shiny_Mythic_Crystal_Unicorn.png"  },
-    ["Cyborg Phoenix"]   = {Normal = imageUrl.."7/76/Cyborg_Phoenix.png",   Shiny = imageUrl.."c/c8/Shiny_Cyborg_Phoenix.png",   Mythic = imageUrl.."7/76/Cyborg_Phoenix.png",          ShinyMythic = imageUrl.."c/c8/Shiny_Cyborg_Phoenix.png"          },
+    ["Cyborg Phoenix"]   = {Normal = imageUrl.."7/76/Cyborg_Phoenix.png",   Shiny = imageUrl.."c/c8/Shiny_Cyborg_Phoenix.png",   Mythic = imageUrl.."2/25/Mythic_Cyborg_Phoenix.png",   ShinyMythic = imageUrl.."7/75/Shiny_Mythic_Cyborg_Phoenix.png"   },
     ["Stone Gargoyle"]   = {Normal = imageUrl.."2/23/Stone_Gargoyle.png",   Shiny = imageUrl.."e/e6/Shiny_Stone_Gargoyle.png",   Mythic = imageUrl.."3/3c/Mythic_Stone_Gargoyle.png",   ShinyMythic = imageUrl.."b/b9/Shiny_Mythic_Stone_Gargoyle.png"   },
-    ["Game Master"]      = {Normal = imageUrl.."4/46/Game_Master.png",      Shiny = imageUrl.."5/50/Shiny_Game_Master.png",      Mythic = imageUrl.."0/01/Mythic_Game_Master.png",      ShinyMythic = imageUrl.."0/00/Shiny_Mythic_Game_Master.png"      },
     ["Space Invader"]    = {Normal = imageUrl.."1/1d/Space_Invader.png",    Shiny = imageUrl.."6/6d/Shiny_Space_Invader.png",    Mythic = imageUrl.."d/df/Mythic_Space_Invader.png",    ShinyMythic = imageUrl.."f/fd/Shiny_Mythic_Space_Invader.png"    },
-    ["Bionic Shard"]     = {Normal = imageUrl.."6/6c/Bionic_Shard.png",     Shiny = imageUrl.."8/8d/Shiny_Bionic_Shard.png",     Mythic = imageUrl.."6/6c/Bionic_Shard.png",            ShinyMythic = imageUrl.."8/8d/Shiny_Bionic_Shard.png"            },
-    ["Jackpot"]          = {Normal = imageUrl.."1/10/Jackpot.png",          Shiny = imageUrl.."5/5e/Shiny_Jackpot.png",          Mythic = imageUrl.."6/6b/Mythic_Jackpot.png",          ShinyMythic = imageUrl.."f/fa/Shiny_Mythic_Jackpot.png"          },
+    ["Bionic Shard"]     = {Normal = imageUrl.."6/6c/Bionic_Shard.png",     Shiny = imageUrl.."8/8d/Shiny_Bionic_Shard.png",     Mythic = imageUrl.."c/c7/Mythic_Bionic_Shard.png",     ShinyMythic = imageUrl.."0/0c/Shiny_Mythic_Bionic_Shard.png"     },
     -- Event Secret Pet List
     ["Silly Doggy :)"]   = {Normal = imageUrl.."1/1d/Silly-doggy.png",      Shiny = imageUrl.."5/5c/Shiny_Silly_Doggy.png",      Mythic = imageUrl.."7/76/Mythic_Silly_Doggy.png",      ShinyMythic = imageUrl.."c/cc/Shiny_Mythic_Silly_Doggy.png"      },
-    ["Silly Doggy"]      = {Normal = imageUrl.."1/1d/Silly-doggy.png",      Shiny = imageUrl.."5/5c/Shiny_Silly_Doggy.png",      Mythic = imageUrl.."7/76/Mythic_Silly_Doggy.png",      ShinyMythic = imageUrl.."c/cc/Shiny_Mythic_Silly_Doggy.png"      },
     -- Event Legendary Pet List
     ["DOOF"]             = {Normal = imageUrl.."3/34/DOOF.png",             Shiny = imageUrl.."7/77/Shiny_DOOF.png",             Mythic = imageUrl.."f/f1/Mythic_DOOF.png",             ShinyMythic = imageUrl.."1/1c/Shiny_Mythic_DOOF.png"             },
-    ["ROUND"]            = {Normal = imageUrl.."2/24/ROUND.png",            Shiny = imageUrl.."f/fb/Shiny_ROUND.png",            Mythic = imageUrl.."b/b0/Mythic_ROUND.png",            ShinyMythic = imageUrl.."a/a6/Shiny_Mythic_ROUND.png"            }
+    ["Game Master"]      = {Normal = imageUrl.."4/46/Game_Master.png",      Shiny = imageUrl.."5/50/Shiny_Game_Master.png",      Mythic = imageUrl.."0/01/Mythic_Game_Master.png",      ShinyMythic = imageUrl.."0/00/Shiny_Mythic_Game_Master.png"      },
+    ["ROUND"]            = {Normal = imageUrl.."2/24/ROUND.png",            Shiny = imageUrl.."f/fb/Shiny_ROUND.png",            Mythic = imageUrl.."b/b0/Mythic_ROUND.png",            ShinyMythic = imageUrl.."a/a6/Shiny_Mythic_ROUND.png"            },
+    ["Jackpot"]          = {Normal = imageUrl.."1/10/Jackpot.png",          Shiny = imageUrl.."5/5e/Shiny_Jackpot.png",          Mythic = imageUrl.."6/6b/Mythic_Jackpot.png",          ShinyMythic = imageUrl.."f/fa/Shiny_Mythic_Jackpot.png"          }
 }
 local function getPetImage(name, isShiny, isMythic)
     local variants = petImages[name]
@@ -193,10 +191,10 @@ local function getPetImage(name, isShiny, isMythic)
 end
 local function sendWebhook(name, rarity, shiny, image)
     local tierMap = {
-        ["Emerald Golem"]  = 1, ["Inferno Dragon"] = 1, ["Unicorn"]       = 1, ["Flying Pig"]      = 1, ["Lunar Serpent"]  = 1, ["Electra"]       = 1, ["Dark Phoenix"] = 1, ["Inferno Cube"] = 1, ["Cyborg Phoenix"] = 1,
-        ["Neon Elemental"] = 2, ["Green Hydra"]    = 2, ["DOOF"]          = 2, ["Crystal Unicorn"] = 2, ["Stone Gargoyle"] = 2,
-        ["NULLVoid"]       = 3, ["Virus"]          = 3, ["Demonic Hydra"] = 3, ["Hexarium"]        = 3, ["Rainbow Shock"]  = 3, ["Space Invader"] = 3, ["Bionic Shard"] = 3, ["Game Master"]  = 3, ["Jackpot"]        = 3,
-        ["King Doggy"]     = 4, ["The Overlord"]   = 4, ["Silly Doggy"]   = 4, ["Silly Doggy :)"]  = 4, ["Mech Robot"]     = 4
+        ["Emerald Golem"]  = 1, ["Inferno Dragon"] = 1, ["Unicorn"]        = 1, ["Flying Pig"]      = 1, ["Lunar Serpent"]  = 1, ["Electra"]       = 1, ["Dark Phoenix"] = 1, ["Inferno Cube"] = 1, ["Cyborg Phoenix"] = 1,
+        ["Neon Elemental"] = 2, ["Green Hydra"]    = 2, ["DOOF"]           = 2, ["Crystal Unicorn"] = 2, ["Stone Gargoyle"] = 2, ["Game Master"]   = 2,
+        ["NULLVoid"]       = 3, ["Virus"]          = 3, ["Demonic Hydra"]  = 3, ["Hexarium"]        = 3, ["Rainbow Shock"]  = 3, ["Space Invader"] = 3, ["Bionic Shard"] = 3, ["Jackpot"]      = 3,
+        ["King Doggy"]     = 4, ["The Overlord"]   = 4, ["Silly Doggy :)"] = 4, ["Mech Robot"]      = 4
     }
     local tier = tierMap[name] or 3
     rolePing = ({"1364857484879073300", "1364857737485357067", "1364857776630923388", "1364881485827407912"})[tier]
@@ -265,7 +263,7 @@ local function sendWebhook(name, rarity, shiny, image)
             ["title"] = petTitle,
             ["description"] = string.format("🐾 **Pet Name : **%s 🐾\n💎 **Pet Rarity : **%s 💎\n❓ **Chance : **1 in %s ❓\n🕛 **Hatch Date : **<t:%s:F> 🕛", name, rarity, chances[name] and chances[name][rarity] and chances[name][rarity][shiny] or "N/A", os.time()),
             ["color"] = 16711680,
-            ["footer"] = {["text"] = "🥚 Total Hatches : " .. totalHatches .. " | 💰 Coins Left : " .. currentCoins .. " | 🎫 Tickets Left : " .. currentTickets .. "\nPet Hatched By : " .. player.Name},
+            ["footer"] = {["text"] = "🥚 Total Hatches : " .. totalHatches .. " | 💰 Coins Left : " .. currentCoins .. " | 🎫 Tickets Left : " .. currentTickets .. "\n🐾 Pet Hatched By : " .. player.Name},
             ["thumbnail"] = {["url"] = getPetImage(name, shiny, isMythic) or fallbackImage}
         }}
     }
