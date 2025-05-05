@@ -137,7 +137,7 @@ local chances = {
     ["Game Master"]             = {Legendary = {[false] = " 20,000",        [true] = " 800,000"       },   Mythic = {[false] = " 2,000,000",       [true] = " 80,000,000"        }},
     ["Space Invader"]           = {Legendary = {[false] = " 50,000",        [true] = " 2,000,000"     },   Mythic = {[false] = " 5,000,000",       [true] = " 200,000,000"       }},
     ["Bionic Shard"]            = {Legendary = {[false] = " 666,667",       [true] = " 26,666,680"    },   Mythic = {[false] = " 66,666,700",      [true] = " 2,666,668,000"     }},
-    ["Game Master"]             = {Legendary = {[false] = " 20,000,000",    [true] = " 800,000,000"   },   Mythic = {[false] = " 2,000,000,000",   [true] = " 80,000,000,000"    }},
+    ["Jackpot"]                 = {Legendary = {[false] = " 20,000,000",    [true] = " 800,000,000"   },   Mythic = {[false] = " 2,000,000,000",   [true] = " 80,000,000,000"    }},
     -- Event Pets
     -- Event Secret Pet List
     ["Silly Doggy"]             = {Secret    = {[false] = " 1,000,000",     [true] = " 40,000,000"    },   Mythic = {[false] = " 100,000,000",     [true] = " 4,000,000,000"     }},
