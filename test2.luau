@@ -69,7 +69,8 @@ local eggData = {
     ["Rainbow Egg"]   = {argArea5,  {-35, 15974, 44  }},
     ["Showman Egg"]   = {arg2_spawn,{9941, 26, 211   }},
     ["Mining Egg"]    = {argArea2_2,{9920, 7682, 243 }},
-    ["Cyber Egg"]     = {argArea2_3,{9914, 13410, 243}}
+    ["Cyber Egg"]     = {argArea2_3,{9914, 13410, 243}},
+    ["Game Egg"]      = {arg2_spawn,{9836, 27, 171   }}
 }
 local function isRecentFrame(id)
     if recentFrames[id] and (tick() - recentFrames[id] < 5) then
@@ -404,7 +405,7 @@ for _, btn in ipairs(tpButtons2) do
     Teleport2:addButton(btn.name, function() btn.func() end)
 end
 -- Eggs Stuff
-eggs:addDropdown("Eggs", {"Infinity Egg","Cyber Egg","Mining Egg","Showman Egg","Rainbow Egg","Nightmare Egg","Hell Egg","Void Egg","Lunar Egg","Crystal Egg","Magma Egg","Spikey Egg","Iceshard Egg","Spotted Egg","Common Egg"}, function(e) selectedEgg = e end, getgenv().Config.open_Egg)
+eggs:addDropdown("Eggs", {"Infinity Egg","Game Egg","Cyber Egg","Mining Egg","Showman Egg","Rainbow Egg","Nightmare Egg","Hell Egg","Void Egg","Lunar Egg","Crystal Egg","Magma Egg","Spikey Egg","Iceshard Egg","Spotted Egg","Common Egg"}, function(e) selectedEgg = e end, getgenv().Config.open_Egg)
 eggs:addSlider("Open Amount", getgenv().Config.open_Amount, 1, 6, function(n) hatchingEggs = n end)
 eggs:addToggle("Open Eggs", getgenv().Config.auto_Open_Eggs, function(t)
     openingEggs = t
