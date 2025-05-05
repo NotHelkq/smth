@@ -78,7 +78,7 @@ local function sendWebhook()
             ["description"] = desc,
             ["color"] = 16711680,
             ["thumbnail"] = {
-                ["url"] = "https://static.wikia.nocookie.net/bgs-infinity/images/2/24/Infinity_Egg.png/revision/latest?cb=20250418015247"
+                ["url"] = "https://static.wikia.nocookie.net/bgs-infinity/images/1/1a/Showman_Egg.png/revision/latest?cb=20250505001400"
             }
         }}
     }
