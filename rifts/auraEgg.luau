@@ -27,15 +27,15 @@ local function sendWebhook()
     local y = rPos.Y
     local areaPos = ""
     if y >= 0 and y < 410 then
-        areaPos = "Area 0-1"
+        areaPos = "Area 0-1 // World 1"
     elseif y >= 410 and y < 2650 then
-        areaPos = "Area 1-2"
+        areaPos = "Area 1-2 // World 1"
     elseif y >= 2650 and y < 6850 then
-        areaPos = "Area 2-3"
+        areaPos = "Area 2-3 // World 1"
     elseif y >= 6850 and y < 10130 then
-        areaPos = "Area 3-4"
+        areaPos = "Area 3-4 // World 1"
     elseif y >= 10130 and y <= 15960 then
-        areaPos = "Area 4-5"
+        areaPos = "Area 4-5 // World 1"
     else
         areaPos = ""
     end
