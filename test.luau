@@ -220,6 +220,7 @@ local function sendWebhook(name, rarity, shiny, image)
         end
         petTitle = table.concat(titleParts).." "..shinyStatus..(isMythic and "Mythic " or "")..petType.." Pet Hatched "..table.concat(reversedParts)
     else petTitle = "🐾 Pet Hatched!" end
+    
     if leaderstats then
         local hatches = leaderstats:FindFirstChild("🥚 Hatches")
         if hatches and hatches:IsA("IntValue") then
@@ -257,7 +258,6 @@ local function sendWebhook(name, rarity, shiny, image)
         end
     end
 
-
     local data = {
         ["content"] = "<@&" .. rolePing .. ">",
         ["embeds"] = {{
@@ -280,12 +280,15 @@ local function monitorHatch()
             local name = frame.Label.Text
             local rarity = frame.Rarity.Text
             local shiny = frame.Shiny.Visible
+            local deleted = frame.Deleted.Visible
             local chance = frame:FindFirstChild("Chance") and frame.Chance.Text or nil
             local rarityLower = rarity:lower()
             if rarityLower:find("legendary") or rarityLower:find("secret") or rarityLower:find("mythic") then
-                if not isRecentFrame(frame) then
-                    local image = petImages[name] or fallbackImage
-                    sendWebhook(name, rarity, shiny, image, chance)
+                if not deleted then
+                    if not isRecentFrame(frame) then
+                        local image = petImages[name] or fallbackImage
+                        sendWebhook(name, rarity, shiny, image, chance)
+                    end
                 end
             end
         end
@@ -336,7 +339,7 @@ local function monitorRifts()
 end
 -- lib stuff
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/idk.luau"))()
-local Window  = library.new("Bubble Gum Simulator Infinity")
+local Window  = library.new("Bubble Gum Simulator Infinity test")
 local Main      = Window:addPage("Auto Farm", 5012544693, true)
 local eggStuff  = Window:addPage("Eggs", 5012544693)
 local MiscStuff = Window:addPage("Misc", 5012544693)
