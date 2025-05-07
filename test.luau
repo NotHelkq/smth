@@ -284,11 +284,8 @@ local function monitorHatch()
             local chance = frame:FindFirstChild("Chance") and frame.Chance.Text or nil
             local rarityLower = rarity:lower()
             if rarityLower:find("legendary") or rarityLower:find("secret") or rarityLower:find("mythic") then
-                if blacklist_adp and not deleted then 
-                    if not isRecentFrame(frame) then
-                        local image = petImages[name] or fallbackImage
-                        sendWebhook(name, rarity, shiny, image, chance)
-                    end
+                if blacklist_adp and deleted then 
+                    -- nothing
                 else 
                     if not isRecentFrame(frame) then
                         local image = petImages[name] or fallbackImage
