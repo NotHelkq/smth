@@ -284,7 +284,12 @@ local function monitorHatch()
             local chance = frame:FindFirstChild("Chance") and frame.Chance.Text or nil
             local rarityLower = rarity:lower()
             if rarityLower:find("legendary") or rarityLower:find("secret") or rarityLower:find("mythic") then
-                if not deleted then
+                if blacklist_adp and not deleted then 
+                    if not isRecentFrame(frame) then
+                        local image = petImages[name] or fallbackImage
+                        sendWebhook(name, rarity, shiny, image, chance)
+                    end
+                else 
                     if not isRecentFrame(frame) then
                         local image = petImages[name] or fallbackImage
                         sendWebhook(name, rarity, shiny, image, chance)
@@ -339,7 +344,7 @@ local function monitorRifts()
 end
 -- lib stuff
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/idk.luau"))()
-local Window  = library.new("Bubble Gum Simulator Infinity test")
+local Window  = library.new("Bubble Gum Simulator Infinity")
 local Main      = Window:addPage("Auto Farm", 5012544693, true)
 local eggStuff  = Window:addPage("Eggs", 5012544693)
 local MiscStuff = Window:addPage("Misc", 5012544693)
@@ -558,13 +563,16 @@ webh:addToggle("Send Lucky Rift Webhooks", getgenv().Config.send_Rift_Webhook, f
 end)
 webh:addToggle("Send Rare Hatches Webhooks", getgenv().Config.send_Hatch_Webhook, function(t)
     if t then
-        hatchConnection = runService.RenderStepped:Connect(monitorHatch)
-    else
-        if hatchConnection then
-            hatchConnection:Disconnect()
-            hatchConnection = nil
+            hatchConnection = runService.RenderStepped:Connect(monitorHatch)
+        else
+            if hatchConnection then
+                hatchConnection:Disconnect()
+                hatchConnection = nil
+            end
         end
-    end
+end)
+webh:addToggle("Blacklist Auto Deleted Pets", getgenv().Config.blacklist_Deleted_Pets, function(t)
+    blacklist_adp = t
 end)
 -- Settings
 sett:addKeybind("Toggle Hub", Enum.KeyCode.LeftControl, function()
