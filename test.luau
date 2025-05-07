@@ -19,7 +19,7 @@ local function tp(d) return function(x,y,z)
 end end
 local imageUrl = "https://static.wikia.nocookie.net/bgs-infinity/images/"
 local fallbackImage = "https://static.wikia.nocookie.net/bgs-infinity/images/2/2a/Pet_Placeholder.png"
-local ttppos, tppos = tp(3), tp(10)
+local ttppos, tppos = tp(5), tp(10)
 local function teleportTo(path) remoteEvent:FireServer("Teleport", path) end
 local argspawn = function(tp) teleportTo("Workspace.Worlds.The Overworld.PortalSpawn") end
 local argArea1 = function(tp) teleportTo("Workspace.Worlds.The Overworld.Islands.Floating Island.Island.Portal.Spawn") end
@@ -55,6 +55,7 @@ local function checkChest(chestType, label)
 end
 function goldenCheck() goldenPos = checkChest("golden-chest", "Golden") end
 function royalCheck()  royalPos  = checkChest("royal-chest", "Royal") end
+function diceCheck()   dicePos   = checkChest("dice-rift", "Dice") end
 local eggData = {
     ["Infinity Egg"]  = {argspawn,  {-96, 10, -27    }},
     ["Common Egg"]    = {argspawn,  {-7, 11, -82     }},
@@ -103,8 +104,8 @@ local function abbreviateNumber(number)
     else return tostring(number) end
 end
 local petConfig = {
-    ["Secret"]    = {"King Doggy", "The Overlord", "Silly Doggy :)", "Silly Doggy", "Mech Robot"},
-    ["Legendary"] = {"Emerald Golem", "Inferno Dragon", "Unicorn", "Flying Pig", "Lunar Serpent", "Electra", "Dark Phoenix", "Neon Elemental", "NULLVoid", "Inferno Cube", "Virus", "Green Hydra", "Demonic Hydra", "Hexarium", "Rainbow Shock", "ROUND", "DOOF", "Cyborg Phoenix", "Crystal Unicorn", "Stone Gargoyle", "Space Invader", "Bionic Shard", "Game Master", "Jackpot"}
+    ["Secret"]    = {"King Doggy","The Overlord","Silly Doggy :)","Mech Robot"},
+    ["Legendary"] = {"Emerald Golem","Inferno Dragon","Unicorn","Flying Pig","Lunar Serpent","Electra","Dark Phoenix","Neon Elemental","NULLVoid","Inferno Cube","Virus","Green Hydra","Demonic Hydra","Hexarium","Rainbow Shock","ROUND","DOOF","Cyborg Phoenix","Crystal Unicorn","Stone Gargoyle","Space Invader","Bionic Shard","Game Master","Jackpot"}
 }
 local chances = {
     -- Perm Pets
@@ -136,7 +137,7 @@ local chances = {
     ["Cyborg Phoenix"]          = {Legendary = {[false] = " 2,500",         [true] = " 100,000"       },   Mythic = {[false] = " 250,000",         [true] = " 10,000,000"        }},
     ["Stone Gargoyle"]          = {Legendary = {[false] = " 20,000",        [true] = " 800,000"       },   Mythic = {[false] = " 2,000,000",       [true] = " 80,000,000"        }},
     ["Space Invader"]           = {Legendary = {[false] = " 50,000",        [true] = " 2,000,000"     },   Mythic = {[false] = " 5,000,000",       [true] = " 200,000,000"       }},
-    ["Bionic Shard"]            = {Legendary = {[false] = " 666,667",       [true] = " 26,666,680"    },   Mythic = {[false] = " 66,666,700",      [true] = " 2,666,668,000"     }},
+    ["Bionic Shard"]            = {Legendary = {[false] = " 666,667",       [true] = " 26,666,667"    },   Mythic = {[false] = " 66,666,700",      [true] = " 2,666,667,000"     }},
     -- Event Pets
     -- Event Secret Pet List
     ["Silly Doggy :)"]          = {Secret    = {[false] = " 1,000,000",     [true] = " 40,000,000"    },   Mythic = {[false] = " 100,000,000",     [true] = " 4,000,000,000"     }},
@@ -191,8 +192,8 @@ local function getPetImage(name, isShiny, isMythic)
 end
 local function sendWebhook(name, rarity, shiny, image)
     local tierMap = {
-        ["Emerald Golem"]  = 1, ["Inferno Dragon"] = 1, ["Unicorn"]        = 1, ["Flying Pig"]      = 1, ["Lunar Serpent"]  = 1, ["Electra"]       = 1, ["Dark Phoenix"] = 1, ["Inferno Cube"] = 1, ["Cyborg Phoenix"] = 1,
-        ["Neon Elemental"] = 2, ["Green Hydra"]    = 2, ["DOOF"]           = 2, ["Crystal Unicorn"] = 2, ["Stone Gargoyle"] = 2, ["Game Master"]   = 2,
+        ["Emerald Golem"]  = 1, ["Inferno Dragon"] = 1, ["Unicorn"]        = 1, ["Flying Pig"]      = 1, ["Lunar Serpent"]  = 1, ["Electra"]       = 1, ["Dark Phoenix"] = 1, ["Inferno Cube"] = 1, ["Cyborg Phoenix"] = 1, ["Crystal Unicorn"] = 1,
+        ["Neon Elemental"] = 2, ["Green Hydra"]    = 2, ["DOOF"]           = 2, ["Stone Gargoyle"]  = 2, ["Game Master"]    = 2,
         ["NULLVoid"]       = 3, ["Virus"]          = 3, ["Demonic Hydra"]  = 3, ["Hexarium"]        = 3, ["Rainbow Shock"]  = 3, ["Space Invader"] = 3, ["Bionic Shard"] = 3, ["Jackpot"]      = 3,
         ["King Doggy"]     = 4, ["The Overlord"]   = 4, ["Silly Doggy :)"] = 4, ["Mech Robot"]      = 4
     }
@@ -263,7 +264,7 @@ local function sendWebhook(name, rarity, shiny, image)
             ["title"] = petTitle,
             ["description"] = string.format("🐾 **Pet Name : **%s 🐾\n💎 **Pet Rarity : **%s 💎\n❓ **Chance : **1 in %s ❓\n🕛 **Hatch Date : **<t:%s:F> 🕛", name, rarity, chances[name] and chances[name][rarity] and chances[name][rarity][shiny] or "N/A", os.time()),
             ["color"] = 16711680,
-            ["footer"] = {["text"] = "🥚 Total Hatches : " .. totalHatches .. " | 💰 Coins Left : " .. currentCoins .. " | 🎫 Tickets Left : " .. currentTickets .. "\n🐾 Pet Hatched By : " .. player.Name},
+            ["footer"] = {["text"] = "💰 Coins Left : " .. currentCoins .. " | 🎫 Tickets Left : " .. currentTickets .. "\n🥚 Total Hatches : " .. totalHatches .. " | 🐾 Pet Hatched By : " .. player.Name},
             ["thumbnail"] = {["url"] = getPetImage(name, shiny, isMythic) or fallbackImage}
         }}
     }
@@ -307,6 +308,7 @@ local function monitorRifts()
         {name = "cyber-egg",     url = "cyberEgg.luau"    },
         {name = "golden-chest",  url = "goldenChest.luau" },
         {name = "royal-chest",   url = "royalChest.luau"  },
+        {name = "dice-rift",     url = "diceRift.luau"    },
         {name = "bubble-rift",   url = "bubbleRift.luau"  }
     }
     local riftDict = {}
@@ -345,6 +347,7 @@ local Teleport1  = Main:addSection("Teleport (World 1)")
 local Teleport2  = Main:addSection("Teleport (World 2)")
 local eggs   = eggStuff:addSection("Hatch (You must be near egg!)")
 local misc  = MiscStuff:addSection("Misc")
+local misc2 = MiscStuff:addSection("Chests")
 local webh   = Webhooks:addSection("Webhooks")
 local sett   = Settings:addSection("Others")
 -- Auto Farm 
@@ -423,13 +426,15 @@ eggs:addToggle("Teleport to Egg", getgenv().Config.teleport_to_Egg, function(t)
     end
 end)
 -- Misc Stuff
-misc:addButton("Unlock All Areas", function()
+misc:addButton("Unlock All Areas (World 1)", function()
     for i, v in next, game:GetService("Workspace").Worlds["The Overworld"].Islands:GetChildren() do
         firetouchinterest(v.Island.UnlockHitbox, player.Character.HumanoidRootPart, 0);
         task.wait();
         firetouchinterest(v.Island.UnlockHitbox, player.Character.HumanoidRootPart, 1);
         task.wait(0.3);
     end
+end)
+misc:addButton("Unlock All Areas (World 2)", function()
     for i, v in next, game:GetService("Workspace").Worlds["Minigame Paradise"].Islands:GetChildren() do
         firetouchinterest(v.Island.UnlockHitbox, player.Character.HumanoidRootPart, 0);
         task.wait();
@@ -453,7 +458,7 @@ misc:addToggle("Auto Claim Wheel Spin", getgenv().Config.auto_Claim_Wheel_Spin, 
         task.wait(10)
     end
 end)
-misc:addToggle("Auto Open Mystery Box", false, function(t)
+misc2:addToggle("Auto Open Mystery Box", false, function(t)
     automboxRunning = t
     while automboxRunning do
         remoteEvent:FireServer("UseGift", "Mystery Box", 10)
@@ -465,7 +470,7 @@ misc:addToggle("Auto Open Mystery Box", false, function(t)
         end;
     end
 end)
-misc:addToggle("Auto Open Golden Chest", false, function(t)
+misc2:addToggle("Auto Open Golden Chest", false, function(t)
     autoGoldenChest = t
     goldenChecked = false
     wait(1)
@@ -475,7 +480,7 @@ misc:addToggle("Auto Open Golden Chest", false, function(t)
             goldenCheck()
             wait(2)
             playerPos()
-            tppos(goldenPos.X, plrPos.Y, goldenPos.Z)
+            ttppos(goldenPos.X, plrPos.Y, goldenPos.Z)
             wait(5)
             tppos(goldenPos.X, goldenPos.Y + 10, goldenPos.Z)
             goldenChecked = true
@@ -489,17 +494,17 @@ misc:addToggle("Auto Open Golden Chest", false, function(t)
         end
     end
 end)
-misc:addToggle("Auto Open Royal Chest", false, function(t)
-    autoGoldenChest = t
+misc2:addToggle("Auto Open Royal Chest", false, function(t)
+    autoRoyalChest = t
     royalChecked = false
     wait(1)
-    while autoGoldenChest do
+    while autoRoyalChest do
         local rchest = workspace.Rendered.Rifts["royal-chest"]:FindFirstChild("Chest")
         if not royalChecked and rchest then
             royalCheck()
             wait(2)
             playerPos()
-            tppos(royalPos.X, plrPos.Y, royalPos.Z)
+            ttppos(royalPos.X, plrPos.Y, royalPos.Z)
             wait(5)
             tppos(royalPos.X, royalPos.Y + 10, royalPos.Z)
             royalChecked = true
@@ -510,6 +515,30 @@ misc:addToggle("Auto Open Royal Chest", false, function(t)
         else
             task.wait(10)
             royalChecked = false
+        end
+    end
+end)
+misc2:addToggle("Auto Open Dice Chest", false, function(t)
+    autoDiceChest = t
+    diceChecked = false
+    wait(1)
+    while autoDiceChest do
+        local dchest = workspace.Rendered.Rifts["dice-rift"]:FindFirstChild("Chest")
+        if not diceChecked and dchest then
+            diceCheck()
+            wait(2)
+            playerPos()
+            ttppos(dicePos.X, plrPos.Y, dicePos.Z)
+            wait(5)
+            tppos(dicePos.X, dicePos.Y + 10, dicePos.Z)
+            royalChecked = true
+        end
+        if diceChecked and dchest then
+            remoteEvent:FireServer("UnlockRiftChest", "dice-rift", false)
+            task.wait(2)
+        else
+            task.wait(10)
+            diceChecked = false
         end
     end
 end)
@@ -566,5 +595,6 @@ sett:addButton("Kill Hub", function()
     automboxRunning   = false
     autoGoldenChest   = false
     autoRoyalChest    = false
+    autoDiceChest     = false
     Window.container:Destroy()
 end)
