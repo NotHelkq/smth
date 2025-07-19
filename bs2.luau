@@ -27,8 +27,8 @@ end)
 Farm:addToggle("Auto Reset", getgenv().Config.autoReset, function(t)
     autoreset = t
     while autoreset and task.wait(0.1) do
-        if timer.Visible and timer.Text == "0" then
-            wait(5)
+        if timer.Text == "1" then
+            task.wait(11)
             player.Character:BreakJoints()
         end
     end
