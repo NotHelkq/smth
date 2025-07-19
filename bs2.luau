@@ -1,6 +1,14 @@
 if not game:IsLoaded() then game.Loaded:Wait() end
 local player = game:GetService("Players").LocalPlayer
-local timer = player.PlayerGui.HUD.Frame.RumbleHolder.Timer2
+local function getTimer()
+    local hud = player.PlayerGui:FindFirstChild("HUD")
+    if not hud then return nil end
+    local frame = hud:FindFirstChild("Frame")
+    if not frame then return nil end
+    local rumbleHolder = frame:FindFirstChild("RumbleHolder")
+    if not rumbleHolder then return nil end
+    return rumbleHolder:FindFirstChild("Timer2")
+end
 -- lib stuff
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/idk.luau"))()
 local Window  = library.new("Random Script")
@@ -26,10 +34,20 @@ end)
 
 Farm:addToggle("Auto Reset", getgenv().Config.autoReset, function(t)
     autoreset = t
+    local lastResetTime = 0
+    local resetCooldown = false
     while autoreset and task.wait(0.1) do
-        if timer.Text == "1" then
-            task.wait(11)
-            player.Character:BreakJoints()
+        local currentTimer = getTimer()
+        if currentTimer and currentTimer.Visible and currentTimer.Text == "1" then 
+            if not resetCooldown then
+                resetCooldown = true
+                task.wait(10)
+                if player and player.Character then
+                    player.Character:BreakJoints()
+                end
+                task.wait(5) 
+                resetCooldown = false
+            end
         end
     end
 end)
