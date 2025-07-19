@@ -3,7 +3,7 @@ local player = game:GetService("Players").LocalPlayer
 local timer = player.PlayerGui.HUD.Frame.RumbleHolder.Timer2
 -- lib stuff
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/idk.luau"))()
-local Window  = library.new("Some random script for furry (kitsune)")
+local Window  = library.new("Random Script")
 local Main      = Window:addPage("Auto Farm", 5012544693, true)
 local Settings  = Window:addPage("Settings", 5012544693)
 local Farm      = Main:addSection("Auto Farm")
