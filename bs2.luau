@@ -57,3 +57,5 @@ settings:addKeybind("Toggle Hub", Enum.KeyCode.LeftControl, function() Window:to
 settings:addButton("Kill Hub", function()
     Window.container:Destroy()
 end)
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/hassanxzayn-lua/Anti-afk/main/antiafkbyhassanxzyn"))()
