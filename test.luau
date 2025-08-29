@@ -204,6 +204,12 @@ do
 				BackgroundColor3 = themes.DarkContrast
 			}, {
 				utility:Create("UICorner"),
+				utility:Create("UIStroke", {
+					Color = themes.TextColor,
+					Transparency = 0.8,
+					Thickness = 3,
+					ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+				}),
 				utility:Create("TextButton", {
 					Name = "ResizeWindow",
 					Position = UDim2.new(1,-2,1,-2),
@@ -273,14 +279,11 @@ do
 		utility:InitializeKeybind()
 		utility:DraggingEnabled(container.Main.TopBar, container.Main)
 
-
 		local draggingResize
 		container.Main.ResizeWindow.MouseButton1Down:Connect(function()
 			draggingResize = true
 			while draggingResize do
-
 				local x, y = mouse.X-1, mouse.Y-1
-				
 				local pos = container.Main.AbsolutePosition
 				local size = container.Main.AbsoluteSize
 				if x-pos.X >= 500 then
@@ -791,6 +794,7 @@ do
 		return button
 	end
 
+	-- Adds a toggle to the section.
 	function section:addToggle(title, default, callback)
 		local toggle = utility:Create("ImageButton", {
 			Name = "Toggle",
@@ -865,6 +869,8 @@ do
 	
 		return toggle
 	end
+
+	-- Adds a textbox to the section.
 	function section:addTextbox(title, default, callback)
 		local textbox = utility:Create("ImageButton", {
 			Name = "Textbox",
@@ -972,6 +978,7 @@ do
 		return textbox
 	end
 
+	-- Adds a keybind to the section.
 	function section:addKeybind(title, default, callback, changedCallback)
 		local keybind = utility:Create("ImageButton", {
 			Name = "Keybind",
@@ -1076,6 +1083,7 @@ do
 		return keybind
 	end
 
+	-- Adds a color picker to the section.
 	function section:addColorPicker(title, default, callback)
 		local colorpicker = utility:Create("ImageButton", {
 			Name = "ColorPicker",
@@ -1587,6 +1595,7 @@ do
 		return colorpicker
 	end
 
+	-- Adds a slider to the section.
 	function section:addSlider(title, default, min, max, callback)
 		local slider = utility:Create("ImageButton", {
 			Name = "Slider",
@@ -1737,6 +1746,7 @@ do
 		return slider
 	end
 
+	-- Adds a dropdown to the section.
 	function section:addDropdown(title, list, callback, default)
 		local dropdown = utility:Create("Frame", {
 			Name = "Dropdown",
@@ -1873,6 +1883,7 @@ do
 		return dropdown
 	end
 
+	-- Adds a multi-select dropdown to the section.
 	function section:addMultiDropdown(title, list, callback)
 		local dropdown = utility:Create("Frame", {
 			Name = "MultiDropdown",
