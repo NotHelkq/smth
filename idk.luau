@@ -7,7 +7,6 @@ local tween = game:GetService("TweenService")
 local tweeninfo = TweenInfo.new
 
 local utility = {}
-
 local objects = {}
 local themes = {
 	Background = Color3.fromRGB(24, 24, 24),  
@@ -21,26 +20,20 @@ local UISize = UDim2.new(0,800,0,450);
 do
 	function utility:Create(instance, properties, children)
 		local object = Instance.new(instance)
-
 		for i, v in pairs(properties or {}) do
 			object[i] = v
-
 			if typeof(v) == "Color3" then
 				local theme = utility:Find(themes, v)
-
 				if theme then
 					objects[theme] = objects[theme] or {}
 					objects[theme][i] = objects[theme][i] or setmetatable({}, {_mode = "k"})
-
 					table.insert(objects[theme][i], object)
 				end
 			end
 		end
-
 		for i, module in pairs(children or {}) do
 			module.Parent = object
 		end
-
 		return object
 	end
 
@@ -54,7 +47,7 @@ do
 	end
 
 	function utility:Find(table, value) 
-		for i, v in  pairs(table) do
+		for i, v in pairs(table) do
 			if v == value then
 				return i
 			end
@@ -64,47 +57,37 @@ do
 	function utility:Sort(pattern, values)
 		local new = {}
 		pattern = pattern:lower()
-
 		if pattern == "" then
 			return values
 		end
-
 		for i, value in pairs(values) do
 			if tostring(value):lower():find(pattern) then
 				table.insert(new, value)
 			end
 		end
-
 		return new
 	end
 
 	function utility:Pop(object, shrink)
 		local clone = object:Clone()
-
 		clone.AnchorPoint = Vector2.new(0.5, 0.5)
 		clone.Size = clone.Size - UDim2.new(0, shrink, 0, shrink)
 		clone.Position = UDim2.new(0.5, 0, 0.5, 0)
-
 		clone.Parent = object
 		clone:ClearAllChildren()
-
 		object.ImageTransparency = 1
 		utility:Tween(clone, {Size = object.Size}, 0.2)
-
 		spawn(function()
 			wait(0.2)
-
 			object.ImageTransparency = 0
 			clone:Destroy()
 		end)
-
 		return clone
 	end
 
 	function utility:InitializeKeybind()
 		self.keybinds = {}
 		self.ended = {}
-
 		input.InputBegan:Connect(function(key,proc)
 			if self.keybinds[key.KeyCode] and not proc then
 				for i, bind in pairs(self.keybinds[key.KeyCode]) do
@@ -112,7 +95,6 @@ do
 				end
 			end
 		end)
-
 		input.InputEnded:Connect(function(key)
 			if key.UserInputType == Enum.UserInputType.MouseButton1 then
 				for i, callback in pairs(self.ended) do
@@ -123,11 +105,8 @@ do
 	end
 
 	function utility:BindToKey(key, callback)
-
 		self.keybinds[key] = self.keybinds[key] or {}
-
 		table.insert(self.keybinds[key], callback)
-
 		return {
 			UnBind = function()
 				for i, bind in pairs(self.keybinds[key]) do
@@ -141,29 +120,22 @@ do
 
 	function utility:KeyPressed()
 		local key = input.InputBegan:Wait()
-
-		while key.UserInputType ~= Enum.UserInputType.Keyboard	 do
+		while key.UserInputType ~= Enum.UserInputType.Keyboard do
 			key = input.InputBegan:Wait()
 		end
-
 		wait() 
-
 		return key
 	end
 
 	function utility:DraggingEnabled(frame, parent)
-
 		parent = parent or frame
-
 		local dragging = false
 		local dragInput, mousePos, framePos
-
 		frame.InputBegan:Connect(function(input)
 			if input.UserInputType == Enum.UserInputType.MouseButton1 then
 				dragging = true
 				mousePos = input.Position
 				framePos = parent.Position
-
 				input.Changed:Connect(function()
 					if input.UserInputState == Enum.UserInputState.End then
 						dragging = false
@@ -171,29 +143,23 @@ do
 				end)
 			end
 		end)
-
 		frame.InputChanged:Connect(function(input)
 			if input.UserInputType == Enum.UserInputType.MouseMovement then
 				dragInput = input
 			end
 		end)
-
 		input.InputChanged:Connect(function(input)
 			if input == dragInput and dragging then
 				local delta = input.Position - mousePos
-				parent.Position  = UDim2.new(framePos.X.Scale, framePos.X.Offset + delta.X, framePos.Y.Scale, framePos.Y.Offset + delta.Y)
+				parent.Position = UDim2.new(framePos.X.Scale, framePos.X.Offset + delta.X, framePos.Y.Scale, framePos.Y.Offset + delta.Y)
 			end
 		end)
-
 	end
 
 	function utility:DraggingEnded(callback)
 		table.insert(self.ended, callback)
 	end
-
 end
-
-
 
 local library = {} 
 local page = {}
@@ -215,8 +181,8 @@ do
 
 	function library.new(title)
 		local container = utility:Create("ScreenGui", {
-			Name = title or "Bubble Gum Simulator Infinity",
-			Parent = game.CoreGui;
+			Name = title or "Random UI",
+			Parent = game.CoreGui
 		}, {
 			utility:Create("Frame", {
 				Name = "Main",
@@ -229,8 +195,8 @@ do
 					Name = "ResizeWindow",
 					Position = UDim2.new(1,-2,1,-2),
 					Size = UDim2.new(0,-15,0,-15),
-					ZIndex = 5;
-					BackgroundColor3 = Color3.fromRGB(0,0,0);
+					ZIndex = 5,
+					BackgroundColor3 = Color3.fromRGB(0,0,0),
 					BackgroundTransparency = 0.75,
 					BorderSizePixel = 0,
 					Text = ""
@@ -250,7 +216,7 @@ do
 						Size = UDim2.new(1, 0, 1, 0),
 						ZIndex = 5,
 						Font = Enum.Font.SourceSansSemibold,
-						Text = title or "Bubble Gum Simulator Infinity",
+						Text = title or "Random UI",
 						TextColor3 = themes.TextColor,
 						TextSize = 16,
 						TextXAlignment = Enum.TextXAlignment.Center
@@ -297,12 +263,12 @@ do
 
 		local draggingResize
 		container.Main.ResizeWindow.MouseButton1Down:Connect(function()
-			draggingResize = true;
+			draggingResize = true
 			while draggingResize do
 
 				local x, y = mouse.X-1, mouse.Y-1
 				
-				local pos = container.Main.AbsolutePosition;
+				local pos = container.Main.AbsolutePosition
 				local size = container.Main.AbsoluteSize
 				if x-pos.X >= 500 then
 					container.Main.Size = UDim2.new(0,x-pos.X,0,size.Y)
@@ -311,14 +277,14 @@ do
 				if y-pos.Y >= 281 then
 					container.Main.Size = UDim2.new(0,size.X,0,y-pos.Y)
 				end
-				UISize = UDim2.new(0, container.Main.AbsoluteSize.X, 0, container.Main.AbsoluteSize.Y);
+				UISize = UDim2.new(0, container.Main.AbsoluteSize.X, 0, container.Main.AbsoluteSize.Y)
 				utility:Wait()
 			end
 		end)
 		
 		input.InputEnded:Connect(function(input)
 			if input.UserInputType == Enum.UserInputType.MouseButton1 then
-				draggingResize = false;
+				draggingResize = false
 			end
 		end)		
 		
@@ -448,13 +414,13 @@ do
 		})
 
 		local scrollingFrame = container.Container.ScrollingFrame
-	local UIListLayout = scrollingFrame:FindFirstChildOfClass("UIListLayout")
+		local UIListLayout = scrollingFrame:FindFirstChildOfClass("UIListLayout")
 
-	if UIListLayout then
-		UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-			scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, UIListLayout.AbsoluteContentSize.Y + 10)
-		end)
-	end
+		if UIListLayout then
+			UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+				scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, UIListLayout.AbsoluteContentSize.Y + 10)
+			end)
+		end
 		
 		return setmetatable({
 			page = page,
@@ -599,8 +565,6 @@ do
 
 		self.toggling = false
 	end
-
-
 
 	function library:Notify(title, text, callback)
 
@@ -786,11 +750,9 @@ do
 			utility:Pop(button, 10)
 
 			debounce = true
-			text.TextSize = 0
-			utility:Tween(button.Title, {TextSize = 14}, 0.2)
-
-			wait(0.2)
-			utility:Tween(button.Title, {TextSize = 12}, 0.2)
+			utility:Tween(button.Title, {TextSize = 12}, 0.1)
+			wait(0.1)
+			utility:Tween(button.Title, {TextSize = 14}, 0.1)
 
 			if callback then
 				callback(function(...)
@@ -955,7 +917,7 @@ do
 
 		input:GetPropertyChangedSignal("Text"):Connect(function()
 
-			if button.ImageTransparency == 0 and (button.Size == UDim2.new(0, 200, 0, 16) or button.Size == UDim2.new(0, 100, 0, 16)) then -- i know, i dont like this either
+			if button.ImageTransparency == 0 and (button.Size == UDim2.new(0, 200, 0, 16) or button.Size == UDim2.new(0, 100, 0, 16)) then 
 				utility:Pop(button, 10)
 			end
 
@@ -1232,7 +1194,7 @@ do
 						Size = UDim2.new(0, 2, 1, 0),
 						ZIndex = 2
 					}),
-					utility:Create("UIGradient", { -- rainbow canvas
+					utility:Create("UIGradient", {
 						Color = ColorSequence.new({
 							ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 0, 0)), 
 							ColorSequenceKeypoint.new(0.17, Color3.fromRGB(255, 255, 0)), 
@@ -1515,7 +1477,6 @@ do
 			end
 		end)
 
-		-- click events
 		local button = colorpicker.Button
 		local toggle, debounce, animate
 
@@ -1985,7 +1946,6 @@ do
 		end
 	
 		local function updateMultiDropdown(filteredList, callbackArg)
-			-- Clear any previous options
 			for _, child in pairs(dropdown.List.Frame:GetChildren()) do
 				if child:IsA("ImageButton") then
 					child:Destroy()
@@ -1993,7 +1953,6 @@ do
 			end
 	
 			local entries = 0
-			-- If no filtered list is given, use the full list
 			local optionsToDisplay = filteredList or allOptions
 	
 			for _, value in pairs(optionsToDisplay) do
@@ -2050,7 +2009,6 @@ do
 				})
 	
 				optionButton.MouseButton1Click:Connect(function()
-					-- Toggle selection of this option
 					local found = false
 					for idx, sel in pairs(selected) do
 						if sel == value then
