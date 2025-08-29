@@ -13,7 +13,8 @@ local themes = {
 	Accent = Color3.fromRGB(10, 10, 10), 
 	LightContrast = Color3.fromRGB(20, 20, 20), 
 	DarkContrast = Color3.fromRGB(14, 14, 14),  
-	TextColor = Color3.fromRGB(255, 255, 255)
+	TextColor = Color3.fromRGB(255, 255, 255),
+	GlowColor = Color3.fromRGB(255, 0, 0)
 }
 local UISize = UDim2.new(0,800,0,450);
 
@@ -206,7 +207,7 @@ do
 				utility:Create("UICorner"),
 				utility:Create("UIStroke", {
 					Color = themes.TextColor,
-					Transparency = 0.8,
+					Transparency = 0,
 					Thickness = 3,
 					ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 				}),
