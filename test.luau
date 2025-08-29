@@ -261,7 +261,7 @@ do
 				utility:Create("UIStroke", {
 					Color = themes.TextColor,
 					Transparency = 0,
-					Thickness = 2,
+					Thickness = 1,
 					ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 				}),
 				utility:Create("TextButton", {
