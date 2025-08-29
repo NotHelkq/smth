@@ -18,6 +18,13 @@ local themes = {
 local UISize = UDim2.new(0,800,0,450);
 
 do
+	--[[
+		Creates a new Roblox instance with properties and children
+		@param instance: string - Class name of instance to create
+		@param properties: table - Properties to apply to the instance
+		@param children: table - Child instances to parent to the new instance
+		@return: Instance - The created instance
+	]]
 	function utility:Create(instance, properties, children)
 		local object = Instance.new(instance)
 		for i, v in pairs(properties or {}) do
@@ -37,15 +44,32 @@ do
 		return object
 	end
 
+	--[[
+		Tweens an instance's properties over a duration
+		@param instance: Instance - Instance to tween
+		@param properties: table - Properties to animate with target values
+		@param duration: number - Duration of the tween in seconds
+		@param ...: any - Additional TweenInfo parameters
+	]]
 	function utility:Tween(instance, properties, duration, ...)
 		tween:Create(instance, tweeninfo(duration, ...), properties):Play()
 	end
 
+	--[[
+		Waits for the next RenderStepped event
+		@return: boolean - Always returns true
+	]]
 	function utility:Wait()
 		run.RenderStepped:Wait()
 		return true
 	end
 
+	--[[
+		Finds a key in a table that matches the given value
+		@param table: table - Table to search
+		@param value: any - Value to find
+		@return: any - Key if found, otherwise nil
+	]]
 	function utility:Find(table, value) 
 		for i, v in pairs(table) do
 			if v == value then
@@ -54,6 +78,12 @@ do
 		end
 	end
 
+	--[[
+		Filters values based on a pattern match
+		@param pattern: string - Pattern to match (case-insensitive)
+		@param values: table - Array of values to filter
+		@return: table - Filtered array of values
+	]]
 	function utility:Sort(pattern, values)
 		local new = {}
 		pattern = pattern:lower()
@@ -68,6 +98,12 @@ do
 		return new
 	end
 
+	--[[
+		Creates a pop animation effect on an object
+		@param object: Instance - Object to animate
+		@param shrink: number - Amount to shrink the clone by
+		@return: Instance - Clone object used for animation
+	]]
 	function utility:Pop(object, shrink)
 		local clone = object:Clone()
 		clone.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -85,6 +121,9 @@ do
 		return clone
 	end
 
+	--[[
+		Initializes the keybind system for handling keyboard inputs
+	]]
 	function utility:InitializeKeybind()
 		self.keybinds = {}
 		self.ended = {}
@@ -104,6 +143,12 @@ do
 		end)
 	end
 
+	--[[
+		Binds a callback function to a specific key
+		@param key: Enum.KeyCode - Key to bind to
+		@param callback: function - Function to call when key is pressed
+		@return: table - Table with UnBind method to remove binding
+	]]
 	function utility:BindToKey(key, callback)
 		self.keybinds[key] = self.keybinds[key] or {}
 		table.insert(self.keybinds[key], callback)
@@ -118,6 +163,10 @@ do
 		}
 	end
 
+	--[[
+		Waits for and returns the next keyboard key press
+		@return: InputObject - The input object for the pressed key
+	]]
 	function utility:KeyPressed()
 		local key = input.InputBegan:Wait()
 		while key.UserInputType ~= Enum.UserInputType.Keyboard do
@@ -127,6 +176,11 @@ do
 		return key
 	end
 
+	--[[
+		Enables dragging functionality for a frame
+		@param frame: Instance - Frame to make draggable
+		@param parent: Instance - Optional parent to move instead of frame
+	]]
 	function utility:DraggingEnabled(frame, parent)
 		parent = parent or frame
 		local dragging = false
@@ -156,6 +210,10 @@ do
 		end)
 	end
 
+	--[[
+		Registers a callback for when dragging ends
+		@param callback: function - Function to call when dragging stops
+	]]
 	function utility:DraggingEnded(callback)
 		table.insert(self.ended, callback)
 	end
@@ -170,6 +228,10 @@ do
 	page.__index = page
 	section.__index = section
 
+	--[[
+		Forces recalculation of UI layout for an instance
+		@param instance: Instance - Instance to recalculate layout for
+	]]
 	function utility:ForceLayoutRecalculate(instance)
 		local Layout = instance:FindFirstChildOfClass("UIListLayout") or instance:FindFirstChildOfClass("UIGridLayout")
 		if Layout then
@@ -179,6 +241,11 @@ do
 		game:GetService("RunService").Heartbeat:Wait()
 	end
 
+	--[[
+		Creates a new library instance with a main UI container
+		@param title: string - Title of the library window
+		@return: table - New library object
+	]]
 	function library.new(title)
 		local container = utility:Create("ScreenGui", {
 			Name = title or "Random UI",
@@ -191,6 +258,12 @@ do
 				BackgroundColor3 = themes.DarkContrast
 			}, {
 				utility:Create("UICorner"),
+				utility:Create("UIStroke", {
+					Color = themes.TextColor,
+					Transparency = 0,
+					Thickness = 1,
+					ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+				}),
 				utility:Create("TextButton", {
 					Name = "ResizeWindow",
 					Position = UDim2.new(1,-2,1,-2),
@@ -260,14 +333,11 @@ do
 		utility:InitializeKeybind()
 		utility:DraggingEnabled(container.Main.TopBar, container.Main)
 
-
 		local draggingResize
 		container.Main.ResizeWindow.MouseButton1Down:Connect(function()
 			draggingResize = true
 			while draggingResize do
-
 				local x, y = mouse.X-1, mouse.Y-1
-				
 				local pos = container.Main.AbsolutePosition
 				local size = container.Main.AbsoluteSize
 				if x-pos.X >= 500 then
@@ -296,6 +366,13 @@ do
 		}, library)
 	end
 
+	--[[
+		Creates a new page in the library
+		@param library: table - The library instance
+		@param title: string - Title of the page
+		@param icon: string - Icon ID for the page
+		@return: table - New page object
+	]]
 	function page.new(library, title, icon)
 		icon = "rbxassetid://" .. tostring(icon)
 		local button = utility:Create("TextButton", {
@@ -363,6 +440,12 @@ do
 		}, page)
 	end
 
+	--[[
+		Creates a new section in a page
+		@param page: table - The page instance
+		@param title: string - Title of the section
+		@return: table - New section object
+	]]
 	function section.new(page, title)
 		local container = utility:Create("Frame", {
 			Name = title,
@@ -434,6 +517,13 @@ do
 		}, section) 
 	end
 
+	--[[
+		Adds a new page to the library
+		@param title: string - Title of the page
+		@param icon: string - Icon ID for the page
+		@param isDefault: boolean - Whether this page should be selected by default
+		@return: table - The created page
+	]]
 	function library:addPage(title, icon, isDefault)
 		local page = page.new(self, title, icon)
 		local button = page.button
@@ -455,10 +545,19 @@ do
 		return page
 	end
 
+	--[[
+		Waits for the next heartbeat event
+		@return: boolean - Always returns true
+	]]
 	function utility:Wait()
     	return game:GetService("RunService").Heartbeat:Wait()
 	end
 	
+	--[[
+		Selects and displays a specific page
+		@param selectedPage: table - The page to select
+		@param instant: boolean - Whether to transition instantly
+	]]
 	function library:SelectPage(selectedPage, instant)
 		if self.selectedPage then
 			self.selectedPage.container.Visible = false
@@ -499,6 +598,11 @@ do
 		self.selectedPage = selectedPage
 	end
 
+	--[[
+		Adds a section to the page
+		@param ...: any - Section parameters
+		@return: table - The created section
+	]]
 	function page:addSection(...)
 		local section = section.new(self, ...)
 		table.insert(self.sections, section)
@@ -512,6 +616,11 @@ do
 		return section
 	end
 	
+	--[[
+		Sets a theme color for the library
+		@param theme: string - Theme property to change
+		@param color3: Color3 - Color value to set
+	]]
 	function library:setTheme(theme, color3)
 		themes[theme] = color3
 
@@ -526,8 +635,10 @@ do
 		end
 	end
 
+	--[[
+		Toggles the visibility of the library UI
+	]]
 	function library:toggle()
-
 		if self.toggling then
 			return
 		end
@@ -536,12 +647,15 @@ do
 
 		local container = self.container.Main
 		local topbar = container.TopBar
+		local uistroke = container.UIStroke -- Get the UIStroke
 
 		if self.position then
+			-- Show the UI
 			utility:Tween(container, {
 				Size = UISize,
 				Position = self.position
 			}, 0.2)
+			uistroke.Enabled = true -- Show the UIStroke
 			wait(0.2)
 
 			utility:Tween(topbar, {Size = UDim2.new(1, 0, 0, 30)}, 0.2)
@@ -550,10 +664,12 @@ do
 			container.ClipsDescendants = false
 			self.position = nil
 		else
+			-- Hide the UI
 			self.position = container.Position
 			container.ClipsDescendants = true
 
 			utility:Tween(topbar, {Size = UDim2.new(1, 0, 1, 0)}, 0.2)
+			uistroke.Enabled = false -- Hide the UIStroke
 			wait(0.2)
 
 			utility:Tween(container, {
@@ -565,9 +681,13 @@ do
 
 		self.toggling = false
 	end
-
+	--[[
+		Displays a notification with title, text, and callback
+		@param title: string - Notification title
+		@param text: string - Notification content
+		@param callback: function - Function to call when buttons are clicked
+	]]
 	function library:Notify(title, text, callback)
-
 		if self.activeNotification then
 			self.activeNotification = self.activeNotification()
 		end
@@ -710,6 +830,12 @@ do
 		end)
 	end
 
+	--[[
+		Adds a button to the section
+		@param title: string - Button text
+		@param callback: function - Function called on button click
+		@return: Instance - Created button object
+	]]
 	function section:addButton(title, callback)
 		local button = utility:Create("ImageButton", {
 			Name = "Button",
@@ -766,6 +892,13 @@ do
 		return button
 	end
 
+	--[[
+		Adds a toggle to the section
+		@param title: string - Toggle label
+		@param default: boolean - Initial state
+		@param callback: function - Function called on state change
+		@return: Instance - Created toggle object
+	]]
 	function section:addToggle(title, default, callback)
 		local toggle = utility:Create("ImageButton", {
 			Name = "Toggle",
@@ -840,6 +973,14 @@ do
 	
 		return toggle
 	end
+
+	--[[
+		Adds a textbox to the section
+		@param title: string - Textbox label
+		@param default: string - Initial text
+		@param callback: function - Function called on text change
+		@return: Instance - Created textbox object
+	]]
 	function section:addTextbox(title, default, callback)
 		local textbox = utility:Create("ImageButton", {
 			Name = "Textbox",
@@ -917,7 +1058,7 @@ do
 
 		input:GetPropertyChangedSignal("Text"):Connect(function()
 
-			if button.ImageTransparency == 0 and (button.Size == UDim2.new(0, 200, 0, 16) or button.Size == UDim2.new(0, 100, 0, 16)) then 
+			if button.ImageTransparency == 0 and (button.Size == UDim2.new(0, 200, 0, 16) or button.Size == UDim2.new(0, 100, 0, 16)) then -- i know, i dont like this either
 				utility:Pop(button, 10)
 			end
 
@@ -947,6 +1088,14 @@ do
 		return textbox
 	end
 
+	--[[
+		Adds a keybind to the section
+		@param title: string - Keybind label
+		@param default: Enum.KeyCode - Initial keybind
+		@param callback: function - Function called when key is pressed
+		@param changedCallback: function - Function called when keybind changes
+		@return: Instance - Created keybind object
+	]]
 	function section:addKeybind(title, default, callback, changedCallback)
 		local keybind = utility:Create("ImageButton", {
 			Name = "Keybind",
@@ -1051,6 +1200,13 @@ do
 		return keybind
 	end
 
+	--[[
+		Adds a color picker to the section
+		@param title: string - Color picker label
+		@param default: Color3 - Initial color
+		@param callback: function - Function called on color change
+		@return: Instance - Created color picker object
+	]]
 	function section:addColorPicker(title, default, callback)
 		local colorpicker = utility:Create("ImageButton", {
 			Name = "ColorPicker",
@@ -1194,7 +1350,7 @@ do
 						Size = UDim2.new(0, 2, 1, 0),
 						ZIndex = 2
 					}),
-					utility:Create("UIGradient", {
+					utility:Create("UIGradient", { -- rainbow canvas
 						Color = ColorSequence.new({
 							ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 0, 0)), 
 							ColorSequenceKeypoint.new(0.17, Color3.fromRGB(255, 255, 0)), 
@@ -1477,6 +1633,7 @@ do
 			end
 		end)
 
+		-- click events
 		local button = colorpicker.Button
 		local toggle, debounce, animate
 
@@ -1561,6 +1718,15 @@ do
 		return colorpicker
 	end
 
+	--[[
+		Adds a slider to the section
+		@param title: string - Slider label
+		@param default: number - Initial value
+		@param min: number - Minimum value
+		@param max: number - Maximum value
+		@param callback: function - Function called on value change
+		@return: Instance - Created slider object
+	]]
 	function section:addSlider(title, default, min, max, callback)
 		local slider = utility:Create("ImageButton", {
 			Name = "Slider",
@@ -1711,6 +1877,14 @@ do
 		return slider
 	end
 
+	--[[
+		Adds a dropdown to the section
+		@param title: string - Dropdown label
+		@param list: table - List of options
+		@param callback: function - Function called on selection
+		@param default: string - Initial selected value
+		@return: Instance - Created dropdown object
+	]]
 	function section:addDropdown(title, list, callback, default)
 		local dropdown = utility:Create("Frame", {
 			Name = "Dropdown",
@@ -1847,6 +2021,13 @@ do
 		return dropdown
 	end
 
+	--[[
+		Adds a multi-select dropdown to the section
+		@param title: string - Dropdown label
+		@param list: table - List of options
+		@param callback: function - Function called on selection change
+		@return: Instance - Created multi-dropdown object
+	]]
 	function section:addMultiDropdown(title, list, callback)
 		local dropdown = utility:Create("Frame", {
 			Name = "MultiDropdown",
@@ -1946,6 +2127,7 @@ do
 		end
 	
 		local function updateMultiDropdown(filteredList, callbackArg)
+			-- Clear any previous options
 			for _, child in pairs(dropdown.List.Frame:GetChildren()) do
 				if child:IsA("ImageButton") then
 					child:Destroy()
@@ -1953,6 +2135,7 @@ do
 			end
 	
 			local entries = 0
+			-- If no filtered list is given, use the full list
 			local optionsToDisplay = filteredList or allOptions
 	
 			for _, value in pairs(optionsToDisplay) do
@@ -2009,6 +2192,7 @@ do
 				})
 	
 				optionButton.MouseButton1Click:Connect(function()
+					-- Toggle selection of this option
 					local found = false
 					for idx, sel in pairs(selected) do
 						if sel == value then
@@ -2092,8 +2276,12 @@ do
 		return dropdown
 	end
 
+	--[[
+		Selects a page internally
+		@param page: table - Page to select
+		@param toggle: boolean - Whether to toggle selection
+	]]
 	function library:SelectPage(page, toggle)
-
 		if toggle and self.focusedPage == page then
 			return
 		end
@@ -2180,8 +2368,11 @@ do
 		end
 	end
 
+	--[[
+		Resizes the page layout
+		@param scroll: boolean - Whether to scroll to last position
+	]]
 	function page:Resize(scroll)
-
 		for i, section in pairs(self.sections) do
 			section.container.Parent.Size = UDim2.new(0.48, 0, 0, 240)
 			section.container.Parent.Position = UDim2.new(((i+1)%2)/2, 4, 0, 244*(math.floor((i+1)/2)-1))
@@ -2195,8 +2386,11 @@ do
 		end
 	end
 
+	--[[
+		Resizes the section based on module sizes
+		@param smooth: boolean - Whether to resize smoothly
+	]]
 	function section:Resize(smooth)
-
 		if self.page.library.focusedPage ~= self.page then
 			return
 		end
@@ -2211,8 +2405,12 @@ do
 
 	end
 
+	--[[
+		Gets a module by name or title
+		@param info: string or Instance - Module name or instance
+		@return: Instance - The module object
+	]]
 	function section:getModule(info)
-
 		if table.find(self.modules, info) then
 			return info
 		end
@@ -2226,12 +2424,23 @@ do
 		error("No module found under "..tostring(info))
 	end
 
+	--[[
+		Updates a button's title
+		@param button: Instance - Button to update
+		@param title: string - New title
+	]]
 	function section:updateButton(button, title)
 		button = self:getModule(button)
 
 		button.Title.Text = title
 	end
 
+	--[[
+		Updates a toggle's state
+		@param toggle: Instance - Toggle to update
+		@param title: string - New title (optional)
+		@param value: boolean - New state
+	]]
 	function section:updateToggle(toggle, title, value)
 		toggle = self:getModule(toggle)
 
@@ -2269,6 +2478,12 @@ do
 		}, 0.1)
 	end
 
+	--[[
+		Updates a textbox's value
+		@param textbox: Instance - Textbox to update
+		@param title: string - New title (optional)
+		@param value: string - New text value (optional)
+	]]
 	function section:updateTextbox(textbox, title, value)
 		textbox = self:getModule(textbox)
 
@@ -2282,6 +2497,12 @@ do
 
 	end
 
+	--[[
+		Updates a keybind
+		@param keybind: Instance - Keybind to update
+		@param title: string - New title (optional)
+		@param key: Enum.KeyCode - New key (optional)
+	]]
 	function section:updateKeybind(keybind, title, key)
 		keybind = self:getModule(keybind)
 
@@ -2304,6 +2525,12 @@ do
 		end
 	end
 
+	--[[
+		Updates a color picker
+		@param colorpicker: Instance - Color picker to update
+		@param title: string - New title (optional)
+		@param color: Color3 or table - New color value
+	]]
 	function section:updateColorPicker(colorpicker, title, color)
 		colorpicker = self:getModule(colorpicker)
 
@@ -2342,6 +2569,16 @@ do
 		end
 	end
 
+	--[[
+		Updates a slider's value
+		@param slider: Instance - Slider to update
+		@param title: string - New title (optional)
+		@param value: number - New value (optional)
+		@param min: number - Minimum value
+		@param max: number - Maximum value
+		@param lvalue: number - Last value for pop effect
+		@return: number - Updated value
+	]]
 	function section:updateSlider(slider, title, value, min, max, lvalue)
 		slider = self:getModule(slider)
 
@@ -2369,6 +2606,13 @@ do
 		return value
 	end
 
+	--[[
+		Updates a dropdown
+		@param dropdown: Instance - Dropdown to update
+		@param title: string - New title (optional)
+		@param list: table - New list of options (optional)
+		@param callback: function - Callback for selection
+	]]
 	function section:updateDropdown(dropdown, title, list, callback)
 		dropdown = self:getModule(dropdown)
 
