@@ -647,12 +647,15 @@ do
 
 		local container = self.container.Main
 		local topbar = container.TopBar
+		local uistroke = container.UIStroke -- Get the UIStroke
 
 		if self.position then
+			-- Show the UI
 			utility:Tween(container, {
 				Size = UISize,
 				Position = self.position
 			}, 0.2)
+			utility:Tween(uistroke, {Transparency = 0.2}, 0.2) -- Show the UIStroke
 			wait(0.2)
 
 			utility:Tween(topbar, {Size = UDim2.new(1, 0, 0, 30)}, 0.2)
@@ -661,10 +664,12 @@ do
 			container.ClipsDescendants = false
 			self.position = nil
 		else
+			-- Hide the UI
 			self.position = container.Position
 			container.ClipsDescendants = true
 
 			utility:Tween(topbar, {Size = UDim2.new(1, 0, 1, 0)}, 0.2)
+			utility:Tween(uistroke, {Transparency = 1}, 0.2) -- Hide the UIStroke
 			wait(0.2)
 
 			utility:Tween(container, {
@@ -676,7 +681,6 @@ do
 
 		self.toggling = false
 	end
-
 	--[[
 		Displays a notification with title, text, and callback
 		@param title: string - Notification title
