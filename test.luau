@@ -206,7 +206,7 @@ do
 			}, {
 				utility:Create("UICorner"),
 				utility:Create("UIStroke", {
-					Color = themes.TextColor,
+					Color = themes.GlowColor,
 					Transparency = 0,
 					Thickness = 3,
 					ApplyStrokeMode = Enum.ApplyStrokeMode.Border
