@@ -94,13 +94,13 @@ local function sendWebhook(target)
             ["fields"] = {
                 {["name"] = "Stats",
                     ["value"] = string.format(
-                        "Fist Strength : %s\nBody Toughness : %s\nMovement Speed : %s\nJump Force : %s\nPsychic Power : %s",
+                        "Fist Strength : %s\n Body Toughness : %s\n Movement Speed : %s\n Jump Force : %s\n Psychic Power : %s",
                         Ffsv, Fbtv, Fmsv, Fjfv, Fppv
                     ),
                     ["inline"] = true},
                 {["name"] = "Multipliers",
                     ["value"] = string.format(
-                        "Fist Strength : %s\nBody Toughness : %s\nMovement Speed : %s\nJump Force : %s\nPsychic Power : %s",
+                        "Fist Strength : x%s\n Body Toughness : x%s\n Movement Speed : x%s\n Jump Force : x%s\n Psychic Power : x%s",
                         Ffsm, Fbtm, Fmsm, Fjfm, Fppm 
                     ),
                     ["inline"] = true},
@@ -218,7 +218,7 @@ webh:addButton("Send Webhook", function()
     local user = game:GetService("Players"):FindFirstChild(u)
     if user then 
         sendWebhook(u)
-    else warn("Player doesn't exist") end
+    else warn("\n----------------------\n \n Player doesn't exist \n \n----------------------") end
 end)
 
 -- Teleport
