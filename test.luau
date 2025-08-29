@@ -655,7 +655,7 @@ do
 				Size = UISize,
 				Position = self.position
 			}, 0.2)
-			utility:Tween(uistroke, {Transparency = 0.2}, 0.2) -- Show the UIStroke
+			uistroke.Enabled = true -- Show the UIStroke
 			wait(0.2)
 
 			utility:Tween(topbar, {Size = UDim2.new(1, 0, 0, 30)}, 0.2)
@@ -669,7 +669,7 @@ do
 			container.ClipsDescendants = true
 
 			utility:Tween(topbar, {Size = UDim2.new(1, 0, 1, 0)}, 0.2)
-			utility:Tween(uistroke, {Transparency = 1}, 0.2) -- Hide the UIStroke
+			uistroke.Enabled = false -- Hide the UIStroke
 			wait(0.2)
 
 			utility:Tween(container, {
