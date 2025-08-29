@@ -695,7 +695,7 @@ do
 		local notification = utility:Create("ImageLabel", {
 			Name = "Notification",
 			Parent = self.container,
-			BackgroundTransparency = 1,
+			BackgroundTransparency = 0,
 			Size = UDim2.new(0, 200, 0, 60),
 			Image = "rbxassetid://5028857472",
 			ImageColor3 = themes.Background,
@@ -707,14 +707,14 @@ do
 			utility:Create("ImageLabel", {
 				Name = "Flash",
 				Size = UDim2.new(1, 0, 1, 0),
-				BackgroundTransparency = 1,
+				BackgroundTransparency = 0,
 				Image = "rbxassetid://4641149554",
 				ImageColor3 = themes.TextColor,
 				ZIndex = 5
 			}),
 			utility:Create("TextLabel", {
 				Name = "Title",
-				BackgroundTransparency = 1,
+				BackgroundTransparency = 0,
 				Position = UDim2.new(0, 10, 0, 8),
 				Size = UDim2.new(1, -40, 0, 16),
 				ZIndex = 4,
@@ -725,7 +725,7 @@ do
 			}),
 			utility:Create("TextLabel", {
 				Name = "Text",
-				BackgroundTransparency = 1,
+				BackgroundTransparency = 0,
 				Position = UDim2.new(0, 10, 1, -24),
 				Size = UDim2.new(1, -40, 0, 16),
 				ZIndex = 4,
@@ -736,7 +736,7 @@ do
 			}),
 			utility:Create("ImageButton", {
 				Name = "Accept",
-				BackgroundTransparency = 1,
+				BackgroundTransparency = 0,
 				Position = UDim2.new(1, -26, 0, 8),
 				Size = UDim2.new(0, 16, 0, 16),
 				Image = "rbxassetid://5012538259",
@@ -745,7 +745,7 @@ do
 			}),
 			utility:Create("ImageButton", {
 				Name = "Decline",
-				BackgroundTransparency = 1,
+				BackgroundTransparency = 0,
 				Position = UDim2.new(1, -26, 1, -24),
 				Size = UDim2.new(0, 16, 0, 16),
 				Image = "rbxassetid://5012538583",
