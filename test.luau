@@ -869,7 +869,7 @@ function Library:SectionAddTextbox(section, title, default, callback)
     end)
 
     input:GetPropertyChangedSignal("Text"):Connect(function()
-        if button.ImageTransparency == 0 and (button.Size == UDim2.new(0, 200, 0, 16) or button.Size = UDim2.new(0, 100, 0, 16)) then
+        if button.ImageTransparency == 0 and (button.Size == UDim2.new(0, 200, 0, 16) or button.Size == UDim2.new(0, 100, 0, 16)) then
             Utility:PopEffect(button, 10)
         end
         if callback then
