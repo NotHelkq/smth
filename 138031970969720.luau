@@ -82,8 +82,8 @@ local function sendWebhook(target)
     local Ffsv,Fbtv,Fmsv,Fjfv,Fppv = fN(fsv),fN(btv),fN(msv),fN(jfv),fN(ppv)
     local fsm, btm, msm, jfm, ppm = s.FSMulti.Value, s.BTMulti.Value, s.MSMulti.Value, s.JFMulti.Value, s.PPMulti.Value
     local Ffsm,Fbtm,Fmsm,Fjfm,Fppm = fN(fsm),fN(btm),fN(msm),fN(jfm),fN(ppm)
-    local g, gm, gc, t, rep, tpmv, tpm = s.Race.Value, s.Multiplier.Value, s.UniversalCoins.Value, s.Tokens.Value, s.Reputation.Value, s.TPMGained.Value, s.TPMGained.Value * s.Multiplier.Value
-    local Fgc, Ft, Ftpmv, Ftpm = fN(gc), fN(t), fN(tpmv), fN(tpm)
+    local g, gm, gc, rb, t, rep, tpmv, tpm = s.Race.Value, s.Multiplier.Value, s.UniversalCoins.Value, s.RuneMultiplier.Value, s.Tokens.Value, s.Reputation.Value, s.TPMGained.Value, s.TPMGained.Value * s.Multiplier.Value + s.RuneMultiplier.Value
+    local Fgc, Ft, Ftpmv, Ftpm, Frb = fN(gc), fN(t), fN(tpmv), fN(tpm), fN(rb)
     local status = n.leaderstats.Status.Value
 
     local data = {
@@ -106,8 +106,8 @@ local function sendWebhook(target)
                     ["inline"] = true},
                 {["name"] = "Other",
                     ["value"] = string.format(
-                        "Grade : %s | x%s\n Grade Coins : %s\n Tokens : %s\n TPM : %s (%s)\n Reputation : %s (%s)",
-                        g, gm, Fgc, Ft, Ftpm, Ftpmv, status, rep
+                        "Grade : %s | x%s\n Grade Coins : %s\n Rune Boost : %s\n Tokens : %s\n TPM : %s (%s)\n Reputation : %s (%s)",
+                        g, gm, Fgc, Frb, Ft, Ftpm, Ftpmv, status, rep
                     ),
                     ["inline"] = true}},
             ["footer"] = {["text"] = os.date("%m/%d/%Y %H:%M:%S")}
