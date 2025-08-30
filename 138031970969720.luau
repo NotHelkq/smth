@@ -125,6 +125,7 @@ local Settings  = Window:addPage("Settings", 5012544693)
 local Farm       = Main:addSection("Auto Farm")
 local misc       = Main:addSection("Misc")
 local webh       = Main:addSection("Check Player's Stats")
+local kill       = Main:addSection("Kill Any Player")
 local sett   = Settings:addSection("Others")
 
 -- Auto Farm
@@ -220,7 +221,20 @@ webh:addButton("Send Webhook", function()
         sendWebhook(u)
     else warn("\n----------------------\n \n Player doesn't exist \n \n----------------------") end
 end)
-
+kill:addTextbox("Username", "", false)
+kill:addButton("Kill Player", function()
+    local u = kill.container.ScrollingFrame.Textbox.Button.Textbox.Text
+    local user = game:GetService("Players"):FindFirstChild(u)
+    if user then 
+        local args = {
+            {
+                "Skill_SoulReap",
+                game:GetService("Players"):WaitForChild(u)
+            }
+        }
+        game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
+    else warn("\n----------------------\n \n Player doesn't exist \n \n----------------------") end
+end)
 -- Teleport
 for _, sectionData in ipairs(teleportData) do
     local section = teleport:addSection(sectionData.section)
