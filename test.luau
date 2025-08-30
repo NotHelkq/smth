@@ -604,9 +604,17 @@ function Library:PageAddSection(page, title)
     local section = self:CreateSection(page, title)
     table.insert(page.Sections, section)
     page.NeedsRefresh = true
-    if self.SelectedPage == page then
-        self:SelectPage(page, true)
-    end
+    
+    -- Force a resize after a short delay
+    task.spawn(function()
+        task.wait(0.2)
+        self:SectionResize(section)
+        
+        if self.SelectedPage == page then
+            self:SelectPage(page, true)
+        end
+    end)
+    
     return section
 end
 
@@ -639,7 +647,7 @@ function Library:CreateSection(page, title)
                 TextColor3 = Themes.TextColor,
                 TextSize = 14,
                 TextXAlignment = Enum.TextXAlignment.Left,
-                TextTransparency = 1
+                TextTransparency = 0 -- Changed from 1 to 0 to make title visible
             }),
             Utility:Create("ScrollingFrame", {
                 Name = "ScrollingFrame",
@@ -648,7 +656,7 @@ function Library:CreateSection(page, title)
                 BorderSizePixel = 0,
                 Position = UDim2.new(0, 0, 0, 25),
                 Size = UDim2.new(1, 0, 1, -25),
-                CanvasSize = UDim2.new(0, 0, 0, 466),
+                CanvasSize = UDim2.new(0, 0, 0, 0), -- Start with 0, will be updated
                 ScrollBarThickness = 3,
                 ScrollBarImageColor3 = Themes.TextColor,
                 ZIndex = 5
@@ -660,23 +668,20 @@ function Library:CreateSection(page, title)
             })
         })
     })
-    
+
     local scrollingFrame = container.InnerContainer.ScrollingFrame
     local uiListLayout = scrollingFrame:FindFirstChildOfClass("UIListLayout")
 
     if uiListLayout then
         uiListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
             scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, uiListLayout.AbsoluteContentSize.Y + 10)
+            
+            -- Also update the section container size
+            local totalHeight = uiListLayout.AbsoluteContentSize.Y + 35 -- 25 for title + 10 padding
+            container.Size = UDim2.new(1, -10, 0, math.max(28, totalHeight))
         end)
     end
 
-    task.defer(function()
-        Utility:RecalculateLayout(page.Container)
-        if page.UIListLayout then
-            page.Container.CanvasSize = UDim2.new(0, 0, 0, page.UIListLayout.AbsoluteContentSize.Y + 20)
-        end
-    end)
-    
     return {
         Page = page,
         Container = container.InnerContainer,
@@ -2215,18 +2220,27 @@ function Library:PageResize(page, scroll)
 end
 
 -- Resize section
-function Library:SectionResize(section, smooth)
-    if section.Page.Library.SelectedPage ~= section.Page then return end
-    local size = 0
+function Library:SectionResize(section)
+    if not section or not section.UIListLayout then return end
+    
+    -- Wait for UI to update
+    task.wait(0.1)
+    
+    local totalSize = 0
     for _, module in pairs(section.Modules) do
-        size = size + module.AbsoluteSize.Y + 4
+        if module:IsA("GuiObject") then
+            totalSize = totalSize + module.AbsoluteSize.Y + 4
+        end
     end
-    if smooth then
-        Utility:Tween(section.ScrollingFrame.Parent, {Size = UDim2.new(1, 0, 0, size)}, 0.1)
-    else
-        section.ScrollingFrame.Parent.Size = UDim2.new(1, 0, 0, size)
+    
+    section.ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, totalSize + 10)
+    
+    -- Update the section container size
+    local container = section.Container.Parent
+    if container then
+        local newHeight = math.max(28, totalSize + 35) -- Minimum height of 28
+        container.Size = UDim2.new(1, -10, 0, newHeight)
     end
-    section.ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, size)
 end
 
 -- Get module
