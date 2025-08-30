@@ -106,7 +106,7 @@ local function sendWebhook(target)
                     ["inline"] = true},
                 {["name"] = "Other",
                     ["value"] = string.format(
-                        "Grade : %s | x%s\n Grade Coins : %s\n Rune Boost : %s\n Tokens : %s\n TPM : %s (%s)\n Reputation : %s (%s)",
+                        "Grade : %s | x%s\n Grade Coins : %s\n Rune Boost : +%s\n Tokens : %s\n TPM : %s (%s)\n Reputation : %s (%s)",
                         g, gm, Fgc, Frb, Ft, Ftpm, Ftpmv, status, rep
                     ),
                     ["inline"] = true}},
