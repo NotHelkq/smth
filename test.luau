@@ -660,7 +660,7 @@ function Library:CreateSection(page, title)
             })
         })
     })
-
+    
     local scrollingFrame = container.InnerContainer.ScrollingFrame
     local uiListLayout = scrollingFrame:FindFirstChildOfClass("UIListLayout")
 
@@ -670,6 +670,13 @@ function Library:CreateSection(page, title)
         end)
     end
 
+    task.defer(function()
+        Utility:RecalculateLayout(page.Container)
+        if page.UIListLayout then
+            page.Container.CanvasSize = UDim2.new(0, 0, 0, page.UIListLayout.AbsoluteContentSize.Y + 20)
+        end
+    end)
+    
     return {
         Page = page,
         Container = container.InnerContainer,
