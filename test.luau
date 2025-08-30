@@ -2043,14 +2043,19 @@ function Library:UpdateKeybind(keybind, title, key)
         keybind.Title.Text = title
     end
     local bind = self.Binds[keybind]
-    if bind.Connection then
+    if bind and bind.Connection then
         bind.Connection:Unbind()
     end
     if key then
-        bind.Connection = Utility:BindKey(self.Keybinds, key, bind.Callback)
+        if bind then
+            bind.Connection = Utility:BindKey(self.Keybinds, key, bind.Callback)
+        end
         keybind.Button.Text.Text = key.Name
     else
         keybind.Button.Text.Text = "None"
+        if bind then
+            bind.Connection = nil
+        end
     end
 end
 
