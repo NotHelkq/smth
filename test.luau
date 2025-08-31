@@ -775,14 +775,8 @@ function Library:SectionAddButton(section, title, callback)
         debounce = false
     end)
     
-    -- Trigger section resize after adding the button
-    task.defer(function()
-        if section.UIListLayout then
-            section.UIListLayout:ApplyLayout()
-            task.wait(0.1)
-            self:PageResize(section.Page)
-        end
-    end)
+    -- Trigger page resize after adding the button
+    self:AutoResizePage(section.Page)
     
     return button
 end
@@ -2294,6 +2288,21 @@ function Library:PageResize(page)
     totalHeight = totalHeight + currentRowHeight + 20 
     
     page.Container.CanvasSize = UDim2.new(0, 0, 0, totalHeight)
+end
+
+function Library:AutoResizePage(page)
+    if not page or not page.UIGridLayout then return end
+    
+    -- Wait a frame for UI to update
+    task.defer(function()
+        task.wait(0.1)
+        self:PageResize(page)
+        
+        -- Also update the grid layout
+        if page.UIGridLayout then
+            page.UIGridLayout:ApplyLayout()
+        end
+    end)
 end
 
 -- Resize section
