@@ -510,7 +510,7 @@ function Library:ShowNotification(title, text, callback)
         Size = UDim2.new(0, 200, 0, 60),
         Image = "rbxassetid://5028857472",
         ImageColor3 = Color3.fromRGB(0, 0, 0), 
-        ImageTransparency = 0.5,  
+        ImageTransparency = 0.25,  
         ScaleType = Enum.ScaleType.Slice,
         SliceCenter = Rect.new(4, 4, 296, 296),
         ZIndex = 3,
@@ -522,7 +522,7 @@ function Library:ShowNotification(title, text, callback)
             BackgroundTransparency = 1,  
             Image = "rbxassetid://4641149554",
             ImageColor3 = Themes.TextColor,
-            ImageTransparency = 0.8,  
+            ImageTransparency = 0.5,  
             ZIndex = 5
         }),
         Utility:Create("TextLabel", {
