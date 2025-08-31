@@ -527,7 +527,7 @@ function Library:ShowNotification(title, text, callback)
         }),
         Utility:Create("TextLabel", {
             Name = "Title",
-            BackgroundTransparency = 0,
+            BackgroundTransparency = 1,
             Position = UDim2.new(0, 10, 0, 8),
             Size = UDim2.new(1, -40, 0, 16),
             ZIndex = 4,
@@ -539,7 +539,7 @@ function Library:ShowNotification(title, text, callback)
         }),
         Utility:Create("TextLabel", {
             Name = "Text",
-            BackgroundTransparency = 0,
+            BackgroundTransparency = 1,
             Position = UDim2.new(0, 10, 1, -24),
             Size = UDim2.new(1, -40, 0, 16),
             ZIndex = 4,
@@ -551,7 +551,7 @@ function Library:ShowNotification(title, text, callback)
         }),
         Utility:Create("ImageButton", {
             Name = "Accept",
-            BackgroundTransparency = 0,
+            BackgroundTransparency = 1,
             Position = UDim2.new(1, -26, 0, 8),
             Size = UDim2.new(0, 16, 0, 16),
             Image = "rbxassetid://5012538259",
@@ -560,7 +560,7 @@ function Library:ShowNotification(title, text, callback)
         }),
         Utility:Create("ImageButton", {
             Name = "Decline",
-            BackgroundTransparency = 0,
+            BackgroundTransparency = 1,
             Position = UDim2.new(1, -26, 1, -24),
             Size = UDim2.new(0, 16, 0, 16),
             Image = "rbxassetid://5012538583",
