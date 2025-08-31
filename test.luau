@@ -99,6 +99,7 @@ end
 function Utility:InitKeybinds()
     local keybinds = {}
     local endedCallbacks = {}
+    
     UserInputService.InputBegan:Connect(function(input, processed)
         if not processed and keybinds[input.KeyCode] then
             for _, callback in pairs(keybinds[input.KeyCode]) do
@@ -106,6 +107,7 @@ function Utility:InitKeybinds()
             end
         end
     end)
+    
     UserInputService.InputEnded:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             for _, callback in pairs(endedCallbacks) do
@@ -113,17 +115,27 @@ function Utility:InitKeybinds()
             end
         end
     end)
+    
     return {Keybinds = keybinds, EndedCallbacks = endedCallbacks}
 end
 
 -- Binds a callback to a key
 function Utility:BindKey(keybindsTable, key, callback)
     keybindsTable[key] = keybindsTable[key] or {}
-    table.insert(keybindsTable[key], callback)
+    
+    local safeCallback = function()
+        local success, err = pcall(callback)
+        if not success then
+            warn("Keybind callback error: " .. tostring(err))
+        end
+    end
+    
+    table.insert(keybindsTable[key], safeCallback)
+    
     return {
         Unbind = function()
             for i, bind in pairs(keybindsTable[key]) do
-                if bind == callback then
+                if bind == safeCallback then
                     table.remove(keybindsTable[key], i)
                     break
                 end
@@ -396,15 +408,11 @@ function Library:CreatePage(title, icon)
         ScrollBarImageColor3 = Themes.DarkContrast,
         Visible = false
     }, {
-        Utility:Create("UIPadding", {
-            PaddingLeft = UDim.new(0, 10),
-            PaddingRight = UDim.new(0, 10)
-        }),
-        Utility:Create("UIListLayout", {
+        Utility:Create("UIGridLayout", {
             SortOrder = Enum.SortOrder.LayoutOrder,
-            Padding = UDim.new(0, 10),
+            CellSize = UDim2.new(0.48, 0, 0, 240),
+            CellPadding = UDim2.new(0, 10, 0, 10),
             HorizontalAlignment = Enum.HorizontalAlignment.Center,
-            FillDirection = Enum.FillDirection.Horizontal,
             VerticalAlignment = Enum.VerticalAlignment.Top
         })
     })
@@ -415,7 +423,7 @@ function Library:CreatePage(title, icon)
         Button = button,
         Sections = {},
         NeedsRefresh = true,
-        UIListLayout = container:FindFirstChildOfClass("UIListLayout"),
+        UIGridLayout = container:FindFirstChildOfClass("UIGridLayout"),
         LastPosition = nil
     }
 end
