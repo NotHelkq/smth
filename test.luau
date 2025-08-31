@@ -408,12 +408,9 @@ function Library:CreatePage(title, icon)
         ScrollBarImageColor3 = Themes.DarkContrast,
         Visible = false
     }, {
-        Utility:Create("UIGridLayout", {
+        Utility:Create("UIListLayout", {
             SortOrder = Enum.SortOrder.LayoutOrder,
-            CellSize = UDim2.new(0.48, 0, 0, 240),
-            CellPadding = UDim2.new(0, 10, 0, 10),
-            HorizontalAlignment = Enum.HorizontalAlignment.Center,
-            VerticalAlignment = Enum.VerticalAlignment.Top
+            Padding = UDim.new(0, 10)
         })
     })
 
@@ -423,7 +420,7 @@ function Library:CreatePage(title, icon)
         Button = button,
         Sections = {},
         NeedsRefresh = true,
-        UIGridLayout = container:FindFirstChildOfClass("UIGridLayout"),
+        UIListLayout = container:FindFirstChildOfClass("UIListLayout"),
         LastPosition = nil
     }
 end
@@ -639,7 +636,7 @@ function Library:CreateSection(page, title)
     local container = Utility:Create("Frame", {
         Name = title,
         Parent = page.Container,
-        Size = UDim2.new(0.48, 0, 0, 35), -- Start with minimum height (title height)
+        Size = UDim2.new(1, 0, 0, 35), -- Start with minimum height
         ZIndex = 2,
         BackgroundColor3 = Themes.LightContrast,
         ClipsDescendants = true
@@ -688,22 +685,6 @@ function Library:CreateSection(page, title)
     local scrollingFrame = container.InnerContainer.ScrollingFrame
     local uiListLayout = scrollingFrame:FindFirstChildOfClass("UIListLayout")
 
-    -- Connect to UIListLayout changes to update section size dynamically
-    if uiListLayout then
-        uiListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-            self:SectionResize({
-                Page = page,
-                Container = container.InnerContainer,
-                ScrollingFrame = scrollingFrame,
-                UIListLayout = uiListLayout,
-                ColorPickers = {},
-                Modules = section.Modules or {},
-                Binds = {},
-                Lists = {}
-            })
-        end)
-    end
-
     local section = {
         Page = page,
         Container = container.InnerContainer,
@@ -715,33 +696,39 @@ function Library:CreateSection(page, title)
         Lists = {}
     }
 
+    -- Connect to UIListLayout changes to update section size dynamically
+    if uiListLayout then
+        uiListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+            self:SectionResize(section)
+        end)
+    end
+
     return section
 end
 
 -- Update the SectionResize function
 function Library:SectionResize(section)
     if not section or not section.UIListLayout then return end
-
+    
     -- Wait for UI to update
     task.wait(0.1)
-
+    
     local totalSize = section.UIListLayout.AbsoluteContentSize.Y
-    local padding = section.UIListLayout.Padding.Offset
     local titleHeight = 25 -- Height of the title area
     local containerPadding = 16 -- InnerContainer padding (8px top + 8px bottom)
-
+    
     -- Calculate total content height
-    local contentHeight = totalSize + padding + titleHeight
-
+    local contentHeight = totalSize + titleHeight
+    
     -- Update ScrollingFrame CanvasSize
-    section.ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, totalSize + padding)
-
+    section.ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, totalSize)
+    
     -- Update section container size with max limit of 260px
     local container = section.Container.Parent
     if container then
         local newHeight = math.min(260, math.max(35, contentHeight + containerPadding))
-        container.Size = UDim2.new(0.48, 0, 0, newHeight)
-
+        container.Size = UDim2.new(1, 0, 0, newHeight)
+        
         -- Enable scrollbar if content exceeds max height
         if contentHeight + containerPadding > 260 then
             section.ScrollingFrame.ScrollBarImageTransparency = 0
@@ -749,7 +736,7 @@ function Library:SectionResize(section)
             section.ScrollingFrame.ScrollBarImageTransparency = 1
         end
     end
-
+    
     -- Update page layout
     self:PageResize(section.Page)
 end
@@ -781,6 +768,7 @@ function Library:SectionAddButton(section, title, callback)
         })
     })
 
+
     table.insert(section.Modules, button)
 
     local debounce = false
@@ -791,27 +779,29 @@ function Library:SectionAddButton(section, title, callback)
         Utility:Tween(button.Title, {TextSize = 12}, 0.1)
         task.wait(0.1)
         Utility:Tween(button.Title, {TextSize = 14}, 0.1)
-
+        
+        -- Add error handling with pcall
         if callback then
             local success, err = pcall(function()
                 callback(function(...)
                     self:UpdateButton(button, ...)
                 end)
             end)
+            
             if not success then
                 warn("Button callback error: " .. tostring(err))
                 self:ShowNotification("Error", "Button action failed: " .. tostring(err))
             end
         end
-
+        
         debounce = false
     end)
-
+    
     -- Trigger section resize after adding the button
     task.defer(function()
         self:SectionResize(section)
     end)
-
+    
     return button
 end
 
@@ -868,6 +858,11 @@ function Library:SectionAddToggle(section, title, default, callback)
         })
     })
 
+    table.insert(section.Modules, toggle)
+
+    local active = default or false
+    self:UpdateToggle(toggle, nil, active)
+
     toggle.MouseButton1Click:Connect(function()
         active = not active
         self:UpdateToggle(toggle, nil, active)
@@ -887,11 +882,12 @@ function Library:SectionAddToggle(section, title, default, callback)
             end
         end
     end)
-
+    
+    -- Trigger section resize after adding the toggle
     task.defer(function()
         self:SectionResize(section)
     end)
-
+    
     return toggle
 end
 
@@ -994,11 +990,12 @@ function Library:SectionAddTextbox(section, title, default, callback)
             end
         end
     end)
-
+    
+    -- Trigger section resize after adding the textbox
     task.defer(function()
         self:SectionResize(section)
     end)
-
+    
     return textbox
 end
 
@@ -1098,11 +1095,12 @@ function Library:SectionAddKeybind(section, title, default, callback, changedCal
             end
         end
     end)
-
+    
+    -- Trigger section resize after adding the keybind
     task.defer(function()
         self:SectionResize(section)
     end)
-
+    
     return keybind
 end
 
@@ -1603,11 +1601,12 @@ function Library:SectionAddColorPicker(section, title, default, callback)
         self:UpdateColorPicker(colorpicker, nil, lastColor)
         animate(false)
     end)
-
+    
+    -- Trigger section resize after adding the color picker
     task.defer(function()
         self:SectionResize(section)
     end)
-
+    
     return colorpicker
 end
 
@@ -1756,11 +1755,12 @@ function Library:SectionAddSlider(section, title, default, min, max, callback)
             callbackFunc(value)
         end
     end)
-
+    
+    -- Trigger section resize after adding the slider
     task.defer(function()
         self:SectionResize(section)
     end)
-
+    
     return slider
 end
 
@@ -1896,11 +1896,12 @@ function Library:SectionAddDropdown(section, title, list, callback, default)
     dropdown:GetPropertyChangedSignal("Size"):Connect(function()
         self:SectionResize(section)
     end)
-
+    
+    -- Trigger section resize after adding the dropdown
     task.defer(function()
         self:SectionResize(section)
     end)
-
+    
     return dropdown
 end
 
@@ -2122,20 +2123,22 @@ function Library:SectionAddMultiDropdown(section, title, list, callback)
 
     search.TextBox:GetPropertyChangedSignal("Text"):Connect(function()
         if focused then
-            local sorted = Utility:FilterList(search.TextBox.Text, allOptions)
-            sorted = (#sorted ~= 0 and sorted) or allOptions
-            updateMultiDropdown(sorted, callback)
+            local filteredList = Utility:FilterList(search.TextBox.Text, allOptions)
+            filteredList = #filteredList ~= 0 and filteredList
+
+            updateMultiDropdown(filteredList, callback)
         end
     end)
 
     dropdown:GetPropertyChangedSignal("Size"):Connect(function()
         self:SectionResize(section)
     end)
-
+    
+    -- Trigger section resize after adding the multidropdown
     task.defer(function()
         self:SectionResize(section)
     end)
-
+    
     return dropdown
 end
 
@@ -2221,13 +2224,11 @@ function Library:UpdateColorPicker(colorpicker, title, color)
     Utility:Tween(tab.Container.Color.Select, {Position = UDim2.new(hue, 0, 0, 0)}, 0.1)
 
     Utility:Tween(tab.Container.Canvas, {ImageColor3 = Color3.fromHSV(hue, 1, 1)}, 0.5)
-    Utility:Tween(tab.Container.Canvas.Cursor, {Position = UDim2.new(sat, 0, 1 - brightness, 0)}, 0.5)
+    Utility:Tween(tab.Container.Canvas.Cursor, {Position = UDim2.new(sat, 0, 1 - brightness, 0), ImageColor3 = Color3.fromRGB(255 - (color3.R * 255), 255 - (color3.G * 255), 255 - (color3.B * 255))}, 0.1)
 
-    for i, container in pairs(tab.Container.Inputs:GetChildren()) do
-        if container:IsA("ImageLabel") then
-            local value = math.clamp(color3[container.Name], 0, 1) * 255
-            container.Textbox.Text = math.floor(value)
-        end
+    for i, prop in pairs({"r", "g", "b"}) do
+        local num = math.clamp(color3[prop:upper()] * 255, 0, 255)
+        tab.Container.Inputs[prop:upper()].Textbox.Text = math.floor(num)
     end
 end
 
@@ -2243,11 +2244,16 @@ function Library:UpdateSlider(slider, title, value, min, max, lvalue)
         percent = (value - min) / (max - min)
     end
 
-    percent = math.clamp(percent, 0, 1)
-    value = value or math.floor(min + (max - min) * percent)
+    percent = math.clamp(percent or 0, 0, 1)
 
-    slider.TextBox.Text = value
+    if value then
+        slider.TextBox.Text = value
+    end
+
     Utility:Tween(bar.Fill, {Size = UDim2.new(percent, 0, 1, 0)}, 0.1)
+
+    value = value or math.floor(min + (max - min) * percent)
+    slider.TextBox.Text = value
 
     if value ~= lvalue and slider.ImageTransparency == 0 then
         Utility:PopEffect(slider, 10)
@@ -2343,70 +2349,18 @@ end
 
 -- Resize page
 function Library:PageResize(page)
-    if not page or not page.UIGridLayout then return end
-
+    if not page or not page.UIListLayout then return end
+    
     -- Calculate total height needed based on section heights
     local totalHeight = 0
-    local maxRowHeight = 0
-    local sectionsPerRow = 2 -- Assuming 2 sections per row as per UIGridLayout
-
-    for i, section in ipairs(page.Sections) do
+    
+    for _, section in ipairs(page.Sections) do
         local sectionHeight = section.Container.Parent.AbsoluteSize.Y
-        maxRowHeight = math.max(maxRowHeight, sectionHeight)
-
-        -- Start new row every 2 sections
-        if i % sectionsPerRow == 0 then
-            totalHeight = totalHeight + maxRowHeight + page.UIGridLayout.CellPadding.Y.Offset
-            maxRowHeight = 0
-        end
+        totalHeight = totalHeight + sectionHeight + page.UIListLayout.Padding.Offset
     end
-
-    -- Add the last row if it's not complete
-    if maxRowHeight > 0 then
-        totalHeight = totalHeight + maxRowHeight + page.UIGridLayout.CellPadding.Y.Offset
-    end
-
+    
     -- Update page container CanvasSize
     page.Container.CanvasSize = UDim2.new(0, 0, 0, totalHeight + 20) -- Extra padding for safety
-end
-
--- Resize section
-function Library:SectionResize(section)
-    if not section or not section.UIListLayout then return end
-    
-    -- Wait for UI to update
-    task.wait(0.1)
-    
-    local totalSize = 0
-    for _, module in pairs(section.Modules) do
-        if module:IsA("GuiObject") then
-            totalSize = totalSize + module.AbsoluteSize.Y + 4
-        end
-    end
-    
-    section.ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, totalSize + 10)
-    
-    -- Update the section container size
-    local container = section.Container.Parent
-    if container then
-        local newHeight = math.max(28, totalSize + 35) -- Minimum height of 28
-        container.Size = UDim2.new(1, -10, 0, newHeight)
-    end
-end
-
--- Get module
-function Library:GetModule(section, info)
-    if table.find(section.Modules, info) then
-        return info
-    end
-
-    for _, module in pairs(section.Modules) do
-        if (module:FindFirstChild("Title") or module:FindFirstChild("TextBox", true)).Text == info then
-            return module
-        end
-    end
-
-    error("No module found under " .. tostring(info))
 end
 
 return Library
