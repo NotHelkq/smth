@@ -639,7 +639,7 @@ function Library:CreateSection(page, title)
     local container = Utility:Create("Frame", {
         Name = title,
         Parent = page.Container,
-        Size = UDim2.new(0.48, 0, 0, 35), -- Start with minimum height
+        Size = UDim2.new(0.48, 0, 0, 35), -- Start with minimum height (title height)
         ZIndex = 2,
         BackgroundColor3 = Themes.LightContrast,
         ClipsDescendants = true
@@ -688,21 +688,23 @@ function Library:CreateSection(page, title)
     local scrollingFrame = container.InnerContainer.ScrollingFrame
     local uiListLayout = scrollingFrame:FindFirstChildOfClass("UIListLayout")
 
+    -- Connect to UIListLayout changes to update section size dynamically
     if uiListLayout then
         uiListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-            local contentHeight = uiListLayout.AbsoluteContentSize.Y
-            scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, contentHeight + 10)
-            
-            -- Calculate the new section height with max limit of 260px
-            local newHeight = math.min(260, math.max(35, contentHeight + 35))
-            container.Size = UDim2.new(0.48, 0, 0, newHeight)
-            
-            -- Update page layout after section resize
-            self:PageResize(page)
+            self:SectionResize({
+                Page = page,
+                Container = container.InnerContainer,
+                ScrollingFrame = scrollingFrame,
+                UIListLayout = uiListLayout,
+                ColorPickers = {},
+                Modules = section.Modules or {},
+                Binds = {},
+                Lists = {}
+            })
         end)
     end
 
-    return {
+    local section = {
         Page = page,
         Container = container.InnerContainer,
         ScrollingFrame = scrollingFrame,
@@ -712,34 +714,44 @@ function Library:CreateSection(page, title)
         Binds = {},
         Lists = {}
     }
+
+    return section
 end
 
 -- Update the SectionResize function
 function Library:SectionResize(section)
     if not section or not section.UIListLayout then return end
-    
+
     -- Wait for UI to update
     task.wait(0.1)
-    
-    local totalSize = 0
-    for _, module in pairs(section.Modules) do
-        if module:IsA("GuiObject") then
-            totalSize = totalSize + module.AbsoluteSize.Y + 4
-        end
-    end
-    
-    -- Limit the maximum content height
-    local maxContentHeight = 260 - 35  -- 260px max section height minus title area
-    local contentHeight = math.min(maxContentHeight, totalSize + 10)
-    
-    section.ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, contentHeight)
-    
-    -- Update the section container size with max limit of 260px
+
+    local totalSize = section.UIListLayout.AbsoluteContentSize.Y
+    local padding = section.UIListLayout.Padding.Offset
+    local titleHeight = 25 -- Height of the title area
+    local containerPadding = 16 -- InnerContainer padding (8px top + 8px bottom)
+
+    -- Calculate total content height
+    local contentHeight = totalSize + padding + titleHeight
+
+    -- Update ScrollingFrame CanvasSize
+    section.ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, totalSize + padding)
+
+    -- Update section container size with max limit of 260px
     local container = section.Container.Parent
     if container then
-        local newHeight = math.min(260, math.max(35, totalSize + 35))
-        container.Size = UDim2.new(1, -10, 0, newHeight)
+        local newHeight = math.min(260, math.max(35, contentHeight + containerPadding))
+        container.Size = UDim2.new(0.48, 0, 0, newHeight)
+
+        -- Enable scrollbar if content exceeds max height
+        if contentHeight + containerPadding > 260 then
+            section.ScrollingFrame.ScrollBarImageTransparency = 0
+        else
+            section.ScrollingFrame.ScrollBarImageTransparency = 1
+        end
     end
+
+    -- Update page layout
+    self:PageResize(section.Page)
 end
 
 -- Section methods
@@ -769,7 +781,6 @@ function Library:SectionAddButton(section, title, callback)
         })
     })
 
-
     table.insert(section.Modules, button)
 
     local debounce = false
@@ -780,33 +791,27 @@ function Library:SectionAddButton(section, title, callback)
         Utility:Tween(button.Title, {TextSize = 12}, 0.1)
         task.wait(0.1)
         Utility:Tween(button.Title, {TextSize = 14}, 0.1)
-        
-        -- Add error handling with pcall
+
         if callback then
             local success, err = pcall(function()
                 callback(function(...)
                     self:UpdateButton(button, ...)
                 end)
             end)
-            
             if not success then
                 warn("Button callback error: " .. tostring(err))
                 self:ShowNotification("Error", "Button action failed: " .. tostring(err))
             end
         end
-        
+
         debounce = false
     end)
-    
+
     -- Trigger section resize after adding the button
     task.defer(function()
-        if section.UIListLayout then
-            section.UIListLayout:ApplyLayout()
-            task.wait(0.1)
-            self:PageResize(section.Page)
-        end
+        self:SectionResize(section)
     end)
-    
+
     return button
 end
 
@@ -881,6 +886,10 @@ function Library:SectionAddToggle(section, title, default, callback)
                 self:UpdateToggle(toggle, nil, active)
             end
         end
+    end)
+
+    task.defer(function()
+        self:SectionResize(section)
     end)
 
     return toggle
@@ -986,6 +995,10 @@ function Library:SectionAddTextbox(section, title, default, callback)
         end
     end)
 
+    task.defer(function()
+        self:SectionResize(section)
+    end)
+
     return textbox
 end
 
@@ -1084,6 +1097,10 @@ function Library:SectionAddKeybind(section, title, default, callback, changedCal
                 end)
             end
         end
+    end)
+
+    task.defer(function()
+        self:SectionResize(section)
     end)
 
     return keybind
@@ -1587,6 +1604,10 @@ function Library:SectionAddColorPicker(section, title, default, callback)
         animate(false)
     end)
 
+    task.defer(function()
+        self:SectionResize(section)
+    end)
+
     return colorpicker
 end
 
@@ -1736,6 +1757,10 @@ function Library:SectionAddSlider(section, title, default, min, max, callback)
         end
     end)
 
+    task.defer(function()
+        self:SectionResize(section)
+    end)
+
     return slider
 end
 
@@ -1869,6 +1894,10 @@ function Library:SectionAddDropdown(section, title, list, callback, default)
     end)
 
     dropdown:GetPropertyChangedSignal("Size"):Connect(function()
+        self:SectionResize(section)
+    end)
+
+    task.defer(function()
         self:SectionResize(section)
     end)
 
@@ -2103,6 +2132,10 @@ function Library:SectionAddMultiDropdown(section, title, list, callback)
         self:SectionResize(section)
     end)
 
+    task.defer(function()
+        self:SectionResize(section)
+    end)
+
     return dropdown
 end
 
@@ -2310,31 +2343,31 @@ end
 
 -- Resize page
 function Library:PageResize(page)
-    if not page.UIGridLayout then return end
-    
+    if not page or not page.UIGridLayout then return end
+
     -- Calculate total height needed based on section heights
     local totalHeight = 0
     local maxRowHeight = 0
-    local sectionsPerRow = 2
-    
+    local sectionsPerRow = 2 -- Assuming 2 sections per row as per UIGridLayout
+
     for i, section in ipairs(page.Sections) do
         local sectionHeight = section.Container.Parent.AbsoluteSize.Y
         maxRowHeight = math.max(maxRowHeight, sectionHeight)
-        
+
         -- Start new row every 2 sections
         if i % sectionsPerRow == 0 then
-            totalHeight = totalHeight + maxRowHeight + 10 -- Add padding
+            totalHeight = totalHeight + maxRowHeight + page.UIGridLayout.CellPadding.Y.Offset
             maxRowHeight = 0
         end
     end
-    
+
     -- Add the last row if it's not complete
     if maxRowHeight > 0 then
-        totalHeight = totalHeight + maxRowHeight + 10
+        totalHeight = totalHeight + maxRowHeight + page.UIGridLayout.CellPadding.Y.Offset
     end
-    
-    -- Update page container size
-    page.Container.CanvasSize = UDim2.new(0, 0, 0, totalHeight + 20)
+
+    -- Update page container CanvasSize
+    page.Container.CanvasSize = UDim2.new(0, 0, 0, totalHeight + 20) -- Extra padding for safety
 end
 
 -- Resize section
