@@ -636,7 +636,7 @@ function Library:CreateSection(page, title)
     local container = Utility:Create("Frame", {
         Name = title,
         Parent = page.Container,
-        Size = UDim2.new(0.98, 0, 0, 35), -- Start with minimum height
+        Size = UDim2.new(0.9, 0, 0, 35), -- Start with minimum height
         ZIndex = 2,
         BackgroundColor3 = Themes.LightContrast,
         ClipsDescendants = true
