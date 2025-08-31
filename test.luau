@@ -636,7 +636,7 @@ function Library:CreateSection(page, title)
     local container = Utility:Create("Frame", {
         Name = title,
         Parent = page.Container,
-        Size = UDim2.new(0.9, 0, 0, 35), -- Start with minimum height
+        Size = UDim2.new(0.9, -10, 0, 35),
         ZIndex = 2,
         BackgroundColor3 = Themes.LightContrast,
         ClipsDescendants = true
@@ -726,11 +726,11 @@ function Library:SectionResize(section)
     -- Update section container size with max limit of 260px
     local container = section.Container.Parent
     if container then
-        local newHeight = math.min(260, math.max(35, contentHeight + containerPadding))
+        local newHeight = math.min(1000, math.max(35, contentHeight + containerPadding))
         container.Size = UDim2.new(1, 0, 0, newHeight)
         
         -- Enable scrollbar if content exceeds max height
-        if contentHeight + containerPadding > 260 then
+        if contentHeight + containerPadding > 1000 then
             section.ScrollingFrame.ScrollBarImageTransparency = 0
         else
             section.ScrollingFrame.ScrollBarImageTransparency = 1
