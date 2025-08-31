@@ -97,51 +97,26 @@ end
 
 -- Initializes keybind handling
 function Utility:InitKeybinds()
-    self.keybinds = {}
-    self.ended = {}
+    local keybinds = {}
+    local endedCallbacks = {}
     
     UserInputService.InputBegan:Connect(function(input, processed)
-        if not processed and self.keybinds[input.KeyCode] then
-            for _, bind in pairs(self.keybinds[input.KeyCode]) do
-                bind()
+        if not processed and keybinds[input.KeyCode] then
+            for _, callback in pairs(keybinds[input.KeyCode]) do
+                callback()
             end
         end
     end)
     
     UserInputService.InputEnded:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            for _, callback in pairs(self.ended) do
+            for _, callback in pairs(endedCallbacks) do
                 callback()
             end
         end
     end)
     
-    return {Keybinds = self.keybinds, EndedCallbacks = self.ended}
-end
-
--- Update the BindKey function
-function Utility:BindKey(keybindsTable, key, callback)
-    keybindsTable[key] = keybindsTable[key] or {}
-    
-    local safeCallback = function()
-        local success, err = pcall(callback)
-        if not success then
-            warn("Keybind callback error: " .. tostring(err))
-        end
-    end
-    
-    table.insert(keybindsTable[key], safeCallback)
-    
-    return {
-        Unbind = function()
-            for i, bind in pairs(keybindsTable[key]) do
-                if bind == safeCallback then
-                    table.remove(keybindsTable[key], i)
-                    break
-                end
-            end
-        end
-    }
+    return {Keybinds = keybinds, EndedCallbacks = endedCallbacks}
 end
 
 -- Binds a callback to a key
@@ -433,10 +408,12 @@ function Library:CreatePage(title, icon)
         ScrollBarImageColor3 = Themes.DarkContrast,
         Visible = false
     }, {
-        Utility:Create("UIListLayout", {
+        Utility:Create("UIGridLayout", {
             SortOrder = Enum.SortOrder.LayoutOrder,
-            Padding = UDim.new(0, 10),
-            HorizontalAlignment = Enum.HorizontalAlignment.Center
+            CellSize = UDim2.new(0.48, 0, 0, 240),
+            CellPadding = UDim2.new(0, 10, 0, 10),
+            HorizontalAlignment = Enum.HorizontalAlignment.Center,
+            VerticalAlignment = Enum.VerticalAlignment.Top
         })
     })
 
@@ -446,7 +423,7 @@ function Library:CreatePage(title, icon)
         Button = button,
         Sections = {},
         NeedsRefresh = true,
-        UIListLayout = container:FindFirstChildOfClass("UIListLayout"),
+        UIGridLayout = container:FindFirstChildOfClass("UIGridLayout"),
         LastPosition = nil
     }
 end
@@ -1075,14 +1052,17 @@ function Library:SectionAddKeybind(section, title, default, callback, changedCal
         end
     end
 
-    section.Binds[keybind] = {Callback = function()
-        animate()
-        if callback then
-            callback(function(...)
-                self:UpdateKeybind(keybind, ...)
-            end)
+    -- Store the bind in the section's binds table
+    section.Binds[keybind] = {
+        Callback = function()
+            animate()
+            if callback then
+                callback(function(...)
+                    self:UpdateKeybind(keybind, ...)
+                end)
+            end
         end
-    end}
+    }
 
     if default and callback then
         self:UpdateKeybind(keybind, nil, default)
@@ -2162,10 +2142,15 @@ function Library:UpdateKeybind(keybind, title, key)
     if title then
         keybind.Title.Text = title
     end
-    local bind = self.Binds[keybind]
+    
+    local section = self:FindSectionForKeybind(keybind)
+    if not section then return end
+    
+    local bind = section.Binds[keybind]
     if bind and bind.Connection then
         bind.Connection:Unbind()
     end
+    
     if key then
         if bind then
             bind.Connection = Utility:BindKey(self.Keybinds, key, bind.Callback)
@@ -2312,14 +2297,20 @@ function Library:UpdateDropdown(dropdown, title, list, callback)
     end
 end
 
+function Library:FindSectionForKeybind(keybind)
+    for _, page in pairs(self.Pages) do
+        for _, section in pairs(page.Sections) do
+            if section.Binds and section.Binds[keybind] then
+                return section
+            end
+        end
+    end
+    return nil
+end
+
 -- Resize page
 function Library:PageResize(page)
     if not page.UIGridLayout then return end
-    
-    -- Force layout update
-    task.wait(0.1)
-    page.UIGridLayout:ApplyLayout()
-    task.wait(0.1)
     
     -- Calculate total height needed based on section heights
     local totalHeight = 0
