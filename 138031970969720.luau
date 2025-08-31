@@ -116,7 +116,7 @@ local function sendWebhook(target)
     httpRequest({Url = _G.WebhookLink, Method = "POST", Headers = {["Content-Type"] = "application/json"}, Body = httpService:JSONEncode(data)})
 end
 
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/test.luau"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/idk.luau"))()
 local Window = Library.New("SPTS : Genesis")
 local Main = Window:AddPage("Auto Farm", 5012544693, true)
 local TeleportPage = Window:AddPage("Teleport", 5012544693)
