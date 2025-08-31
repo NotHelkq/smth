@@ -109,14 +109,39 @@ function Utility:InitKeybinds()
     end)
     
     UserInputService.InputEnded:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            for _, callback in pairs(endedCallbacks) do
+        if endedCallbacks[input.UserInputType] then
+            for _, callback in pairs(endedCallbacks[input.UserInputType]) do
                 callback()
             end
         end
     end)
     
     return {Keybinds = keybinds, EndedCallbacks = endedCallbacks}
+end
+
+-- Update the BindKey function
+function Utility:BindKey(keybindsTable, key, callback)
+    keybindsTable[key] = keybindsTable[key] or {}
+    
+    local safeCallback = function()
+        local success, err = pcall(callback)
+        if not success then
+            warn("Keybind callback error: " .. tostring(err))
+        end
+    end
+    
+    table.insert(keybindsTable[key], safeCallback)
+    
+    return {
+        Unbind = function()
+            for i, bind in pairs(keybindsTable[key]) do
+                if bind == safeCallback then
+                    table.remove(keybindsTable[key], i)
+                    break
+                end
+            end
+        end
+    }
 end
 
 -- Binds a callback to a key
@@ -693,9 +718,12 @@ function Library:CreateSection(page, title)
             local contentHeight = uiListLayout.AbsoluteContentSize.Y
             scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, contentHeight + 10)
             
-            -- Calculate the new section height based on content
-            local newHeight = math.max(35, contentHeight + 35)
+            -- Calculate the new section height with max limit of 260px
+            local newHeight = math.min(260, math.max(35, contentHeight + 35))
             container.Size = UDim2.new(0.48, 0, 0, newHeight)
+            
+            -- Update page layout after section resize
+            self:PageResize(page)
         end)
     end
 
@@ -709,6 +737,34 @@ function Library:CreateSection(page, title)
         Binds = {},
         Lists = {}
     }
+end
+
+-- Update the SectionResize function
+function Library:SectionResize(section)
+    if not section or not section.UIListLayout then return end
+    
+    -- Wait for UI to update
+    task.wait(0.1)
+    
+    local totalSize = 0
+    for _, module in pairs(section.Modules) do
+        if module:IsA("GuiObject") then
+            totalSize = totalSize + module.AbsoluteSize.Y + 4
+        end
+    end
+    
+    -- Limit the maximum content height
+    local maxContentHeight = 260 - 35  -- 260px max section height minus title area
+    local contentHeight = math.min(maxContentHeight, totalSize + 10)
+    
+    section.ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, contentHeight)
+    
+    -- Update the section container size with max limit of 260px
+    local container = section.Container.Parent
+    if container then
+        local newHeight = math.min(260, math.max(35, totalSize + 35))
+        container.Size = UDim2.new(1, -10, 0, newHeight)
+    end
 end
 
 -- Section methods
