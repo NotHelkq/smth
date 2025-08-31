@@ -82,8 +82,8 @@ local function sendWebhook(target)
     local Ffsv,Fbtv,Fmsv,Fjfv,Fppv = fN(fsv),fN(btv),fN(msv),fN(jfv),fN(ppv)
     local fsm, btm, msm, jfm, ppm = s.FSMulti.Value, s.BTMulti.Value, s.MSMulti.Value, s.JFMulti.Value, s.PPMulti.Value
     local Ffsm,Fbtm,Fmsm,Fjfm,Fppm = fN(fsm),fN(btm),fN(msm),fN(jfm),fN(ppm)
-    local g, gm, gc, t, rep, tpmv, tpm = s.Race.Value, s.Multiplier.Value, s.UniversalCoins.Value, s.Tokens.Value, s.Reputation.Value, s.TPMGained.Value, s.TPMGained.Value * s.Multiplier.Value
-    local Fgc, Ft, Ftpmv, Ftpm = fN(gc), fN(t), fN(tpmv), fN(tpm)
+    local g, gm, gc, rb, t, rep, tpmv, tpm = s.Race.Value, s.Multiplier.Value, s.UniversalCoins.Value, s.RuneMultiplier.Value, s.Tokens.Value, s.Reputation.Value, s.TPMGained.Value, s.TPMGained.Value * s.Multiplier.Value + s.RuneMultiplier.Value
+    local Fgc, Ft, Ftpmv, Ftpm, Frb = fN(gc), fN(t), fN(tpmv), fN(tpm), fN(rb)
     local status = n.leaderstats.Status.Value
 
     local data = {
@@ -106,8 +106,8 @@ local function sendWebhook(target)
                     ["inline"] = true},
                 {["name"] = "Other",
                     ["value"] = string.format(
-                        "Grade : %s | x%s\n Grade Coins : %s\n Tokens : %s\n TPM : %s (%s)\n Reputation : %s (%s)",
-                        g, gm, Fgc, Ft, Ftpm, Ftpmv, status, rep
+                        "Grade : %s | x%s\n Grade Coins : %s\n Rune Boost : +%s\n Tokens : %s\n TPM : %s (%s)\n Reputation : %s (%s)",
+                        g, gm, Fgc, Frb, Ft, Ftpm, Ftpmv, status, rep
                     ),
                     ["inline"] = true}},
             ["footer"] = {["text"] = os.date("%m/%d/%Y %H:%M:%S")}
@@ -116,19 +116,19 @@ local function sendWebhook(target)
     httpRequest({Url = _G.WebhookLink, Method = "POST", Headers = {["Content-Type"] = "application/json"}, Body = httpService:JSONEncode(data)})
 end
 
-local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/idk.luau"))()
-local Window  = library.new("SPTS : Genesis")
-local Main      = Window:addPage("Auto Farm", 5012544693, true)
-local teleport  = Window:addPage("Teleport", 5012544693)
-local Settings  = Window:addPage("Settings", 5012544693)
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/test.luau"))()
+local Window = Library.New("SPTS : Genesis")
+local Main = Window:AddPage("Auto Farm", 5012544693, true)
+local TeleportPage = Window:AddPage("Teleport", 5012544693)
+local Settings = Window:AddPage("Settings", 5012544693)
 
-local Farm       = Main:addSection("Auto Farm")
-local misc       = Main:addSection("Misc")
-local webh       = Main:addSection("Check Player's Stats")
-local sett   = Settings:addSection("Others")
+local Farm = Window:PageAddSection(Main, "Auto Farm")
+local Misc = Window:PageAddSection(Main, "Misc")
+local Webh = Window:PageAddSection(Main, "Check Player's Stats | Kill Player")
+local Sett = Window:PageAddSection(Settings, "Others")
 
 -- Auto Farm
-Farm:addToggle("Auto Fist Strength", false, function(t)
+Window:SectionAddToggle(Farm, "Auto Fist Strength", false, function(t)
     autofs = t
     while autofs do
         local fsValue = player.PrivateStats.FistStrength.Value
@@ -139,7 +139,7 @@ Farm:addToggle("Auto Fist Strength", false, function(t)
     end
 end)
 
-Farm:addToggle("Auto Body Toughness", false, function(t)
+Window:SectionAddToggle(Farm, "Auto Body Toughness", false, function(t)
     autobt = t
     while autobt do
         local btValue = player.PrivateStats.BodyToughness.Value
@@ -150,7 +150,7 @@ Farm:addToggle("Auto Body Toughness", false, function(t)
     end
 end)
 
-Farm:addToggle("Auto Movement Speed", false, function(t)
+Window:SectionAddToggle(Farm, "Auto Movement Speed", false, function(t)
     automs = t
     while automs do
         local msValue = player.PrivateStats.MovementSpeed.Value
@@ -161,7 +161,7 @@ Farm:addToggle("Auto Movement Speed", false, function(t)
     end
 end)
 
-Farm:addToggle("Auto Jump Force", false, function(t)
+Window:SectionAddToggle(Farm, "Auto Jump Force", false, function(t)
     autojf = t
     while autojf do
         local jfValue = player.PrivateStats.JumpForce.Value
@@ -172,7 +172,7 @@ Farm:addToggle("Auto Jump Force", false, function(t)
     end
 end)
 
-Farm:addToggle("Auto Psychic Power", false, function(t)
+Window:SectionAddToggle(Farm, "Auto Psychic Power", false, function(t)
     autopp = t
     while autopp do
         local ppValue = player.PrivateStats.PsychicPower.Value
@@ -188,7 +188,7 @@ local username = player.Name
 local multiplierFolder = game:GetService("ReplicatedStorage").Multipliers
 for _, mult in ipairs({"FS", "BT", "MS", "JF", "PP"}) do
     local remote = multiplierFolder["Upgrade"..mult]
-    misc:addToggle("Auto "..mult.." Multiplier", false, function(t)
+    Window:SectionAddToggle(Misc, "Auto "..mult.." Multiplier", false, function(t)
         _G["auto"..mult.."multi"] = t
         while _G["auto"..mult.."multi"] do
             remote:FireServer(username)
@@ -196,30 +196,50 @@ for _, mult in ipairs({"FS", "BT", "MS", "JF", "PP"}) do
         end
     end)
 end
-webh:addTextbox("Username", "", false)
-webh:addButton("Send Webhook", function()
-    local u = webh.container.ScrollingFrame.Textbox.Button.Textbox.Text
+
+-- Webhook/kill
+local usernameTextbox = Window:SectionAddTextbox(Webh, "Username", "", function(text) end)
+Window:SectionAddButton(Webh, "Send Webhook", function()
+    local u = usernameTextbox.Button.Textbox.Text
     local user = game:GetService("Players"):FindFirstChild(u)
     if user then 
         sendWebhook(u)
-    else warn("\n----------------------\n \n Player doesn't exist \n \n----------------------") end
+        local closeNotification = Window:ShowNotification("Success", "Webhook Sent")
+        delay(3, function() if closeNotification then closeNotification() end end)
+    else
+        local closeNotification = Window:ShowNotification("Error", "Player Doesn't Exist")
+        delay(3, function() if closeNotification then closeNotification() end end)
+    end
+end)
+Window:SectionAddButton(Webh, "Kill Player", function()
+    local u = usernameTextbox.Button.Textbox.Text
+    local user = game:GetService("Players"):FindFirstChild(u)
+    if user then 
+        local args = {{"Skill_SoulReap",game:GetService("Players"):WaitForChild(u)}}
+        game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
+        local closeNotification = Window:ShowNotification("Success", "Player Killed")
+        delay(3, function() if closeNotification then closeNotification() end end)
+    else 
+        local closeNotification = Window:ShowNotification("Error", "Player Doesn't Exist")
+        delay(3, function() if closeNotification then closeNotification() end end)
+    end
 end)
 
 -- Teleport
 for _, sectionData in ipairs(teleportData) do
-    local section = teleport:addSection(sectionData.section)
+    local tpSection = Window:PageAddSection(TeleportPage, sectionData.section)
     for _, buttonData in ipairs(sectionData.buttons) do
-        section:addButton(buttonData[1], function()
+        Window:SectionAddButton(tpSection, buttonData[1], function()
             tppos(buttonData[2], buttonData[3], buttonData[4])
         end)
     end
 end
 
--- Settings
-sett:addKeybind("Toggle Hub", Enum.KeyCode.LeftControl, function() Window:toggle() end)
-sett:addButton("Unload Script", function()
+-- Settings 
+Window:SectionAddKeybind(Sett, "Toggle Hub", Enum.KeyCode.RightControl, function() Window:ToggleVisibility() end)
+Window:SectionAddButton(Sett, "Unload Script", function()
     for _, v in ipairs({"fs", "bt", "ms", "jf", "pp", "fsmulti", "btmulti", "msmulti", "jfmulti", "ppmulti", "rollgrade"}) do
         _G["auto"..v] = false
     end
-    Window.container:Destroy()
+    Window.Container:Destroy()
 end)
