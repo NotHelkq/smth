@@ -63,7 +63,6 @@ local ms = {100, 5e3, 500e3, 10e6}
 local jf = {5e3, 200e3, 2e6, 10e6}
 local pp = {10e3, 1e6, 1e9, 100e9, 10e12, 10e15}
 
--- Webhook
 local function fN(num)
     local suffixes = {"", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc", "Ud", "Dd", "Td", "Qad"}
     local i = 1
@@ -190,7 +189,7 @@ Window:SectionAddToggle(Farm, "Auto Roll Grade 7/8/9/10", false, function(t)
         if buff < 2.1 then
             game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("SpinGrade"):InvokeServer()
         else autorollgrade = false end
-        task.wait(0.1)
+        task.wait(0.33)
     end
 end)
 
@@ -199,7 +198,10 @@ Window:SectionAddButton(Misc, "Quick Roll Grade", function()
     local buff = game:GetService("Players").LocalPlayer.PrivateStats.Multiplier.Value
     if buff < 2.1 then
         game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("SpinGrade"):InvokeServer() 
-    else warn("You can't quick roll with grade 7/8/9/10") end
+    else 
+        local closeNotification = Window:ShowNotification("Error", "You Can't Quick Roll With Grade 7-10")
+        delay(3, function() if closeNotification then closeNotification() end end)
+    end
 end)
 
 local username = player.Name
