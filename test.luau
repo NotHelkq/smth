@@ -391,16 +391,20 @@ function Library:CreatePage(title, icon)
         BorderSizePixel = 0,
         Position = UDim2.new(0, 0, 0, 5),
         Size = UDim2.new(1, 0, 1, -5),
-        CanvasSize = UDim2.new(0, 0, 0, 466),
+        CanvasSize = UDim2.new(0, 0, 0, 0),
         ScrollBarThickness = 3,
         ScrollBarImageColor3 = Themes.DarkContrast,
         Visible = false
     }, {
-        Utility:Create("UIGridLayout", {
+        Utility:Create("UIPadding", {
+            PaddingLeft = UDim.new(0, 10),
+            PaddingRight = UDim.new(0, 10)
+        }),
+        Utility:Create("UIListLayout", {
             SortOrder = Enum.SortOrder.LayoutOrder,
-            CellSize = UDim2.new(0.48, 0, 0, 240),
-            CellPadding = UDim2.new(0, 10, 0, 10),
+            Padding = UDim.new(0, 10),
             HorizontalAlignment = Enum.HorizontalAlignment.Center,
+            FillDirection = Enum.FillDirection.Horizontal,
             VerticalAlignment = Enum.VerticalAlignment.Top
         })
     })
@@ -411,7 +415,7 @@ function Library:CreatePage(title, icon)
         Button = button,
         Sections = {},
         NeedsRefresh = true,
-        UIGridLayout = container:FindFirstChildOfClass("UIGridLayout"),
+        UIListLayout = container:FindFirstChildOfClass("UIListLayout"),
         LastPosition = nil
     }
 end
@@ -427,22 +431,20 @@ function Library:SelectPage(page, instant)
     page.Container.Visible = true
 
     if page.NeedsRefresh then
-        -- Add a small delay to ensure UI is fully rendered
+        -- Force a layout update
         task.wait(0.1)
-        RunService.Heartbeat:Wait()
-        RunService.Heartbeat:Wait()
-        
         if page.UIListLayout then
-            Utility:RecalculateLayout(page.Container)
-            page.Container.CanvasSize = UDim2.new(0, 0, 0, page.UIListLayout.AbsoluteContentSize.Y + 20)
+            page.UIListLayout:ApplyLayout()
         end
         
         for _, section in pairs(page.Sections) do
             if section.UIListLayout then
-                Utility:RecalculateLayout(section.ScrollingFrame)
-                section.ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, section.UIListLayout.AbsoluteContentSize.Y + 10)
+                section.UIListLayout:ApplyLayout()
             end
         end
+        
+        task.wait(0.1)
+        self:PageResize(page)
         page.NeedsRefresh = false
     end
 
@@ -629,7 +631,7 @@ function Library:CreateSection(page, title)
     local container = Utility:Create("Frame", {
         Name = title,
         Parent = page.Container,
-        Size = UDim2.new(0.48, 0, 0, 240), -- Fixed size for grid layout
+        Size = UDim2.new(0.48, 0, 0, 30), -- Start with minimum height
         ZIndex = 2,
         BackgroundColor3 = Themes.LightContrast,
         ClipsDescendants = true
@@ -653,7 +655,7 @@ function Library:CreateSection(page, title)
                 TextColor3 = Themes.TextColor,
                 TextSize = 14,
                 TextXAlignment = Enum.TextXAlignment.Left,
-                TextTransparency = 0 -- Make title visible
+                TextTransparency = 0
             }),
             Utility:Create("ScrollingFrame", {
                 Name = "ScrollingFrame",
@@ -662,7 +664,7 @@ function Library:CreateSection(page, title)
                 BorderSizePixel = 0,
                 Position = UDim2.new(0, 0, 0, 25),
                 Size = UDim2.new(1, 0, 1, -25),
-                CanvasSize = UDim2.new(0, 0, 0, 466),
+                CanvasSize = UDim2.new(0, 0, 0, 0),
                 ScrollBarThickness = 3,
                 ScrollBarImageColor3 = Themes.TextColor,
                 ZIndex = 5
@@ -680,10 +682,11 @@ function Library:CreateSection(page, title)
 
     if uiListLayout then
         uiListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-            scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, uiListLayout.AbsoluteContentSize.Y + 10)
+            local contentHeight = uiListLayout.AbsoluteContentSize.Y
+            scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, contentHeight + 10)
             
-            -- Also update the section container size if needed
-            local newHeight = math.min(240, uiListLayout.AbsoluteContentSize.Y + 35)
+            -- Calculate the new section height based on content
+            local newHeight = math.max(30, contentHeight + 35) -- Minimum height of 28
             container.Size = UDim2.new(0.48, 0, 0, newHeight)
         end)
     end
@@ -739,6 +742,7 @@ function Library:SectionAddButton(section, title, callback)
         task.wait(0.1)
         Utility:Tween(button.Title, {TextSize = 14}, 0.1)
         
+        -- Add error handling with pcall
         if callback then
             local success, err = pcall(function()
                 callback(function(...)
@@ -748,13 +752,22 @@ function Library:SectionAddButton(section, title, callback)
             
             if not success then
                 warn("Button callback error: " .. tostring(err))
-                -- You could also show a notification here
                 self:ShowNotification("Error", "Button action failed: " .. tostring(err))
             end
         end
         
         debounce = false
     end)
+    
+    -- Trigger section resize after adding the button
+    task.defer(function()
+        if section.UIListLayout then
+            section.UIListLayout:ApplyLayout()
+            task.wait(0.1)
+            self:PageResize(section.Page)
+        end
+    end)
+    
     return button
 end
 
@@ -2239,13 +2252,20 @@ end
 
 -- Resize page
 function Library:PageResize(page)
-    if not page.UIGridLayout then return end
+    if not page.UIListLayout then return end
     
-    -- Calculate the total height needed for all sections
+    local maxHeight = 0
+    for _, section in pairs(page.Sections) do
+        local sectionHeight = section.Container.Parent.AbsoluteSize.Y
+        if sectionHeight > maxHeight then
+            maxHeight = sectionHeight
+        end
+    end
+    
     local rows = math.ceil(#page.Sections / 2)
-    local totalHeight = rows * 250 -- 240px height + 10px padding
+    local totalHeight = rows * (maxHeight + 10) 
     
-    page.Container.CanvasSize = UDim2.new(0, 0, 0, totalHeight)
+    page.Container.CanvasSize = UDim2.new(0, 0, 0, totalHeight + 20)
 end
 
 -- Resize section
