@@ -721,6 +721,7 @@ function Library:SectionAddButton(section, title, callback)
         })
     })
 
+
     table.insert(section.Modules, button)
 
     local debounce = false
@@ -731,11 +732,21 @@ function Library:SectionAddButton(section, title, callback)
         Utility:Tween(button.Title, {TextSize = 12}, 0.1)
         task.wait(0.1)
         Utility:Tween(button.Title, {TextSize = 14}, 0.1)
+        
         if callback then
-            callback(function(...)
-                self:UpdateButton(button, ...)
+            local success, err = pcall(function()
+                callback(function(...)
+                    self:UpdateButton(button, ...)
+                end)
             end)
+            
+            if not success then
+                warn("Button callback error: " .. tostring(err))
+                -- You could also show a notification here
+                self:ShowNotification("Error", "Button action failed: " .. tostring(err))
+            end
         end
+        
         debounce = false
     end)
     return button
@@ -794,21 +805,24 @@ function Library:SectionAddToggle(section, title, default, callback)
         })
     })
 
-    table.insert(section.Modules, toggle)
-
-    local active = default or false
-    self:UpdateToggle(toggle, nil, active)
-
-    if callback and default ~= nil then
-        task.defer(function()
-            callback(active)
-        end)
-    end
-
     toggle.MouseButton1Click:Connect(function()
         active = not active
         self:UpdateToggle(toggle, nil, active)
-        if callback then callback(active) end
+        
+        -- Add error handling with pcall
+        if callback then
+            local success, err = pcall(function()
+                callback(active)
+            end)
+            
+            if not success then
+                warn("Toggle callback error: " .. tostring(err))
+                self:ShowNotification("Error", "Toggle action failed: " .. tostring(err))
+                -- Revert the toggle state if there was an error
+                active = not active
+                self:UpdateToggle(toggle, nil, active)
+            end
+        end
     end)
 
     return toggle
@@ -885,9 +899,15 @@ function Library:SectionAddTextbox(section, title, default, callback)
             Utility:PopEffect(button, 10)
         end
         if callback then
-            callback(input.Text, nil, function(...)
-                self:UpdateTextbox(textbox, ...)
+            local success, err = pcall(function()
+                callback(input.Text, nil, function(...)
+                    self:UpdateTextbox(textbox, ...)
+                end)
             end)
+            
+            if not success then
+                warn("Textbox callback error: " .. tostring(err))
+            end
         end
     end)
 
@@ -895,9 +915,16 @@ function Library:SectionAddTextbox(section, title, default, callback)
         input.TextXAlignment = Enum.TextXAlignment.Center
         Utility:Tween(button, {Size = UDim2.new(0, 100, 0, 16), Position = UDim2.new(1, -110, 0.5, -8)}, 0.2)
         if callback then
-            callback(input.Text, true, function(...)
-                self:UpdateTextbox(textbox, ...)
+            -- Add error handling
+            local success, err = pcall(function()
+                callback(input.Text, true, function(...)
+                    self:UpdateTextbox(textbox, ...)
+                end)
             end)
+            
+            if not success then
+                warn("Textbox callback error: " .. tostring(err))
+            end
         end
     end)
 
