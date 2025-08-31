@@ -97,26 +97,26 @@ end
 
 -- Initializes keybind handling
 function Utility:InitKeybinds()
-    local keybinds = {}
-    local endedCallbacks = {}
+    self.keybinds = {}
+    self.ended = {}
     
     UserInputService.InputBegan:Connect(function(input, processed)
-        if not processed and keybinds[input.KeyCode] then
-            for _, callback in pairs(keybinds[input.KeyCode]) do
-                callback()
+        if not processed and self.keybinds[input.KeyCode] then
+            for _, bind in pairs(self.keybinds[input.KeyCode]) do
+                bind()
             end
         end
     end)
     
     UserInputService.InputEnded:Connect(function(input)
-        if endedCallbacks[input.UserInputType] then
-            for _, callback in pairs(endedCallbacks[input.UserInputType]) do
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            for _, callback in pairs(self.ended) do
                 callback()
             end
         end
     end)
     
-    return {Keybinds = keybinds, EndedCallbacks = endedCallbacks}
+    return {Keybinds = self.keybinds, EndedCallbacks = self.ended}
 end
 
 -- Update the BindKey function
@@ -433,12 +433,10 @@ function Library:CreatePage(title, icon)
         ScrollBarImageColor3 = Themes.DarkContrast,
         Visible = false
     }, {
-        Utility:Create("UIGridLayout", {
+        Utility:Create("UIListLayout", {
             SortOrder = Enum.SortOrder.LayoutOrder,
-            CellSize = UDim2.new(0.48, 0, 0, 240),
-            CellPadding = UDim2.new(0, 10, 0, 10),
-            HorizontalAlignment = Enum.HorizontalAlignment.Center,
-            VerticalAlignment = Enum.VerticalAlignment.Top
+            Padding = UDim.new(0, 10),
+            HorizontalAlignment = Enum.HorizontalAlignment.Center
         })
     })
 
@@ -448,7 +446,7 @@ function Library:CreatePage(title, icon)
         Button = button,
         Sections = {},
         NeedsRefresh = true,
-        UIGridLayout = container:FindFirstChildOfClass("UIGridLayout"),
+        UIListLayout = container:FindFirstChildOfClass("UIListLayout"),
         LastPosition = nil
     }
 end
@@ -2316,19 +2314,35 @@ end
 
 -- Resize page
 function Library:PageResize(page)
-    if not page.UIListLayout then return end
+    if not page.UIGridLayout then return end
     
-    local maxHeight = 0
-    for _, section in pairs(page.Sections) do
+    -- Force layout update
+    task.wait(0.1)
+    page.UIGridLayout:ApplyLayout()
+    task.wait(0.1)
+    
+    -- Calculate total height needed based on section heights
+    local totalHeight = 0
+    local maxRowHeight = 0
+    local sectionsPerRow = 2
+    
+    for i, section in ipairs(page.Sections) do
         local sectionHeight = section.Container.Parent.AbsoluteSize.Y
-        if sectionHeight > maxHeight then
-            maxHeight = sectionHeight
+        maxRowHeight = math.max(maxRowHeight, sectionHeight)
+        
+        -- Start new row every 2 sections
+        if i % sectionsPerRow == 0 then
+            totalHeight = totalHeight + maxRowHeight + 10 -- Add padding
+            maxRowHeight = 0
         end
     end
     
-    local rows = math.ceil(#page.Sections / 2)
-    local totalHeight = rows * (maxHeight + 10) 
+    -- Add the last row if it's not complete
+    if maxRowHeight > 0 then
+        totalHeight = totalHeight + maxRowHeight + 10
+    end
     
+    -- Update page container size
     page.Container.CanvasSize = UDim2.new(0, 0, 0, totalHeight + 20)
 end
 
