@@ -396,9 +396,12 @@ function Library:CreatePage(title, icon)
         ScrollBarImageColor3 = Themes.DarkContrast,
         Visible = false
     }, {
-        Utility:Create("UIListLayout", {
+        Utility:Create("UIGridLayout", {
             SortOrder = Enum.SortOrder.LayoutOrder,
-            Padding = UDim.new(0, 4)
+            CellSize = UDim2.new(0.48, 0, 0, 240),
+            CellPadding = UDim2.new(0, 10, 0, 10),
+            HorizontalAlignment = Enum.HorizontalAlignment.Center,
+            VerticalAlignment = Enum.VerticalAlignment.Top
         })
     })
 
@@ -408,7 +411,7 @@ function Library:CreatePage(title, icon)
         Button = button,
         Sections = {},
         NeedsRefresh = true,
-        UIListLayout = container:FindFirstChildOfClass("UIListLayout"),
+        UIGridLayout = container:FindFirstChildOfClass("UIGridLayout"),
         LastPosition = nil
     }
 end
@@ -424,12 +427,16 @@ function Library:SelectPage(page, instant)
     page.Container.Visible = true
 
     if page.NeedsRefresh then
+        -- Add a small delay to ensure UI is fully rendered
+        task.wait(0.1)
         RunService.Heartbeat:Wait()
         RunService.Heartbeat:Wait()
+        
         if page.UIListLayout then
             Utility:RecalculateLayout(page.Container)
             page.Container.CanvasSize = UDim2.new(0, 0, 0, page.UIListLayout.AbsoluteContentSize.Y + 20)
         end
+        
         for _, section in pairs(page.Sections) do
             if section.UIListLayout then
                 Utility:RecalculateLayout(section.ScrollingFrame)
@@ -605,15 +612,14 @@ function Library:PageAddSection(page, title)
     table.insert(page.Sections, section)
     page.NeedsRefresh = true
     
-    -- Force a resize after a short delay
-    task.spawn(function()
-        task.wait(0.2)
-        self:SectionResize(section)
-        
-        if self.SelectedPage == page then
+    -- Update page layout
+    self:PageResize(page)
+    
+    if self.SelectedPage == page then
+        task.defer(function()
             self:SelectPage(page, true)
-        end
-    end)
+        end)
+    end
     
     return section
 end
@@ -623,7 +629,7 @@ function Library:CreateSection(page, title)
     local container = Utility:Create("Frame", {
         Name = title,
         Parent = page.Container,
-        Size = UDim2.new(1, -10, 0, 28),
+        Size = UDim2.new(0.48, 0, 0, 240), -- Fixed size for grid layout
         ZIndex = 2,
         BackgroundColor3 = Themes.LightContrast,
         ClipsDescendants = true
@@ -647,7 +653,7 @@ function Library:CreateSection(page, title)
                 TextColor3 = Themes.TextColor,
                 TextSize = 14,
                 TextXAlignment = Enum.TextXAlignment.Left,
-                TextTransparency = 0 -- Changed from 1 to 0 to make title visible
+                TextTransparency = 0 -- Make title visible
             }),
             Utility:Create("ScrollingFrame", {
                 Name = "ScrollingFrame",
@@ -656,7 +662,7 @@ function Library:CreateSection(page, title)
                 BorderSizePixel = 0,
                 Position = UDim2.new(0, 0, 0, 25),
                 Size = UDim2.new(1, 0, 1, -25),
-                CanvasSize = UDim2.new(0, 0, 0, 0), -- Start with 0, will be updated
+                CanvasSize = UDim2.new(0, 0, 0, 466),
                 ScrollBarThickness = 3,
                 ScrollBarImageColor3 = Themes.TextColor,
                 ZIndex = 5
@@ -676,9 +682,9 @@ function Library:CreateSection(page, title)
         uiListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
             scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, uiListLayout.AbsoluteContentSize.Y + 10)
             
-            -- Also update the section container size
-            local totalHeight = uiListLayout.AbsoluteContentSize.Y + 35 -- 25 for title + 10 padding
-            container.Size = UDim2.new(1, -10, 0, math.max(28, totalHeight))
+            -- Also update the section container size if needed
+            local newHeight = math.min(240, uiListLayout.AbsoluteContentSize.Y + 35)
+            container.Size = UDim2.new(0.48, 0, 0, newHeight)
         end)
     end
 
@@ -2232,18 +2238,14 @@ function Library:UpdateDropdown(dropdown, title, list, callback)
 end
 
 -- Resize page
-function Library:PageResize(page, scroll)
-    for i, section in pairs(page.Sections) do
-        section.Container.Parent.Size = UDim2.new(0.48, 0, 0, 240)
-        section.Container.Parent.Position = UDim2.new(((i+1)%2)/2, 4, 0, 244*(math.floor((i+1)/2)-1))
-    end
-
-    page.Container.CanvasSize = UDim2.new(0, 0, 0, 244*((#page.Sections+1)/2))
-    page.Container.ScrollBarImageTransparency = 244*((#page.Sections+1)/2) > page.Container.AbsoluteSize.Y and 0 or 1
-
-    if scroll then
-        Utility:Tween(page.Container, {CanvasPosition = Vector2.new(0, page.LastPosition or 0)}, 0.2)
-    end
+function Library:PageResize(page)
+    if not page.UIGridLayout then return end
+    
+    -- Calculate the total height needed for all sections
+    local rows = math.ceil(#page.Sections / 2)
+    local totalHeight = rows * 250 -- 240px height + 10px padding
+    
+    page.Container.CanvasSize = UDim2.new(0, 0, 0, totalHeight)
 end
 
 -- Resize section
