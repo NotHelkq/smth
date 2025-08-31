@@ -639,7 +639,7 @@ function Library:CreateSection(page, title)
     local container = Utility:Create("Frame", {
         Name = title,
         Parent = page.Container,
-        Size = UDim2.new(0.48, 0, 0, 30), -- Start with minimum height
+        Size = UDim2.new(0.48, 0, 0, 35), -- Start with minimum height
         ZIndex = 2,
         BackgroundColor3 = Themes.LightContrast,
         ClipsDescendants = true
@@ -694,7 +694,7 @@ function Library:CreateSection(page, title)
             scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, contentHeight + 10)
             
             -- Calculate the new section height based on content
-            local newHeight = math.max(30, contentHeight + 35) -- Minimum height of 28
+            local newHeight = math.max(35, contentHeight + 35)
             container.Size = UDim2.new(0.48, 0, 0, newHeight)
         end)
     end
