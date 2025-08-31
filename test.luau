@@ -495,6 +495,7 @@ function Library:SetTheme(themeKey, newColor)
 end
 
 -- Show notification
+-- Show notification
 function Library:ShowNotification(title, text, callback)
     if self.ActiveNotification then
         self.ActiveNotification()
@@ -509,8 +510,8 @@ function Library:ShowNotification(title, text, callback)
         BackgroundTransparency = 1,
         Size = UDim2.new(0, 200, 0, 60),
         Image = "rbxassetid://5028857472",
-        ImageColor3 = Color3.fromRGB(0, 0, 0), 
-        ImageTransparency = 0.25,  
+        ImageColor3 = Color3.fromRGB(0, 0, 0),
+        ImageTransparency = 0.25,
         ScaleType = Enum.ScaleType.Slice,
         SliceCenter = Rect.new(4, 4, 296, 296),
         ZIndex = 3,
@@ -519,10 +520,10 @@ function Library:ShowNotification(title, text, callback)
         Utility:Create("ImageLabel", {
             Name = "Flash",
             Size = UDim2.new(1, 0, 1, 0),
-            BackgroundTransparency = 1,  
+            BackgroundTransparency = 1,
             Image = "rbxassetid://4641149554",
             ImageColor3 = Themes.TextColor,
-            ImageTransparency = 0.5,  
+            ImageTransparency = 0.5,
             ZIndex = 5
         }),
         Utility:Create("TextLabel", {
@@ -598,6 +599,7 @@ function Library:ShowNotification(title, text, callback)
 
         task.wait(0.2)
         notification:Destroy()
+        self.ActiveNotification = nil
     end
 
     self.ActiveNotification = close
@@ -613,6 +615,8 @@ function Library:ShowNotification(title, text, callback)
         if callback then callback(false) end
         close()
     end)
+    
+    return close
 end
 
 -- Page methods
