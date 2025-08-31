@@ -636,7 +636,7 @@ function Library:CreateSection(page, title)
     local container = Utility:Create("Frame", {
         Name = title,
         Parent = page.Container,
-        Size = UDim2.new(1, 0, 0, 35), -- Start with minimum height
+        Size = UDim2.new(0.98, 0, 0, 35), -- Start with minimum height
         ZIndex = 2,
         BackgroundColor3 = Themes.LightContrast,
         ClipsDescendants = true
@@ -763,7 +763,7 @@ function Library:SectionAddButton(section, title, callback)
             Font = Enum.Font.Gotham,
             Text = title,
             TextColor3 = Themes.TextColor,
-            TextSize = 14,
+            TextSize = 16,
             TextTransparency = 0.1
         })
     })
@@ -828,7 +828,7 @@ function Library:SectionAddToggle(section, title, default, callback)
             Font = Enum.Font.Gotham,
             Text = title,
             TextColor3 = Themes.TextColor,
-            TextSize = 14,
+            TextSize = 16,
             TextTransparency = 0.1,
             TextXAlignment = Enum.TextXAlignment.Left
         }),
@@ -914,7 +914,7 @@ function Library:SectionAddTextbox(section, title, default, callback)
             Font = Enum.Font.Gotham,
             Text = title,
             TextColor3 = Themes.TextColor,
-            TextSize = 14,
+            TextSize = 16,
             TextTransparency = 0.1,
             TextXAlignment = Enum.TextXAlignment.Left
         }),
@@ -1022,7 +1022,7 @@ function Library:SectionAddKeybind(section, title, default, callback, changedCal
             Font = Enum.Font.Gotham,
             Text = title,
             TextColor3 = Themes.TextColor,
-            TextSize = 14,
+            TextSize = 16,
             TextTransparency = 0.1,
             TextXAlignment = Enum.TextXAlignment.Left
         }),
@@ -1127,7 +1127,7 @@ function Library:SectionAddColorPicker(section, title, default, callback)
             Font = Enum.Font.Gotham,
             Text = title,
             TextColor3 = Themes.TextColor,
-            TextSize = 14,
+            TextSize = 16,
             TextTransparency = 0.1,
             TextXAlignment = Enum.TextXAlignment.Left
         }),
@@ -1632,7 +1632,7 @@ function Library:SectionAddSlider(section, title, default, min, max, callback)
             Font = Enum.Font.Gotham,
             Text = title,
             TextColor3 = Themes.TextColor,
-            TextSize = 14,
+            TextSize = 16,
             TextTransparency = 0.1,
             TextXAlignment = Enum.TextXAlignment.Left
         }),
@@ -1798,7 +1798,7 @@ function Library:SectionAddDropdown(section, title, list, callback, default)
                 Font = Enum.Font.Gotham,
                 Text = title,
                 TextColor3 = Themes.TextColor,
-                TextSize = 14,
+                TextSize = 16,
                 TextTransparency = 0.1,
                 TextXAlignment = Enum.TextXAlignment.Left
             }),
@@ -1939,7 +1939,7 @@ function Library:SectionAddMultiDropdown(section, title, list, callback)
                 Font = Enum.Font.Gotham,
                 Text = title,
                 TextColor3 = Themes.TextColor,
-                TextSize = 14,
+                TextSize = 16,
                 TextTransparency = 0.1,
                 TextXAlignment = Enum.TextXAlignment.Left
             }),
