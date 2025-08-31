@@ -506,10 +506,11 @@ function Library:ShowNotification(title, text, callback)
     local notification = Utility:Create("ImageLabel", {
         Name = "Notification",
         Parent = self.Container,
-        BackgroundTransparency = 0,
+        BackgroundTransparency = 1,
         Size = UDim2.new(0, 200, 0, 60),
         Image = "rbxassetid://5028857472",
-        ImageColor3 = Themes.Background,
+        ImageColor3 = Color3.fromRGB(0, 0, 0), 
+        ImageTransparency = 0.5,  
         ScaleType = Enum.ScaleType.Slice,
         SliceCenter = Rect.new(4, 4, 296, 296),
         ZIndex = 3,
@@ -518,9 +519,10 @@ function Library:ShowNotification(title, text, callback)
         Utility:Create("ImageLabel", {
             Name = "Flash",
             Size = UDim2.new(1, 0, 1, 0),
-            BackgroundTransparency = 0,
+            BackgroundTransparency = 1,  
             Image = "rbxassetid://4641149554",
             ImageColor3 = Themes.TextColor,
+            ImageTransparency = 0.8,  
             ZIndex = 5
         }),
         Utility:Create("TextLabel", {
@@ -726,11 +728,11 @@ function Library:SectionResize(section)
     -- Update section container size with max limit of 260px
     local container = section.Container.Parent
     if container then
-        local newHeight = math.min(1000, math.max(35, contentHeight + containerPadding))
+        local newHeight = math.min(260, math.max(35, contentHeight + containerPadding))
         container.Size = UDim2.new(1, 0, 0, newHeight)
         
         -- Enable scrollbar if content exceeds max height
-        if contentHeight + containerPadding > 1000 then
+        if contentHeight + containerPadding > 260 then
             section.ScrollingFrame.ScrollBarImageTransparency = 0
         else
             section.ScrollingFrame.ScrollBarImageTransparency = 1
