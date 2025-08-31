@@ -103,7 +103,10 @@ function Utility:InitKeybinds()
     UserInputService.InputBegan:Connect(function(input, processed)
         if not processed and keybinds[input.KeyCode] then
             for _, callback in pairs(keybinds[input.KeyCode]) do
-                callback()
+                local success, err = pcall(callback)
+                if not success then
+                    warn("Keybind callback error: " .. tostring(err))
+                end
             end
         end
     end)
@@ -111,7 +114,10 @@ function Utility:InitKeybinds()
     UserInputService.InputEnded:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             for _, callback in pairs(endedCallbacks) do
-                callback()
+                local success, err = pcall(callback)
+                if not success then
+                    warn("Drag end callback error: " .. tostring(err))
+                end
             end
         end
     end)
@@ -410,7 +416,7 @@ function Library:CreatePage(title, icon)
     }, {
         Utility:Create("UIGridLayout", {
             SortOrder = Enum.SortOrder.LayoutOrder,
-            CellSize = UDim2.new(0.48, 0, 0, 240),
+            CellSize = UDim2.new(0.48, 0, 0, 0), -- Height will be determined by content
             CellPadding = UDim2.new(0, 10, 0, 10),
             HorizontalAlignment = Enum.HorizontalAlignment.Center,
             VerticalAlignment = Enum.VerticalAlignment.Top
@@ -693,9 +699,11 @@ function Library:CreateSection(page, title)
             local contentHeight = uiListLayout.AbsoluteContentSize.Y
             scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, contentHeight + 10)
             
-            -- Calculate the new section height based on content
-            local newHeight = math.max(35, contentHeight + 35)
+            local newHeight = math.min(250, math.max(35, contentHeight + 35))
             container.Size = UDim2.new(0.48, 0, 0, newHeight)
+            
+            -- Update page layout
+            self:PageResize(page)
         end)
     end
 
@@ -2260,20 +2268,32 @@ end
 
 -- Resize page
 function Library:PageResize(page)
-    if not page.UIListLayout then return end
+    if not page.UIGridLayout then return end
     
-    local maxHeight = 0
-    for _, section in pairs(page.Sections) do
+    local maxRowHeight = 0
+    local currentRowHeight = 0
+    local totalHeight = 0
+    
+    for i, section in ipairs(page.Sections) do
         local sectionHeight = section.Container.Parent.AbsoluteSize.Y
-        if sectionHeight > maxHeight then
-            maxHeight = sectionHeight
+        
+        if i % 2 == 1 then
+            totalHeight = totalHeight + currentRowHeight + 10
+            currentRowHeight = 0
+        end
+        
+        if sectionHeight > currentRowHeight then
+            currentRowHeight = sectionHeight
+        end
+        
+        if currentRowHeight > maxRowHeight then
+            maxRowHeight = currentRowHeight
         end
     end
     
-    local rows = math.ceil(#page.Sections / 2)
-    local totalHeight = rows * (maxHeight + 10) 
+    totalHeight = totalHeight + currentRowHeight + 20 
     
-    page.Container.CanvasSize = UDim2.new(0, 0, 0, totalHeight + 20)
+    page.Container.CanvasSize = UDim2.new(0, 0, 0, totalHeight)
 end
 
 -- Resize section
