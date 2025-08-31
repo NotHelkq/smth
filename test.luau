@@ -103,10 +103,7 @@ function Utility:InitKeybinds()
     UserInputService.InputBegan:Connect(function(input, processed)
         if not processed and keybinds[input.KeyCode] then
             for _, callback in pairs(keybinds[input.KeyCode]) do
-                local success, err = pcall(callback)
-                if not success then
-                    warn("Keybind callback error: " .. tostring(err))
-                end
+                callback()
             end
         end
     end)
@@ -114,10 +111,7 @@ function Utility:InitKeybinds()
     UserInputService.InputEnded:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             for _, callback in pairs(endedCallbacks) do
-                local success, err = pcall(callback)
-                if not success then
-                    warn("Drag end callback error: " .. tostring(err))
-                end
+                callback()
             end
         end
     end)
@@ -416,7 +410,7 @@ function Library:CreatePage(title, icon)
     }, {
         Utility:Create("UIGridLayout", {
             SortOrder = Enum.SortOrder.LayoutOrder,
-            CellSize = UDim2.new(0.48, 0, 0, 0), -- Height will be determined by content
+            CellSize = UDim2.new(0.48, 0, 0, 240),
             CellPadding = UDim2.new(0, 10, 0, 10),
             HorizontalAlignment = Enum.HorizontalAlignment.Center,
             VerticalAlignment = Enum.VerticalAlignment.Top
@@ -699,11 +693,9 @@ function Library:CreateSection(page, title)
             local contentHeight = uiListLayout.AbsoluteContentSize.Y
             scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, contentHeight + 10)
             
-            local newHeight = math.min(250, math.max(35, contentHeight + 35))
+            -- Calculate the new section height based on content
+            local newHeight = math.max(35, contentHeight + 35)
             container.Size = UDim2.new(0.48, 0, 0, newHeight)
-            
-            -- Update page layout
-            self:PageResize(page)
         end)
     end
 
@@ -775,8 +767,14 @@ function Library:SectionAddButton(section, title, callback)
         debounce = false
     end)
     
-    -- Trigger page resize after adding the button
-    self:AutoResizePage(section.Page)
+    -- Trigger section resize after adding the button
+    task.defer(function()
+        if section.UIListLayout then
+            section.UIListLayout:ApplyLayout()
+            task.wait(0.1)
+            self:PageResize(section.Page)
+        end
+    end)
     
     return button
 end
@@ -2262,47 +2260,20 @@ end
 
 -- Resize page
 function Library:PageResize(page)
-    if not page.UIGridLayout then return end
+    if not page.UIListLayout then return end
     
-    local maxRowHeight = 0
-    local currentRowHeight = 0
-    local totalHeight = 0
-    
-    for i, section in ipairs(page.Sections) do
+    local maxHeight = 0
+    for _, section in pairs(page.Sections) do
         local sectionHeight = section.Container.Parent.AbsoluteSize.Y
-        
-        if i % 2 == 1 then
-            totalHeight = totalHeight + currentRowHeight + 10
-            currentRowHeight = 0
-        end
-        
-        if sectionHeight > currentRowHeight then
-            currentRowHeight = sectionHeight
-        end
-        
-        if currentRowHeight > maxRowHeight then
-            maxRowHeight = currentRowHeight
+        if sectionHeight > maxHeight then
+            maxHeight = sectionHeight
         end
     end
     
-    totalHeight = totalHeight + currentRowHeight + 20 
+    local rows = math.ceil(#page.Sections / 2)
+    local totalHeight = rows * (maxHeight + 10) 
     
-    page.Container.CanvasSize = UDim2.new(0, 0, 0, totalHeight)
-end
-
-function Library:AutoResizePage(page)
-    if not page or not page.UIGridLayout then return end
-    
-    -- Wait a frame for UI to update
-    task.defer(function()
-        task.wait(0.1)
-        self:PageResize(page)
-        
-        -- Also update the grid layout
-        if page.UIGridLayout then
-            page.UIGridLayout:ApplyLayout()
-        end
-    end)
+    page.Container.CanvasSize = UDim2.new(0, 0, 0, totalHeight + 20)
 end
 
 -- Resize section
