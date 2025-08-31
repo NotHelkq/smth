@@ -782,22 +782,29 @@ function Library:SectionAddButton(section, title, callback)
         if debounce then return end
         Utility:PopEffect(button, 10)
         debounce = true
+        
+        -- Store original text size
+        local originalTextSize = button.Title.TextSize
+        
+        -- Animate text smaller
         Utility:Tween(button.Title, {TextSize = 12}, 0.1)
         task.wait(0.1)
-        Utility:Tween(button.Title, {TextSize = 14}, 0.1)
         
-        -- Add error handling with pcall
-        if callback then
-            local success, err = pcall(function()
+        -- Use pcall to catch any errors
+        local success, err = pcall(function()
+            if callback then
                 callback(function(...)
                     self:UpdateButton(button, ...)
                 end)
-            end)
-            
-            if not success then
-                warn("Button callback error: " .. tostring(err))
-                self:ShowNotification("Error", "Button action failed: " .. tostring(err))
             end
+        end)
+        
+        -- Always reset text size, even if there was an error
+        Utility:Tween(button.Title, {TextSize = originalTextSize}, 0.1)
+        
+        if not success then
+            warn("Button callback error: " .. tostring(err))
+            self:ShowNotification("Error", "Button action failed: " .. tostring(err))
         end
         
         debounce = false
