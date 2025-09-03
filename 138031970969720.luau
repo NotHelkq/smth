@@ -213,8 +213,7 @@ Window:SectionAddToggle(stats, "Return On Death", false, function(t)
             introgui.Enabled = false
             screengui = player.PlayerGui:WaitForChild("ScreenGui")
             screengui.Enabled = true
-            wait(1)
-            if rod then
+            if _G.rod then
                 local FindHum = player.Character:WaitForChild("Humanoid")
 				player.Character.HumanoidRootPart.CFrame = CFrame.new(x, y, z)
             end
