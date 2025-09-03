@@ -729,14 +729,14 @@ function Library:SectionResize(section)
     -- Update ScrollingFrame CanvasSize
     section.ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, totalSize)
     
-    -- Update section container size with max limit of 260px
+    -- Update section container size with max limit of 300px
     local container = section.Container.Parent
     if container then
-        local newHeight = math.min(260, math.max(35, contentHeight + containerPadding))
+        local newHeight = math.min(300, math.max(35, contentHeight + containerPadding))
         container.Size = UDim2.new(1, 0, 0, newHeight)
         
         -- Enable scrollbar if content exceeds max height
-        if contentHeight + containerPadding > 260 then
+        if contentHeight + containerPadding > 300 then
             section.ScrollingFrame.ScrollBarImageTransparency = 0
         else
             section.ScrollingFrame.ScrollBarImageTransparency = 1
