@@ -19,6 +19,12 @@ local function getArea(value, vl)
 end
 
 local teleportData = {
+    {section = "Teleport to ???",
+    buttons = {
+        {"Teleport to Spawn", 448, 250, 883},
+        {"Teleport to Grim Reaper", -125, 250, 517},
+        {"Teleport to Leaderboards", -733, 250, 736}
+        }},
     {section = "Teleport to Fist Strength Areas",
     buttons = {
         {"Teleport to Rock", 408, 272, 980},
@@ -48,12 +54,6 @@ local teleportData = {
         {"Teleport to Psychic Island | 100b pp", -2581, 5517, -502},
         {"Teleport to Psychic Island | 10t pp", -2545, 5412, -489},
         {"Teleport to Psychic Island | 10qa pp", -2667, 5580, -431}
-        }},
-    {section = "Teleport to ???",
-    buttons = {
-        {"Teleport to Spawn", 448, 250, 883},
-        {"Teleport to Grim Reaper", -125, 250, 517},
-        {"Teleport to Leaderboards", -733, 250, 736}
         }}
 }
 
@@ -117,98 +117,118 @@ end
 
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/idk.luau"))()
 local Window = Library.New("SPTS : Genesis")
-local Main = Window:AddPage("Auto Farm", 5012544693, true)
+local Main         = Window:AddPage("Auto Farm", 5012544693, true)
+local Misc         = Window:AddPage("Misc", 5012544693)
 local TeleportPage = Window:AddPage("Teleport", 5012544693)
-local Settings = Window:AddPage("Settings", 5012544693)
+local Settings     = Window:AddPage("Settings", 5012544693)
 
-local Farm = Window:PageAddSection(Main, "Auto Farm")
-local Misc = Window:PageAddSection(Main, "Misc")
-local Webh = Window:PageAddSection(Main, "Check Player's Stats | Kill Player")
-local Sett = Window:PageAddSection(Settings, "Others")
+local stats = Window:PageAddSection(Main, "Stats")
+local multi = Window:PageAddSection(Main, "Multiplier")
+local Webh  = Window:PageAddSection(Misc, "Check Player's Stats")
+local grade = Window:PageAddSection(Misc, "Auto Roll")
+local Sett  = Window:PageAddSection(Settings, "Others")
 
 -- Auto Farm
-Window:SectionAddToggle(Farm, "Auto Fist Strength", false, function(t)
-    autofs = t
-    while autofs do
+Window:SectionAddToggle(stats, "Auto Fist Strength", false, function(t)
+    _G.autofs = t
+    while _G.autofs do
         local fsValue = player.PrivateStats.FistStrength.Value
         local area = getArea(fsValue, fs)
         local args = {{"+FS"..(area + 2)}}
         remoteEvent:FireServer(unpack(args))
-        task.wait(0.5)
+        task.wait(0.1)
     end
 end)
 
-Window:SectionAddToggle(Farm, "Auto Body Toughness", false, function(t)
-    autobt = t
-    while autobt do
+Window:SectionAddToggle(stats, "Auto Body Toughness", false, function(t)
+    _G.autobt = t
+    while _G.autobt do
         local btValue = player.PrivateStats.BodyToughness.Value
         local area = getArea(btValue, bt)
         local args = {{"+BT"..area}}
         remoteEvent:FireServer(unpack(args))
-        task.wait(0.5)
+        task.wait(0.1)
     end
 end)
 
-Window:SectionAddToggle(Farm, "Auto Movement Speed", false, function(t)
-    automs = t
-    while automs do
+Window:SectionAddToggle(stats, "Auto Movement Speed", false, function(t)
+    _G.automs = t
+    while _G.automs do
         local msValue = player.PrivateStats.MovementSpeed.Value
         local area = getArea(msValue, ms)
         local args = {{"+MS"..area}}
         remoteEvent:FireServer(unpack(args))
-        task.wait(0.5)
+        task.wait(0.1)
     end
 end)
 
-Window:SectionAddToggle(Farm, "Auto Jump Force", false, function(t)
-    autojf = t
-    while autojf do
+Window:SectionAddToggle(stats, "Auto Jump Force", false, function(t)
+    _G.autojf = t
+    while _G.autojf do
         local jfValue = player.PrivateStats.JumpForce.Value
         local area = getArea(jfValue, jf)
         local args = {{"+JF"..area}}
         remoteEvent:FireServer(unpack(args))
-        task.wait(0.5)
+        task.wait(0.1)
     end
 end)
 
-Window:SectionAddToggle(Farm, "Auto Psychic Power", false, function(t)
-    autopp = t
-    while autopp do
+Window:SectionAddToggle(stats, "Auto Psychic Power", false, function(t)
+    _G.autopp = t
+    while _G.autopp do
         local ppValue = player.PrivateStats.PsychicPower.Value
         local area = getArea(ppValue, pp)
         local args = {{"+PP"..(area)}}
         remoteEvent:FireServer(unpack(args))
-        task.wait(0.5)
+        task.wait(0.1)
     end
 end)
 
-Window:SectionAddToggle(Farm, "Auto Roll Grade 7/8/9/10", false, function(t)
-    autorollgrade = t
-    while autorollgrade do
-        local buff = game:GetService("Players").LocalPlayer.PrivateStats.Multiplier.Value
-        if buff < 2.1 then
-            game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("SpinGrade"):InvokeServer()
-        else autorollgrade = false end
-        task.wait(0.33)
+Window:SectionAddToggle(stats, "Free Tokens", false, function(t)
+    _G.ft = t 
+    while _G.ft and task.wait(0.001) do 
+        local args = {{"NextMission"}}
+        game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
     end
 end)
 
--- Misc
-Window:SectionAddButton(Misc, "Quick Roll Grade", function() 
-    local buff = game:GetService("Players").LocalPlayer.PrivateStats.Multiplier.Value
-    if buff < 2.1 then
-        game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("SpinGrade"):InvokeServer() 
-    else 
-        local closeNotification = Window:ShowNotification("Error", "You Can't Quick Roll With Grade 7-10")
-        delay(3, function() if closeNotification then closeNotification() end end)
+Window:SectionAddToggle(stats, "Return On Death", false, function(t)
+    _G.rod = t
+    while _G.rod do
+        player.Character.Humanoid.Died:connect(function()
+			playerdied = true
+		end)
+        if not playerdied then
+            x = player.Character.HumanoidRootPart.Position.x
+            y = player.Character.HumanoidRootPart.Position.y
+            z = player.Character.HumanoidRootPart.Position.z
+            wait(0.33)
+        end
+        if playerdied then
+            wait(4)
+            game:GetService("ReplicatedStorage").RemoteEvent:FireServer({"Respawn"})
+            wait(1)
+            game.Lighting.Blur.Enabled = false
+            introgui = player.PlayerGui:WaitForChild("IntroGui")
+            introgui.Enabled = false
+            screengui = player.PlayerGui:WaitForChild("ScreenGui")
+            screengui.Enabled = true
+            wait(1)
+            if rod then
+                local FindHum = player.Character:WaitForChild("Humanoid")
+				player.Character.HumanoidRootPart.CFrame = CFrame.new(x, y, z)
+            end
+            playerdied = false
+        end
     end
 end)
 
+-- Multiplier
 local username = player.Name
 local multiplierFolder = game:GetService("ReplicatedStorage").Multipliers
 for _, mult in ipairs({"FS", "BT", "MS", "JF", "PP"}) do
     local remote = multiplierFolder["Upgrade"..mult]
-    Window:SectionAddToggle(Misc, "Auto "..mult.." Multiplier", false, function(t)
+    Window:SectionAddToggle(multi, "Auto "..mult.." Multiplier", false, function(t)
         _G["auto"..mult.."multi"] = t
         while _G["auto"..mult.."multi"] do
             remote:FireServer(username)
@@ -217,7 +237,7 @@ for _, mult in ipairs({"FS", "BT", "MS", "JF", "PP"}) do
     end)
 end
 
--- Webhook/kill
+-- Webhook
 local usernameTextbox = Window:SectionAddTextbox(Webh, "Username", "", function(text) end)
 Window:SectionAddButton(Webh, "Send Webhook", function()
     local u = usernameTextbox.Button.Textbox.Text
@@ -231,17 +251,16 @@ Window:SectionAddButton(Webh, "Send Webhook", function()
         delay(3, function() if closeNotification then closeNotification() end end)
     end
 end)
-Window:SectionAddButton(Webh, "Kill Player", function()
-    local u = usernameTextbox.Button.Textbox.Text
-    local user = game:GetService("Players"):FindFirstChild(u)
-    if user then 
-        local args = {{"Skill_SoulReap",game:GetService("Players"):WaitForChild(u)}}
-        game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
-        local closeNotification = Window:ShowNotification("Success", "Player Killed")
-        delay(3, function() if closeNotification then closeNotification() end end)
-    else 
-        local closeNotification = Window:ShowNotification("Error", "Player Doesn't Exist")
-        delay(3, function() if closeNotification then closeNotification() end end)
+
+-- Grade
+Window:SectionAddToggle(grade, "Auto Roll Grade 7/8/9/10", false, function(t)
+    _G.autorollgrade = t
+    while _G.autorollgrade do
+        local buff = game:GetService("Players").LocalPlayer.PrivateStats.Multiplier.Value
+        if buff < 2.1 then
+            game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("SpinGrade"):InvokeServer()
+        else autorollgrade = false end
+        task.wait(0.33)
     end
 end)
 
@@ -261,5 +280,7 @@ Window:SectionAddButton(Sett, "Unload Script", function()
     for _, v in ipairs({"fs", "bt", "ms", "jf", "pp", "fsmulti", "btmulti", "msmulti", "jfmulti", "ppmulti", "rollgrade"}) do
         _G["auto"..v] = false
     end
+    _G.rod = false
+    _G.ft  = false
     Window.Container:Destroy()
 end)
