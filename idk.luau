@@ -220,7 +220,7 @@ function Library.New(title)
             Utility:Create("UIStroke", {
                 Name = "UIStroke",
                 Color = Themes.TextColor,
-                Thickness = 1,
+                Thickness = 0,
                 ApplyStrokeMode = Enum.ApplyStrokeMode.Border
             }),
             Utility:Create("TextButton", {
@@ -247,7 +247,7 @@ function Library.New(title)
                     Size = UDim2.new(1, 0, 1, 0),
                     ZIndex = 5,
                     Font = Enum.Font.SourceSansSemibold,
-                    Text = title or "UI Library",
+                    Text = title or "Random UI",
                     TextColor3 = Themes.TextColor,
                     TextSize = 16,
                     TextXAlignment = Enum.TextXAlignment.Center
@@ -729,14 +729,14 @@ function Library:SectionResize(section)
     -- Update ScrollingFrame CanvasSize
     section.ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, totalSize)
     
-    -- Update section container size with max limit of 300px
+    -- Update section container size with max limit of 260px
     local container = section.Container.Parent
     if container then
-        local newHeight = math.min(300, math.max(35, contentHeight + containerPadding))
+        local newHeight = math.min(1000, math.max(35, contentHeight + containerPadding))
         container.Size = UDim2.new(1, 0, 0, newHeight)
         
         -- Enable scrollbar if content exceeds max height
-        if contentHeight + containerPadding > 300 then
+        if contentHeight + containerPadding > 1000 then
             section.ScrollingFrame.ScrollBarImageTransparency = 0
         else
             section.ScrollingFrame.ScrollBarImageTransparency = 1
