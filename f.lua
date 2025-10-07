@@ -351,22 +351,50 @@ function SimpleUI:addPage(name)
                 Util.newInstance("UIPadding", {Parent = row, PaddingLeft = UDim.new(0,12)})
                 local label = Util.newInstance("TextLabel", {Text = txt, Size = UDim2.new(0.7,0,1,0), BackgroundTransparency = 1, Parent = row, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left})
 
+                -- action box containing the switch
                 local action = Util.newInstance("Frame", {Size = UDim2.new(0,80,0,24), AnchorPoint = Vector2.new(1,0.5), Position = UDim2.new(1,-12,0.5,0), BackgroundColor3 = Theme.Panel, Parent = row, BorderSizePixel = 0})
                 Util.newInstance("UICorner", {Parent = action})
                 Util.newInstance("UIPadding", {Parent = action, PaddingRight = UDim.new(0,6)})
 
-                local toggle = Util.newInstance("TextButton", {Text = default and "ON" or "OFF", Size = UDim2.new(0,44,0,18), AnchorPoint = Vector2.new(1,0.5), Position = UDim2.new(1,-8,0.5,0), Parent = action, BackgroundColor3 = (default and Theme.Accent or Theme.Row), TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 12, BorderSizePixel = 0})
-                Util.newInstance("UICorner", {Parent = toggle})
-                toggle.MouseButton1Click:Connect(function()
-                    local on = toggle.Text == "ON"
-                    if on then
-                        toggle.Text = "OFF" toggle.BackgroundColor3 = Theme.Row
+                -- switch track
+                local track = Util.newInstance("Frame", {Size = UDim2.new(0,44,0,20), Position = UDim2.new(1,-8,0.5,-10), BackgroundColor3 = (default and Theme.Accent or Theme.Row), Parent = action, BorderSizePixel = 0, AnchorPoint = Vector2.new(1,0)})
+                Util.newInstance("UICorner", {Parent = track})
+                -- knob
+                local knob = Util.newInstance("Frame", {Size = UDim2.new(0,16,0,16), Position = UDim2.new(0.06,0,0.5,-8), BackgroundColor3 = Theme.Panel, Parent = track, BorderSizePixel = 0})
+                Util.newInstance("UICorner", {Parent = knob})
+
+                local state = default and true or false
+                local function setState(on, instant)
+                    state = not not on
+                    local targetX = state and 1 or 0
+                    local knobPos = state and UDim2.new(0.88, -16, 0.5, -8) or UDim2.new(0.06,0,0.5,-8)
+                    local trackColor = state and Theme.Accent or Theme.Row
+                    if instant then
+                        knob.Position = knobPos
+                        track.BackgroundColor3 = trackColor
                     else
-                        toggle.Text = "ON" toggle.BackgroundColor3 = Theme.Accent
+                        Util.tween(knob, {Position = knobPos}, 0.12)
+                        Util.tween(track, {BackgroundColor3 = trackColor}, 0.12)
                     end
-                    pcall(cb, toggle.Text == "ON")
+                end
+
+                -- initial visual
+                setState(state, true)
+
+                -- toggle on click
+                track.InputBegan:Connect(function(inp)
+                    if inp.UserInputType == Enum.UserInputType.MouseButton1 then
+                        setState(not state)
+                        pcall(cb, state)
+                    end
                 end)
-                return toggle
+
+                return {
+                    Track = track,
+                    Knob = knob,
+                    Set = setState,
+                    Get = function() return state end
+                }
             end,
             AddTextbox = function(_, txt, default, cb)
                 local row = Util.newInstance("Frame", {Size = UDim2.new(1,0,0,34), BackgroundColor3 = Theme.Row, Parent = content, BorderSizePixel = 0})
@@ -392,10 +420,13 @@ function SimpleUI:addPage(name)
                 Util.newInstance("UICorner", {Parent = row})
                 Util.newInstance("UIPadding", {Parent = row, PaddingLeft = UDim.new(0,12)})
                 Util.newInstance("TextLabel", {Text = txt, Size = UDim2.new(0.4,0,1,0), BackgroundTransparency = 1, Parent = row, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left})
-                local barBg = Util.newInstance("Frame", {Size = UDim2.new(0.55,0,0,10), Position = UDim2.new(0.44,0,0.5,-5), BackgroundColor3 = Theme.Panel, Parent = row, BorderSizePixel = 0})
+                -- slightly reduce bar width to make room for numeric value label
+                local barBg = Util.newInstance("Frame", {Size = UDim2.new(0.46,0,0,10), Position = UDim2.new(0.44,0,0.5,-5), BackgroundColor3 = Theme.Panel, Parent = row, BorderSizePixel = 0})
                 Util.newInstance("UICorner", {Parent = barBg})
                 local fill = Util.newInstance("Frame", {Size = UDim2.new( (default-min)/(max-min), 0, 1, 0), BackgroundColor3 = Theme.Accent, Parent = barBg})
                 Util.newInstance("UICorner", {Parent = fill})
+                -- numeric value label on the right
+                local valueLabel = Util.newInstance("TextLabel", {Text = tostring(default), Size = UDim2.new(0,50,0,18), AnchorPoint = Vector2.new(1,0.5), Position = UDim2.new(1,-12,0.5,-9), BackgroundTransparency = 1, Parent = row, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, TextXAlignment = Enum.TextXAlignment.Right})
                 local dragging
                 barBg.InputBegan:Connect(function(inp)
                     if inp.UserInputType == Enum.UserInputType.MouseButton1 then dragging = true end
@@ -407,9 +438,13 @@ function SimpleUI:addPage(name)
                     if dragging and inp.UserInputType == Enum.UserInputType.MouseMovement then
                         local rel = math.clamp((inp.Position.X - barBg.AbsolutePosition.X) / barBg.AbsoluteSize.X, 0, 1)
                         fill.Size = UDim2.new(rel,0,1,0)
-                        pcall(cb, math.floor(min + rel*(max-min)))
+                        local value = math.floor(min + rel*(max-min))
+                        if valueLabel then valueLabel.Text = tostring(value) end
+                        pcall(cb, value)
                     end
                 end)
+                -- set initial value label
+                if valueLabel then valueLabel.Text = tostring(math.floor(default)) end
                 return fill
             end,
             AddDropdown = function(_, label, options, defaultIndex, cb)
