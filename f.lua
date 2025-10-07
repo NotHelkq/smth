@@ -642,7 +642,7 @@ function Library:CreateSection(page, title)
     local container = Utility:Create("Frame", {
         Name = title,
         Parent = page.Container,
-        Size = UDim2.new(0.9, -10, 0, 35),
+        Size = UDim2.new(1, -16, 0, 35), -- leave ~8px gap on left and right
         ZIndex = 2,
         BackgroundColor3 = Themes.LightContrast,
         ClipsDescendants = true
