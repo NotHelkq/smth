@@ -2305,7 +2305,7 @@ function Library:UpdateDropdown(dropdown, title, list, callback)
                 Text = value,
                 TextColor3 = Themes.TextColor,
                 TextSize = 14,
-                TextXAlignment = "Left",
+                TextXAlignment = Enum.TextXAlignment.Left,
                 TextTransparency = 0.1
             })
         })
