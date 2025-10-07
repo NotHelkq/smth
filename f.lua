@@ -207,7 +207,7 @@ Library.__index = Library
 function Library.New(title)
     local keybindSystem = Utility:InitKeybinds()
     local container = Utility:Create("ScreenGui", {
-        Name = title or "UI Library",
+        Name = title or "Unknown Script",
         Parent = game.CoreGui
     }, {
         Utility:Create("Frame", {
@@ -247,7 +247,7 @@ function Library.New(title)
                     Size = UDim2.new(1, 0, 1, 0),
                     ZIndex = 5,
                     Font = Enum.Font.SourceSansSemibold,
-                    Text = title or "Random UI",
+                    Text = title or "Unknown Script",
                     TextColor3 = Themes.TextColor,
                     TextSize = 16,
                     TextXAlignment = Enum.TextXAlignment.Center
