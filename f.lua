@@ -6,10 +6,13 @@ local HttpService = game:GetService("HttpService")
 local UserInputService = game:GetService("UserInputService")
 
 local Theme = {
-    Background = Color3.fromRGB(24,24,24),
-    Panel = Color3.fromRGB(34,34,34),
-    Row = Color3.fromRGB(28,28,28),
-    Accent = Color3.fromRGB(85,170,255),
+    Background = Color3.fromRGB(24,24,24), -- same as Random UI
+    Accent = Color3.fromRGB(10,10,10),    -- Random UI Accent (very dark)
+    LightContrast = Color3.fromRGB(20,20,20),
+    DarkContrast = Color3.fromRGB(14,14,14),
+    -- Map our semantic names to the Random UI palette
+    Panel = Color3.fromRGB(14,14,14),
+    Row = Color3.fromRGB(20,20,20),
     Text = Color3.fromRGB(255,255,255),
 }
 
@@ -69,8 +72,8 @@ function SimpleUI.new(title)
 
     local main = Util.newInstance("Frame", {
         Name = "Main",
-        Size = UDim2.new(0, 600, 0, 380),
-        Position = UDim2.new(0.2,0,0.15,0),
+        Size = UDim2.new(0, 800, 0, 450), -- default size from Random UI
+        Position = UDim2.new(0.18,0,0.12,0),
         BackgroundColor3 = Theme.Background,
         BorderSizePixel = 0,
         Parent = screen,
@@ -357,7 +360,7 @@ function SimpleUI:addPage(name)
                 Util.newInstance("UIPadding", {Parent = action, PaddingRight = UDim.new(0,6)})
 
                 -- switch track
-                local track = Util.newInstance("Frame", {Size = UDim2.new(0,44,0,20), Position = UDim2.new(1,-8,0.5,-10), BackgroundColor3 = (default and Theme.Accent or Theme.Row), Parent = action, BorderSizePixel = 0, AnchorPoint = Vector2.new(1,0)})
+                local track = Util.newInstance("Frame", {Size = UDim2.new(0,44,0,20), Position = UDim2.new(1,-8,0.5,-10), BackgroundColor3 = (default and Color3.fromRGB(85,170,255) or Theme.Row), Parent = action, BorderSizePixel = 0, AnchorPoint = Vector2.new(1,0)})
                 Util.newInstance("UICorner", {Parent = track})
                 -- knob
                 local knob = Util.newInstance("Frame", {Size = UDim2.new(0,16,0,16), Position = UDim2.new(0.06,0,0.5,-8), BackgroundColor3 = Theme.Panel, Parent = track, BorderSizePixel = 0})
@@ -368,7 +371,7 @@ function SimpleUI:addPage(name)
                     state = not not on
                     local targetX = state and 1 or 0
                     local knobPos = state and UDim2.new(0.88, -16, 0.5, -8) or UDim2.new(0.06,0,0.5,-8)
-                    local trackColor = state and Theme.Accent or Theme.Row
+                    local trackColor = state and Color3.fromRGB(85,170,255) or Theme.Row
                     if instant then
                         knob.Position = knobPos
                         track.BackgroundColor3 = trackColor
@@ -423,7 +426,7 @@ function SimpleUI:addPage(name)
                 -- slightly reduce bar width to make room for numeric value label
                 local barBg = Util.newInstance("Frame", {Size = UDim2.new(0.46,0,0,10), Position = UDim2.new(0.44,0,0.5,-5), BackgroundColor3 = Theme.Panel, Parent = row, BorderSizePixel = 0})
                 Util.newInstance("UICorner", {Parent = barBg})
-                local fill = Util.newInstance("Frame", {Size = UDim2.new( (default-min)/(max-min), 0, 1, 0), BackgroundColor3 = Theme.Accent, Parent = barBg})
+                local fill = Util.newInstance("Frame", {Size = UDim2.new( (default-min)/(max-min), 0, 1, 0), BackgroundColor3 = Color3.fromRGB(85,170,255), Parent = barBg})
                 Util.newInstance("UICorner", {Parent = fill})
                 -- numeric value label on the right
                 local valueLabel = Util.newInstance("TextLabel", {Text = tostring(default), Size = UDim2.new(0,50,0,18), AnchorPoint = Vector2.new(1,0.5), Position = UDim2.new(1,-12,0.5,-9), BackgroundTransparency = 1, Parent = row, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, TextXAlignment = Enum.TextXAlignment.Right})
