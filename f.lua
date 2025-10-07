@@ -240,8 +240,9 @@ function SimpleUI:addPage(name)
             BackgroundColor3 = Theme.Panel,
             Parent = self.Frame,
         })
-        container.AnchorPoint = Vector2.new(0.5, 0)
-        container.Position = UDim2.new(0.5, 0, 0, 0)
+    container.AnchorPoint = Vector2.new(0.5, 0)
+    -- push sections a bit down so they don't sit flush with top padding
+    container.Position = UDim2.new(0.5, 0, 0, 8)
         Util.newInstance("UICorner", {Parent = container})
 
         local header = Util.newInstance("TextLabel", {
@@ -262,6 +263,8 @@ function SimpleUI:addPage(name)
             Size = UDim2.new(1,0,0,0),
             Parent = container,
         })
+        -- add small left padding so child controls' text shifts right slightly
+        Util.newInstance("UIPadding", {Parent = content, PaddingLeft = UDim.new(0,6)})
         local innerLayout = Util.newInstance("UIListLayout", {Parent = content}) innerLayout.SortOrder = Enum.SortOrder.LayoutOrder innerLayout.Padding = UDim.new(0,6)
 
         -- keep track of content size
@@ -275,10 +278,11 @@ function SimpleUI:addPage(name)
         local section = {
             Container = content,
             AddButton = function(_, txt, cb)
+                -- full-width dark panel style button with padded text
                 local btn = Util.newInstance("TextButton", {
                     Text = txt or "Button",
-                    Size = UDim2.new(1,0,0,28),
-                    BackgroundColor3 = Theme.Background,
+                    Size = UDim2.new(1,0,0,34),
+                    BackgroundColor3 = Theme.Panel,
                     Parent = content,
                     TextColor3 = Theme.Text,
                     Font = Enum.Font.Gotham,
@@ -286,8 +290,10 @@ function SimpleUI:addPage(name)
                     BorderSizePixel = 0,
                     TextXAlignment = Enum.TextXAlignment.Left,
                     TextYAlignment = Enum.TextYAlignment.Center,
+                    AutoButtonColor = false,
                 })
                 Util.newInstance("UICorner", {Parent = btn})
+                Util.newInstance("UIPadding", {Parent = btn, PaddingLeft = UDim.new(0,12), PaddingRight = UDim.new(0,8)})
                 btn.MouseButton1Click:Connect(function() pcall(cb) end)
                 return btn
             end,
@@ -295,8 +301,9 @@ function SimpleUI:addPage(name)
                 local frame = Util.newInstance("Frame", {Size = UDim2.new(1,0,0,30), BackgroundTransparency = 1, Parent = content})
                 Util.newInstance("TextLabel", {Text = txt, Size = UDim2.new(0.5,0,1,0), BackgroundTransparency = 1, Parent = frame, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left})
 
-                local btn = Util.newInstance("TextButton", {Text = "None", Size = UDim2.new(0.45,0,0.7,0), Position = UDim2.new(0.5,0,0.15,0), Parent = frame, BackgroundColor3 = Theme.Background, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, BorderSizePixel = 0})
+                local btn = Util.newInstance("TextButton", {Text = "None", Size = UDim2.new(0.28,0,0.7,0), Position = UDim2.new(0.72,0,0.15,0), Parent = frame, BackgroundColor3 = Theme.Panel, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, BorderSizePixel = 0})
                 Util.newInstance("UICorner", {Parent = btn})
+                Util.newInstance("UIPadding", {Parent = btn, PaddingLeft = UDim.new(0,8), PaddingRight = UDim.new(0,8)})
 
                 -- Normalize defaultKey: allow Enum.KeyCode or string
                 local boundKey
@@ -345,24 +352,38 @@ function SimpleUI:addPage(name)
             AddToggle = function(_, txt, default, cb)
                 local frame = Util.newInstance("Frame", {Size = UDim2.new(1,0,0,28), BackgroundTransparency = 1, Parent = content})
                 local label = Util.newInstance("TextLabel", {Text = txt, Size = UDim2.new(0.75,0,1,0), BackgroundTransparency = 1, Parent = frame, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left})
-                local toggle = Util.newInstance("TextButton", {Text = default and "ON" or "OFF", Size = UDim2.new(0.23,0,0.8,0), Position = UDim2.new(0.77,0,0.1,0), Parent = frame, BackgroundColor3 = default and Theme.Accent or Theme.Panel, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 12, BorderSizePixel = 0})
-                Util.newInstance("UICorner", {Parent = toggle})
-                toggle.MouseButton1Click:Connect(function()
-                    local on = toggle.Text == "ON"
-                    if on then
-                        toggle.Text = "OFF" toggle.BackgroundColor3 = Theme.Panel
+                -- create a modern switch-style toggle
+                local toggleBg = Util.newInstance("Frame", {Size = UDim2.new(0.18,0,0.6,0), Position = UDim2.new(0.78,0,0.2,0), BackgroundColor3 = Theme.Panel, Parent = frame, BorderSizePixel = 0})
+                Util.newInstance("UICorner", {Parent = toggleBg})
+                local handle = Util.newInstance("Frame", {Size = UDim2.new(0,14,0,14), BackgroundColor3 = Color3.new(1,1,1), Parent = toggleBg, AnchorPoint = Vector2.new(0,0.5)})
+                Util.newInstance("UICorner", {Parent = handle})
+                -- position handle left or right
+                local function setOn(isOn, instant)
+                    if isOn then
+                        Util.tween(handle, {Position = UDim2.new(1,-18,0.5,0)}, instant and 0 or 0.12)
                     else
-                        toggle.Text = "ON" toggle.BackgroundColor3 = Theme.Accent
+                        Util.tween(handle, {Position = UDim2.new(0,4,0.5,0)}, instant and 0 or 0.12)
                     end
-                    pcall(cb, toggle.Text == "ON")
+                    toggleBg.BackgroundColor3 = isOn and Theme.Accent or Theme.Panel
+                end
+                -- initialize
+                handle.Position = UDim2.new(0,4,0.5,0)
+                setOn(default)
+                -- clickable area overlay
+                local clickBtn = Util.newInstance("TextButton", {Text = "", Size = UDim2.new(1,1,1,1), BackgroundTransparency = 1, Parent = toggleBg, BorderSizePixel = 0})
+                clickBtn.MouseButton1Click:Connect(function()
+                    default = not default
+                    setOn(default)
+                    pcall(cb, default)
                 end)
-                return toggle
+                return toggleBg
             end,
             AddTextbox = function(_, txt, default, cb)
                 local frame = Util.newInstance("Frame", {Size = UDim2.new(1,0,0,34), BackgroundTransparency = 1, Parent = content})
                 Util.newInstance("TextLabel", {Text = txt, Size = UDim2.new(0.5,0,1,0), BackgroundTransparency = 1, Parent = frame, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left})
-                local box = Util.newInstance("TextBox", {Text = default or "", Size = UDim2.new(0.48,0,0.8,0), Position = UDim2.new(0.5,0,0.1,0), Parent = frame, BackgroundColor3 = Theme.Background, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14})
+                local box = Util.newInstance("TextBox", {Text = default or "", Size = UDim2.new(0.48,0,0.8,0), Position = UDim2.new(0.5,0,0.1,0), Parent = frame, BackgroundColor3 = Theme.Panel, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, BorderSizePixel = 0})
                 Util.newInstance("UICorner", {Parent = box})
+                Util.newInstance("UIPadding", {Parent = box, PaddingLeft = UDim.new(0,10)})
                 box.FocusLost:Connect(function(enter)
                     pcall(cb, box.Text, enter)
                 end)
@@ -372,7 +393,7 @@ function SimpleUI:addPage(name)
                 min = min or 0 max = max or 100 default = default or min
                 local frame = Util.newInstance("Frame", {Size = UDim2.new(1,0,0,34), BackgroundTransparency = 1, Parent = content})
                 Util.newInstance("TextLabel", {Text = txt, Size = UDim2.new(0.4,0,1,0), BackgroundTransparency = 1, Parent = frame, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left})
-                local barBg = Util.newInstance("Frame", {Size = UDim2.new(0.55,0,0,8), Position = UDim2.new(0.44,0,0.5,-4), BackgroundColor3 = Theme.Panel, Parent = frame})
+                local barBg = Util.newInstance("Frame", {Size = UDim2.new(0.55,0,0,10), Position = UDim2.new(0.44,0,0.5,-5), BackgroundColor3 = Theme.Panel, Parent = frame, BorderSizePixel = 0})
                 Util.newInstance("UICorner", {Parent = barBg})
                 local fill = Util.newInstance("Frame", {Size = UDim2.new( (default-min)/(max-min), 0, 1, 0), BackgroundColor3 = Theme.Accent, Parent = barBg})
                 Util.newInstance("UICorner", {Parent = fill})
@@ -394,11 +415,11 @@ function SimpleUI:addPage(name)
             end,
             AddDropdown = function(_, label, options, defaultIndex, cb)
                 options = options or {}
-                local container = Util.newInstance("Frame", {Size = UDim2.new(1,0,0,30), BackgroundTransparency = 1, Parent = content})
+                local container = Util.newInstance("Frame", {Size = UDim2.new(1,0,0,34), BackgroundTransparency = 1, Parent = content})
                 Util.newInstance("TextLabel", {Text = label, Size = UDim2.new(0.35,0,1,0), BackgroundTransparency = 1, Parent = container, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left})
-
-                local btn = Util.newInstance("TextButton", {Text = options[defaultIndex] or "Select", Size = UDim2.new(0.6,0,0.8,0), Position = UDim2.new(0.38,0,0.1,0), Parent = container, BackgroundColor3 = Theme.Background, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, AutoButtonColor = true, BorderSizePixel = 0, TextXAlignment = Enum.TextXAlignment.Left})
+                local btn = Util.newInstance("TextButton", {Text = options[defaultIndex] or "Select", Size = UDim2.new(0.6,0,0.8,0), Position = UDim2.new(0.38,0,0.1,0), Parent = container, BackgroundColor3 = Theme.Panel, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, AutoButtonColor = false, BorderSizePixel = 0, TextXAlignment = Enum.TextXAlignment.Left})
                 Util.newInstance("UICorner", {Parent = btn})
+                Util.newInstance("UIPadding", {Parent = btn, PaddingLeft = UDim.new(0,12)})
                 -- create popup under top-level screen to avoid clipping / overlap
                 local listContainer = Util.newInstance("Frame", {Size = UDim2.new(0,0,0,0), Position = UDim2.new(0,0,0,0), BackgroundColor3 = Theme.Panel, Parent = LIB.Screen, ClipsDescendants = true, Visible = false, BorderSizePixel = 0, ZIndex = 50})
                 Util.newInstance("UICorner", {Parent = listContainer})
@@ -409,7 +430,7 @@ function SimpleUI:addPage(name)
                 local function rebuild()
                     for _,c in pairs(scroll:GetChildren()) do if c:IsA("TextButton") then c:Destroy() end end
                     for i,v in ipairs(options) do
-                        local opt = Util.newInstance("TextButton", {Text = tostring(v), Size = UDim2.new(1,0,0,28), Parent = scroll, BackgroundColor3 = Theme.Background, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, BorderSizePixel = 0, TextXAlignment = Enum.TextXAlignment.Left, ZIndex = 52})
+                        local opt = Util.newInstance("TextButton", {Text = tostring(v), Size = UDim2.new(1,0,0,28), Parent = scroll, BackgroundColor3 = Theme.Panel, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, BorderSizePixel = 0, TextXAlignment = Enum.TextXAlignment.Left, ZIndex = 52})
                         Util.newInstance("UICorner", {Parent = opt})
                         opt.MouseButton1Click:Connect(function()
                             btn.Text = tostring(v)
@@ -480,8 +501,9 @@ function SimpleUI:addPage(name)
                 local container = Util.newInstance("Frame", {Size = UDim2.new(1,0,0,30), BackgroundTransparency = 1, Parent = content})
                 Util.newInstance("TextLabel", {Text = label, Size = UDim2.new(0.35,0,1,0), BackgroundTransparency = 1, Parent = container, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left})
 
-                local display = Util.newInstance("TextButton", {Text = "", Size = UDim2.new(0.6,0,0.8,0), Position = UDim2.new(0.38,0,0.1,0), Parent = container, BackgroundColor3 = Theme.Background, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, AutoButtonColor = true, BorderSizePixel = 0, TextXAlignment = Enum.TextXAlignment.Left})
+                local display = Util.newInstance("TextButton", {Text = "", Size = UDim2.new(0.6,0,0.8,0), Position = UDim2.new(0.38,0,0.1,0), Parent = container, BackgroundColor3 = Theme.Panel, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, AutoButtonColor = false, BorderSizePixel = 0, TextXAlignment = Enum.TextXAlignment.Left})
                 Util.newInstance("UICorner", {Parent = display})
+                Util.newInstance("UIPadding", {Parent = display, PaddingLeft = UDim.new(0,12)})
 
                 -- popup lives under top-level screen to avoid overlap
                 local listContainer = Util.newInstance("Frame", {Size = UDim2.new(0,0,0,0), Position = UDim2.new(0,0,0,0), BackgroundColor3 = Theme.Panel, Parent = LIB.Screen, ClipsDescendants = true, Visible = false, BorderSizePixel = 0, ZIndex = 60})
@@ -501,7 +523,7 @@ function SimpleUI:addPage(name)
                     for _,c in pairs(scroll:GetChildren()) do if c:IsA("Frame") or c:IsA("TextButton") then c:Destroy() end end
                     for i,v in ipairs(options) do
                         local row = Util.newInstance("Frame", {Size = UDim2.new(1,0,0,28), Parent = scroll, BackgroundTransparency = 1})
-                        local opt = Util.newInstance("TextButton", {Text = tostring(v), Size = UDim2.new(1,0,0,28), Parent = row, BackgroundColor3 = Theme.Background, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, AutoButtonColor = true, BorderSizePixel = 0, TextXAlignment = Enum.TextXAlignment.Left, ZIndex = 62})
+                        local opt = Util.newInstance("TextButton", {Text = tostring(v), Size = UDim2.new(1,0,0,28), Parent = row, BackgroundColor3 = Theme.Panel, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, AutoButtonColor = true, BorderSizePixel = 0, TextXAlignment = Enum.TextXAlignment.Left, ZIndex = 62})
                         Util.newInstance("UICorner", {Parent = opt})
                         local check = Util.newInstance("TextLabel", {Text = selected[v] and "✓" or "", Size = UDim2.new(0,28,1,0), Position = UDim2.new(1,-28,0,0), BackgroundTransparency = 1, Parent = row, TextColor3 = Theme.Text, Font = Enum.Font.GothamBold, TextSize = 16, TextXAlignment = Enum.TextXAlignment.Center, ZIndex = 63})
                         opt.MouseButton1Click:Connect(function()
