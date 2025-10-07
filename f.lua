@@ -187,7 +187,7 @@ end
 -- Add a page (button appears in sidebar and container in content area)
 function SimpleUI:addPage(name)
     local pageButton = Util.newInstance("TextButton", {
-        Text = name,
+        Text = name or "Page",
         Size = UDim2.new(1,-12,0,28),
         Position = UDim2.new(0,6,0,0),
         BackgroundColor3 = Theme.Background,
@@ -196,6 +196,7 @@ function SimpleUI:addPage(name)
         TextColor3 = Theme.Text,
         Font = Enum.Font.Gotham,
         TextSize = 14,
+        BorderSizePixel = 0,
     })
 
     Util.newInstance("UICorner", {Parent = pageButton})
@@ -236,7 +237,8 @@ function SimpleUI:addPage(name)
             BackgroundColor3 = Theme.Panel,
             Parent = self.Frame,
         })
-        container.Position = UDim2.new(0,8,0,0)
+        -- shift section a bit to the right so it sits more centered in the page
+        container.Position = UDim2.new(0,16,0,0)
         Util.newInstance("UICorner", {Parent = container})
 
         local header = Util.newInstance("TextLabel", {
@@ -271,13 +273,16 @@ function SimpleUI:addPage(name)
             Container = content,
             AddButton = function(_, txt, cb)
                 local btn = Util.newInstance("TextButton", {
-                    Text = txt,
+                    Text = txt or "Button",
                     Size = UDim2.new(1,0,0,28),
                     BackgroundColor3 = Theme.Background,
                     Parent = content,
                     TextColor3 = Theme.Text,
                     Font = Enum.Font.Gotham,
                     TextSize = 14,
+                    BorderSizePixel = 0,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    TextYAlignment = Enum.TextYAlignment.Center,
                 })
                 Util.newInstance("UICorner", {Parent = btn})
                 btn.MouseButton1Click:Connect(function() pcall(cb) end)
@@ -287,7 +292,7 @@ function SimpleUI:addPage(name)
                 local frame = Util.newInstance("Frame", {Size = UDim2.new(1,0,0,30), BackgroundTransparency = 1, Parent = content})
                 Util.newInstance("TextLabel", {Text = txt, Size = UDim2.new(0.5,0,1,0), BackgroundTransparency = 1, Parent = frame, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left})
 
-                local btn = Util.newInstance("TextButton", {Text = "None", Size = UDim2.new(0.45,0,0.7,0), Position = UDim2.new(0.5,0,0.15,0), Parent = frame, BackgroundColor3 = Theme.Background, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14})
+                local btn = Util.newInstance("TextButton", {Text = "None", Size = UDim2.new(0.45,0,0.7,0), Position = UDim2.new(0.5,0,0.15,0), Parent = frame, BackgroundColor3 = Theme.Background, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, BorderSizePixel = 0})
                 Util.newInstance("UICorner", {Parent = btn})
 
                 -- Normalize defaultKey: allow Enum.KeyCode or string
@@ -337,7 +342,7 @@ function SimpleUI:addPage(name)
             AddToggle = function(_, txt, default, cb)
                 local frame = Util.newInstance("Frame", {Size = UDim2.new(1,0,0,28), BackgroundTransparency = 1, Parent = content})
                 local label = Util.newInstance("TextLabel", {Text = txt, Size = UDim2.new(0.75,0,1,0), BackgroundTransparency = 1, Parent = frame, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left})
-                local toggle = Util.newInstance("TextButton", {Text = default and "ON" or "OFF", Size = UDim2.new(0.23,0,0.8,0), Position = UDim2.new(0.77,0,0.1,0), Parent = frame, BackgroundColor3 = default and Theme.Accent or Theme.Panel, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 12})
+                local toggle = Util.newInstance("TextButton", {Text = default and "ON" or "OFF", Size = UDim2.new(0.23,0,0.8,0), Position = UDim2.new(0.77,0,0.1,0), Parent = frame, BackgroundColor3 = default and Theme.Accent or Theme.Panel, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 12, BorderSizePixel = 0})
                 Util.newInstance("UICorner", {Parent = toggle})
                 toggle.MouseButton1Click:Connect(function()
                     local on = toggle.Text == "ON"
@@ -389,22 +394,18 @@ function SimpleUI:addPage(name)
                 local container = Util.newInstance("Frame", {Size = UDim2.new(1,0,0,30), BackgroundTransparency = 1, Parent = content})
                 Util.newInstance("TextLabel", {Text = label, Size = UDim2.new(0.35,0,1,0), BackgroundTransparency = 1, Parent = container, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left})
 
-                local btn = Util.newInstance("TextButton", {Text = options[defaultIndex] or "Select", Size = UDim2.new(0.6,0,0.8,0), Position = UDim2.new(0.38,0,0.1,0), Parent = container, BackgroundColor3 = Theme.Background, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, AutoButtonColor = true})
+                local btn = Util.newInstance("TextButton", {Text = options[defaultIndex] or "Select", Size = UDim2.new(0.6,0,0.8,0), Position = UDim2.new(0.38,0,0.1,0), Parent = container, BackgroundColor3 = Theme.Background, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, AutoButtonColor = true, BorderSizePixel = 0, TextXAlignment = Enum.TextXAlignment.Left})
                 Util.newInstance("UICorner", {Parent = btn})
-
-                local listContainer = Util.newInstance("Frame", {Size = UDim2.new(0.6,0,0,0), Position = UDim2.new(0.38,0,0,1), BackgroundColor3 = Theme.Panel, Parent = container, ClipsDescendants = true, Visible = false})
-                local scroll = Util.newInstance("ScrollingFrame", {Parent = listContainer, Size = UDim2.new(1,0,1,0), BackgroundTransparency = 1, CanvasSize = UDim2.new(0,0,0,0), ScrollBarThickness = 6})
+                local listContainer = Util.newInstance("Frame", {Size = UDim2.new(0.6,0,0,0), Position = UDim2.new(0.38,0,0,1), BackgroundColor3 = Theme.Panel, Parent = container, ClipsDescendants = true, Visible = false, BorderSizePixel = 0})
+                Util.newInstance("UICorner", {Parent = listContainer})
+                local scroll = Util.newInstance("ScrollingFrame", {Parent = listContainer, Size = UDim2.new(1,0,1,0), BackgroundTransparency = 1, CanvasSize = UDim2.new(0,0,0,0), ScrollBarThickness = 6, BorderSizePixel = 0})
                 local layout = Util.newInstance("UIListLayout", {Parent = scroll}) layout.SortOrder = Enum.SortOrder.LayoutOrder layout.Padding = UDim.new(0,4)
 
                 local currentOverlayZ = 0
                 local function rebuild()
                     for _,c in pairs(scroll:GetChildren()) do if c:IsA("TextButton") then c:Destroy() end end
                     for i,v in ipairs(options) do
-                        local opt = Util.newInstance("TextButton", {Text = tostring(v), Size = UDim2.new(1,0,0,28), Parent = scroll, BackgroundColor3 = Theme.Background, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14})
-                        -- make sure option sits above overlay
-                        if listContainer and listContainer.ZIndex then
-                            opt.ZIndex = listContainer.ZIndex
-                        end
+                        local opt = Util.newInstance("TextButton", {Text = tostring(v), Size = UDim2.new(1,0,0,28), Parent = scroll, BackgroundColor3 = Theme.Background, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, BorderSizePixel = 0, TextXAlignment = Enum.TextXAlignment.Left})
                         Util.newInstance("UICorner", {Parent = opt})
                         opt.MouseButton1Click:Connect(function()
                             btn.Text = tostring(v)
@@ -422,26 +423,26 @@ function SimpleUI:addPage(name)
 
                 btn.MouseButton1Click:Connect(function()
                     local open = not listContainer.Visible
-                    -- close any other popup
-                    if LIB._popupOverlay then
-                        pcall(function() LIB._popupOverlay:Destroy() end)
-                        LIB._popupOverlay = nil
+                    -- close any other popup handler
+                    if LIB._popupOutsideConn then
+                        pcall(function() LIB._popupOutsideConn:Disconnect() end)
+                        LIB._popupOutsideConn = nil
                     end
                     if open then
-                        -- overlay captures outside clicks
-                        local overlay = Util.newInstance("TextButton", {Size = UDim2.new(1,0,1,0), Position = UDim2.new(0,0,0,0), BackgroundTransparency = 1, Parent = LIB.Screen, AutoButtonColor = false})
-                        overlay.ZIndex = 50
-                        overlay.MouseButton1Click:Connect(function()
-                            listContainer.Visible = false
-                            pcall(function() overlay:Destroy() end)
-                            LIB._popupOverlay = nil
-                        end)
-                        LIB._popupOverlay = overlay
-                        -- ensure popup sits above overlay
-                        listContainer.ZIndex = overlay.ZIndex + 1
-                        currentOverlayZ = overlay.ZIndex
                         listContainer.Visible = true
                         rebuild()
+                        -- detect clicks outside popup to close it
+                        LIB._popupOutsideConn = UserInputService.InputBegan:Connect(function(input, gameProcessed)
+                            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                                local pos = listContainer.AbsolutePosition
+                                local size = listContainer.AbsoluteSize
+                                local mx, my = input.Position.X, input.Position.Y
+                                if mx < pos.X or mx > pos.X + size.X or my < pos.Y or my > pos.Y + size.Y then
+                                    listContainer.Visible = false
+                                    if LIB._popupOutsideConn then LIB._popupOutsideConn:Disconnect() LIB._popupOutsideConn = nil end
+                                end
+                            end
+                        end)
                     else
                         listContainer.Visible = false
                     end
@@ -462,8 +463,9 @@ function SimpleUI:addPage(name)
                 local display = Util.newInstance("TextButton", {Text = "", Size = UDim2.new(0.6,0,0.8,0), Position = UDim2.new(0.38,0,0.1,0), Parent = container, BackgroundColor3 = Theme.Background, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, AutoButtonColor = true})
                 Util.newInstance("UICorner", {Parent = display})
 
-                local listContainer = Util.newInstance("Frame", {Size = UDim2.new(0.6,0,0,0), Position = UDim2.new(0.38,0,0,1), BackgroundColor3 = Theme.Panel, Parent = container, ClipsDescendants = true, Visible = false})
-                local scroll = Util.newInstance("ScrollingFrame", {Parent = listContainer, Size = UDim2.new(1,0,1,0), BackgroundTransparency = 1, CanvasSize = UDim2.new(0,0,0,0), ScrollBarThickness = 6})
+                local listContainer = Util.newInstance("Frame", {Size = UDim2.new(0.6,0,0,0), Position = UDim2.new(0.38,0,0,1), BackgroundColor3 = Theme.Panel, Parent = container, ClipsDescendants = true, Visible = false, BorderSizePixel = 0})
+                Util.newInstance("UICorner", {Parent = listContainer})
+                local scroll = Util.newInstance("ScrollingFrame", {Parent = listContainer, Size = UDim2.new(1,0,1,0), BackgroundTransparency = 1, CanvasSize = UDim2.new(0,0,0,0), ScrollBarThickness = 6, BorderSizePixel = 0})
                 local layout = Util.newInstance("UIListLayout", {Parent = scroll}) layout.SortOrder = Enum.SortOrder.LayoutOrder layout.Padding = UDim.new(0,4)
 
                 local function updateDisplay()
@@ -478,11 +480,9 @@ function SimpleUI:addPage(name)
                     for _,c in pairs(scroll:GetChildren()) do if c:IsA("Frame") or c:IsA("TextButton") then c:Destroy() end end
                     for i,v in ipairs(options) do
                         local row = Util.newInstance("Frame", {Size = UDim2.new(1,0,0,28), Parent = scroll, BackgroundTransparency = 1})
-                        local opt = Util.newInstance("TextButton", {Text = tostring(v), Size = UDim2.new(1,0,0,28), Parent = row, BackgroundColor3 = Theme.Background, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, AutoButtonColor = true})
-                        -- ensure option is above overlay
-                        if listContainer and listContainer.ZIndex then opt.ZIndex = listContainer.ZIndex end
+                        local opt = Util.newInstance("TextButton", {Text = tostring(v), Size = UDim2.new(1,0,0,28), Parent = row, BackgroundColor3 = Theme.Background, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, AutoButtonColor = true, BorderSizePixel = 0, TextXAlignment = Enum.TextXAlignment.Left})
                         Util.newInstance("UICorner", {Parent = opt})
-                        local check = Util.newInstance("TextLabel", {Text = selected[v] and "✓" or "", Size = UDim2.new(0,28,1,0), Position = UDim2.new(1,-28,0,0), BackgroundTransparency = 1, Parent = row, TextColor3 = Theme.Text, Font = Enum.Font.GothamBold, TextSize = 16})
+                        local check = Util.newInstance("TextLabel", {Text = selected[v] and "✓" or "", Size = UDim2.new(0,28,1,0), Position = UDim2.new(1,-28,0,0), BackgroundTransparency = 1, Parent = row, TextColor3 = Theme.Text, Font = Enum.Font.GothamBold, TextSize = 16, TextXAlignment = Enum.TextXAlignment.Center})
                         opt.MouseButton1Click:Connect(function()
                             selected[v] = not selected[v]
                             check.Text = selected[v] and "✓" or ""
@@ -499,22 +499,25 @@ function SimpleUI:addPage(name)
 
                 display.MouseButton1Click:Connect(function()
                     local open = not listContainer.Visible
-                    if LIB._popupOverlay then
-                        pcall(function() LIB._popupOverlay:Destroy() end)
-                        LIB._popupOverlay = nil
+                    -- close other popup handlers
+                    if LIB._popupOutsideConn then
+                        pcall(function() LIB._popupOutsideConn:Disconnect() end)
+                        LIB._popupOutsideConn = nil
                     end
                     if open then
-                        local overlay = Util.newInstance("TextButton", {Size = UDim2.new(1,0,1,0), Position = UDim2.new(0,0,0,0), BackgroundTransparency = 1, Parent = LIB.Screen, AutoButtonColor = false})
-                        overlay.ZIndex = 50
-                        overlay.MouseButton1Click:Connect(function()
-                            listContainer.Visible = false
-                            pcall(function() overlay:Destroy() end)
-                            LIB._popupOverlay = nil
-                        end)
-                        LIB._popupOverlay = overlay
-                        listContainer.ZIndex = overlay.ZIndex + 1
                         listContainer.Visible = true
                         rebuild()
+                        LIB._popupOutsideConn = UserInputService.InputBegan:Connect(function(input, gameProcessed)
+                            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                                local pos = listContainer.AbsolutePosition
+                                local size = listContainer.AbsoluteSize
+                                local mx, my = input.Position.X, input.Position.Y
+                                if mx < pos.X or mx > pos.X + size.X or my < pos.Y or my > pos.Y + size.Y then
+                                    listContainer.Visible = false
+                                    if LIB._popupOutsideConn then LIB._popupOutsideConn:Disconnect() LIB._popupOutsideConn = nil end
+                                end
+                            end
+                        end)
                     else
                         listContainer.Visible = false
                     end
