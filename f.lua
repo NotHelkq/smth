@@ -279,30 +279,22 @@ function SimpleUI:addPage(name)
         local section = {
             Container = content,
             AddButton = function(_, txt, cb)
-                -- full-width dark panel style button with padded text
-                local btn = Util.newInstance("TextButton", {
-                    Text = txt or "Button",
-                    Size = UDim2.new(1,0,0,34),
-                    BackgroundColor3 = Theme.Row,
-                    Parent = content,
-                    TextColor3 = Theme.Text,
-                    Font = Enum.Font.Gotham,
-                    TextSize = 14,
-                    BorderSizePixel = 0,
-                    TextXAlignment = Enum.TextXAlignment.Left,
-                    TextYAlignment = Enum.TextYAlignment.Center,
-                    AutoButtonColor = false,
-                })
-                Util.newInstance("UICorner", {Parent = btn})
-                Util.newInstance("UIPadding", {Parent = btn, PaddingLeft = UDim.new(0,12), PaddingRight = UDim.new(0,8)})
-                btn.MouseButton1Click:Connect(function() pcall(cb) end)
-                return btn
+                -- row container
+                local row = Util.newInstance("Frame", {Size = UDim2.new(1,0,0,34), BackgroundColor3 = Theme.Row, Parent = content, BorderSizePixel = 0})
+                Util.newInstance("UICorner", {Parent = row})
+                Util.newInstance("UIPadding", {Parent = row, PaddingLeft = UDim.new(0,12), PaddingRight = UDim.new(0,8)})
+                -- inner transparent button to receive clicks but show row background
+                local inner = Util.newInstance("TextButton", {Text = txt or "Button", Size = UDim2.new(1,0,1,0), BackgroundTransparency = 1, Parent = row, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left})
+                inner.MouseButton1Click:Connect(function() pcall(cb) end)
+                return inner
             end,
             AddKeybind = function(_, txt, defaultKey, cb)
-                local frame = Util.newInstance("Frame", {Size = UDim2.new(1,0,0,30), BackgroundTransparency = 1, Parent = content})
-                Util.newInstance("TextLabel", {Text = txt, Size = UDim2.new(0.5,0,1,0), BackgroundTransparency = 1, Parent = frame, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left})
+                local row = Util.newInstance("Frame", {Size = UDim2.new(1,0,0,34), BackgroundColor3 = Theme.Row, Parent = content, BorderSizePixel = 0})
+                Util.newInstance("UICorner", {Parent = row})
+                Util.newInstance("UIPadding", {Parent = row, PaddingLeft = UDim.new(0,12)})
+                Util.newInstance("TextLabel", {Text = txt, Size = UDim2.new(0.6,0,1,0), BackgroundTransparency = 1, Parent = row, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left})
 
-                local btn = Util.newInstance("TextButton", {Text = "None", Size = UDim2.new(0.28,0,0.7,0), Position = UDim2.new(0.72,0,0.15,0), Parent = frame, BackgroundColor3 = Theme.Row, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, BorderSizePixel = 0})
+                local btn = Util.newInstance("TextButton", {Text = "None", Size = UDim2.new(0.28,0,0.7,0), Position = UDim2.new(0.72,0,0.15,0), Parent = row, BackgroundColor3 = Theme.Row, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, BorderSizePixel = 0})
                 Util.newInstance("UICorner", {Parent = btn})
                 Util.newInstance("UIPadding", {Parent = btn, PaddingLeft = UDim.new(0,8), PaddingRight = UDim.new(0,8)})
 
@@ -351,9 +343,11 @@ function SimpleUI:addPage(name)
                 return btn
             end,
             AddToggle = function(_, txt, default, cb)
-                local frame = Util.newInstance("Frame", {Size = UDim2.new(1,0,0,28), BackgroundTransparency = 1, Parent = content})
-                local label = Util.newInstance("TextLabel", {Text = txt, Size = UDim2.new(0.75,0,1,0), BackgroundTransparency = 1, Parent = frame, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left})
-                local toggle = Util.newInstance("TextButton", {Text = default and "ON" or "OFF", Size = UDim2.new(0.18,0,0.8,0), Position = UDim2.new(0.78,0,0.1,0), Parent = frame, BackgroundColor3 = Theme.Row, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 12, BorderSizePixel = 0})
+                local row = Util.newInstance("Frame", {Size = UDim2.new(1,0,0,34), BackgroundColor3 = Theme.Row, Parent = content, BorderSizePixel = 0})
+                Util.newInstance("UICorner", {Parent = row})
+                Util.newInstance("UIPadding", {Parent = row, PaddingLeft = UDim.new(0,12)})
+                local label = Util.newInstance("TextLabel", {Text = txt, Size = UDim2.new(0.7,0,1,0), BackgroundTransparency = 1, Parent = row, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left})
+                local toggle = Util.newInstance("TextButton", {Text = default and "ON" or "OFF", Size = UDim2.new(0.18,0,0.7,0), Position = UDim2.new(0.78,0,0.15,0), Parent = row, BackgroundColor3 = Theme.Row, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 12, BorderSizePixel = 0})
                 Util.newInstance("UICorner", {Parent = toggle})
                 toggle.MouseButton1Click:Connect(function()
                     local on = toggle.Text == "ON"
@@ -367,9 +361,11 @@ function SimpleUI:addPage(name)
                 return toggle
             end,
             AddTextbox = function(_, txt, default, cb)
-                local frame = Util.newInstance("Frame", {Size = UDim2.new(1,0,0,34), BackgroundTransparency = 1, Parent = content})
-                Util.newInstance("TextLabel", {Text = txt, Size = UDim2.new(0.5,0,1,0), BackgroundTransparency = 1, Parent = frame, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left})
-                local box = Util.newInstance("TextBox", {Text = default or "", Size = UDim2.new(0.48,0,0.8,0), Position = UDim2.new(0.5,0,0.1,0), Parent = frame, BackgroundColor3 = Theme.Row, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, BorderSizePixel = 0})
+                local row = Util.newInstance("Frame", {Size = UDim2.new(1,0,0,34), BackgroundColor3 = Theme.Row, Parent = content, BorderSizePixel = 0})
+                Util.newInstance("UICorner", {Parent = row})
+                Util.newInstance("UIPadding", {Parent = row, PaddingLeft = UDim.new(0,12)})
+                Util.newInstance("TextLabel", {Text = txt, Size = UDim2.new(0.5,0,1,0), BackgroundTransparency = 1, Parent = row, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left})
+                local box = Util.newInstance("TextBox", {Text = default or "", Size = UDim2.new(0.48,0,0.8,0), Position = UDim2.new(0.5,0,0.1,0), Parent = row, BackgroundColor3 = Theme.Row, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, BorderSizePixel = 0})
                 Util.newInstance("UICorner", {Parent = box})
                 Util.newInstance("UIPadding", {Parent = box, PaddingLeft = UDim.new(0,10)})
                 box.FocusLost:Connect(function(enter)
@@ -379,9 +375,11 @@ function SimpleUI:addPage(name)
             end,
             AddSlider = function(_, txt, min, max, default, cb)
                 min = min or 0 max = max or 100 default = default or min
-                local frame = Util.newInstance("Frame", {Size = UDim2.new(1,0,0,34), BackgroundTransparency = 1, Parent = content})
-                Util.newInstance("TextLabel", {Text = txt, Size = UDim2.new(0.4,0,1,0), BackgroundTransparency = 1, Parent = frame, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left})
-                local barBg = Util.newInstance("Frame", {Size = UDim2.new(0.55,0,0,10), Position = UDim2.new(0.44,0,0.5,-5), BackgroundColor3 = Theme.Panel, Parent = frame, BorderSizePixel = 0})
+                local row = Util.newInstance("Frame", {Size = UDim2.new(1,0,0,40), BackgroundColor3 = Theme.Row, Parent = content, BorderSizePixel = 0})
+                Util.newInstance("UICorner", {Parent = row})
+                Util.newInstance("UIPadding", {Parent = row, PaddingLeft = UDim.new(0,12)})
+                Util.newInstance("TextLabel", {Text = txt, Size = UDim2.new(0.4,0,1,0), BackgroundTransparency = 1, Parent = row, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left})
+                local barBg = Util.newInstance("Frame", {Size = UDim2.new(0.55,0,0,10), Position = UDim2.new(0.44,0,0.5,-5), BackgroundColor3 = Theme.Panel, Parent = row, BorderSizePixel = 0})
                 Util.newInstance("UICorner", {Parent = barBg})
                 local fill = Util.newInstance("Frame", {Size = UDim2.new( (default-min)/(max-min), 0, 1, 0), BackgroundColor3 = Theme.Accent, Parent = barBg})
                 Util.newInstance("UICorner", {Parent = fill})
@@ -403,11 +401,14 @@ function SimpleUI:addPage(name)
             end,
             AddDropdown = function(_, label, options, defaultIndex, cb)
                 options = options or {}
-                local container = Util.newInstance("Frame", {Size = UDim2.new(1,0,0,34), BackgroundTransparency = 1, Parent = content})
-                Util.newInstance("TextLabel", {Text = label, Size = UDim2.new(0.35,0,1,0), BackgroundTransparency = 1, Parent = container, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left})
-                local btn = Util.newInstance("TextButton", {Text = options[defaultIndex] or "Select", Size = UDim2.new(0.6,0,0.8,0), Position = UDim2.new(0.38,0,0.1,0), Parent = container, BackgroundColor3 = Theme.Row, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, AutoButtonColor = false, BorderSizePixel = 0, TextXAlignment = Enum.TextXAlignment.Left})
-                Util.newInstance("UICorner", {Parent = btn})
-                Util.newInstance("UIPadding", {Parent = btn, PaddingLeft = UDim.new(0,12)})
+                local container = Util.newInstance("Frame", {Size = UDim2.new(1,0,0,36), BackgroundTransparency = 1, Parent = content})
+                local row = Util.newInstance("Frame", {Size = UDim2.new(1,0,0,34), BackgroundColor3 = Theme.Row, Parent = container, BorderSizePixel = 0})
+                Util.newInstance("UICorner", {Parent = row})
+                Util.newInstance("UIPadding", {Parent = row, PaddingLeft = UDim.new(0,12)})
+                Util.newInstance("TextLabel", {Text = label, Size = UDim2.new(0.35,0,1,0), BackgroundTransparency = 1, Parent = row, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left})
+                local btn = Util.newInstance("TextButton", {Text = options[defaultIndex] or "Select", Size = UDim2.new(0.6,0,0.8,0), Position = UDim2.new(0.38,0,0.1,0), Parent = row, BackgroundColor3 = Color3.new(1,1,1), TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, AutoButtonColor = false, BorderSizePixel = 0, TextXAlignment = Enum.TextXAlignment.Left})
+                -- inner display uses transparent background so row color shows
+                btn.BackgroundTransparency = 1
                 -- create popup under top-level screen to avoid clipping / overlap
                 local listContainer = Util.newInstance("Frame", {Size = UDim2.new(0,0,0,0), Position = UDim2.new(0,0,0,0), BackgroundColor3 = Theme.Panel, Parent = LIB.Screen, ClipsDescendants = true, Visible = false, BorderSizePixel = 0, ZIndex = 50})
                 Util.newInstance("UICorner", {Parent = listContainer})
@@ -442,26 +443,35 @@ function SimpleUI:addPage(name)
                 end
 
                 btn.MouseButton1Click:Connect(function()
-                    local open = not listContainer.Visible
+                    -- explicit toggle: if already visible, hide and disconnect outside handler
+                    if listContainer.Visible then
+                        listContainer.Visible = false
+                        if LIB._popupOutsideConn then pcall(function() LIB._popupOutsideConn:Disconnect() end) LIB._popupOutsideConn = nil end
+                        return
+                    end
+
                     -- close any other popup handler
                     if LIB._popupOutsideConn then
                         pcall(function() LIB._popupOutsideConn:Disconnect() end)
                         LIB._popupOutsideConn = nil
                     end
-                    if open then
-                        rebuild()
-                        -- ensure popup sits above other UI and is positioned correctly
-                        listContainer.Visible = true
-                        listContainer.ZIndex = 50
-                        scroll.ZIndex = 51
-                        -- position using absolute position of the button
-                        local absPos = btn.AbsolutePosition
-                        local absSize = btn.AbsoluteSize
-                        local screenW = LIB.Screen.AbsoluteSize.X
-                        local width = math.clamp(absSize.X, 120, math.max(120, screenW - absPos.X - 16))
-                        listContainer.Size = UDim2.new(0, width, 0, listContainer.Size.Y.Offset)
-                        listContainer.Position = UDim2.new(0, absPos.X, 0, absPos.Y + absSize.Y + 2)
-                        -- detect clicks outside popup to close it
+
+                    rebuild()
+                    -- ensure popup sits above other UI and is positioned correctly
+                    listContainer.ZIndex = 50
+                    scroll.ZIndex = 51
+                    -- position using absolute position of the button
+                    local absPos = btn.AbsolutePosition
+                    local absSize = btn.AbsoluteSize
+                    local screenW = LIB.Screen.AbsoluteSize.X
+                    local width = math.clamp(absSize.X, 120, math.max(120, screenW - absPos.X - 16))
+                    listContainer.Size = UDim2.new(0, width, 0, listContainer.Size.Y.Offset)
+                    listContainer.Position = UDim2.new(0, absPos.X, 0, absPos.Y + absSize.Y + 2)
+                    listContainer.Visible = true
+
+                    -- defer outside-click registration one tick to avoid treating the opening click as an outside click
+                    task.defer(function()
+                        if LIB._popupOutsideConn then pcall(function() LIB._popupOutsideConn:Disconnect() end) LIB._popupOutsideConn = nil end
                         LIB._popupOutsideConn = UserInputService.InputBegan:Connect(function(input, gameProcessed)
                             if input.UserInputType == Enum.UserInputType.MouseButton1 then
                                 local pos = listContainer.AbsolutePosition
@@ -473,9 +483,7 @@ function SimpleUI:addPage(name)
                                 end
                             end
                         end)
-                    else
-                        listContainer.Visible = false
-                    end
+                    end)
                 end)
 
                 return btn
@@ -487,10 +495,14 @@ function SimpleUI:addPage(name)
                     for _,v in pairs(defaultSelected) do selected[v] = true end
                 end
 
-                local container = Util.newInstance("Frame", {Size = UDim2.new(1,0,0,30), BackgroundTransparency = 1, Parent = content})
-                Util.newInstance("TextLabel", {Text = label, Size = UDim2.new(0.35,0,1,0), BackgroundTransparency = 1, Parent = container, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left})
+                local container = Util.newInstance("Frame", {Size = UDim2.new(1,0,0,36), BackgroundTransparency = 1, Parent = content})
+                local row = Util.newInstance("Frame", {Size = UDim2.new(1,0,0,34), BackgroundColor3 = Theme.Row, Parent = container, BorderSizePixel = 0})
+                Util.newInstance("UICorner", {Parent = row})
+                Util.newInstance("UIPadding", {Parent = row, PaddingLeft = UDim.new(0,12)})
+                Util.newInstance("TextLabel", {Text = label, Size = UDim2.new(0.35,0,1,0), BackgroundTransparency = 1, Parent = row, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left})
 
-                local display = Util.newInstance("TextButton", {Text = "", Size = UDim2.new(0.6,0,0.8,0), Position = UDim2.new(0.38,0,0.1,0), Parent = container, BackgroundColor3 = Theme.Row, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, AutoButtonColor = false, BorderSizePixel = 0, TextXAlignment = Enum.TextXAlignment.Left})
+                local display = Util.newInstance("TextButton", {Text = "", Size = UDim2.new(0.6,0,0.8,0), Position = UDim2.new(0.38,0,0.1,0), Parent = row, BackgroundColor3 = Color3.new(1,1,1), TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, AutoButtonColor = false, BorderSizePixel = 0, TextXAlignment = Enum.TextXAlignment.Left})
+                display.BackgroundTransparency = 1
                 Util.newInstance("UICorner", {Parent = display})
                 Util.newInstance("UIPadding", {Parent = display, PaddingLeft = UDim.new(0,12)})
 
@@ -536,22 +548,30 @@ function SimpleUI:addPage(name)
                 end
 
                 display.MouseButton1Click:Connect(function()
-                    local open = not listContainer.Visible
-                    -- close other popup handlers
+                    -- explicit toggle
+                    if listContainer.Visible then
+                        listContainer.Visible = false
+                        if LIB._popupOutsideConn then pcall(function() LIB._popupOutsideConn:Disconnect() end) LIB._popupOutsideConn = nil end
+                        return
+                    end
+
                     if LIB._popupOutsideConn then
                         pcall(function() LIB._popupOutsideConn:Disconnect() end)
                         LIB._popupOutsideConn = nil
                     end
-                    if open then
-                        rebuild()
-                        -- position and show popup beneath the display control
-                        local absPos = display.AbsolutePosition
-                        local absSize = display.AbsoluteSize
-                        local screenW = LIB.Screen.AbsoluteSize.X
-                        local width = math.clamp(absSize.X, 120, math.max(120, screenW - absPos.X - 16))
-                        listContainer.Size = UDim2.new(0, width, 0, listContainer.Size.Y.Offset)
-                        listContainer.Position = UDim2.new(0, absPos.X, 0, absPos.Y + absSize.Y + 2)
-                        listContainer.Visible = true
+
+                    rebuild()
+                    -- position and show popup beneath the display control
+                    local absPos = display.AbsolutePosition
+                    local absSize = display.AbsoluteSize
+                    local screenW = LIB.Screen.AbsoluteSize.X
+                    local width = math.clamp(absSize.X, 120, math.max(120, screenW - absPos.X - 16))
+                    listContainer.Size = UDim2.new(0, width, 0, listContainer.Size.Y.Offset)
+                    listContainer.Position = UDim2.new(0, absPos.X, 0, absPos.Y + absSize.Y + 2)
+                    listContainer.Visible = true
+
+                    task.defer(function()
+                        if LIB._popupOutsideConn then pcall(function() LIB._popupOutsideConn:Disconnect() end) LIB._popupOutsideConn = nil end
                         LIB._popupOutsideConn = UserInputService.InputBegan:Connect(function(input, gameProcessed)
                             if input.UserInputType == Enum.UserInputType.MouseButton1 then
                                 local pos = listContainer.AbsolutePosition
@@ -563,9 +583,7 @@ function SimpleUI:addPage(name)
                                 end
                             end
                         end)
-                    else
-                        listContainer.Visible = false
-                    end
+                    end)
                 end)
 
                 updateDisplay()
