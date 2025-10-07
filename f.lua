@@ -396,14 +396,20 @@ function SimpleUI:addPage(name)
                 local scroll = Util.newInstance("ScrollingFrame", {Parent = listContainer, Size = UDim2.new(1,0,1,0), BackgroundTransparency = 1, CanvasSize = UDim2.new(0,0,0,0), ScrollBarThickness = 6})
                 local layout = Util.newInstance("UIListLayout", {Parent = scroll}) layout.SortOrder = Enum.SortOrder.LayoutOrder layout.Padding = UDim.new(0,4)
 
+                local currentOverlayZ = 0
                 local function rebuild()
                     for _,c in pairs(scroll:GetChildren()) do if c:IsA("TextButton") then c:Destroy() end end
                     for i,v in ipairs(options) do
                         local opt = Util.newInstance("TextButton", {Text = tostring(v), Size = UDim2.new(1,0,0,28), Parent = scroll, BackgroundColor3 = Theme.Background, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14})
+                        -- make sure option sits above overlay
+                        if listContainer and listContainer.ZIndex then
+                            opt.ZIndex = listContainer.ZIndex
+                        end
                         Util.newInstance("UICorner", {Parent = opt})
                         opt.MouseButton1Click:Connect(function()
                             btn.Text = tostring(v)
                             listContainer.Visible = false
+                            if LIB._popupOverlay then pcall(function() LIB._popupOverlay:Destroy() end) LIB._popupOverlay = nil end
                             pcall(cb, v, i)
                         end)
                     end
@@ -431,6 +437,9 @@ function SimpleUI:addPage(name)
                             LIB._popupOverlay = nil
                         end)
                         LIB._popupOverlay = overlay
+                        -- ensure popup sits above overlay
+                        listContainer.ZIndex = overlay.ZIndex + 1
+                        currentOverlayZ = overlay.ZIndex
                         listContainer.Visible = true
                         rebuild()
                     else
@@ -470,6 +479,8 @@ function SimpleUI:addPage(name)
                     for i,v in ipairs(options) do
                         local row = Util.newInstance("Frame", {Size = UDim2.new(1,0,0,28), Parent = scroll, BackgroundTransparency = 1})
                         local opt = Util.newInstance("TextButton", {Text = tostring(v), Size = UDim2.new(1,0,0,28), Parent = row, BackgroundColor3 = Theme.Background, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, AutoButtonColor = true})
+                        -- ensure option is above overlay
+                        if listContainer and listContainer.ZIndex then opt.ZIndex = listContainer.ZIndex end
                         Util.newInstance("UICorner", {Parent = opt})
                         local check = Util.newInstance("TextLabel", {Text = selected[v] and "✓" or "", Size = UDim2.new(0,28,1,0), Position = UDim2.new(1,-28,0,0), BackgroundTransparency = 1, Parent = row, TextColor3 = Theme.Text, Font = Enum.Font.GothamBold, TextSize = 16})
                         opt.MouseButton1Click:Connect(function()
@@ -477,6 +488,7 @@ function SimpleUI:addPage(name)
                             check.Text = selected[v] and "✓" or ""
                             updateDisplay()
                             if cb then pcall(cb, selected) end
+                            if LIB._popupOverlay then pcall(function() LIB._popupOverlay:Destroy() end) LIB._popupOverlay = nil end
                         end)
                     end
                     local entries = #options
@@ -500,6 +512,7 @@ function SimpleUI:addPage(name)
                             LIB._popupOverlay = nil
                         end)
                         LIB._popupOverlay = overlay
+                        listContainer.ZIndex = overlay.ZIndex + 1
                         listContainer.Visible = true
                         rebuild()
                     else
