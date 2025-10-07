@@ -1,4 +1,3 @@
-
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
@@ -218,6 +217,9 @@ function SimpleUI:addPage(name)
         Layout = list,
     }
 
+    -- capture library reference for closures below
+    local LIB = self
+
     table.insert(self.Pages, page)
 
     pageButton.MouseButton1Click:Connect(function()
@@ -279,6 +281,57 @@ function SimpleUI:addPage(name)
                 })
                 Util.newInstance("UICorner", {Parent = btn})
                 btn.MouseButton1Click:Connect(function() pcall(cb) end)
+                return btn
+            end,
+            AddKeybind = function(_, txt, defaultKey, cb)
+                local frame = Util.newInstance("Frame", {Size = UDim2.new(1,0,0,30), BackgroundTransparency = 1, Parent = content})
+                Util.newInstance("TextLabel", {Text = txt, Size = UDim2.new(0.5,0,1,0), BackgroundTransparency = 1, Parent = frame, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left})
+
+                local btn = Util.newInstance("TextButton", {Text = "None", Size = UDim2.new(0.45,0,0.7,0), Position = UDim2.new(0.5,0,0.15,0), Parent = frame, BackgroundColor3 = Theme.Background, TextColor3 = Theme.Text, Font = Enum.Font.Gotham, TextSize = 14})
+                Util.newInstance("UICorner", {Parent = btn})
+
+                -- Normalize defaultKey: allow Enum.KeyCode or string
+                local boundKey
+                if typeof(defaultKey) == "EnumItem" then
+                    boundKey = defaultKey
+                elseif type(defaultKey) == "string" then
+                    boundKey = Enum.KeyCode[defaultKey]
+                end
+
+                local bindConnection
+                local function applyBinding(key)
+                    boundKey = key
+                    btn.Text = key and (tostring(key.Name) or tostring(key)) or "None"
+                    if bindConnection then
+                        bindConnection:Disconnect()
+                        bindConnection = nil
+                    end
+                    if boundKey then
+                        bindConnection = UserInputService.InputBegan:Connect(function(input, gameProcessed)
+                            if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == boundKey and not gameProcessed then
+                                pcall(cb, input.KeyCode)
+                            end
+                        end)
+                    end
+                end
+
+                -- clicking the button enters capture mode for next key press
+                local captureConn
+                btn.MouseButton1Click:Connect(function()
+                    btn.Text = "Press a key..."
+                    if captureConn then captureConn:Disconnect() captureConn = nil end
+                    captureConn = UserInputService.InputBegan:Connect(function(input, gameProcessed)
+                        if input.UserInputType == Enum.UserInputType.Keyboard then
+                            applyBinding(input.KeyCode)
+                            captureConn:Disconnect()
+                            captureConn = nil
+                        end
+                    end)
+                end)
+
+                -- apply default if provided
+                if boundKey then applyBinding(boundKey) end
+
                 return btn
             end,
             AddToggle = function(_, txt, default, cb)
@@ -362,8 +415,27 @@ function SimpleUI:addPage(name)
                 end
 
                 btn.MouseButton1Click:Connect(function()
-                    listContainer.Visible = not listContainer.Visible
-                    if listContainer.Visible then rebuild() end
+                    local open = not listContainer.Visible
+                    -- close any other popup
+                    if LIB._popupOverlay then
+                        pcall(function() LIB._popupOverlay:Destroy() end)
+                        LIB._popupOverlay = nil
+                    end
+                    if open then
+                        -- overlay captures outside clicks
+                        local overlay = Util.newInstance("TextButton", {Size = UDim2.new(1,0,1,0), Position = UDim2.new(0,0,0,0), BackgroundTransparency = 1, Parent = LIB.Screen, AutoButtonColor = false})
+                        overlay.ZIndex = 50
+                        overlay.MouseButton1Click:Connect(function()
+                            listContainer.Visible = false
+                            pcall(function() overlay:Destroy() end)
+                            LIB._popupOverlay = nil
+                        end)
+                        LIB._popupOverlay = overlay
+                        listContainer.Visible = true
+                        rebuild()
+                    else
+                        listContainer.Visible = false
+                    end
                 end)
 
                 return btn
@@ -414,8 +486,25 @@ function SimpleUI:addPage(name)
                 end
 
                 display.MouseButton1Click:Connect(function()
-                    listContainer.Visible = not listContainer.Visible
-                    if listContainer.Visible then rebuild() end
+                    local open = not listContainer.Visible
+                    if LIB._popupOverlay then
+                        pcall(function() LIB._popupOverlay:Destroy() end)
+                        LIB._popupOverlay = nil
+                    end
+                    if open then
+                        local overlay = Util.newInstance("TextButton", {Size = UDim2.new(1,0,1,0), Position = UDim2.new(0,0,0,0), BackgroundTransparency = 1, Parent = LIB.Screen, AutoButtonColor = false})
+                        overlay.ZIndex = 50
+                        overlay.MouseButton1Click:Connect(function()
+                            listContainer.Visible = false
+                            pcall(function() overlay:Destroy() end)
+                            LIB._popupOverlay = nil
+                        end)
+                        LIB._popupOverlay = overlay
+                        listContainer.Visible = true
+                        rebuild()
+                    else
+                        listContainer.Visible = false
+                    end
                 end)
 
                 updateDisplay()
@@ -451,4 +540,3 @@ end
 
 -- Return module table
 return SimpleUI
-
