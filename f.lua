@@ -2333,5 +2333,3 @@ function Library:PageResize(page)
 end
 
 return Library
-
-print("V2")
