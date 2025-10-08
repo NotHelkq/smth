@@ -1,3 +1,4 @@
+print("test")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
@@ -148,7 +149,7 @@ function Utility:EnableDragging(frame, target)
 				if input.UserInputState == Enum.UserInputState.End then
 					dragging = false
 				end
-			end)
+			end
 		end
 	end)
 	frame.InputChanged:Connect(function(input)
@@ -196,8 +197,18 @@ function Library.New(title)
 			Utility:Create("UIStroke", {
 				Name = "UIStroke",
 				Color = Themes.TextColor,
-				Thickness = 0,
+				Thickness = 2, -- Increased thickness for glow effect
+				Transparency = 0.3, -- Slight transparency for glow-like feel
 				ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+			}, {
+				-- Adding UIGradient for violet-to-black gradient glow
+				Utility:Create("UIGradient", {
+					Color = ColorSequence.new({
+						ColorSequenceKeypoint.new(0, Color3.fromRGB(148, 0, 211)), -- Violet
+						ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0)) -- Black
+					}),
+					Rotation = 45 -- Optional rotation for dynamic gradient
+				})
 			}),
 			Utility:Create("TextButton", {
 				Name = "ResizeButton",
