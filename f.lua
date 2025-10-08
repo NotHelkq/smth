@@ -601,12 +601,23 @@ function Library:PageAddSection(page, title)
 end
 
 function Library:CreateSection(page, title)
-	local container = Utility:Create("Frame", {
+	-- outer wrapper (full width) so UIListLayout can stack sections normally
+	local wrapper = Utility:Create("Frame", {
 		Name = title,
 		Parent = page.Container,
-		-- inset sections by 8px on left and right so they don't touch page borders
-		Position = UDim2.new(0, 8, 0, 0),
-		Size = UDim2.new(1, -16, 0, 35),
+		Size = UDim2.new(1, 0, 0, 35),
+		ZIndex = 2,
+		BackgroundTransparency = 1,
+		ClipsDescendants = true
+	}, {})
+
+	-- inner visible box centered in the wrapper (90% width)
+	local box = Utility:Create("Frame", {
+		Name = title .. "Box",
+		Parent = wrapper,
+		Position = UDim2.new(0.5, 0, 0, 0),
+		AnchorPoint = Vector2.new(0.5, 0),
+		Size = UDim2.new(0.9, 0, 1, 0),
 		ZIndex = 2,
 		BackgroundColor3 = Themes.LightContrast,
 		ClipsDescendants = true
@@ -652,12 +663,13 @@ function Library:CreateSection(page, title)
 		})
 	})
 
-	local scrollingFrame = container.InnerContainer.ScrollingFrame
+	local scrollingFrame = box.InnerContainer.ScrollingFrame
 	local uiListLayout = scrollingFrame:FindFirstChildOfClass("UIListLayout")
 
 	local section = {
 		Page = page,
-		Container = container.InnerContainer,
+		-- Container refers to the InnerContainer (where items are added)
+		Container = box.InnerContainer,
 		ScrollingFrame = scrollingFrame,
 		UIListLayout = uiListLayout,
 		ColorPickers = {},
@@ -694,11 +706,14 @@ function Library:SectionResize(section)
 	local containerPadding = 16
 	local contentHeight = totalSize + titleHeight
 	section.ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, totalSize)
-	local container = section.Container.Parent
-	if container then
-	local newHeight = math.min(1000, math.max(35, contentHeight + containerPadding))
-	-- keep the same horizontal inset (-16) so left/right padding remains 8px
-	container.Size = UDim2.new(1, -16, 0, newHeight)
+	-- wrapper is the parent of the box; box is parent of InnerContainer
+	local wrapper = section.Container.Parent.Parent
+	local box = section.Container.Parent
+	if wrapper and box then
+		local newHeight = math.min(1000, math.max(35, contentHeight + containerPadding))
+		-- set wrapper height (full-width) and keep inner box at 90% width centered
+		wrapper.Size = UDim2.new(1, 0, 0, newHeight)
+		box.Size = UDim2.new(0.9, 0, 1, 0)
 		if contentHeight + containerPadding > 1000 then
 			section.ScrollingFrame.ScrollBarImageTransparency = 0
 		else
@@ -2318,3 +2333,5 @@ function Library:PageResize(page)
 end
 
 return Library
+
+print("V2")
