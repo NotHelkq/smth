@@ -1,4 +1,4 @@
-print("Unknown UI v2.0")
+print("Unknown UI v2.01")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
@@ -642,20 +642,24 @@ function Library:CreateSection(page, title)
 		Utility:Create("UICorner"),
 		Utility:Create("Frame", {
 			Name = "Glow",
-			Position = UDim2.new(0, -8, 0, -8),
-			Size = UDim2.new(1, 16, 1, 16),
-			ZIndex = 1,
-			BackgroundColor3 = Color3.fromRGB(30, 0, 60),
-			BackgroundTransparency = 0.85,
+			-- larger negative offset so the glow extends beyond the main frame edges
+			Position = UDim2.new(0, -24, 0, -24),
+			Size = UDim2.new(1, 48, 1, 48),
+			ZIndex = 0,
+			BackgroundColor3 = Color3.fromRGB(80, 20, 255),
+			-- make the glow more visible by lowering transparency
+			BackgroundTransparency = 0.6,
 			BorderSizePixel = 0,
 		}, {
 			Utility:Create("UIGradient", {
 				Color = ColorSequence.new({
-					ColorSequenceKeypoint.new(0.00, Color3.fromRGB(118, 40, 255)),
+					ColorSequenceKeypoint.new(0.00, Color3.fromRGB(170, 100, 255)),
+					ColorSequenceKeypoint.new(0.50, Color3.fromRGB(118, 40, 255)),
 					ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))
 				}),
 				Rotation = 0,
-				Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 0.6), NumberSequenceKeypoint.new(1, 1)})
+				-- more opaque gradient so the glow shows
+				Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 0.25), NumberSequenceKeypoint.new(1, 0.7)})
 			})
 		}),
 			Utility:Create("Frame", {
