@@ -265,6 +265,25 @@ function Library.New(title)
 
 	Utility:EnableDragging(container.MainFrame.TopBar, container.MainFrame)
 
+	-- start glow animation (subtle rotating gradient + pulse)
+	spawn(function()
+		local glow = container.MainFrame:FindFirstChild("Glow")
+		if not glow then return end
+		local grad = glow:FindFirstChildOfClass("UIGradient")
+		local t = 0
+		while glow and glow.Parent do
+			local dt = 0.016 * (RunService:IsStudio() and 0.5 or 1)
+			 t = t + dt
+			if grad then
+				grad.Rotation = (t * 20) % 360
+			end
+			-- pulse transparency slightly between 0.78 and 0.9
+			local pulse = 0.85 + math.sin(t * 1.2) * 0.05
+			glow.BackgroundTransparency = math.clamp(pulse, 0.7, 0.95)
+			Utility:WaitForRenderStep()
+		end
+	end)
+
 	local draggingResize = false
 	container.MainFrame.ResizeButton.MouseButton1Down:Connect(function()
 		draggingResize = true
@@ -620,6 +639,24 @@ function Library:CreateSection(page, title)
 		ClipsDescendants = true
 	}, {
 		Utility:Create("UICorner"),
+		Utility:Create("Frame", {
+			Name = "Glow",
+			Position = UDim2.new(0, -8, 0, -8),
+			Size = UDim2.new(1, 16, 1, 16),
+			ZIndex = 1,
+			BackgroundColor3 = Color3.fromRGB(30, 0, 60),
+			BackgroundTransparency = 0.85,
+			BorderSizePixel = 0,
+		}, {
+			Utility:Create("UIGradient", {
+				Color = ColorSequence.new({
+					ColorSequenceKeypoint.new(0.00, Color3.fromRGB(118, 40, 255)),
+					ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))
+				}),
+				Rotation = 0,
+				Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 0.6), NumberSequenceKeypoint.new(1, 1)})
+			})
+		}),
 			Utility:Create("Frame", {
 			Name = "InnerContainer",
 			Active = true,
