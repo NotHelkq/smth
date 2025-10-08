@@ -242,7 +242,6 @@ function Library.New(title)
 				Name = "SectionContainer",
 				ClipsDescendants = true,
 				BorderSizePixel = 0,
-				-- left sidebar for page buttons
 				Position = UDim2.new(0, 0, 0, 30),
 				Size = UDim2.new(0, 150, 1, -50),
 				ZIndex = 2,
@@ -601,7 +600,6 @@ function Library:PageAddSection(page, title)
 end
 
 function Library:CreateSection(page, title)
-	-- outer wrapper (full width) so UIListLayout can stack sections normally
 	local wrapper = Utility:Create("Frame", {
 		Name = title,
 		Parent = page.Container,
@@ -611,25 +609,24 @@ function Library:CreateSection(page, title)
 		ClipsDescendants = true
 	}, {})
 
-	-- inner visible box centered in the wrapper (90% width)
 	local box = Utility:Create("Frame", {
 		Name = title .. "Box",
 		Parent = wrapper,
-		Position = UDim2.new(0.5, 0, 0, 0),
-		AnchorPoint = Vector2.new(0.5, 0),
-		Size = UDim2.new(0.9, 0, 1, 0),
+		Position = UDim2.new(0, 5, 0, 0),
+		AnchorPoint = Vector2.new(0, 0),
+		Size = UDim2.new(1, -10, 0, 35),
 		ZIndex = 2,
 		BackgroundColor3 = Themes.LightContrast,
 		ClipsDescendants = true
 	}, {
 		Utility:Create("UICorner"),
-		Utility:Create("Frame", {
+			Utility:Create("Frame", {
 			Name = "InnerContainer",
 			Active = true,
 			BackgroundTransparency = 1,
 			BorderSizePixel = 0,
-			Position = UDim2.new(0, 8, 0, 8),
-			Size = UDim2.new(1, -16, 1, -16)
+			Position = UDim2.new(0, 5, 0, 5),
+			Size = UDim2.new(1, -10, 1, -10)
 		}, {
 			Utility:Create("TextLabel", {
 				Name = "Title",
@@ -668,7 +665,6 @@ function Library:CreateSection(page, title)
 
 	local section = {
 		Page = page,
-		-- Container refers to the InnerContainer (where items are added)
 		Container = box.InnerContainer,
 		ScrollingFrame = scrollingFrame,
 		UIListLayout = uiListLayout,
@@ -706,14 +702,13 @@ function Library:SectionResize(section)
 	local containerPadding = 16
 	local contentHeight = totalSize + titleHeight
 	section.ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, totalSize)
-	-- wrapper is the parent of the box; box is parent of InnerContainer
 	local wrapper = section.Container.Parent.Parent
 	local box = section.Container.Parent
 	if wrapper and box then
-		local newHeight = math.min(1000, math.max(35, contentHeight + containerPadding))
-		-- set wrapper height (full-width) and keep inner box at 90% width centered
-		wrapper.Size = UDim2.new(1, 0, 0, newHeight)
-		box.Size = UDim2.new(0.9, 0, 1, 0)
+	local newHeight = math.min(1000, math.max(35, contentHeight + containerPadding))
+	wrapper.Size = UDim2.new(1, 0, 0, newHeight)
+	box.Size = UDim2.new(1, -10, 0, newHeight)
+	box.Position = UDim2.new(0, 5, 0, 0)
 		if contentHeight + containerPadding > 1000 then
 			section.ScrollingFrame.ScrollBarImageTransparency = 0
 		else
