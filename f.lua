@@ -242,6 +242,7 @@ function Library.New(title)
 				Name = "SectionContainer",
 				ClipsDescendants = true,
 				BorderSizePixel = 0,
+				-- left sidebar for page buttons
 				Position = UDim2.new(0, 0, 0, 30),
 				Size = UDim2.new(0, 150, 1, -50),
 				ZIndex = 2,
@@ -603,7 +604,9 @@ function Library:CreateSection(page, title)
 	local container = Utility:Create("Frame", {
 		Name = title,
 		Parent = page.Container,
-		Size = UDim2.new(0.9, 0, 0, 35),
+		-- inset sections by 8px on left and right so they don't touch page borders
+		Position = UDim2.new(0, 8, 0, 0),
+		Size = UDim2.new(1, -16, 0, 35),
 		ZIndex = 2,
 		BackgroundColor3 = Themes.LightContrast,
 		ClipsDescendants = true
@@ -693,8 +696,9 @@ function Library:SectionResize(section)
 	section.ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, totalSize)
 	local container = section.Container.Parent
 	if container then
-		local newHeight = math.min(1000, math.max(35, contentHeight + containerPadding))
-		container.Size = UDim2.new(1, 0, 0, newHeight)
+	local newHeight = math.min(1000, math.max(35, contentHeight + containerPadding))
+	-- keep the same horizontal inset (-16) so left/right padding remains 8px
+	container.Size = UDim2.new(1, -16, 0, newHeight)
 		if contentHeight + containerPadding > 1000 then
 			section.ScrollingFrame.ScrollBarImageTransparency = 0
 		else
