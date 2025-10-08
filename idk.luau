@@ -149,7 +149,7 @@ function Utility:EnableDragging(frame, target)
 				if input.UserInputState == Enum.UserInputState.End then
 					dragging = false
 				end
-			end
+			end)
 		end
 	end)
 	frame.InputChanged:Connect(function(input)
