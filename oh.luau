@@ -97,7 +97,7 @@ local function abbreviateNumber(number)
     if number >= 1e12 then
         local value = number / 1e12
         return string.format("%.1ft", value):gsub("%.0t", "t") 
-    if number >= 1e9 then
+    elseif number >= 1e9 then
         local value = number / 1e9
         return string.format("%.1fb", value):gsub("%.0b", "b") 
     elseif number >= 1e6 then 
@@ -106,7 +106,8 @@ local function abbreviateNumber(number)
     elseif number >= 1e3 then 
         local value = number / 1e3
         return string.format("%.1fk", value):gsub("%.0k", "k")
-    else return tostring(number) end
+    else return tostring(number) 
+    end
 end
 local petConfig = {
     ["Secret"]    = {"King Doggy","The Overlord","Silly Doggy :)","Mech Robot"},
