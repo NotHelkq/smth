@@ -1,4 +1,3 @@
-print("test2")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
@@ -319,6 +318,7 @@ function Library.New(title)
 		LastNotificationPosition = nil
 	}, Library)
 	Utility:OnDragEnd(lib.EndedCallbacks, function() end)
+	lib:AnimateGradientRotation(lib.Container.MainFrame.UIStroke.UIGradient)
 	return lib
 end
 
@@ -2342,7 +2342,7 @@ end
 function Library:AnimateGradientRotation(gradient)
     task.spawn(function()
         local rotation = -180
-        local step = 1 -- degrees per frame
+        local step = 1
         local maxRotation = 180
         while true do
             gradient.Rotation = rotation
@@ -2350,7 +2350,7 @@ function Library:AnimateGradientRotation(gradient)
             if rotation > maxRotation then
                 rotation = -180
             end
-            task.wait(0.01) -- adjust for smoothness/speed
+            task.wait(0.01)
         end
     end)
 end
