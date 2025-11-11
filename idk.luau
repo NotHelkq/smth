@@ -1,4 +1,4 @@
-print("test")
+print("test2")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
@@ -197,17 +197,18 @@ function Library.New(title)
 			Utility:Create("UIStroke", {
 				Name = "UIStroke",
 				Color = Themes.TextColor,
-				Thickness = 2, -- Increased thickness for glow effect
-				Transparency = 0.3, -- Slight transparency for glow-like feel
+				Thickness = 2, 
+				Transparency = 0,
 				ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 			}, {
-				-- Adding UIGradient for violet-to-black gradient glow
 				Utility:Create("UIGradient", {
 					Color = ColorSequence.new({
-						ColorSequenceKeypoint.new(0, Color3.fromRGB(148, 0, 211)), -- Violet
-						ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0)) -- Black
+						ColorSequenceKeypoint.new(0, Color3.fromRGB(148, 0, 211)), 
+						ColorSequenceKeypoint.new(0.33, Color3.fromRGB(0, 0, 0)), 
+						ColorSequenceKeypoint.new(0.66, Color3.fromRGB(148, 0, 211)), 
+						ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0))
 					}),
-					Rotation = 45 -- Optional rotation for dynamic gradient
+					Rotation = -180
 				})
 			}),
 			Utility:Create("TextButton", {
@@ -2338,4 +2339,19 @@ function Library:PageResize(page)
 	page.Container.CanvasSize = UDim2.new(0, 0, 0, totalHeight + 20)
 end
 
+function Library:AnimateGradientRotation(gradient)
+    task.spawn(function()
+        local rotation = -180
+        local step = 1 -- degrees per frame
+        local maxRotation = 180
+        while true do
+            gradient.Rotation = rotation
+            rotation = rotation + step
+            if rotation > maxRotation then
+                rotation = -180
+            end
+            task.wait(0.01) -- adjust for smoothness/speed
+        end
+    end)
+end
 return Library
