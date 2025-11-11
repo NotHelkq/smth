@@ -1233,13 +1233,22 @@ function Library:SectionAddColorPicker(section, title, default, callback)
 				}),
 				Utility:Create("UIGradient", {
 					Color = ColorSequence.new({
-						ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 0, 0)),
-						ColorSequenceKeypoint.new(0.17, Color3.fromRGB(255, 255, 0)),
-						ColorSequenceKeypoint.new(0.33, Color3.fromRGB(0, 255, 0)),
-						ColorSequenceKeypoint.new(0.50, Color3.fromRGB(0, 255, 255)),
-						ColorSequenceKeypoint.new(0.66, Color3.fromRGB(0, 0, 255)),
-						ColorSequenceKeypoint.new(0.82, Color3.fromRGB(255, 0, 255)),
-						ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 0, 0))
+						ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 200, 0)),
+						ColorSequenceKeypoint.new(0.07, Color3.fromRGB(255, 180, 0)),
+						ColorSequenceKeypoint.new(0.14, Color3.fromRGB(255, 160, 0)),
+						ColorSequenceKeypoint.new(0.21, Color3.fromRGB(255, 140, 0)),
+						ColorSequenceKeypoint.new(0.28, Color3.fromRGB(255, 120, 0)),
+						ColorSequenceKeypoint.new(0.35, Color3.fromRGB(255, 100, 0)),
+						ColorSequenceKeypoint.new(0.42, Color3.fromRGB(255, 80, 0)),
+						ColorSequenceKeypoint.new(0.49, Color3.fromRGB(255, 60, 0)),
+						ColorSequenceKeypoint.new(0.56, Color3.fromRGB(255, 40, 0)),
+						ColorSequenceKeypoint.new(0.63, Color3.fromRGB(255, 20, 0)),
+						ColorSequenceKeypoint.new(0.70, Color3.fromRGB(255, 0, 0)),
+						ColorSequenceKeypoint.new(0.77, Color3.fromRGB(255, 40, 0)),
+						ColorSequenceKeypoint.new(0.84, Color3.fromRGB(255, 80, 0)),
+						ColorSequenceKeypoint.new(0.91, Color3.fromRGB(255, 120, 0)),
+						ColorSequenceKeypoint.new(0.98, Color3.fromRGB(255, 160, 0)),
+						ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 200, 0))
 					})
 				})
 			}),
