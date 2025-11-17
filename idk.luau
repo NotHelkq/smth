@@ -1844,6 +1844,7 @@ function Library:SectionAddDropdown(section, title, list, callback, default)
         })
     })
 
+
     table.insert(section.Modules, dropdown)
 
     local search = dropdown.Search
@@ -1863,9 +1864,9 @@ function Library:SectionAddDropdown(section, title, list, callback, default)
     
     section.Dropdowns[dropdown] = dropdownData
 
-    local function updateDropdownContent(showList)
-        local currentList = showList and dropdownData.CurrentList or {}
-
+    local function updateDropdownContent(displayList)
+        local currentList = displayList or dropdownData.CurrentList
+        
         for _, child in pairs(dropdown.List.Frame:GetChildren()) do
             if child:IsA("ImageButton") then
                 child:Destroy()
@@ -1908,7 +1909,7 @@ function Library:SectionAddDropdown(section, title, list, callback, default)
                 end
                 search.TextBox.Text = value
                 dropdownData.IsOpen = false
-                updateDropdownContent(false)
+                updateDropdownContent({}) 
             end)
 
             entries = entries + 1
@@ -1936,7 +1937,11 @@ function Library:SectionAddDropdown(section, title, list, callback, default)
 
     local function toggleDropdown()
         dropdownData.IsOpen = not dropdownData.IsOpen
-        updateDropdownContent(dropdownData.IsOpen)
+        if dropdownData.IsOpen then
+            updateDropdownContent(dropdownData.CurrentList)
+        else
+            updateDropdownContent({})
+        end
     end
 
     search.Button.MouseButton1Click:Connect(toggleDropdown)
@@ -1944,7 +1949,7 @@ function Library:SectionAddDropdown(section, title, list, callback, default)
     search.TextBox.Focused:Connect(function()
         if not dropdownData.IsOpen then
             dropdownData.IsOpen = true
-            updateDropdownContent(true)
+            updateDropdownContent(dropdownData.CurrentList)
         end
         focused = true
     end)
@@ -1955,13 +1960,18 @@ function Library:SectionAddDropdown(section, title, list, callback, default)
 
     search.TextBox:GetPropertyChangedSignal("Text"):Connect(function()
         if focused and dropdownData.IsOpen then
-            local filteredList = Utility:FilterList(search.TextBox.Text, dropdownData.CurrentList)
-            local tempData = {
-                CurrentList = filteredList,
-                CurrentCallback = dropdownData.CurrentCallback,
-                IsOpen = dropdownData.IsOpen
-            }
-            updateDropdownContent(true)
+            local searchText = search.TextBox.Text
+            if searchText == "" then
+                updateDropdownContent(dropdownData.CurrentList)
+            else
+                local filteredList = {}
+                for _, value in pairs(dropdownData.CurrentList) do
+                    if value:lower():find(searchText:lower(), 1, true) then
+                        table.insert(filteredList, value)
+                    end
+                end
+                updateDropdownContent(filteredList)
+            end
         end
     end)
 
