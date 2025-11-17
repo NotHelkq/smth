@@ -1848,7 +1848,6 @@ function Library:SectionAddDropdown(section, title, list, callback, default)
 
     local search = dropdown.Search
     local focused = false
-    local isOpen = false
 
     list = list or {}
 
@@ -1859,104 +1858,85 @@ function Library:SectionAddDropdown(section, title, list, callback, default)
     local dropdownData = {
         CurrentList = list,
         CurrentCallback = callback,
-        IsOpen = false,
-        UpdateFunction = function(newList, newCallback)
-            if newList then
-                dropdownData.CurrentList = newList
-            end
-            if newCallback then
-                dropdownData.CurrentCallback = newCallback
-            end
-
-            for _, child in pairs(dropdown.List.Frame:GetChildren()) do
-                if child:IsA("ImageButton") then
-                    child:Destroy()
-                end
-            end
-
-            local entries = 0
-            local currentList = dropdownData.CurrentList
-            local currentCallback = dropdownData.CurrentCallback
-
-            for _, value in pairs(currentList) do
-                local button = Utility:Create("ImageButton", {
-                    Parent = dropdown.List.Frame,
-                    BackgroundTransparency = 1,
-                    BorderSizePixel = 0,
-                    Size = UDim2.new(1, 0, 0, 30),
-                    ZIndex = 2,
-                    Image = "rbxassetid://5028857472",
-                    ImageColor3 = Themes.DarkContrast,
-                    ScaleType = Enum.ScaleType.Slice,
-                    SliceCenter = Rect.new(2, 2, 298, 298)
-                }, {
-                    Utility:Create("TextLabel", {
-                        BackgroundTransparency = 1,
-                        Position = UDim2.new(0, 10, 0, 0),
-                        Size = UDim2.new(1, -10, 1, 0),
-                        ZIndex = 3,
-                        Font = Enum.Font.SourceSansSemibold,
-                        Text = value,
-                        TextColor3 = Themes.TextColor,
-                        TextSize = 14,
-                        TextXAlignment = Enum.TextXAlignment.Left,
-                        TextTransparency = 0.1
-                    })
-                })
-
-                button.MouseButton1Click:Connect(function()
-                    if currentCallback then
-                        currentCallback(value, function(...)
-                            self:UpdateDropdown(dropdown, ...)
-                        end)
-                    end
-                    search.TextBox.Text = value
-                    dropdownData.IsOpen = false
-                    self:UpdateDropdown(dropdown, value, nil, currentCallback)
-                end)
-
-                entries = entries + 1
-            end
-
-            local frame = dropdown.List.Frame
-
-            Utility:Tween(dropdown, {Size = UDim2.new(1, 0, 0, (entries == 0 and 30) or math.clamp(entries, 0, 5) * 34 + 38)}, 0.3)
-            Utility:Tween(search.Button, {Rotation = dropdownData.IsOpen and 180 or 0}, 0.3)
-
-            if entries > 5 then
-                for _, button in pairs(dropdown.List.Frame:GetChildren()) do
-                    if button:IsA("ImageButton") then
-                        button.Size = UDim2.new(1, -6, 0, 30)
-                    end
-                end
-
-                frame.CanvasSize = UDim2.new(0, 0, 0, (entries * 34) - 4)
-                frame.ScrollBarImageTransparency = 0
-            else
-                frame.CanvasSize = UDim2.new(0, 0, 0, 0)
-                frame.ScrollBarImageTransparency = 1
-            end
-        end,
-        SetListFunction = function(newList)
-            dropdownData.CurrentList = newList
-            if dropdownData.IsOpen then
-                dropdownData.UpdateFunction()
-            end
-        end,
-        GetListFunction = function()
-            return dropdownData.CurrentList
-        end
+        IsOpen = false
     }
     
     section.Dropdowns[dropdown] = dropdownData
 
+    local function updateDropdownContent(showList)
+        local currentList = showList and dropdownData.CurrentList or {}
+
+        for _, child in pairs(dropdown.List.Frame:GetChildren()) do
+            if child:IsA("ImageButton") then
+                child:Destroy()
+            end
+        end
+
+        local entries = 0
+
+        for _, value in pairs(currentList) do
+            local button = Utility:Create("ImageButton", {
+                Parent = dropdown.List.Frame,
+                BackgroundTransparency = 1,
+                BorderSizePixel = 0,
+                Size = UDim2.new(1, 0, 0, 30),
+                ZIndex = 2,
+                Image = "rbxassetid://5028857472",
+                ImageColor3 = Themes.DarkContrast,
+                ScaleType = Enum.ScaleType.Slice,
+                SliceCenter = Rect.new(2, 2, 298, 298)
+            }, {
+                Utility:Create("TextLabel", {
+                    BackgroundTransparency = 1,
+                    Position = UDim2.new(0, 10, 0, 0),
+                    Size = UDim2.new(1, -10, 1, 0),
+                    ZIndex = 3,
+                    Font = Enum.Font.SourceSansSemibold,
+                    Text = value,
+                    TextColor3 = Themes.TextColor,
+                    TextSize = 14,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    TextTransparency = 0.1
+                })
+            })
+
+            button.MouseButton1Click:Connect(function()
+                if dropdownData.CurrentCallback then
+                    dropdownData.CurrentCallback(value, function(...)
+                        self:UpdateDropdown(dropdown, ...)
+                    end)
+                end
+                search.TextBox.Text = value
+                dropdownData.IsOpen = false
+                updateDropdownContent(false)
+            end)
+
+            entries = entries + 1
+        end
+
+        local frame = dropdown.List.Frame
+
+        Utility:Tween(dropdown, {Size = UDim2.new(1, 0, 0, (entries == 0 and 30) or math.clamp(entries, 0, 5) * 34 + 38)}, 0.3)
+        Utility:Tween(search.Button, {Rotation = dropdownData.IsOpen and 180 or 0}, 0.3)
+
+        if entries > 5 then
+            for _, button in pairs(dropdown.List.Frame:GetChildren()) do
+                if button:IsA("ImageButton") then
+                    button.Size = UDim2.new(1, -6, 0, 30)
+                end
+            end
+
+            frame.CanvasSize = UDim2.new(0, 0, 0, (entries * 34) - 4)
+            frame.ScrollBarImageTransparency = 0
+        else
+            frame.CanvasSize = UDim2.new(0, 0, 0, 0)
+            frame.ScrollBarImageTransparency = 1
+        end
+    end
+
     local function toggleDropdown()
         dropdownData.IsOpen = not dropdownData.IsOpen
-        if dropdownData.IsOpen then
-            dropdownData.UpdateFunction()
-        else
-            dropdownData.UpdateFunction({})
-        end
+        updateDropdownContent(dropdownData.IsOpen)
     end
 
     search.Button.MouseButton1Click:Connect(toggleDropdown)
@@ -1964,7 +1944,7 @@ function Library:SectionAddDropdown(section, title, list, callback, default)
     search.TextBox.Focused:Connect(function()
         if not dropdownData.IsOpen then
             dropdownData.IsOpen = true
-            dropdownData.UpdateFunction()
+            updateDropdownContent(true)
         end
         focused = true
     end)
@@ -1976,7 +1956,12 @@ function Library:SectionAddDropdown(section, title, list, callback, default)
     search.TextBox:GetPropertyChangedSignal("Text"):Connect(function()
         if focused and dropdownData.IsOpen then
             local filteredList = Utility:FilterList(search.TextBox.Text, dropdownData.CurrentList)
-            dropdownData.UpdateFunction(filteredList)
+            local tempData = {
+                CurrentList = filteredList,
+                CurrentCallback = dropdownData.CurrentCallback,
+                IsOpen = dropdownData.IsOpen
+            }
+            updateDropdownContent(true)
         end
     end)
 
@@ -1998,51 +1983,6 @@ function Library:SectionAddDropdown(section, title, list, callback, default)
     end)
 
     return dropdown
-end
-
-function Library:GetDropdownData(section, dropdown)
-    if section.Dropdowns and section.Dropdowns[dropdown] then
-        return section.Dropdowns[dropdown]
-    end
-    return nil
-end
-
-function Library:UpdateDropdownContent(dropdown, newList, newCallback)
-    for _, page in pairs(self.Pages) do
-        for _, section in pairs(page.Sections) do
-            local data = self:GetDropdownData(section, dropdown)
-            if data then
-                data.UpdateFunction(newList, newCallback)
-                return true
-            end
-        end
-    end
-    return false
-end
-
-function Library:SetDropdownList(dropdown, newList)
-    for _, page in pairs(self.Pages) do
-        for _, section in pairs(page.Sections) do
-            local data = self:GetDropdownData(section, dropdown)
-            if data then
-                data.SetListFunction(newList)
-                return true
-            end
-        end
-    end
-    return false
-end
-
-function Library:GetDropdownList(dropdown)
-    for _, page in pairs(self.Pages) do
-        for _, section in pairs(page.Sections) do
-            local data = self:GetDropdownData(section, dropdown)
-            if data then
-                return data.GetListFunction()
-            end
-        end
-    end
-    return nil
 end
 
 function Library:SectionAddMultiDropdown(section, title, list, callback)
@@ -2402,76 +2342,107 @@ function Library:UpdateDropdown(dropdown, title, list, callback)
         dropdown.Search.TextBox.Text = title
     end
     
-    if dropdown.UpdateContent then
-        dropdown.UpdateContent(list, callback)
-    else
-        local entries = 0
-
-        Utility:PopEffect(dropdown.Search, 10)
-
-        for _, button in pairs(dropdown.List.Frame:GetChildren()) do
-            if button:IsA("ImageButton") then
-                button:Destroy()
-            end
-        end
-
-        for _, value in pairs(list or {}) do
-            local button = Utility:Create("ImageButton", {
-                Parent = dropdown.List.Frame,
-                BackgroundTransparency = 1,
-                BorderSizePixel = 0,
-                Size = UDim2.new(1, 0, 0, 30),
-                ZIndex = 2,
-                Image = "rbxassetid://5028857472",
-                ImageColor3 = Themes.DarkContrast,
-                ScaleType = Enum.ScaleType.Slice,
-                SliceCenter = Rect.new(2, 2, 298, 298)
-            }, {
-                Utility:Create("TextLabel", {
-                    BackgroundTransparency = 1,
-                    Position = UDim2.new(0, 10, 0, 0),
-                    Size = UDim2.new(1, -10, 1, 0),
-                    ZIndex = 3,
-                    Font = Enum.Font.SourceSansSemibold,
-                    Text = value,
-                    TextColor3 = Themes.TextColor,
-                    TextSize = 14,
-                    TextXAlignment = Enum.TextXAlignment.Left,
-                    TextTransparency = 0.1
-                })
-            })
-
-            button.MouseButton1Click:Connect(function()
+    for _, page in pairs(self.Pages) do
+        for _, section in pairs(page.Sections) do
+            if section.Dropdowns and section.Dropdowns[dropdown] then
+                local data = section.Dropdowns[dropdown]
+                
+                if list then
+                    data.CurrentList = list
+                end
+                
                 if callback then
-                    callback(value, function(...)
-                        self:UpdateDropdown(dropdown, ...)
-                    end)
+                    data.CurrentCallback = callback
                 end
-                self:UpdateDropdown(dropdown, value, nil, callback)
-            end)
-
-            entries = entries + 1
-        end
-
-        local frame = dropdown.List.Frame
-
-        Utility:Tween(dropdown, {Size = UDim2.new(1, 0, 0, (entries == 0 and 30) or math.clamp(entries, 0, 5) * 34 + 38)}, 0.3)
-        Utility:Tween(dropdown.Search.Button, {Rotation = list and 180 or 0}, 0.3)
-
-        if entries > 5 then
-            for _, button in pairs(dropdown.List.Frame:GetChildren()) do
-                if button:IsA("ImageButton") then
-                    button.Size = UDim2.new(1, -6, 0, 30)
+                
+                if data.IsOpen then
                 end
+                
+                return true
             end
-
-            frame.CanvasSize = UDim2.new(0, 0, 0, (entries * 34) - 4)
-            frame.ScrollBarImageTransparency = 0
-        else
-            frame.CanvasSize = UDim2.new(0, 0, 0, 0)
-            frame.ScrollBarImageTransparency = 1
         end
     end
+    
+    local entries = 0
+
+    Utility:PopEffect(dropdown.Search, 10)
+
+    for _, button in pairs(dropdown.List.Frame:GetChildren()) do
+        if button:IsA("ImageButton") then
+            button:Destroy()
+        end
+    end
+
+    for _, value in pairs(list or {}) do
+        local button = Utility:Create("ImageButton", {
+            Parent = dropdown.List.Frame,
+            BackgroundTransparency = 1,
+            BorderSizePixel = 0,
+            Size = UDim2.new(1, 0, 0, 30),
+            ZIndex = 2,
+            Image = "rbxassetid://5028857472",
+            ImageColor3 = Themes.DarkContrast,
+            ScaleType = Enum.ScaleType.Slice,
+            SliceCenter = Rect.new(2, 2, 298, 298)
+        }, {
+            Utility:Create("TextLabel", {
+                BackgroundTransparency = 1,
+                Position = UDim2.new(0, 10, 0, 0),
+                Size = UDim2.new(1, -10, 1, 0),
+                ZIndex = 3,
+                Font = Enum.Font.SourceSansSemibold,
+                Text = value,
+                TextColor3 = Themes.TextColor,
+                TextSize = 14,
+                TextXAlignment = Enum.TextXAlignment.Left,
+                TextTransparency = 0.1
+            })
+        })
+
+        button.MouseButton1Click:Connect(function()
+            if callback then
+                callback(value, function(...)
+                    self:UpdateDropdown(dropdown, ...)
+                end)
+            end
+            self:UpdateDropdown(dropdown, value, nil, callback)
+        end)
+
+        entries = entries + 1
+    end
+
+    local frame = dropdown.List.Frame
+
+    Utility:Tween(dropdown, {Size = UDim2.new(1, 0, 0, (entries == 0 and 30) or math.clamp(entries, 0, 5) * 34 + 38)}, 0.3)
+    Utility:Tween(dropdown.Search.Button, {Rotation = list and 180 or 0}, 0.3)
+
+    if entries > 5 then
+        for _, button in pairs(dropdown.List.Frame:GetChildren()) do
+            if button:IsA("ImageButton") then
+                button.Size = UDim2.new(1, -6, 0, 30)
+            end
+        end
+
+        frame.CanvasSize = UDim2.new(0, 0, 0, (entries * 34) - 4)
+        frame.ScrollBarImageTransparency = 0
+    else
+        frame.CanvasSize = UDim2.new(0, 0, 0, 0)
+        frame.ScrollBarImageTransparency = 1
+    end
+    
+    return false
+end
+
+function Library:SetDropdownList(dropdown, newList)
+    for _, page in pairs(self.Pages) do
+        for _, section in pairs(page.Sections) do
+            if section.Dropdowns and section.Dropdowns[dropdown] then
+                section.Dropdowns[dropdown].CurrentList = newList
+                return true
+            end
+        end
+    end
+    return false
 end
 
 function Library:FindSectionForKeybind(keybind)
