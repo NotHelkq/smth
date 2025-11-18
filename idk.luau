@@ -706,6 +706,7 @@ function Library:CreateSection(page, title)
 	section.addSlider = function(s, title, default, min, max, callback) return self:SectionAddSlider(s, title, default, min, max, callback) end
 	section.addDropdown = function(s, title, list, callback, default) return self:SectionAddDropdown(s, title, list, callback, default) end
 	section.addMultiDropdown = function(s, title, list, callback) return self:SectionAddMultiDropdown(s, title, list, callback) end
+	section.addLabel = function(s, title) return self:SectionAddLabel(s, title) end
 
 	if uiListLayout then
 		uiListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
@@ -2223,6 +2224,48 @@ function Library:SectionAddMultiDropdown(section, title, list, callback)
 	end)
 
 	return dropdown
+end
+
+function Library:SectionAddLabel(section, title)
+    local label = Utility:Create("ImageButton", {
+        Name = "Label",
+        Parent = section.ScrollingFrame,
+        BackgroundTransparency = 1,
+        BorderSizePixel = 0,
+        Size = UDim2.new(1, 0, 0, 30),
+        ZIndex = 2,
+        Image = "rbxassetid://5028857472",
+        ImageColor3 = Themes.DarkContrast,
+        ScaleType = Enum.ScaleType.Slice,
+        SliceCenter = Rect.new(2, 2, 298, 298)
+    }, {
+        Utility:Create("TextLabel", {
+            Name = "Title",
+            BackgroundTransparency = 1,
+            Size = UDim2.new(1, 0, 1, 0),
+            ZIndex = 3,
+            Font = Enum.Font.Gotham,
+            Text = title,
+            TextColor3 = Themes.TextColor,
+            TextSize = 15,
+            TextTransparency = 0.1,
+            TextXAlignment = Enum.TextXAlignment.Center
+        })
+    })
+
+    table.insert(section.Modules, label)
+
+    task.defer(function()
+        self:SectionResize(section)
+    end)
+
+    return label
+end
+
+function Library:UpdateLabel(label, newText)
+    if label and label:FindFirstChild("Title") then
+        label.Title.Text = newText
+    end
 end
 
 function Library:UpdateButton(button, title)
