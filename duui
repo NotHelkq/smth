@@ -253,8 +253,7 @@ function Library.New(title)
         ZIndex = 5
     }, {
         Utility:Create("UICorner", {
-            CornerRadius = UDim.new(0, 8),
-            CornerIndex = 1 | 2 -- Only round top corners
+            CornerRadius = UDim.new(0, 8)
         })
     })
     
