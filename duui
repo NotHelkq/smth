@@ -772,13 +772,15 @@ function Library:AddButton(section, name, callback)
     })
     
     button.MouseButton1Click:Connect(function()
-        if callback then
+        if type(callback) == "function" then
             local success, err = pcall(callback)
             if not success then
                 warn("Button callback error: " .. tostring(err))
             end
+        elseif callback then
+            warn("Button callback is not a function: " .. tostring(callback))
         end
-    })
+    end)
     
     button.Parent = self.PageContent
     table.insert(section.Elements, button)
