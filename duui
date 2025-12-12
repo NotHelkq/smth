@@ -200,15 +200,9 @@ function Library.New(title)
         Position = UDim2.new(0.5, -400, 0.5, -250),
         Size = DefaultUISize,
         BackgroundColor3 = Themes.Background,
-        BorderSizePixel = 0
+        BorderSizePixel = 0,
+        ClipsDescendants = true
     }, {
-        Utility:Create("UICorner", {CornerRadius = UDim.new(0, 8)}),
-        Utility:Create("UIStroke", {
-            Color = Themes.BorderColor,
-            Thickness = 1,
-            Transparency = 0.5
-        }),
-        
         -- Top Bar Area
         Utility:Create("Frame", {
             Name = "TopBar",
@@ -216,14 +210,6 @@ function Library.New(title)
             BackgroundColor3 = Themes.DarkBackground,
             BorderSizePixel = 0
         }, {
-            Utility:Create("UICorner", {
-                CornerRadius = UDim.new(0, 8),
-                TopLeftRadius = 8,
-                TopRightRadius = 8,
-                BottomLeftRadius = 0,
-                BottomRightRadius = 0
-            }),
-            
             -- Window Controls (Close/Minimize)
             Utility:Create("Frame", {
                 Name = "WindowControls",
@@ -247,11 +233,7 @@ function Library.New(title)
                     AutoButtonColor = false,
                     LayoutOrder = 1
                 }, {
-                    Utility:Create("UICorner", {CornerRadius = UDim.new(1, 0)}),
-                    Utility:Create("UIStroke", {
-                        Color = Color3.fromRGB(180, 140, 30),
-                        Thickness = 1
-                    })
+                    Utility:Create("UICorner", {CornerRadius = UDim.new(1, 0)})
                 }),
                 
                 -- Close Button (Red)
@@ -264,11 +246,7 @@ function Library.New(title)
                     AutoButtonColor = false,
                     LayoutOrder = 2
                 }, {
-                    Utility:Create("UICorner", {CornerRadius = UDim.new(1, 0)}),
-                    Utility:Create("UIStroke", {
-                        Color = Color3.fromRGB(180, 40, 40),
-                        Thickness = 1
-                    })
+                    Utility:Create("UICorner", {CornerRadius = UDim.new(1, 0)})
                 })
             }),
             
@@ -333,14 +311,6 @@ function Library.New(title)
             BackgroundColor3 = Themes.DarkBackground,
             BorderSizePixel = 0
         }, {
-            Utility:Create("UICorner", {
-                CornerRadius = UDim.new(0, 8),
-                TopLeftRadius = 0,
-                TopRightRadius = 8,
-                BottomLeftRadius = 0,
-                BottomRightRadius = 0
-            }),
-            
             Utility:Create("ScrollingFrame", {
                 Name = "PagesContainer",
                 Active = true,
@@ -514,8 +484,6 @@ function Library:CreatePage(title, icon)
             BackgroundColor3 = Themes.Accent,
             BorderSizePixel = 0,
             BackgroundTransparency = 1
-        }, {
-            Utility:Create("UICorner", {CornerRadius = UDim.new(0, 2)})
         }),
         
         -- Title
@@ -831,11 +799,6 @@ function Library:CreateSection(page, title)
         ClipsDescendants = true
     }, {
         Utility:Create("UICorner", {CornerRadius = UDim.new(0, 6)}),
-        Utility:Create("UIStroke", {
-            Color = Themes.LightContrast,
-            Thickness = 1,
-            Transparency = 0.3
-        }),
         
         Utility:Create("Frame", {
             Name = "InnerContainer",
@@ -948,10 +911,6 @@ function Library:SectionAddButton(section, title, callback)
         AutoButtonColor = false
     }, {
         Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)}),
-        Utility:Create("UIStroke", {
-            Color = Themes.DarkContrast,
-            Thickness = 1
-        }),
         
         Utility:Create("TextLabel", {
             Name = "Title",
@@ -1026,8 +985,6 @@ function Library:SectionAddToggle(section, title, default, callback)
         Text = "",
         AutoButtonColor = false
     }, {
-        Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)}),
-        
         Utility:Create("TextLabel", {
             Name = "Title",
             AnchorPoint = Vector2.new(0, 0.5),
@@ -1062,11 +1019,7 @@ function Library:SectionAddToggle(section, title, default, callback)
                 BackgroundColor3 = Color3.fromRGB(255, 255, 255),
                 BorderSizePixel = 0
             }, {
-                Utility:Create("UICorner", {CornerRadius = UDim.new(1, 0)}),
-                Utility:Create("UIStroke", {
-                    Color = Themes.DarkContrast,
-                    Thickness = 1
-                })
+                Utility:Create("UICorner", {CornerRadius = UDim.new(1, 0)})
             })
         })
     })
@@ -1166,10 +1119,6 @@ function Library:SectionAddTextbox(section, title, default, callback)
             ClearTextOnFocus = false
         }, {
             Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)}),
-            Utility:Create("UIStroke", {
-                Color = Themes.DarkContrast,
-                Thickness = 1
-            }),
             Utility:Create("UIPadding", {
                 PaddingLeft = UDim.new(0, 8),
                 PaddingRight = UDim.new(0, 8)
@@ -1255,11 +1204,7 @@ function Library:SectionAddKeybind(section, title, default, callback, changedCal
             TextSize = 14,
             AutoButtonColor = false
         }, {
-            Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)}),
-            Utility:Create("UIStroke", {
-                Color = Themes.DarkContrast,
-                Thickness = 1
-            })
+            Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)})
         })
     })
 
@@ -1375,10 +1320,6 @@ function Library:SectionAddColorPicker(section, title, default, callback)
             AutoButtonColor = false
         }, {
             Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)}),
-            Utility:Create("UIStroke", {
-                Color = Themes.DarkContrast,
-                Thickness = 1
-            }),
             
             Utility:Create("TextLabel", {
                 Name = "ColorText",
@@ -1392,7 +1333,7 @@ function Library:SectionAddColorPicker(section, title, default, callback)
         })
     })
 
-    -- Color picker tab (similar to original but styled)
+    -- Color picker tab
     local tab = Utility:Create("Frame", {
         Name = "ColorPickerTab",
         Parent = self.Container,
@@ -1405,10 +1346,6 @@ function Library:SectionAddColorPicker(section, title, default, callback)
         ZIndex = 100
     }, {
         Utility:Create("UICorner", {CornerRadius = UDim.new(0, 8)}),
-        Utility:Create("UIStroke", {
-            Color = Themes.BorderColor,
-            Thickness = 1
-        }),
         
         Utility:Create("TextLabel", {
             Name = "Title",
@@ -1447,11 +1384,7 @@ function Library:SectionAddColorPicker(section, title, default, callback)
             BackgroundColor3 = Color3.fromRGB(255, 0, 0),
             BorderSizePixel = 0
         }, {
-            Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)}),
-            Utility:Create("UIStroke", {
-                Color = Themes.BorderColor,
-                Thickness = 1
-            })
+            Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)})
         }),
         
         -- RGB inputs
@@ -1496,11 +1429,7 @@ function Library:SectionAddColorPicker(section, title, default, callback)
                     Text = "255",
                     PlaceholderText = "0-255"
                 }, {
-                    Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)}),
-                    Utility:Create("UIStroke", {
-                        Color = Themes.BorderColor,
-                        Thickness = 1
-                    })
+                    Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)})
                 })
             }),
             
@@ -1532,11 +1461,7 @@ function Library:SectionAddColorPicker(section, title, default, callback)
                     Text = "255",
                     PlaceholderText = "0-255"
                 }, {
-                    Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)}),
-                    Utility:Create("UIStroke", {
-                        Color = Themes.BorderColor,
-                        Thickness = 1
-                    })
+                    Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)})
                 })
             }),
             
@@ -1568,11 +1493,7 @@ function Library:SectionAddColorPicker(section, title, default, callback)
                     Text = "255",
                     PlaceholderText = "0-255"
                 }, {
-                    Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)}),
-                    Utility:Create("UIStroke", {
-                        Color = Themes.BorderColor,
-                        Thickness = 1
-                    })
+                    Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)})
                 })
             })
         })
@@ -1723,11 +1644,7 @@ function Library:SectionAddSlider(section, title, default, min, max, callback)
                 BackgroundColor3 = Color3.fromRGB(255, 255, 255),
                 BorderSizePixel = 0
             }, {
-                Utility:Create("UICorner", {CornerRadius = UDim.new(1, 0)}),
-                Utility:Create("UIStroke", {
-                    Color = Themes.Accent,
-                    Thickness = 2
-                })
+                Utility:Create("UICorner", {CornerRadius = UDim.new(1, 0)})
             })
         }),
         
@@ -1746,10 +1663,6 @@ function Library:SectionAddSlider(section, title, default, min, max, callback)
             PlaceholderText = "Value"
         }, {
             Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)}),
-            Utility:Create("UIStroke", {
-                Color = Themes.BorderColor,
-                Thickness = 1
-            }),
             Utility:Create("UIPadding", {
                 PaddingLeft = UDim.new(0, 8),
                 PaddingRight = UDim.new(0, 8)
@@ -1846,10 +1759,6 @@ function Library:SectionAddDropdown(section, title, list, callback, default)
             AutoButtonColor = false
         }, {
             Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)}),
-            Utility:Create("UIStroke", {
-                Color = Themes.BorderColor,
-                Thickness = 1
-            }),
             
             Utility:Create("TextLabel", {
                 Name = "Title",
@@ -1889,10 +1798,6 @@ function Library:SectionAddDropdown(section, title, list, callback, default)
             ClipsDescendants = true
         }, {
             Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)}),
-            Utility:Create("UIStroke", {
-                Color = Themes.BorderColor,
-                Thickness = 1
-            }),
             
             Utility:Create("ScrollingFrame", {
                 Name = "OptionsList",
@@ -2039,10 +1944,6 @@ function Library:SectionAddMultiDropdown(section, title, list, callback)
             AutoButtonColor = false
         }, {
             Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)}),
-            Utility:Create("UIStroke", {
-                Color = Themes.BorderColor,
-                Thickness = 1
-            }),
             
             Utility:Create("TextLabel", {
                 Name = "Title",
@@ -2082,10 +1983,6 @@ function Library:SectionAddMultiDropdown(section, title, list, callback)
             ClipsDescendants = true
         }, {
             Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)}),
-            Utility:Create("UIStroke", {
-                Color = Themes.BorderColor,
-                Thickness = 1
-            }),
             
             Utility:Create("ScrollingFrame", {
                 Name = "OptionsList",
@@ -2180,10 +2077,6 @@ function Library:SectionAddMultiDropdown(section, title, list, callback)
                     BorderSizePixel = 0
                 }, {
                     Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)}),
-                    Utility:Create("UIStroke", {
-                        Color = Themes.BorderColor,
-                        Thickness = 1
-                    }),
                     
                     Utility:Create("ImageLabel", {
                         Name = "CheckIcon",
