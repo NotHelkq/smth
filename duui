@@ -2242,7 +2242,7 @@ function Library:SectionAddMultiDropdown(section, title, list, callback)
             if callback then
                 callback(selectedOptions)
             end
-        })
+        end)
         
         optionButton.Parent = optionsList
     end
