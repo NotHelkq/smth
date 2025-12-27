@@ -54,9 +54,17 @@ end
 
 local Library = {
 	Pages = {},
-	Sections = {},
-	SelectedPage = nil
+	SelectedPage = nil,
+	ActiveNotification = nil,
+	ToggleKey = Enum.KeyCode.RightControl,
+	LastNotifyTime = 0,
+	IsAnimating = false
 }
+
+function Library:ToggleUI()
+	local container = self.Container
+	container.Enabled = not container.Enabled
+end
 
 function Library:Init(title, ver)
 	title = title or "Unknown Script"
@@ -70,7 +78,8 @@ function Library:Init(title, ver)
 
 	local mainFrame = Instance.new("Frame")
 	mainFrame.Name = "MainFrame"
-	mainFrame.Position = UDim2.new(0.5, -400, 0.5, -225)
+	mainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+	mainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
 	mainFrame.Size = DefaultUISize
 	mainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 	mainFrame.Parent = container
@@ -295,6 +304,10 @@ function Library:Init(title, ver)
 	minimizeCorner.CornerRadius = UDim.new(5, 0)
 	minimizeCorner.Parent = minimizeButton
 
+	minimizeButton.MouseButton1Click:Connect(function()
+		Library:ToggleUI()
+	end)
+
 	local resizeButton = Instance.new("TextButton")
 	resizeButton.Name = "ResizeButton"
 	resizeButton.Position = UDim2.new(1, -2, 1, -2)
@@ -306,20 +319,36 @@ function Library:Init(title, ver)
 	resizeButton.Parent = mainFrame
 
 	local draggingResize = false
+	local resizeOffset = Vector2.new()
+
 	resizeButton.MouseButton1Down:Connect(function()
 		draggingResize = true
+		local mousePos = Vector2.new(Mouse.X, Mouse.Y)
+		local frameBottomRight = mainFrame.AbsolutePosition + mainFrame.AbsoluteSize
+		resizeOffset = frameBottomRight - mousePos
+
 		while draggingResize do
-			local x, y = Mouse.X - 1, Mouse.Y - 1
+			local x, y = Mouse.X, Mouse.Y
 			local pos = mainFrame.AbsolutePosition
-			local size = mainFrame.AbsoluteSize
-			if x - pos.X >= 500 then
-				mainFrame.Size = UDim2.new(0, x - pos.X, 0, size.Y)
+
+			local targetX = (x + resizeOffset.X) - pos.X
+			local targetY = (y + resizeOffset.Y) - pos.Y
+
+			if targetX >= 500 then
+				local old_sizeX = mainFrame.Size.X.Offset
+				mainFrame.Size = UDim2.new(0, targetX, 0, mainFrame.Size.Y.Offset)
+				local deltaX = (targetX - old_sizeX) / 2
+				mainFrame.Position = mainFrame.Position + UDim2.new(0, deltaX, 0, 0)
 			end
-			size = mainFrame.AbsoluteSize
-			if y - pos.Y >= 281 then
-				mainFrame.Size = UDim2.new(0, size.X, 0, y - pos.Y)
+
+			if targetY >= 281 then
+				local old_sizeY = mainFrame.Size.Y.Offset
+				mainFrame.Size = UDim2.new(0, mainFrame.Size.X.Offset, 0, targetY)
+				local deltaY = (targetY - old_sizeY) / 2
+				mainFrame.Position = mainFrame.Position + UDim2.new(0, 0, 0, deltaY)
 			end
-			DefaultUISize = UDim2.new(0, mainFrame.AbsoluteSize.X, 0, mainFrame.AbsoluteSize.Y)
+
+			DefaultUISize = mainFrame.Size
 			RunService.RenderStepped:Wait()
 		end
 	end)
@@ -427,6 +456,12 @@ function Library:Init(title, ver)
 	UserInputService.InputEnded:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.MouseButton1 then
 			dragging = false
+		end
+	end)
+
+	UserInputService.InputBegan:Connect(function(input, gpe)
+		if not gpe and input.KeyCode == Library.ToggleKey then
+			Library:ToggleUI()
 		end
 	end)
 
@@ -638,7 +673,7 @@ function Library:PageAddSection(page, title, autoSize)
 	local sectionPadding = Instance.new("UIPadding")
 	sectionPadding.PaddingTop = UDim.new(0, 5)
 	sectionPadding.PaddingBottom = UDim.new(0, 5)
-	sectionPadding.PaddingLeft = UDim.new(0, 5) 
+	sectionPadding.PaddingLeft = UDim.new(0, 5)
 	sectionPadding.PaddingRight = UDim.new(0, 5)
 	sectionPadding.Parent = sectionScrolling
 
@@ -667,7 +702,7 @@ function Library:PageAddSection(page, title, autoSize)
 			AnchorPoint = Vector2.new(0.5, 0.5),
 			Position = UDim2.new(0.5, 0, 0.5, 0),
 			Size = UDim2.new(1, 0, 1, 0),
-			BackgroundColor3 = Color3.fromRGB(30, 30, 30), 
+			BackgroundColor3 = Color3.fromRGB(30, 30, 30),
 			BackgroundTransparency = 1,
 			Parent = frame
 		}, {
@@ -790,7 +825,7 @@ function Library:PageAddSection(page, title, autoSize)
 			Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)})
 		})
 
-		Utility:Create("TextLabel", {Text = "  "..text, Size = UDim2.new(0.4, 0, 1, 0), BackgroundTransparency = 1, TextColor3 = Color3.fromRGB(125,125,125), FontFace = Font.fromName("FredokaOne"), TextSize = 14, TextXAlignment = "Left", Parent = frame})
+		Utility:Create("TextLabel", {Text = " "..text, Size = UDim2.new(0.4, 0, 1, 0), BackgroundTransparency = 1, TextColor3 = Color3.fromRGB(125,125,125), FontFace = Font.fromName("FredokaOne"), TextSize = 14, TextXAlignment = "Left", Parent = frame})
 
 		local valBox = Utility:Create("TextBox", {Size = UDim2.new(0, 35, 0, 18), Position = UDim2.new(1, -40, 0.5, -9), BackgroundColor3 = Color3.fromRGB(40, 40, 40), TextColor3 = Color3.fromRGB(125, 125, 125), Text = tostring(value), FontFace = Font.fromName("FredokaOne"), TextSize = 12, Parent = frame}, {Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)})})
 
@@ -1088,6 +1123,7 @@ function Library:PageAddSection(page, title, autoSize)
 		end)
 	end
 
+
 	function sectionData:addLabel(text)
 		local textService = game:GetService("TextService")
 		local maxWidth = sectionScrolling.AbsoluteSize.X - 20 
@@ -1127,10 +1163,99 @@ function Library:PageAddSection(page, title, autoSize)
 		return frame
 	end
 
-	function Library:ShowNotification(title, text, isError, callback)
-		if self.ActiveNotification then
-			self.ActiveNotification()
+	function sectionData:addKeybind(text, default, callback)
+		local binding = false
+		local currentKey = default or Enum.KeyCode.F
+
+		local frame = Utility:Create("Frame", {
+			Size = UDim2.new(1, 0, 0, 32),
+			BackgroundTransparency = 1,
+			Parent = sectionScrolling
+		}, {
+			Utility:Create("UIStroke", {Color = Color3.fromRGB(45, 45, 45), ApplyStrokeMode = "Border"}),
+			Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)})
+		})
+
+		local label = Utility:Create("TextLabel", {
+			Size = UDim2.new(1, -10, 1, 0),
+			Position = UDim2.new(0, 10, 0, 0),
+			BackgroundTransparency = 1,
+			Text = text,
+			TextColor3 = Color3.fromRGB(125, 125, 125),
+			FontFace = Font.fromName("FredokaOne"),
+			TextSize = 14,
+			TextXAlignment = "Left",
+			Parent = frame
+		})
+
+		local keyBox = Utility:Create("Frame", {
+			Size = UDim2.new(0, 50, 0, 20),
+			Position = UDim2.new(1, -10, 0.5, 0),
+			AnchorPoint = Vector2.new(1, 0.5),
+			BackgroundColor3 = Color3.fromRGB(20, 20, 20),
+			Parent = frame
+		}, {
+			Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)}),
+			Utility:Create("UIStroke", {Color = Color3.fromRGB(55, 55, 55)})
+		})
+
+		local keyLabel = Utility:Create("TextLabel", {
+			Size = UDim2.new(1, 0, 1, 0),
+			BackgroundTransparency = 1,
+			Text = currentKey.Name,
+			TextColor3 = Color3.fromRGB(200, 200, 200),
+			FontFace = Font.fromName("FredokaOne"),
+			TextSize = 11,
+			Parent = keyBox
+		})
+
+		local btn = Utility:Create("TextButton", {
+			Size = UDim2.new(1, 0, 1, 0),
+			BackgroundTransparency = 1,
+			Text = "",
+			Parent = frame
+		})
+
+		local function updateKeyBoxSize()
+			local txtSize = game:GetService("TextService"):GetTextSize(keyLabel.Text, keyLabel.TextSize, keyLabel.Font, Vector2.new(200, 20))
+			keyBox.Size = UDim2.new(0, math.max(40, txtSize.X + 15), 0, 20)
 		end
+		updateKeyBoxSize()
+
+		btn.MouseButton1Click:Connect(function()
+			binding = true
+			keyLabel.Text = "..."
+			Utility:Tween(keyBox, {BackgroundColor3 = Color3.fromRGB(35, 35, 35)}, 0.1)
+		end)
+
+		UserInputService.InputBegan:Connect(function(input, gpe)
+			if gpe then return end
+
+			if binding and input.UserInputType == Enum.UserInputType.Keyboard then
+				currentKey = input.KeyCode
+				keyLabel.Text = currentKey.Name
+				updateKeyBoxSize()
+				Utility:Tween(keyBox, {BackgroundColor3 = Color3.fromRGB(20, 20, 20)}, 0.1)
+				binding = false
+
+				-- ONLY FIRE CALLBACK WHEN THE KEY IS SAVED
+				if callback then 
+					callback(currentKey) 
+				end
+			elseif not binding and input.KeyCode == currentKey then
+				-- This is where your actual cheat/feature logic goes
+				-- (We don't put the 'Settings' notify here)
+			end
+		end)
+
+		return frame
+	end
+
+	function Library:ShowNotification(title, text, isError, callback)
+		if tick() - self.LastNotifyTime < 2 then return end
+		self.LastNotifyTime = tick()
+
+		if self.ActiveNotification then self.ActiveNotification() end
 
 		title = title or "Notification"
 		text = text or ""
@@ -1269,9 +1394,7 @@ function Library.new(title, ver)
 	local minimizeButton = Library.MainFrame:FindFirstChild("MinimizeButton")
 	if minimizeButton then
 		minimizeButton.MouseButton1Click:Connect(function()
-			if Library.Container then
-				Library.Container.Enabled = not Library.Container.Enabled
-			end
+			Library:ToggleUI()
 		end)
 	end
 
