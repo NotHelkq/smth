@@ -62,8 +62,113 @@ local Library = {
 }
 
 function Library:ToggleUI()
+	if self.IsAnimating then return end
+	self.IsAnimating = true
+
+	local mainFrame = self.MainFrame
 	local container = self.Container
-	container.Enabled = not container.Enabled
+	local isOpening = not container.Enabled
+
+	local function applyFade(obj, targetTransparency, duration)
+		local properties = {}
+
+		local isSidebar = obj:IsDescendantOf(self.SidebarScrollingFrame)
+		local origBG = obj:GetAttribute("OriginalBackgroundTransparency") or 0
+		local origText = obj:GetAttribute("OriginalTextTransparency") or 0
+		local origStroke = obj:GetAttribute("OriginalTransparency") or 0
+
+		if obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox") then
+			properties.TextTransparency = targetTransparency == 1 and 1 or origText
+		end
+
+		if obj:IsA("Frame") or obj:IsA("ScrollingFrame") or obj:IsA("TextButton") or obj:IsA("TextBox") then
+			if isSidebar and (obj:IsA("TextButton")) then
+				local isSelected = (self.SelectedPage and self.SelectedPage.Button == obj)
+				properties.BackgroundTransparency = (targetTransparency == 1 or not isSelected) and 1 or 0
+			else
+				properties.BackgroundTransparency = targetTransparency == 1 and 1 or origBG
+			end
+		end
+
+		if obj:IsA("UIStroke") then
+			if isSidebar then
+				local btn = obj.Parent:IsA("TextButton") and obj.Parent
+				local isSelected = (self.SelectedPage and self.SelectedPage.Button == btn)
+				properties.Transparency = (targetTransparency == 1 or not isSelected) and 1 or 0
+			else
+				properties.Transparency = targetTransparency == 1 and 1 or origStroke
+			end
+		end
+
+		if obj:IsA("ImageLabel") or obj:IsA("ImageButton") then
+			local origImg = obj:GetAttribute("OriginalImageTransparency") or 0
+			properties.ImageTransparency = targetTransparency == 1 and 1 or origImg
+		end
+
+		if next(properties) then
+			self.Utility:Tween(obj, properties, duration)
+		end
+	end
+
+	for _, v in pairs(mainFrame:GetDescendants()) do
+		if not v:GetAttribute("HasSnapshot") then
+			if v:IsA("Frame") or v:IsA("ScrollingFrame") or v:IsA("TextButton") or v:IsA("TextBox") then
+				v:SetAttribute("OriginalBackgroundTransparency", v.BackgroundTransparency)
+			end
+			if v:IsA("TextLabel") or v:IsA("TextButton") or v:IsA("TextBox") then
+				v:SetAttribute("OriginalTextTransparency", v.TextTransparency)
+			end
+			if v:IsA("UIStroke") then
+				v:SetAttribute("OriginalTransparency", v.Transparency)
+			end
+			if v:IsA("ImageLabel") or v:IsA("ImageButton") then
+				v:SetAttribute("OriginalImageTransparency", v.ImageTransparency)
+			end
+			v:SetAttribute("HasSnapshot", true)
+		end
+	end
+
+	local currentSize = mainFrame.Size
+	local currentPos = mainFrame.Position
+	local closedSize = UDim2.new(0, currentSize.X.Offset * 0.9, 0, currentSize.Y.Offset * 0.9)
+	local centerOffsetPos = UDim2.new(currentPos.X.Scale, currentPos.X.Offset + (currentSize.X.Offset * 0.05), currentPos.Y.Scale, currentPos.Y.Offset + (currentSize.Y.Offset * 0.05))
+
+	if isOpening then
+		mainFrame.Size = closedSize
+		mainFrame.Position = centerOffsetPos
+
+		for _, v in pairs(mainFrame:GetDescendants()) do
+			if v:IsA("GuiObject") then
+				if v:IsA("TextLabel") or v:IsA("TextButton") or v:IsA("TextBox") then v.TextTransparency = 1 end
+				if v:IsA("ImageLabel") or v:IsA("ImageButton") then v.ImageTransparency = 1 end
+				v.BackgroundTransparency = 1
+			elseif v:IsA("UIStroke") then
+				v.Transparency = 1
+			end
+		end
+
+		container.Enabled = true
+
+		for _, v in pairs(mainFrame:GetDescendants()) do
+			applyFade(v, 0, 0.4)
+		end
+
+		self.Utility:Tween(mainFrame, {Size = currentSize, Position = currentPos}, 0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out).Completed:Wait()
+	else
+		local animDuration = 0.3
+		for _, v in pairs(mainFrame:GetDescendants()) do
+			applyFade(v, 1, animDuration)
+		end
+
+		local closeTween = self.Utility:Tween(mainFrame, {Size = closedSize, Position = centerOffsetPos}, animDuration, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
+		closeTween.Completed:Wait()
+
+		container.Enabled = false
+		mainFrame.Size = currentSize
+		mainFrame.Position = currentPos
+	end
+
+	self.IsAnimating = false
 end
 
 function Library:Init(title, ver)
@@ -72,14 +177,14 @@ function Library:Init(title, ver)
 
 	local container = Instance.new("ScreenGui")
 	container.Name = title
-	container.Parent = script.Parent 
+	container.Parent = game.CoreGui
 	container.ResetOnSpawn = false
 	container.ZIndexBehavior = Enum.ZIndexBehavior.Global
 
 	local mainFrame = Instance.new("Frame")
 	mainFrame.Name = "MainFrame"
-	mainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
-	mainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+	mainFrame.AnchorPoint = Vector2.new(0, 0)
+	mainFrame.Position = UDim2.new(0.5, -DefaultUISize.X.Offset/2, 0.5, -DefaultUISize.Y.Offset/2)
 	mainFrame.Size = DefaultUISize
 	mainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 	mainFrame.Parent = container
@@ -335,17 +440,11 @@ function Library:Init(title, ver)
 			local targetY = (y + resizeOffset.Y) - pos.Y
 
 			if targetX >= 500 then
-				local old_sizeX = mainFrame.Size.X.Offset
 				mainFrame.Size = UDim2.new(0, targetX, 0, mainFrame.Size.Y.Offset)
-				local deltaX = (targetX - old_sizeX) / 2
-				mainFrame.Position = mainFrame.Position + UDim2.new(0, deltaX, 0, 0)
 			end
 
 			if targetY >= 281 then
-				local old_sizeY = mainFrame.Size.Y.Offset
 				mainFrame.Size = UDim2.new(0, mainFrame.Size.X.Offset, 0, targetY)
-				local deltaY = (targetY - old_sizeY) / 2
-				mainFrame.Position = mainFrame.Position + UDim2.new(0, 0, 0, deltaY)
 			end
 
 			DefaultUISize = mainFrame.Size
@@ -693,7 +792,7 @@ function Library:PageAddSection(page, title, autoSize)
 
 	function sectionData:addButton(text, callback)
 		local frame = Utility:Create("Frame", {
-			Size = UDim2.new(1, 0, 0, 30),
+			Size = UDim2.new(1, 0, 0, 28),
 			BackgroundTransparency = 1,
 			Parent = sectionScrolling
 		})
@@ -706,7 +805,7 @@ function Library:PageAddSection(page, title, autoSize)
 			BackgroundTransparency = 1,
 			Parent = frame
 		}, {
-			Utility:Create("UIStroke", {Color = Color3.fromRGB(60, 60, 60), ApplyStrokeMode = "Border"}),
+			Utility:Create("UIStroke", {Color = Color3.fromRGB(45, 45, 45), ApplyStrokeMode = "Border"}),
 			Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)})
 		})
 
@@ -717,31 +816,21 @@ function Library:PageAddSection(page, title, autoSize)
 			TextColor3 = Color3.fromRGB(125, 125, 125),
 			FontFace = Font.fromName("FredokaOne"),
 			TextSize = 14,
+			TextXAlignment = Enum.TextXAlignment.Center,
 			Parent = visualFrame
 		})
 
-		local function SafeCallback(...)
-			if not callback then return end 
-			local success, err = pcall(callback, ...)
-			if not success then
-				Library:ShowNotification("Script Error", tostring(err), true)
-			end
-		end
-
 		btn.MouseButton1Down:Connect(function()
 			Utility:Tween(visualFrame, {Size = UDim2.new(0.95, 0, 0.9, 0)}, 0.1)
-			Utility:Tween(btn, {TextSize = 13}, 0.1)
 		end)
 
 		btn.MouseButton1Up:Connect(function()
 			Utility:Tween(visualFrame, {Size = UDim2.new(1, 0, 1, 0)}, 0.1)
-			Utility:Tween(btn, {TextSize = 14}, 0.1)
-			SafeCallback() 
+			if callback then pcall(callback) end
 		end)
 
 		btn.MouseLeave:Connect(function()
 			Utility:Tween(visualFrame, {Size = UDim2.new(1, 0, 1, 0)}, 0.1)
-			Utility:Tween(btn, {TextSize = 14}, 0.1)
 		end)
 
 		return frame
@@ -749,13 +838,13 @@ function Library:PageAddSection(page, title, autoSize)
 
 	function sectionData:addToggle(text, default, callback)
 		local toggled = default or false
-
+		
 		local btn = Utility:Create("TextButton", {
 			Name = "Toggle",
-			Size = UDim2.new(1, 0, 0, 30),
+			Size = UDim2.new(1, 0, 0, 28),
 			BackgroundTransparency = 1,
-			Text = "  " .. text,
-			TextColor3 = ThemeColor,
+			Text = text,
+			TextColor3 = Color3.fromRGB(125, 125, 125),
 			TextXAlignment = "Left",
 			FontFace = Font.fromName("FredokaOne"),
 			TextSize = 14,
@@ -763,12 +852,14 @@ function Library:PageAddSection(page, title, autoSize)
 			Parent = sectionScrolling
 		}, {
 			Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)}),
-			Utility:Create("UIStroke", {Color = Color3.fromRGB(60, 60, 60), ApplyStrokeMode = "Border"})
+			Utility:Create("UIStroke", {Color = Color3.fromRGB(45, 45, 45), ApplyStrokeMode = "Border"}),
+			Utility:Create("UIPadding", {PaddingLeft = UDim.new(0, 10)})
 		})
 
 		local switch = Utility:Create("Frame", {
 			Size = UDim2.new(0, 30, 0, 16),
-			Position = UDim2.new(1, -35, 0.5, -8),
+			Position = UDim2.new(1, -10, 0.5, 0),
+			AnchorPoint = Vector2.new(1, 0.5),
 			BackgroundColor3 = Color3.fromRGB(50, 50, 50),
 			Parent = btn
 		}, {
@@ -777,7 +868,8 @@ function Library:PageAddSection(page, title, autoSize)
 
 		local circle = Utility:Create("Frame", {
 			Size = UDim2.new(0, 12, 0, 12),
-			Position = UDim2.new(0, 2, 0.5, -6),
+			Position = UDim2.new(0, 2, 0.5, 0),
+			AnchorPoint = Vector2.new(0, 0.5),
 			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 			Parent = switch
 		}, {
@@ -788,49 +880,80 @@ function Library:PageAddSection(page, title, autoSize)
 			local speed = animate and 0.2 or 0
 			if toggled then
 				Utility:Tween(switch, {BackgroundColor3 = Color3.fromRGB(40, 200, 100)}, speed)
-				Utility:Tween(circle, {Position = UDim2.new(1, -14, 0.5, -6)}, speed)
+				Utility:Tween(circle, {Position = UDim2.new(1, -14, 0.5, 0)}, speed)
 			else
 				Utility:Tween(switch, {BackgroundColor3 = Color3.fromRGB(50, 50, 50)}, speed)
-				Utility:Tween(circle, {Position = UDim2.new(0, 2, 0.5, -6)}, speed)
-			end
-		end
-
-		local function SafeCallback(val)
-			if not callback then return end
-			local success, err = pcall(callback, val)
-			if not success then
-				Library:ShowNotification("Toggle Error", tostring(err), true)
-				toggled = false 
-				updateVisuals(true)
+				Utility:Tween(circle, {Position = UDim2.new(0, 2, 0.5, 0)}, speed)
 			end
 		end
 
 		btn.MouseButton1Click:Connect(function()
 			toggled = not toggled
 			updateVisuals(true)
-			SafeCallback(toggled)
+			if callback then pcall(callback, toggled) end
 		end)
 
-		if default then updateVisuals(false) end
+		updateVisuals(false)
 		return btn
 	end
 
 	function sectionData:addSlider(text, min, max, default, callback)
 		local value = default or min
 		local dragging = false
-		local lastErrorTime = 0 
 
-		local frame = Utility:Create("Frame", {Size = UDim2.new(1, 0, 0, 30), BackgroundTransparency = 1, Parent = sectionScrolling}, {
-			Utility:Create("UIStroke", {Color = Color3.fromRGB(60, 60, 60), ApplyStrokeMode = "Border"}),
+		local frame = Utility:Create("Frame", {
+			Size = UDim2.new(1, 0, 0, 28),
+			BackgroundTransparency = 1,
+			Parent = sectionScrolling
+		}, {
+			Utility:Create("UIStroke", {Color = Color3.fromRGB(45, 45, 45), ApplyStrokeMode = "Border"}),
 			Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)})
 		})
 
-		Utility:Create("TextLabel", {Text = " "..text, Size = UDim2.new(0.4, 0, 1, 0), BackgroundTransparency = 1, TextColor3 = Color3.fromRGB(125,125,125), FontFace = Font.fromName("FredokaOne"), TextSize = 14, TextXAlignment = "Left", Parent = frame})
+		local label = Utility:Create("TextLabel", {
+			Text = text,
+			Size = UDim2.new(1, 0, 1, 0),
+			BackgroundTransparency = 1,
+			TextColor3 = Color3.fromRGB(125, 125, 125),
+			FontFace = Font.fromName("FredokaOne"),
+			TextSize = 14,
+			TextXAlignment = "Left",
+			Parent = frame
+		}, {
+			Utility:Create("UIPadding", {PaddingLeft = UDim.new(0, 10)})
+		})
 
-		local valBox = Utility:Create("TextBox", {Size = UDim2.new(0, 35, 0, 18), Position = UDim2.new(1, -40, 0.5, -9), BackgroundColor3 = Color3.fromRGB(40, 40, 40), TextColor3 = Color3.fromRGB(125, 125, 125), Text = tostring(value), FontFace = Font.fromName("FredokaOne"), TextSize = 12, Parent = frame}, {Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)})})
+		local valBox = Utility:Create("TextBox", {
+			Size = UDim2.new(0, 35, 0, 18),
+			Position = UDim2.new(1, -10, 0.5, 0),
+			AnchorPoint = Vector2.new(1, 0.5),
+			BackgroundColor3 = Color3.fromRGB(40, 40, 40),
+			TextColor3 = Color3.fromRGB(125, 125, 125),
+			Text = tostring(value),
+			FontFace = Font.fromName("FredokaOne"),
+			TextSize = 12,
+			Parent = frame
+		}, {
+			Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)})
+		})
 
-		local slideBar = Utility:Create("Frame", {Size = UDim2.new(0.3, 0, 0, 6), Position = UDim2.new(1, -45, 0.5, 0), AnchorPoint = Vector2.new(1, 0.5), BackgroundColor3 = Color3.fromRGB(40, 40, 40), Parent = frame}, {Utility:Create("UICorner", {CornerRadius = UDim.new(1, 0)})})
-		local fill = Utility:Create("Frame", {Size = UDim2.new((value-min)/(max-min), 0, 1, 0), BackgroundColor3 = Color3.fromRGB(150, 150, 150), Parent = slideBar}, {Utility:Create("UICorner", {CornerRadius = UDim.new(1, 0)})})
+		local slideBar = Utility:Create("Frame", {
+			Size = UDim2.new(0.3, 0, 0, 4),
+			Position = UDim2.new(1, -50, 0.5, 0),
+			AnchorPoint = Vector2.new(1, 0.5),
+			BackgroundColor3 = Color3.fromRGB(40, 40, 40),
+			Parent = frame
+		}, {
+			Utility:Create("UICorner", {CornerRadius = UDim.new(1, 0)})
+		})
+		
+		local fill = Utility:Create("Frame", {
+			Size = UDim2.new((value-min)/(max-min), 0, 1, 0),
+			BackgroundColor3 = Color3.fromRGB(150, 150, 150),
+			Parent = slideBar
+		}, {
+			Utility:Create("UICorner", {CornerRadius = UDim.new(1, 0)})
+		})
 
 		local function updateVisuals(val)
 			local percent = math.clamp((val - min) / (max - min), 0, 1)
@@ -838,21 +961,12 @@ function Library:PageAddSection(page, title, autoSize)
 			valBox.Text = tostring(val)
 		end
 
-		local function SafeCallback(val)
-			if not callback then return end
-			local success, err = pcall(callback, val)
-			if not success and tick() - lastErrorTime > 3 then
-				lastErrorTime = tick()
-				Library:ShowNotification("Slider Error", tostring(err), true)
-			end
-		end
-
-		valBox.FocusLost:Connect(function(enterPressed)
+		valBox.FocusLost:Connect(function()
 			local newValue = tonumber(valBox.Text)
 			if newValue then
 				value = math.clamp(math.floor(newValue), min, max)
 				updateVisuals(value)
-				SafeCallback(value)
+				if callback then pcall(callback, value) end
 			else
 				valBox.Text = tostring(value)
 			end
@@ -862,283 +976,369 @@ function Library:PageAddSection(page, title, autoSize)
 			local percent = math.clamp((input.Position.X - slideBar.AbsolutePosition.X) / slideBar.AbsoluteSize.X, 0, 1)
 			value = math.floor(min + (max - min) * percent)
 			updateVisuals(value)
-			SafeCallback(value)
+			if callback then pcall(callback, value) end
 		end
 
-		slideBar.InputBegan:Connect(function(input) 
-			if input.UserInputType == Enum.UserInputType.MouseButton1 then 
-				dragging = true 
-				update(input) 
-			end 
+		slideBar.InputBegan:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.MouseButton1 then
+				dragging = true
+				update(input)
+			end
 		end)
-		UserInputService.InputEnded:Connect(function(input) 
-			if input.UserInputType == Enum.UserInputType.MouseButton1 then 
-				dragging = false 
-			end 
+
+		UserInputService.InputEnded:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.MouseButton1 then
+				dragging = false
+			end
 		end)
-		UserInputService.InputChanged:Connect(function(input) 
-			if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then 
-				update(input) 
-			end 
+
+		UserInputService.InputChanged:Connect(function(input)
+			if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+				update(input)
+			end
 		end)
 
 		return frame
 	end
 
-	function sectionData:addDropdown(text, list, callback)
-		local isDropped = false
+	function sectionData:addDropdown(text, options, default, callback)
+		local open = false
+		local initial = default or options[1]
+		local selected = type(initial) == "function" and "None" or tostring(initial)
+		local optionButtons = {}
+
 		local frame = Utility:Create("Frame", {
-			Size = UDim2.new(1, 0, 0, 30), 
-			BackgroundTransparency = 1, 
-			ClipsDescendants = true, 
+			Size = UDim2.new(1, 0, 0, 28),
+			BackgroundTransparency = 1,
+			ClipsDescendants = true,
+			ZIndex = 5,
 			Parent = sectionScrolling
 		}, {
-			Utility:Create("UIStroke", {Color = Color3.fromRGB(60, 60, 60), ApplyStrokeMode = "Border"}),
+			Utility:Create("UIStroke", {Color = Color3.fromRGB(45, 45, 45), ApplyStrokeMode = "Border"}),
 			Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)})
 		})
 
-		local btn = Utility:Create("TextButton", {
-			Size = UDim2.new(1, 0, 0, 30), 
-			Text = "  " .. text .. ": None", 
-			TextColor3 = Color3.fromRGB(125, 125, 125), 
-			TextXAlignment = "Left", 
-			BackgroundTransparency = 1, 
-			FontFace = Font.fromName("FredokaOne"),
-			TextSize = 15,
-			TextTruncate = Enum.TextTruncate.AtEnd,
-			Parent = frame
-		})
-
-		local arrow = Utility:Create("TextLabel", {
-			Size = UDim2.new(0, 30, 0, 30),
-			Position = UDim2.new(1, -30, 0, 0),
-			Text = "▼", 
-			TextSize = 12, 
-			TextColor3 = Color3.fromRGB(100, 100, 100),
+		local container = Utility:Create("Frame", {
+			Size = UDim2.new(1, 0, 0, 28),
 			BackgroundTransparency = 1,
+			Parent = frame
+		})
+
+		local label = Utility:Create("TextLabel", {
+			Text = text .. ":",
+			Size = UDim2.new(0, 0, 1, 0),
+			AutomaticSize = Enum.AutomaticSize.X,
+			BackgroundTransparency = 1,
+			TextColor3 = Color3.fromRGB(125, 125, 125),
 			FontFace = Font.fromName("FredokaOne"),
-			Interactable = false,
-			Parent = frame
+			TextSize = 14,
+			TextXAlignment = "Left",
+			Parent = container
+		}, {
+			Utility:Create("UIPadding", {PaddingLeft = UDim.new(0, 10)})
 		})
 
-		local listFrame = Utility:Create("ScrollingFrame", {
-			Position = UDim2.new(0, 0, 0, 32), 
-			Size = UDim2.new(1, 0, 1, -35), 
-			BackgroundTransparency = 1, 
-			BorderSizePixel = 0, 
+		local selectedLabel = Utility:Create("TextLabel", {
+			Text = selected,
+			Size = UDim2.new(0, 0, 1, 0),
+			Position = UDim2.new(1, 5, 0, 0),
+			AutomaticSize = Enum.AutomaticSize.X,
+			BackgroundTransparency = 1,
+			TextColor3 = Color3.fromRGB(125, 125, 125),
+			FontFace = Font.fromName("FredokaOne"),
+			TextSize = 14,
+			TextXAlignment = "Left",
+			Parent = label
+		})
+
+		local searchBox = Utility:Create("TextBox", {
+			Size = UDim2.new(0, 80, 0, 20),
+			Position = UDim2.new(1, -30, 0.5, 0),
+			AnchorPoint = Vector2.new(1, 0.5),
+			BackgroundColor3 = Color3.fromRGB(30, 30, 30),
+			TextColor3 = Color3.fromRGB(200, 200, 200),
+			Text = "",
+			PlaceholderText = "Search...",
+			FontFace = Font.fromName("FredokaOne"),
+			TextSize = 12,
+			ZIndex = 10,
+			Parent = container
+		}, {
+			Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)}),
+			Utility:Create("UIStroke", {Color = Color3.fromRGB(45, 45, 45)})
+		})
+
+		local arrow = Utility:Create("ImageLabel", {
+			Size = UDim2.new(0, 16, 0, 16),
+			Position = UDim2.new(1, -10, 0.5, 0),
+			AnchorPoint = Vector2.new(1, 0.5),
+			BackgroundTransparency = 1,
+			Image = "rbxassetid://6034818372",
+			ImageColor3 = Color3.fromRGB(125, 125, 125),
+			ZIndex = 7,
+			Parent = container
+		})
+
+		local triggerBtn = Utility:Create("TextButton", {
+			Size = UDim2.new(1, 0, 1, 0),
+			BackgroundTransparency = 1,
+			Text = "",
+			ZIndex = 6,
+			Parent = container
+		})
+
+		local optionScrolling = Utility:Create("ScrollingFrame", {
+			Size = UDim2.new(1, 0, 0, 0),
+			Position = UDim2.new(0, 0, 0, 30),
+			BackgroundTransparency = 1,
+			BorderSizePixel = 0,
 			ScrollBarThickness = 2,
-			ScrollBarImageColor3 = Color3.fromRGB(60, 60, 60),
-			CanvasSize = UDim2.new(0, 0, 0, 0),
-			Visible = false, 
-			ScrollingEnabled = false, 
+			ScrollBarImageColor3 = Color3.fromRGB(80, 80, 80),
+			Visible = false,
 			Parent = frame
+		}, {
+			Utility:Create("UIListLayout", {SortOrder = "LayoutOrder", Padding = UDim.new(0, 4)}),
+			Utility:Create("UIPadding", {PaddingTop = UDim.new(0, 2), PaddingLeft = UDim.new(0, 10), PaddingRight = UDim.new(0, 10), PaddingBottom = UDim.new(0, 5)})
 		})
 
-		local listLayout = Utility:Create("UIListLayout", {Padding = UDim.new(0, 4), Parent = listFrame})
-		Utility:Create("UIPadding", {PaddingLeft = UDim.new(0, 5), PaddingRight = UDim.new(0, 5), Parent = listFrame})
+		local dpController = {}
 
-		local function SafeCallback(...)
-			if not callback then return end
-			local success, err = pcall(callback, ...)
-			if not success then
-				Library:ShowNotification("Script Error", tostring(err), true)
-			end
+		local function updateLayout()
+			local visibleCount = 0
+			for _, b in pairs(optionButtons) do if b.Visible then visibleCount = visibleCount + 1 end end
+			local targetHeight = math.min(visibleCount, 3.5) * 24 + 10
+			optionScrolling.Size = UDim2.new(1, 0, 0, targetHeight)
+			optionScrolling.CanvasSize = UDim2.new(0, 0, 0, visibleCount * 24 + 10)
+			if open then Utility:Tween(frame, {Size = UDim2.new(1, 0, 0, 30 + targetHeight)}, 0.2) end
 		end
 
-		local function refresh()
-			for _, v in pairs(listFrame:GetChildren()) do if v:IsA("TextButton") then v:Destroy() end end
-			for _, item in pairs(list) do
-				local itemBtn = Utility:Create("TextButton", {
-					Size = UDim2.new(1, 0, 0, 26),
-					BackgroundColor3 = Color3.fromRGB(30, 30, 30), 
-					Text = "  " .. item, 
-					TextColor3 = Color3.fromRGB(180, 180, 180), 
-					FontFace = Font.fromName("FredokaOne"),
-					TextSize = 14,
-					TextXAlignment = "Left",
-					Parent = listFrame
-				}, {
-					Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)}),
-					Utility:Create("UIStroke", {Color = Color3.fromRGB(40, 40, 40)})
-				})
+		local function toggle(force)
+			open = (force ~= nil) and force or not open
+			optionScrolling.Visible = open
+			if open then updateLayout() else Utility:Tween(frame, {Size = UDim2.new(1, 0, 0, 28)}, 0.2) end
+			Utility:Tween(arrow, {Rotation = open and 180 or 0}, 0.2)
+		end
 
-				itemBtn.MouseButton1Click:Connect(function()
-					btn.Text = "  " .. text .. ": " .. item
-					isDropped = false
-					arrow.Text = "▼"
-					listFrame.Visible = false
-					listFrame.ScrollingEnabled = false
-					Utility:Tween(frame, {Size = UDim2.new(1, 0, 0, 30)}, 0.2)
-					SafeCallback(item)
+		triggerBtn.MouseButton1Click:Connect(toggle)
+		searchBox.Focused:Connect(function() toggle(true) end)
+
+		function dpController:Refresh(newList)
+			for _, b in pairs(optionButtons) do b:Destroy() end
+			table.clear(optionButtons)
+			for _, opt in pairs(newList) do
+				local optText = tostring(opt)
+				local btn = Utility:Create("TextButton", {
+					Size = UDim2.new(1, 0, 0, 20),
+					BackgroundTransparency = 1,
+					Text = optText,
+					TextColor3 = (selected == optText) and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(150, 150, 150),
+					FontFace = Font.fromName("FredokaOne"),
+					TextSize = 12,
+					Parent = optionScrolling
+				}, {
+					Utility:Create("UIStroke", {Color = Color3.fromRGB(45, 45, 45), ApplyStrokeMode = "Border"}),
+					Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)})
+				})
+				table.insert(optionButtons, btn)
+				btn.MouseButton1Click:Connect(function()
+					selected = optText
+					selectedLabel.Text = optText
+					for _, otherBtn in pairs(optionButtons) do
+						otherBtn.TextColor3 = (otherBtn.Text == selected) and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(150, 150, 150)
+					end
+					toggle(false)
+					if callback then pcall(callback, opt) end
 				end)
 			end
-			listFrame.CanvasSize = UDim2.new(0, 0, 0, listLayout.AbsoluteContentSize.Y + 5)
+			updateLayout()
 		end
 
-		btn.MouseButton1Click:Connect(function()
-			isDropped = not isDropped
-			arrow.Text = isDropped and "▲" or "▼"
-
-			if isDropped then 
-				refresh()
-				listFrame.Visible = true
-				listFrame.ScrollingEnabled = #list > 3
-			else
-				listFrame.Visible = false
-				listFrame.ScrollingEnabled = false
-			end
-
-			local itemHeight = 26 + 4
-			local goal = isDropped and math.min(listLayout.AbsoluteContentSize.Y + 40, (3.5 * itemHeight) + 35) or 30
-			Utility:Tween(frame, {Size = UDim2.new(1, 0, 0, goal)}, 0.2)
+		searchBox:GetPropertyChangedSignal("Text"):Connect(function()
+			local q = searchBox.Text:lower()
+			for _, b in pairs(optionButtons) do b.Visible = b.Text:lower():find(q) ~= nil end
+			updateLayout()
 		end)
+
+		dpController:Refresh(options)
+		return dpController
 	end
 
-	function sectionData:addMultiDropdown(text, list, callback)
-		local selected = {}
-		local isDropped = false
+	function sectionData:addMultiDropdown(text, options, default, callback)
+		local open = false
+		local selected = type(default) == "table" and default or {}
+		local optionButtons = {}
+		for i, v in pairs(selected) do selected[i] = tostring(v) end
+
 		local frame = Utility:Create("Frame", {
-			Size = UDim2.new(1, 0, 0, 30), 
-			BackgroundTransparency = 1, 
+			Size = UDim2.new(1, 0, 0, 28),
+			BackgroundTransparency = 1,
 			ClipsDescendants = true,
+			ZIndex = 5,
 			Parent = sectionScrolling
 		}, {
-			Utility:Create("UIStroke", {Color = Color3.fromRGB(60, 60, 60), ApplyStrokeMode = "Border"}),
+			Utility:Create("UIStroke", {Color = Color3.fromRGB(45, 45, 45), ApplyStrokeMode = "Border"}),
 			Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)})
 		})
 
-		local btn = Utility:Create("TextButton", {
-			Size = UDim2.new(1, 0, 0, 30), 
-			Text = "  " .. text .. ": None", 
-			TextColor3 = Color3.fromRGB(125, 125, 125), 
-			TextXAlignment = "Left", 
-			BackgroundTransparency = 1, 
-			FontFace = Font.fromName("FredokaOne"),
-			TextSize = 15,
-			TextTruncate = Enum.TextTruncate.AtEnd,
-			Parent = frame
-		})
-
-		local arrow = Utility:Create("TextLabel", {
-			Size = UDim2.new(0, 30, 0, 30),
-			Position = UDim2.new(1, -30, 0, 0),
-			Text = "▼", 
-			TextSize = 12, 
-			TextColor3 = Color3.fromRGB(100, 100, 100),
+		local container = Utility:Create("Frame", {
+			Size = UDim2.new(1, 0, 0, 28),
 			BackgroundTransparency = 1,
+			Parent = frame
+		})
+
+		local label = Utility:Create("TextLabel", {
+			Text = text .. ":",
+			Size = UDim2.new(0, 0, 1, 0),
+			AutomaticSize = Enum.AutomaticSize.X,
+			BackgroundTransparency = 1,
+			TextColor3 = Color3.fromRGB(125, 125, 125),
 			FontFace = Font.fromName("FredokaOne"),
-			Interactable = false,
-			Parent = frame
+			TextSize = 14,
+			TextXAlignment = "Left",
+			Parent = container
+		}, {
+			Utility:Create("UIPadding", {PaddingLeft = UDim.new(0, 10)})
 		})
 
-		local listFrame = Utility:Create("ScrollingFrame", {
-			Position = UDim2.new(0, 0, 0, 32), 
-			Size = UDim2.new(1, 0, 1, -35), 
-			BackgroundTransparency = 1, 
-			BorderSizePixel = 0, 
+		local selectedCountLabel = Utility:Create("TextLabel", {
+			Text = #selected .. " Selected",
+			Size = UDim2.new(0, 0, 1, 0),
+			Position = UDim2.new(1, 5, 0, 0),
+			AutomaticSize = Enum.AutomaticSize.X,
+			BackgroundTransparency = 1,
+			TextColor3 = Color3.fromRGB(125, 125, 125),
+			FontFace = Font.fromName("FredokaOne"),
+			TextSize = 14,
+			TextXAlignment = "Left",
+			Parent = label
+		})
+
+		local searchBox = Utility:Create("TextBox", {
+			Size = UDim2.new(0, 80, 0, 20),
+			Position = UDim2.new(1, -30, 0.5, 0),
+			AnchorPoint = Vector2.new(1, 0.5),
+			BackgroundColor3 = Color3.fromRGB(30, 30, 30),
+			TextColor3 = Color3.fromRGB(200, 200, 200),
+			Text = "",
+			PlaceholderText = "Search...",
+			FontFace = Font.fromName("FredokaOne"),
+			TextSize = 12,
+			ZIndex = 10,
+			Parent = container
+		}, {
+			Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)}),
+			Utility:Create("UIStroke", {Color = Color3.fromRGB(45, 45, 45)})
+		})
+
+		local arrow = Utility:Create("ImageLabel", {
+			Size = UDim2.new(0, 16, 0, 16),
+			Position = UDim2.new(1, -10, 0.5, 0),
+			AnchorPoint = Vector2.new(1, 0.5),
+			BackgroundTransparency = 1,
+			Image = "rbxassetid://6034818372",
+			ImageColor3 = Color3.fromRGB(125, 125, 125),
+			ZIndex = 7,
+			Parent = container
+		})
+
+		local triggerBtn = Utility:Create("TextButton", {
+			Size = UDim2.new(1, 0, 1, 0),
+			BackgroundTransparency = 1,
+			Text = "",
+			ZIndex = 6,
+			Parent = container
+		})
+
+		local optionScrolling = Utility:Create("ScrollingFrame", {
+			Size = UDim2.new(1, 0, 0, 0),
+			Position = UDim2.new(0, 0, 0, 30),
+			BackgroundTransparency = 1,
+			BorderSizePixel = 0,
 			ScrollBarThickness = 2,
-			ScrollBarImageColor3 = Color3.fromRGB(60, 60, 60),
-			CanvasSize = UDim2.new(0, 0, 0, 0),
-			Visible = false, 
-			ScrollingEnabled = false, 
+			ScrollBarImageColor3 = Color3.fromRGB(80, 80, 80),
+			Visible = false,
 			Parent = frame
+		}, {
+			Utility:Create("UIListLayout", {SortOrder = "LayoutOrder", Padding = UDim.new(0, 4)}),
+			Utility:Create("UIPadding", {PaddingTop = UDim.new(0, 2), PaddingLeft = UDim.new(0, 10), PaddingRight = UDim.new(0, 10), PaddingBottom = UDim.new(0, 5)})
 		})
 
-		local listLayout = Utility:Create("UIListLayout", {Padding = UDim.new(0, 4), Parent = listFrame})
-		Utility:Create("UIPadding", {PaddingLeft = UDim.new(0, 5), PaddingRight = UDim.new(0, 5), Parent = listFrame})
+		local mdpController = {}
 
-		local function updateText()
-			btn.Text = "  " .. text .. ": " .. (#selected == 0 and "None" or table.concat(selected, ", "))
+		local function updateLayout()
+			local visibleCount = 0
+			for _, b in pairs(optionButtons) do if b.Visible then visibleCount = visibleCount + 1 end end
+			local targetHeight = math.min(visibleCount, 3.5) * 24 + 10
+			optionScrolling.Size = UDim2.new(1, 0, 0, targetHeight)
+			optionScrolling.CanvasSize = UDim2.new(0, 0, 0, visibleCount * 24 + 10)
+			if open then Utility:Tween(frame, {Size = UDim2.new(1, 0, 0, 30 + targetHeight)}, 0.2) end
 		end
 
-		local function SafeCallback(...)
-			if not callback then return end
-			local success, err = pcall(callback, ...)
-			if not success then
-				Library:ShowNotification("Script Error", tostring(err), true)
-			end
+		local function toggle(force)
+			open = (force ~= nil) and force or not open
+			optionScrolling.Visible = open
+			if open then updateLayout() else Utility:Tween(frame, {Size = UDim2.new(1, 0, 0, 28)}, 0.2) end
+			Utility:Tween(arrow, {Rotation = open and 180 or 0}, 0.2)
 		end
 
-		btn.MouseButton1Click:Connect(function()
-			isDropped = not isDropped
-			arrow.Text = isDropped and "▲" or "▼"
+		triggerBtn.MouseButton1Click:Connect(toggle)
+		searchBox.Focused:Connect(function() toggle(true) end)
 
-			if isDropped then
-				listFrame.Visible = true
-				listFrame.ScrollingEnabled = #list > 3
-
-				for _, v in pairs(listFrame:GetChildren()) do if v:IsA("TextButton") then v:Destroy() end end
-
-				for _, item in pairs(list) do
-					local isSel = table.find(selected, item)
-					local itemBtn = Utility:Create("TextButton", {
-						Size = UDim2.new(1, 0, 0, 26), 
-						BackgroundColor3 = Color3.fromRGB(30, 30, 30), 
-						Text = "  " .. item, 
-						TextColor3 = Color3.fromRGB(180, 180, 180), 
-						FontFace = Font.fromName("FredokaOne"),
-						TextSize = 14,
-						TextXAlignment = "Left",
-						Parent = listFrame
-					}, {
-						Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)}),
-						Utility:Create("UIStroke", {Color = Color3.fromRGB(40, 40, 40)})
-					})
-
-					local check = Utility:Create("TextLabel", {
-						Size = UDim2.new(0, 20, 1, 0),
-						Position = UDim2.new(1, -25, 0, 0),
-						Text = "✓",
-						TextColor3 = Color3.fromRGB(255, 255, 255),
-						TextTransparency = isSel and 0 or 1,
-						BackgroundTransparency = 1,
-						FontFace = Font.fromName("FredokaOne"),
-						TextSize = 14,
-						Interactable = false,
-						Parent = itemBtn
-					})
-
-					itemBtn.MouseButton1Click:Connect(function()
-						local idx = table.find(selected, item)
-						if idx then 
-							table.remove(selected, idx) 
-							check.TextTransparency = 1
-						else 
-							table.insert(selected, item) 
-							check.TextTransparency = 0
-						end
-						updateText()
-						SafeCallback(selected)
-					end)
-				end
-				listFrame.CanvasSize = UDim2.new(0, 0, 0, listLayout.AbsoluteContentSize.Y + 5)
-			else
-				listFrame.Visible = false
-				listFrame.ScrollingEnabled = false
+		function mdpController:Refresh(newList)
+			for _, b in pairs(optionButtons) do b:Destroy() end
+			table.clear(optionButtons)
+			for _, opt in pairs(newList) do
+				local optText = tostring(opt)
+				local btn = Utility:Create("TextButton", {
+					Size = UDim2.new(1, 0, 0, 20),
+					BackgroundTransparency = 1,
+					Text = optText,
+					TextColor3 = table.find(selected, optText) and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(150, 150, 150),
+					FontFace = Font.fromName("FredokaOne"),
+					TextSize = 12,
+					Parent = optionScrolling
+				}, {
+					Utility:Create("UIStroke", {Color = Color3.fromRGB(45, 45, 45), ApplyStrokeMode = "Border"}),
+					Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)})
+				})
+				table.insert(optionButtons, btn)
+				btn.MouseButton1Click:Connect(function()
+					local idx = table.find(selected, optText)
+					if idx then table.remove(selected, idx) else table.insert(selected, optText) end
+					btn.TextColor3 = table.find(selected, optText) and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(150, 150, 150)
+					selectedCountLabel.Text = #selected .. " Selected"
+					if callback then pcall(callback, selected) end
+				end)
 			end
+			updateLayout()
+		end
 
-			local itemHeight = 26 + 4
-			local goal = isDropped and math.min(listLayout.AbsoluteContentSize.Y + 40, (3.5 * itemHeight) + 35) or 30
-			Utility:Tween(frame, {Size = UDim2.new(1, 0, 0, goal)}, 0.2)
+		searchBox:GetPropertyChangedSignal("Text"):Connect(function()
+			local q = searchBox.Text:lower()
+			for _, b in pairs(optionButtons) do b.Visible = b.Text:lower():find(q) ~= nil end
+			updateLayout()
 		end)
-	end
 
+		mdpController:Refresh(options)
+		return mdpController
+	end
 
 	function sectionData:addLabel(text)
 		local textService = game:GetService("TextService")
-		local maxWidth = sectionScrolling.AbsoluteSize.X - 20 
-
-		local textSize = textService:GetTextSize(
-			text, 
-			14, 
-			Enum.Font.FredokaOne, 
-			Vector2.new(maxWidth > 0 and maxWidth or 180, math.huge)
-		)
-
-		local labelHeight = math.max(30, textSize.Y + 12) 
+		
+		local function calculateHeight(txt)
+			local maxWidth = sectionScrolling.AbsoluteSize.X - 20
+			local textSize = textService:GetTextSize(
+				txt, 
+				14, 
+				Enum.Font.FredokaOne, 
+				Vector2.new(maxWidth > 0 and maxWidth or 180, math.huge)
+			)
+			return math.max(30, textSize.Y + 12)
+		end
 
 		local frame = Utility:Create("Frame", {
-			Size = UDim2.new(1, 0, 0, labelHeight),
+			Size = UDim2.new(1, 0, 0, calculateHeight(text)),
 			BackgroundTransparency = 1,
 			Parent = sectionScrolling
 		}, {
@@ -1160,7 +1360,13 @@ function Library:PageAddSection(page, title, autoSize)
 			Parent = frame
 		})
 
-		return frame
+		local labelController = {}
+		function labelController:SetText(newText)
+			label.Text = tostring(newText)
+			frame.Size = UDim2.new(1, 0, 0, calculateHeight(newText))
+		end
+
+		return labelController
 	end
 
 	function sectionData:addKeybind(text, default, callback)
@@ -1168,7 +1374,7 @@ function Library:PageAddSection(page, title, autoSize)
 		local currentKey = default or Enum.KeyCode.F
 
 		local frame = Utility:Create("Frame", {
-			Size = UDim2.new(1, 0, 0, 32),
+			Size = UDim2.new(1, 0, 0, 28),
 			BackgroundTransparency = 1,
 			Parent = sectionScrolling
 		}, {
@@ -1177,8 +1383,7 @@ function Library:PageAddSection(page, title, autoSize)
 		})
 
 		local label = Utility:Create("TextLabel", {
-			Size = UDim2.new(1, -10, 1, 0),
-			Position = UDim2.new(0, 10, 0, 0),
+			Size = UDim2.new(1, 0, 1, 0),
 			BackgroundTransparency = 1,
 			Text = text,
 			TextColor3 = Color3.fromRGB(125, 125, 125),
@@ -1186,10 +1391,12 @@ function Library:PageAddSection(page, title, autoSize)
 			TextSize = 14,
 			TextXAlignment = "Left",
 			Parent = frame
+		}, {
+			Utility:Create("UIPadding", {PaddingLeft = UDim.new(0, 10)})
 		})
 
 		local keyBox = Utility:Create("Frame", {
-			Size = UDim2.new(0, 50, 0, 20),
+			Size = UDim2.new(0, 40, 0, 18),
 			Position = UDim2.new(1, -10, 0.5, 0),
 			AnchorPoint = Vector2.new(1, 0.5),
 			BackgroundColor3 = Color3.fromRGB(20, 20, 20),
@@ -1209,6 +1416,11 @@ function Library:PageAddSection(page, title, autoSize)
 			Parent = keyBox
 		})
 
+		local function updateKeyBox()
+			local size = game:GetService("TextService"):GetTextSize(keyLabel.Text, keyLabel.TextSize, keyLabel.Font, Vector2.new(200, 18))
+			keyBox.Size = UDim2.new(0, math.max(40, size.X + 16), 0, 18)
+		end
+
 		local btn = Utility:Create("TextButton", {
 			Size = UDim2.new(1, 0, 1, 0),
 			BackgroundTransparency = 1,
@@ -1216,38 +1428,24 @@ function Library:PageAddSection(page, title, autoSize)
 			Parent = frame
 		})
 
-		local function updateKeyBoxSize()
-			local txtSize = game:GetService("TextService"):GetTextSize(keyLabel.Text, keyLabel.TextSize, keyLabel.Font, Vector2.new(200, 20))
-			keyBox.Size = UDim2.new(0, math.max(40, txtSize.X + 15), 0, 20)
-		end
-		updateKeyBoxSize()
-
 		btn.MouseButton1Click:Connect(function()
 			binding = true
 			keyLabel.Text = "..."
-			Utility:Tween(keyBox, {BackgroundColor3 = Color3.fromRGB(35, 35, 35)}, 0.1)
+			updateKeyBox()
 		end)
 
 		UserInputService.InputBegan:Connect(function(input, gpe)
 			if gpe then return end
-
 			if binding and input.UserInputType == Enum.UserInputType.Keyboard then
 				currentKey = input.KeyCode
 				keyLabel.Text = currentKey.Name
-				updateKeyBoxSize()
-				Utility:Tween(keyBox, {BackgroundColor3 = Color3.fromRGB(20, 20, 20)}, 0.1)
 				binding = false
-
-				-- ONLY FIRE CALLBACK WHEN THE KEY IS SAVED
-				if callback then 
-					callback(currentKey) 
-				end
-			elseif not binding and input.KeyCode == currentKey then
-				-- This is where your actual cheat/feature logic goes
-				-- (We don't put the 'Settings' notify here)
+				updateKeyBox()
+				if callback then pcall(callback, currentKey) end
 			end
 		end)
 
+		updateKeyBox()
 		return frame
 	end
 
