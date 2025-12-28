@@ -439,11 +439,11 @@ function Library:Init(title, ver)
 			local targetX = (x + resizeOffset.X) - pos.X
 			local targetY = (y + resizeOffset.Y) - pos.Y
 
-			if targetX >= 500 then
+			if targetX >= 800 then
 				mainFrame.Size = UDim2.new(0, targetX, 0, mainFrame.Size.Y.Offset)
 			end
 
-			if targetY >= 281 then
+			if targetY >= 450 then
 				mainFrame.Size = UDim2.new(0, mainFrame.Size.X.Offset, 0, targetY)
 			end
 
