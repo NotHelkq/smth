@@ -496,6 +496,7 @@ function Library:Init(title, ver)
 
 	local sidebarListLayout = Instance.new("UIListLayout")
 	sidebarListLayout.Padding = UDim.new(0, 5)
+	sidebarListLayout.SortOrder = Enum.SortOrder.LayoutOrder 
 	sidebarListLayout.Parent = sidebarScrollingFrame
 
 	local sidebarPadding = Instance.new("UIPadding")
@@ -581,6 +582,7 @@ function Library:addPage(title, icon, isDefault)
 	pageButton.Text = ""
 	pageButton.AutoButtonColor = false
 	pageButton.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+	pageButton.LayoutOrder = #self.Pages + 1
 	pageButton.BackgroundTransparency = #self.Pages == 0 and 0 or 1
 
 	local sectionCorner = Instance.new("UICorner")
@@ -1018,10 +1020,18 @@ function Library:PageAddSection(page, title, autoSize)
 			Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)})
 		})
 
-		local container = Utility:Create("Frame", {
-			Size = UDim2.new(1, 0, 0, 28),
+		local labelContainer = Utility:Create("Frame", {
+			Size = UDim2.new(1, -100, 0, 28),
 			BackgroundTransparency = 1,
 			Parent = frame
+		}, {
+			Utility:Create("UIListLayout", {
+				FillDirection = Enum.FillDirection.Horizontal,
+				VerticalAlignment = Enum.VerticalAlignment.Center,
+				Padding = UDim.new(0, 5),
+				SortOrder = Enum.SortOrder.LayoutOrder
+			}),
+			Utility:Create("UIPadding", {PaddingLeft = UDim.new(0, 10)})
 		})
 
 		local label = Utility:Create("TextLabel", {
@@ -1032,28 +1042,25 @@ function Library:PageAddSection(page, title, autoSize)
 			TextColor3 = Color3.fromRGB(125, 125, 125),
 			FontFace = Font.fromName("FredokaOne"),
 			TextSize = 14,
-			TextXAlignment = "Left",
-			Parent = container
-		}, {
-			Utility:Create("UIPadding", {PaddingLeft = UDim.new(0, 10)})
+			LayoutOrder = 1,
+			Parent = labelContainer
 		})
 
 		local selectedLabel = Utility:Create("TextLabel", {
 			Text = selected,
 			Size = UDim2.new(0, 0, 1, 0),
-			Position = UDim2.new(1, 5, 0, 0),
 			AutomaticSize = Enum.AutomaticSize.X,
 			BackgroundTransparency = 1,
 			TextColor3 = Color3.fromRGB(125, 125, 125),
 			FontFace = Font.fromName("FredokaOne"),
 			TextSize = 14,
-			TextXAlignment = "Left",
-			Parent = label
+			LayoutOrder = 2,
+			Parent = labelContainer
 		})
 
 		local searchBox = Utility:Create("TextBox", {
 			Size = UDim2.new(0, 80, 0, 20),
-			Position = UDim2.new(1, -30, 0.5, 0),
+			Position = UDim2.new(1, -30, 0, 14),
 			AnchorPoint = Vector2.new(1, 0.5),
 			BackgroundColor3 = Color3.fromRGB(30, 30, 30),
 			TextColor3 = Color3.fromRGB(200, 200, 200),
@@ -1062,7 +1069,7 @@ function Library:PageAddSection(page, title, autoSize)
 			FontFace = Font.fromName("FredokaOne"),
 			TextSize = 12,
 			ZIndex = 10,
-			Parent = container
+			Parent = frame
 		}, {
 			Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)}),
 			Utility:Create("UIStroke", {Color = Color3.fromRGB(45, 45, 45)})
@@ -1070,21 +1077,21 @@ function Library:PageAddSection(page, title, autoSize)
 
 		local arrow = Utility:Create("ImageLabel", {
 			Size = UDim2.new(0, 16, 0, 16),
-			Position = UDim2.new(1, -10, 0.5, 0),
+			Position = UDim2.new(1, -10, 0, 14),
 			AnchorPoint = Vector2.new(1, 0.5),
 			BackgroundTransparency = 1,
 			Image = "rbxassetid://6034818372",
 			ImageColor3 = Color3.fromRGB(125, 125, 125),
 			ZIndex = 7,
-			Parent = container
+			Parent = frame
 		})
 
 		local triggerBtn = Utility:Create("TextButton", {
-			Size = UDim2.new(1, 0, 1, 0),
+			Size = UDim2.new(1, 0, 0, 28),
 			BackgroundTransparency = 1,
 			Text = "",
 			ZIndex = 6,
-			Parent = container
+			Parent = frame
 		})
 
 		local optionScrolling = Utility:Create("ScrollingFrame", {
@@ -1106,9 +1113,9 @@ function Library:PageAddSection(page, title, autoSize)
 		local function updateLayout()
 			local visibleCount = 0
 			for _, b in pairs(optionButtons) do if b.Visible then visibleCount = visibleCount + 1 end end
-			local targetHeight = math.min(visibleCount, 3.5) * 24 + 10
+			local targetHeight = math.min(visibleCount, 5.5) * 24
 			optionScrolling.Size = UDim2.new(1, 0, 0, targetHeight)
-			optionScrolling.CanvasSize = UDim2.new(0, 0, 0, visibleCount * 24 + 10)
+			optionScrolling.CanvasSize = UDim2.new(0, 0, 0, visibleCount * 24)
 			if open then Utility:Tween(frame, {Size = UDim2.new(1, 0, 0, 30 + targetHeight)}, 0.2) end
 		end
 
@@ -1180,10 +1187,18 @@ function Library:PageAddSection(page, title, autoSize)
 			Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)})
 		})
 
-		local container = Utility:Create("Frame", {
-			Size = UDim2.new(1, 0, 0, 28),
+		local labelContainer = Utility:Create("Frame", {
+			Size = UDim2.new(1, -100, 0, 28),
 			BackgroundTransparency = 1,
 			Parent = frame
+		}, {
+			Utility:Create("UIListLayout", {
+				FillDirection = Enum.FillDirection.Horizontal,
+				VerticalAlignment = Enum.VerticalAlignment.Center,
+				Padding = UDim.new(0, 5),
+				SortOrder = Enum.SortOrder.LayoutOrder
+			}),
+			Utility:Create("UIPadding", {PaddingLeft = UDim.new(0, 10)})
 		})
 
 		local label = Utility:Create("TextLabel", {
@@ -1194,28 +1209,25 @@ function Library:PageAddSection(page, title, autoSize)
 			TextColor3 = Color3.fromRGB(125, 125, 125),
 			FontFace = Font.fromName("FredokaOne"),
 			TextSize = 14,
-			TextXAlignment = "Left",
-			Parent = container
-		}, {
-			Utility:Create("UIPadding", {PaddingLeft = UDim.new(0, 10)})
+			LayoutOrder = 1,
+			Parent = labelContainer
 		})
 
 		local selectedCountLabel = Utility:Create("TextLabel", {
 			Text = #selected .. " Selected",
 			Size = UDim2.new(0, 0, 1, 0),
-			Position = UDim2.new(1, 5, 0, 0),
 			AutomaticSize = Enum.AutomaticSize.X,
 			BackgroundTransparency = 1,
 			TextColor3 = Color3.fromRGB(125, 125, 125),
 			FontFace = Font.fromName("FredokaOne"),
 			TextSize = 14,
-			TextXAlignment = "Left",
-			Parent = label
+			LayoutOrder = 2,
+			Parent = labelContainer
 		})
 
 		local searchBox = Utility:Create("TextBox", {
 			Size = UDim2.new(0, 80, 0, 20),
-			Position = UDim2.new(1, -30, 0.5, 0),
+			Position = UDim2.new(1, -30, 0, 14),
 			AnchorPoint = Vector2.new(1, 0.5),
 			BackgroundColor3 = Color3.fromRGB(30, 30, 30),
 			TextColor3 = Color3.fromRGB(200, 200, 200),
@@ -1224,7 +1236,7 @@ function Library:PageAddSection(page, title, autoSize)
 			FontFace = Font.fromName("FredokaOne"),
 			TextSize = 12,
 			ZIndex = 10,
-			Parent = container
+			Parent = frame
 		}, {
 			Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)}),
 			Utility:Create("UIStroke", {Color = Color3.fromRGB(45, 45, 45)})
@@ -1232,21 +1244,21 @@ function Library:PageAddSection(page, title, autoSize)
 
 		local arrow = Utility:Create("ImageLabel", {
 			Size = UDim2.new(0, 16, 0, 16),
-			Position = UDim2.new(1, -10, 0.5, 0),
+			Position = UDim2.new(1, -10, 0, 14),
 			AnchorPoint = Vector2.new(1, 0.5),
 			BackgroundTransparency = 1,
 			Image = "rbxassetid://6034818372",
 			ImageColor3 = Color3.fromRGB(125, 125, 125),
 			ZIndex = 7,
-			Parent = container
+			Parent = frame
 		})
 
 		local triggerBtn = Utility:Create("TextButton", {
-			Size = UDim2.new(1, 0, 1, 0),
+			Size = UDim2.new(1, 0, 0, 28),
 			BackgroundTransparency = 1,
 			Text = "",
 			ZIndex = 6,
-			Parent = container
+			Parent = frame
 		})
 
 		local optionScrolling = Utility:Create("ScrollingFrame", {
@@ -1268,9 +1280,9 @@ function Library:PageAddSection(page, title, autoSize)
 		local function updateLayout()
 			local visibleCount = 0
 			for _, b in pairs(optionButtons) do if b.Visible then visibleCount = visibleCount + 1 end end
-			local targetHeight = math.min(visibleCount, 3.5) * 24 + 10
+			local targetHeight = math.min(visibleCount, 5.5) * 24
 			optionScrolling.Size = UDim2.new(1, 0, 0, targetHeight)
-			optionScrolling.CanvasSize = UDim2.new(0, 0, 0, visibleCount * 24 + 10)
+			optionScrolling.CanvasSize = UDim2.new(0, 0, 0, visibleCount * 24)
 			if open then Utility:Tween(frame, {Size = UDim2.new(1, 0, 0, 30 + targetHeight)}, 0.2) end
 		end
 
