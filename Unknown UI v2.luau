@@ -1342,44 +1342,57 @@ function Library:PageAddSection(page, title, autoSize)
 		local frame = Utility:Create("Frame", {
 			Size = UDim2.new(1, 0, 0, 28),
 			BackgroundTransparency = 1,
-			Parent = sectionScrolling,
-			ClipsDescendants = true 
+			Parent = sectionScrolling
 		}, {
-			Utility:Create("UIStroke", {
-				Color = Color3.fromRGB(45, 45, 45),
-				ApplyStrokeMode = "Border"
-			}),
+			Utility:Create("UIStroke", {Color = Color3.fromRGB(45, 45, 45), ApplyStrokeMode = "Border"}),
 			Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)})
 		})
 
-		local inputBox = Utility:Create("TextBox", {
-			Name = "InputBox",
-			Parent = frame,
-			Size = UDim2.new(1, -10, 1, 0),
-			Position = UDim2.new(0, 5, 0, 0),
+		local label = Utility:Create("TextLabel", {
+			Text = text,
+			Size = UDim2.new(1, 0, 1, 0),
 			BackgroundTransparency = 1,
-			Text = "",
-			PlaceholderText = text or "Enter text...",
-			TextColor3 = Color3.fromRGB(200, 200, 200),
-			PlaceholderColor3 = Color3.fromRGB(100, 100, 100),
+			TextColor3 = Color3.fromRGB(125, 125, 125),
 			FontFace = Font.fromName("FredokaOne"),
 			TextSize = 14,
-			TextXAlignment = Enum.TextXAlignment.Left,
-			ClearTextOnFocus = false,
+			TextXAlignment = "Left",
+			Parent = frame
+		}, {
+			Utility:Create("UIPadding", {PaddingLeft = UDim.new(0, 10)})
+		})
+
+		local inputBox = Utility:Create("TextBox", {
+			Size = UDim2.new(0, 80, 0, 18),
+			Position = UDim2.new(1, -10, 0.5, 0),
+			AnchorPoint = Vector2.new(1, 0.5),
+			BackgroundColor3 = Color3.fromRGB(30, 30, 30),
+			TextColor3 = Color3.fromRGB(200, 200, 200),
+			Text = "",
+			PlaceholderText = placeholder or "Type...",
+			FontFace = Font.fromName("FredokaOne"),
+			TextSize = 12,
+			ClearTextOnFocus = false, 
+			Parent = frame,
 			TextTruncate = Enum.TextTruncate.AtEnd,
 			ClipsDescendants = true
+		}, {
+			Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)}),
+			Utility:Create("UIStroke", {Color = Color3.fromRGB(55, 55, 55)})
 		})
 
 		inputBox.FocusLost:Connect(function(enterPressed)
-			inputBox.TextXAlignment = Enum.TextXAlignment.Left 
-			if callback then
-				callback(inputBox.Text)
+			inputBox.TextXAlignment = Enum.TextXAlignment.Left
+			
+			if callback then 
+				local success, err = pcall(callback, inputBox.Text, enterPressed)
+				if not success then warn("Input Callback Error: " .. err) end
 			end
 		end)
 
 		inputBox.Focused:Connect(function()
 			inputBox.TextXAlignment = Enum.TextXAlignment.Right
 		end)
+
 		return frame
 	end
 
