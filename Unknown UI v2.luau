@@ -102,7 +102,14 @@ function Library:ToggleUI()
 
 		if obj:IsA("ImageLabel") or obj:IsA("ImageButton") then
 			local origImg = obj:GetAttribute("OriginalImageTransparency") or 0
-			properties.ImageTransparency = targetTransparency == 1 and 1 or origImg
+			
+			if isSidebar then
+				local btn = obj:FindFirstAncestorOfClass("TextButton")
+				local isSelected = (self.SelectedPage and self.SelectedPage.Button == btn)
+				properties.ImageTransparency = targetTransparency == 1 and 1 or (isSelected and 0 or 0.5)
+			else
+				properties.ImageTransparency = targetTransparency == 1 and 1 or origImg
+			end
 		end
 
 		if next(properties) then
