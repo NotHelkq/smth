@@ -1371,7 +1371,7 @@ function Library:PageAddSection(page, title, autoSize)
 		})
 
 		local inputBox = Utility:Create("TextBox", {
-			Size = UDim2.new(0, 100, 0, 18), 
+			Size = UDim2.new(0, 100, 0, 18),
 			Position = UDim2.new(1, -10, 0.5, 0),
 			AnchorPoint = Vector2.new(1, 0.5),
 			BackgroundColor3 = Color3.fromRGB(30, 30, 30),
@@ -1382,15 +1382,29 @@ function Library:PageAddSection(page, title, autoSize)
 			TextSize = 12,
 			ClearTextOnFocus = false, 
 			Parent = frame,
-			TextTruncate = Enum.TextTruncate.AtEnd,
-			ClipsDescendants = true
+			TextTruncate = Enum.TextTruncate.None, 
+			ClipsDescendants = true,
+			TextXAlignment = Enum.TextXAlignment.Center 
 		}, {
 			Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)}),
-			Utility:Create("UIStroke", {Color = Color3.fromRGB(55, 55, 55)})
+			Utility:Create("UIStroke", {Color = Color3.fromRGB(55, 55, 55)}),
+			Utility:Create("UIPadding", {
+				PaddingLeft = UDim.new(0, 5),
+				PaddingRight = UDim.new(0, 5)
+			})
 		})
 
+		local function adjustAlignment()
+			local paddingSpace = 10
+			if inputBox.TextBounds.X > (inputBox.AbsoluteSize.X - paddingSpace) then
+				inputBox.TextXAlignment = Enum.TextXAlignment.Left
+			else
+				inputBox.TextXAlignment = Enum.TextXAlignment.Center
+			end
+		end
+
 		inputBox.FocusLost:Connect(function(enterPressed)
-			inputBox.TextXAlignment = Enum.TextXAlignment.Left
+			adjustAlignment()
 			
 			if callback then 
 				local success, err = pcall(callback, inputBox.Text, enterPressed)
@@ -1398,17 +1412,8 @@ function Library:PageAddSection(page, title, autoSize)
 			end
 		end)
 
-		inputBox.Focused:Connect(function()
-			if inputBox.Text ~= "" then
-				inputBox.TextXAlignment = Enum.TextXAlignment.Right
-			end
-		end)
-
-		inputBox:GetPropertyChangedSignal("Text"):Connect(function()
-			if inputBox:IsFocused() then
-				inputBox.TextXAlignment = Enum.TextXAlignment.Right
-			end
-		end)
+		inputBox:GetPropertyChangedSignal("Text"):Connect(adjustAlignment)
+		inputBox.Focused:Connect(adjustAlignment)
 
 		return frame
 	end
