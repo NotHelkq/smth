@@ -1339,53 +1339,47 @@ function Library:PageAddSection(page, title, autoSize)
 	end
 
 	function sectionData:addInput(text, placeholder, callback)
-        local frame = Utility:Create("Frame", {
-            Size = UDim2.new(1, 0, 0, 28),
-            BackgroundTransparency = 1,
-            Parent = sectionScrolling
-        }, {
-            Utility:Create("UIStroke", {Color = Color3.fromRGB(45, 45, 45), ApplyStrokeMode = "Border"}),
-            Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)})
-        })
-
-        local label = Utility:Create("TextLabel", {
-            Text = text,
-            Size = UDim2.new(1, 0, 1, 0),
-            BackgroundTransparency = 1,
-            TextColor3 = Color3.fromRGB(125, 125, 125),
-            FontFace = Font.fromName("FredokaOne"),
-            TextSize = 14,
-            TextXAlignment = "Left",
-            Parent = frame
-        }, {
-            Utility:Create("UIPadding", {PaddingLeft = UDim.new(0, 10)})
-        })
-
-		local InputBox = Utility:Create("TextBox", {
-			Name = "InputBox",
-			Parent = Input,
+		local frame = Utility:Create("Frame", {
+			Size = UDim2.new(1, 0, 0, 28),
 			BackgroundTransparency = 1,
-			Size = UDim2.new(1, -20, 1, 0),
-			Position = UDim2.new(0, 10, 0, 0),
-			Font = Enum.Font.SourceSans,
-			Text = placeholder or "",
-			TextColor3 = Color3.fromRGB(200, 200, 200),
+			Parent = sectionScrolling
+		}, {
+			Utility:Create("UIStroke", {Color = Color3.fromRGB(45, 45, 45), ApplyStrokeMode = "Border"}),
+			Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)})
+		})
+
+		local inputBox = Utility:Create("TextBox", {
+			Size = UDim2.new(1, -10, 1, 0),
+			Position = UDim2.new(0, 5, 0, 0),
+			BackgroundTransparency = 1,
+			Text = "",
+			PlaceholderText = text,
+			TextColor3 = Color3.fromRGB(125, 125, 125),
+			PlaceholderColor3 = Color3.fromRGB(80, 80, 80),
+			FontFace = Font.fromName("FredokaOne"),
 			TextSize = 14,
 			TextXAlignment = Enum.TextXAlignment.Left,
 			ClearTextOnFocus = false,
-			TextTruncate = Enum.TextTruncate.AtEnd, 
-			ClipsDescendants = true 
+			TextTruncate = Enum.TextTruncate.AtEnd,
+			ClipsDescendants = true
+		}, {
+			Utility:Create("UIPadding", {PaddingLeft = UDim.new(0, 5)})
 		})
-		
-        inputBox.FocusLost:Connect(function(enterPressed)
-            if callback then 
-                local success, err = pcall(callback, inputBox.Text, enterPressed)
-                if not success then warn("Input Callback Error: " .. err) end
-            end
-        end)
 
-        return frame
-    end
+		inputBox.FocusLost:Connect(function(enterPressed)
+			inputBox.TextXAlignment = Enum.TextXAlignment.Left
+			
+			if callback then
+				pcall(callback, inputBox.Text)
+			end
+		end)
+
+		inputBox.Focused:Connect(function()
+			inputBox.TextXAlignment = Enum.TextXAlignment.Right
+		end)
+
+		return frame
+	end
 
 	function sectionData:addLabel(text)
 		local textService = game:GetService("TextService")
