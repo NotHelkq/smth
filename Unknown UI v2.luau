@@ -1361,23 +1361,22 @@ function Library:PageAddSection(page, title, autoSize)
             Utility:Create("UIPadding", {PaddingLeft = UDim.new(0, 10)})
         })
 
-        local inputBox = Utility:Create("TextBox", {
-            Size = UDim2.new(0, 80, 0, 18),
-            Position = UDim2.new(1, -10, 0.5, 0),
-            AnchorPoint = Vector2.new(1, 0.5),
-            BackgroundColor3 = Color3.fromRGB(30, 30, 30),
-            TextColor3 = Color3.fromRGB(200, 200, 200),
-            Text = "",
-            PlaceholderText = placeholder or "Type...",
-            FontFace = Font.fromName("FredokaOne"),
-            TextSize = 12,
-            ClearTextOnFocus = false, 
-            Parent = frame
-        }, {
-            Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)}),
-            Utility:Create("UIStroke", {Color = Color3.fromRGB(55, 55, 55)})
-        })
-
+		local InputBox = Utility:Create("TextBox", {
+			Name = "InputBox",
+			Parent = Input,
+			BackgroundTransparency = 1,
+			Size = UDim2.new(1, -20, 1, 0),
+			Position = UDim2.new(0, 10, 0, 0),
+			Font = Enum.Font.SourceSans,
+			Text = placeholder or "",
+			TextColor3 = Color3.fromRGB(200, 200, 200),
+			TextSize = 14,
+			TextXAlignment = Enum.TextXAlignment.Left,
+			ClearTextOnFocus = false,
+			TextTruncate = Enum.TextTruncate.AtEnd, 
+			ClipsDescendants = true 
+		})
+		
         inputBox.FocusLost:Connect(function(enterPressed)
             if callback then 
                 local success, err = pcall(callback, inputBox.Text, enterPressed)
