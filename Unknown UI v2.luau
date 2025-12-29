@@ -1342,42 +1342,44 @@ function Library:PageAddSection(page, title, autoSize)
 		local frame = Utility:Create("Frame", {
 			Size = UDim2.new(1, 0, 0, 28),
 			BackgroundTransparency = 1,
-			Parent = sectionScrolling
+			Parent = sectionScrolling,
+			ClipsDescendants = true 
 		}, {
-			Utility:Create("UIStroke", {Color = Color3.fromRGB(45, 45, 45), ApplyStrokeMode = "Border"}),
+			Utility:Create("UIStroke", {
+				Color = Color3.fromRGB(45, 45, 45),
+				ApplyStrokeMode = "Border"
+			}),
 			Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)})
 		})
 
 		local inputBox = Utility:Create("TextBox", {
+			Name = "InputBox",
+			Parent = frame,
 			Size = UDim2.new(1, -10, 1, 0),
 			Position = UDim2.new(0, 5, 0, 0),
 			BackgroundTransparency = 1,
 			Text = "",
-			PlaceholderText = text,
-			TextColor3 = Color3.fromRGB(125, 125, 125),
-			PlaceholderColor3 = Color3.fromRGB(80, 80, 80),
+			PlaceholderText = text or "Enter text...",
+			TextColor3 = Color3.fromRGB(200, 200, 200),
+			PlaceholderColor3 = Color3.fromRGB(100, 100, 100),
 			FontFace = Font.fromName("FredokaOne"),
 			TextSize = 14,
 			TextXAlignment = Enum.TextXAlignment.Left,
 			ClearTextOnFocus = false,
 			TextTruncate = Enum.TextTruncate.AtEnd,
 			ClipsDescendants = true
-		}, {
-			Utility:Create("UIPadding", {PaddingLeft = UDim.new(0, 5)})
 		})
 
 		inputBox.FocusLost:Connect(function(enterPressed)
-			inputBox.TextXAlignment = Enum.TextXAlignment.Left
-			
+			inputBox.TextXAlignment = Enum.TextXAlignment.Left 
 			if callback then
-				pcall(callback, inputBox.Text)
+				callback(inputBox.Text)
 			end
 		end)
 
 		inputBox.Focused:Connect(function()
 			inputBox.TextXAlignment = Enum.TextXAlignment.Right
 		end)
-
 		return frame
 	end
 
