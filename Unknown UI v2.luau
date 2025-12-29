@@ -695,6 +695,11 @@ function Library:SelectPage(page)
 		if textLabel then
 			self.Utility:Tween(textLabel, {TextColor3 = Color3.fromRGB(125, 125, 125)}, 0.2)
 		end
+		
+		local iconLabel = self.SelectedPage.Button:FindFirstChild("ImageLabel")
+		if iconLabel then
+			self.Utility:Tween(iconLabel, {ImageTransparency = 0.5}, 0.2)
+		end
 
 		self.SelectedPage.Container.Visible = false
 	end
@@ -713,6 +718,11 @@ function Library:SelectPage(page)
 	local textLabel = page.Button:FindFirstChild("sectionText")
 	if textLabel then
 		self.Utility:Tween(textLabel, {TextColor3 = Color3.fromRGB(255, 255, 255)}, 0.2)
+	end 
+
+	local iconLabel = page.Button:FindFirstChild("ImageLabel")
+	if iconLabel then
+		self.Utility:Tween(iconLabel, {ImageTransparency = 0}, 0.2)
 	end
 
 	page.Container.Visible = true
