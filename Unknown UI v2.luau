@@ -722,11 +722,17 @@ function Library:PageAddSection(page, title, autoSize)
 	page.SectionCount = page.SectionCount + 1
 	local targetCol = (page.SectionCount % 2 == 1) and page.LeftCol or page.RightCol
 
+	local layout = targetCol:FindFirstChildOfClass("UIListLayout")
+	if layout then
+		layout.SortOrder = Enum.SortOrder.LayoutOrder
+	end
+
 	local section = Instance.new("Frame")
 	section.Name = title .. "Section"
 	section.Parent = targetCol
 	section.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
 	section.Size = UDim2.new(1, 0, 0, autoSize and 50 or 220)
+	section.LayoutOrder = page.SectionCount
 
 	local sectionCorner = Instance.new("UICorner")
 	sectionCorner.CornerRadius = UDim.new(0, 5)
@@ -790,7 +796,10 @@ function Library:PageAddSection(page, title, autoSize)
 	end
 	sectionListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(updateSize)
 
-	local sectionData = {ScrollingFrame = sectionScrolling}
+	local sectionData = {
+		ScrollingFrame = sectionScrolling,
+		Container = section
+	}
 
 	function sectionData:addButton(text, callback)
 		local frame = Utility:Create("Frame", {
@@ -1362,7 +1371,7 @@ function Library:PageAddSection(page, title, autoSize)
 		})
 
 		local inputBox = Utility:Create("TextBox", {
-			Size = UDim2.new(0, 80, 0, 18),
+			Size = UDim2.new(0, 100, 0, 18), 
 			Position = UDim2.new(1, -10, 0.5, 0),
 			AnchorPoint = Vector2.new(1, 0.5),
 			BackgroundColor3 = Color3.fromRGB(30, 30, 30),
@@ -1390,7 +1399,15 @@ function Library:PageAddSection(page, title, autoSize)
 		end)
 
 		inputBox.Focused:Connect(function()
-			inputBox.TextXAlignment = Enum.TextXAlignment.Right
+			if inputBox.Text ~= "" then
+				inputBox.TextXAlignment = Enum.TextXAlignment.Right
+			end
+		end)
+
+		inputBox:GetPropertyChangedSignal("Text"):Connect(function()
+			if inputBox:IsFocused() then
+				inputBox.TextXAlignment = Enum.TextXAlignment.Right
+			end
 		end)
 
 		return frame
