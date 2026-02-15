@@ -1,0 +1,7 @@
+if game.PlaceId == 3823781113 then
+    loadstring(game:HttpGet("https://vss.pandadevelopment.net/virtual/file/9953da233fcd4038"))()
+elseif game.PlaceId == 2202352383 then
+    loadstring(game:HttpGet("https://vss.pandadevelopment.net/virtual/file/5191d1a6f5504a14"))()
+else
+    warn("Game Not Supported")
+end
