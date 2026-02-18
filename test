@@ -237,13 +237,15 @@ function Library:Init(title, ver)
 		self.MobileToggleButton = mobileToggle
 		self:SetMobileToggleImage(self.MobileToggleImageId)
 
-		-- Dragging for mobile toggle with overlay
+		-- Mobile toggle drag (perfect overlay method)
 		local function startToggleDrag(input)
+			input.Handled = true
 			local overlay = Utility:Create("Frame", {
 				Name = "DragOverlay",
 				Size = UDim2.new(1, 0, 1, 0),
 				BackgroundTransparency = 1,
 				Active = true,
+				ZIndex = 1000,
 				Parent = mobileGui
 			})
 
@@ -271,8 +273,6 @@ function Library:Init(title, ver)
 					ended.Handled = true
 				end
 			end)
-
-			input.Handled = true
 		end
 
 		mobileToggle.InputBegan:Connect(function(input)
@@ -486,7 +486,7 @@ function Library:Init(title, ver)
 		Library:ToggleUI()
 	end)
 
-	-- Resize button with overlay
+	-- Resize button with overlay (same perfect method)
 	local resizeButton = Utility:Create("TextButton", {
 		Name = "ResizeButton",
 		Position = UDim2.new(1, -2, 1, -2),
@@ -499,11 +499,13 @@ function Library:Init(title, ver)
 	})
 
 	local function startResize(input)
+		input.Handled = true
 		local overlay = Utility:Create("Frame", {
 			Name = "ResizeOverlay",
 			Size = UDim2.new(1, 0, 1, 0),
 			BackgroundTransparency = 1,
 			Active = true,
+			ZIndex = 1000,
 			Parent = container
 		})
 
@@ -518,7 +520,6 @@ function Library:Init(title, ver)
 				local newSizeX = math.max(400, startSize.X.Offset + delta.X)
 				local newSizeY = math.max(225, startSize.Y.Offset + delta.Y)
 				mainFrame.Size = UDim2.new(0, newSizeX, 0, newSizeY)
-				-- Keep top-left fixed: we don't adjust position because resize button is at bottom-right
 				change.Handled = true
 			end
 		end)
@@ -530,8 +531,6 @@ function Library:Init(title, ver)
 				ended.Handled = true
 			end
 		end)
-
-		input.Handled = true
 	end
 
 	resizeButton.InputBegan:Connect(function(input)
@@ -618,13 +617,15 @@ function Library:Init(title, ver)
 	})
 	self.TopbarText = topbar.TopbarText
 
-	-- Dragging for topbar with overlay
+	-- Topbar drag with overlay (same perfect method)
 	local function startTopbarDrag(input)
+		input.Handled = true
 		local overlay = Utility:Create("Frame", {
 			Name = "DragOverlay",
 			Size = UDim2.new(1, 0, 1, 0),
 			BackgroundTransparency = 1,
 			Active = true,
+			ZIndex = 1000,
 			Parent = container
 		})
 
@@ -652,8 +653,6 @@ function Library:Init(title, ver)
 				ended.Handled = true
 			end
 		end)
-
-		input.Handled = true
 	end
 
 	topbar.InputBegan:Connect(function(input)
