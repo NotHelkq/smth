@@ -5,7 +5,6 @@ local TweenService = game:GetService("TweenService")
 local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 
--- Default size remains 800x450 on execution, resizing now allows down to 400x225
 local DefaultUISize = UDim2.new(0, 800, 0, 450)
 local ThemeColor = Color3.fromRGB(125, 125, 125)
 
@@ -237,17 +236,13 @@ function Library:Init(title, ver)
 		self.MobileToggleButton = mobileToggle
 		self:SetMobileToggleImage(self.MobileToggleImageId)
 
-		-- Mobile toggle drag (perfect overlay method with TextButton)
+		-- MOBILE TOGGLE DRAG (WORKING PATTERN)
 		local function startToggleDrag(input)
-			input.Handled = true
-
-			local overlay = Utility:Create("TextButton", {
+			local overlay = Utility:Create("Frame", {
 				Name = "DragOverlay",
 				Size = UDim2.new(1, 0, 1, 0),
 				BackgroundTransparency = 1,
-				Text = "",
-				AutoButtonColor = false,
-				ZIndex = 10000,
+				Active = true,
 				Parent = mobileGui
 			})
 
@@ -275,6 +270,8 @@ function Library:Init(title, ver)
 					ended.Handled = true
 				end
 			end)
+
+			input.Handled = true
 		end
 
 		mobileToggle.InputBegan:Connect(function(input)
@@ -488,7 +485,7 @@ function Library:Init(title, ver)
 		Library:ToggleUI()
 	end)
 
-	-- Resize button with overlay (same perfect method as mobile toggle)
+	-- RESIZE BUTTON DRAG (SAME WORKING PATTERN)
 	local resizeButton = Utility:Create("TextButton", {
 		Name = "ResizeButton",
 		Position = UDim2.new(1, -2, 1, -2),
@@ -501,26 +498,21 @@ function Library:Init(title, ver)
 	})
 
 	local function startResize(input)
-		input.Handled = true
-
-		local overlay = Utility:Create("TextButton", {
+		local overlay = Utility:Create("Frame", {
 			Name = "ResizeOverlay",
 			Size = UDim2.new(1, 0, 1, 0),
 			BackgroundTransparency = 1,
-			Text = "",
-			AutoButtonColor = false,
-			ZIndex = 10000,
+			Active = true,
 			Parent = container
 		})
 
-		local startPos = input.Position
+		local dragStart = input.Position
 		local startSize = mainFrame.Size
-		local startFramePos = mainFrame.Position
 
 		local connection
 		connection = overlay.InputChanged:Connect(function(change)
 			if change.UserInputType == Enum.UserInputType.Touch or change.UserInputType == Enum.UserInputType.MouseMovement then
-				local delta = change.Position - startPos
+				local delta = change.Position - dragStart
 				local newSizeX = math.max(400, startSize.X.Offset + delta.X)
 				local newSizeY = math.max(225, startSize.Y.Offset + delta.Y)
 				mainFrame.Size = UDim2.new(0, newSizeX, 0, newSizeY)
@@ -535,6 +527,8 @@ function Library:Init(title, ver)
 				ended.Handled = true
 			end
 		end)
+
+		input.Handled = true
 	end
 
 	resizeButton.InputBegan:Connect(function(input)
@@ -621,17 +615,13 @@ function Library:Init(title, ver)
 	})
 	self.TopbarText = topbar.TopbarText
 
-	-- Topbar drag with overlay (same perfect method as mobile toggle)
+	-- TOPBAR DRAG (SAME WORKING PATTERN)
 	local function startTopbarDrag(input)
-		input.Handled = true
-
-		local overlay = Utility:Create("TextButton", {
+		local overlay = Utility:Create("Frame", {
 			Name = "DragOverlay",
 			Size = UDim2.new(1, 0, 1, 0),
 			BackgroundTransparency = 1,
-			Text = "",
-			AutoButtonColor = false,
-			ZIndex = 10000,
+			Active = true,
 			Parent = container
 		})
 
@@ -659,6 +649,8 @@ function Library:Init(title, ver)
 				ended.Handled = true
 			end
 		end)
+
+		input.Handled = true
 	end
 
 	topbar.InputBegan:Connect(function(input)
