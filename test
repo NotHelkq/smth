@@ -105,7 +105,7 @@ function Library:ToggleUI()
 
 		if obj:IsA("ImageLabel") or obj:IsA("ImageButton") then
 			local origImg = obj:GetAttribute("OriginalImageTransparency") or 0
-			
+
 			if isSidebar then
 				local btn = obj:FindFirstAncestorOfClass("TextButton")
 				local isSelected = (self.SelectedPage and self.SelectedPage.Button == btn)
@@ -199,7 +199,10 @@ function Library:Init(title, ver)
 	title = title or "Unknown Script"
 	ver = ver or "Version : ???"
 
-	local container = self.Utility:Create("ScreenGui", {
+	-- Assign Utility early so self.Utility is available, but we'll still use local Utility for creation inside Init to avoid confusion
+	self.Utility = Utility
+
+	local container = Utility:Create("ScreenGui", {
 		Name = title,
 		Parent = game.CoreGui,
 		ResetOnSpawn = false,
@@ -207,7 +210,7 @@ function Library:Init(title, ver)
 	})
 	self.Container = container
 
-	local mainFrame = self.Utility:Create("Frame", {
+	local mainFrame = Utility:Create("Frame", {
 		Name = "MainFrame",
 		AnchorPoint = Vector2.new(0, 0),
 		Position = UDim2.new(0.5, -DefaultUISize.X.Offset/2, 0.5, -DefaultUISize.Y.Offset/2),
@@ -252,7 +255,7 @@ function Library:Init(title, ver)
 	})
 	self.MainFrame = mainFrame
 
-	local mainContent = self.Utility:Create("Frame", {
+	local mainContent = Utility:Create("Frame", {
 		Name = "MainContent",
 		Position = UDim2.new(0, 187, 0, 28),
 		Size = UDim2.new(1, -188, 1, -29),
@@ -262,7 +265,7 @@ function Library:Init(title, ver)
 	})
 	self.MainContent = mainContent
 
-	local nameFrame = self.Utility:Create("Frame", {
+	local nameFrame = Utility:Create("Frame", {
 		Name = "NameFrame",
 		Position = UDim2.new(0, 1, 0, 28),
 		Size = UDim2.new(0, 175, 0, 50),
@@ -294,7 +297,7 @@ function Library:Init(title, ver)
 		}}
 	})
 
-	local playerFrame = self.Utility:Create("Frame", {
+	local playerFrame = Utility:Create("Frame", {
 		Name = "PlayerFrame",
 		Position = UDim2.new(0, 0, 1, -45),
 		Size = UDim2.new(0, 175, 0, 45),
@@ -347,7 +350,7 @@ function Library:Init(title, ver)
 	end
 	loadAvatar()
 
-	local toggleButton = self.Utility:Create("ImageButton", {
+	local toggleButton = Utility:Create("ImageButton", {
 		Name = "ToggleButton",
 		Position = UDim2.new(0, 160, 0, 12),
 		Size = UDim2.new(0, 15, 0, 15),
@@ -374,7 +377,7 @@ function Library:Init(title, ver)
 		end
 	end)
 
-	local closeButton = self.Utility:Create("TextButton", {
+	local closeButton = Utility:Create("TextButton", {
 		Name = "CloseButton",
 		AnchorPoint = Vector2.new(1, 0),
 		Position = UDim2.new(0, 20, 0, 10),
@@ -389,7 +392,7 @@ function Library:Init(title, ver)
 	})
 	closeButton.MouseButton1Click:Connect(function() container:Destroy() end)
 
-	local minimizeButton = self.Utility:Create("TextButton", {
+	local minimizeButton = Utility:Create("TextButton", {
 		Name = "MinimizeButton",
 		AnchorPoint = Vector2.new(1, 0),
 		Position = UDim2.new(0, 40, 0, 10),
@@ -406,7 +409,7 @@ function Library:Init(title, ver)
 		Library:ToggleUI()
 	end)
 
-	local resizeButton = self.Utility:Create("TextButton", {
+	local resizeButton = Utility:Create("TextButton", {
 		Name = "ResizeButton",
 		Position = UDim2.new(1, -2, 1, -2),
 		Size = UDim2.new(0, -15, 0, -15),
@@ -469,7 +472,7 @@ function Library:Init(title, ver)
 		end
 	end)
 
-	local scrollingFrameFrame = self.Utility:Create("Frame", {
+	local scrollingFrameFrame = Utility:Create("Frame", {
 		Name = "SidebarFrame",
 		Position = UDim2.new(0, 2, 0, 85),
 		Size = UDim2.new(0, 175, 1, -139),
@@ -478,7 +481,7 @@ function Library:Init(title, ver)
 		Parent = mainFrame
 	})
 
-	local sidebarScrollingFrame = self.Utility:Create("ScrollingFrame", {
+	local sidebarScrollingFrame = Utility:Create("ScrollingFrame", {
 		Name = "SidebarScrollingFrame",
 		Position = UDim2.new(0, 0, 0, 0),
 		Size = UDim2.new(1, 0, 1, 0),
@@ -508,7 +511,7 @@ function Library:Init(title, ver)
 	end
 	sidebarListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(updateSidebarScrolling)
 
-	local topbar = self.Utility:Create("Frame", {
+	local topbar = Utility:Create("Frame", {
 		Name = "Topbar",
 		Position = UDim2.new(0, 187, 0, 1),
 		Size = UDim2.new(1, -188, 0, 26),
@@ -561,7 +564,7 @@ function Library:Init(title, ver)
 	end)
 
 	if UserInputService.TouchEnabled then
-		local mobileToggle = self.Utility:Create("ImageButton", {
+		local mobileToggle = Utility:Create("ImageButton", {
 			Name = "MobileToggle",
 			AnchorPoint = Vector2.new(0, 0),
 			Position = UDim2.new(0, 20, 0, 100),
@@ -625,7 +628,7 @@ end
 function Library:addPage(title, icon, isDefault)
 	icon = icon or ""
 
-	local pageButton = self.Utility:Create("TextButton", {
+	local pageButton = Utility:Create("TextButton", {
 		Name = title or "Page " .. (#self.Pages + 1),
 		Parent = self.SidebarScrollingFrame,
 		Size = UDim2.new(1, 0, 0, 30),
@@ -639,7 +642,7 @@ function Library:addPage(title, icon, isDefault)
 		{"UIStroke", {ApplyStrokeMode = Enum.ApplyStrokeMode.Border, Color = Color3.fromRGB(40, 40, 40), Transparency = #self.Pages == 0 and 0 or 1}}
 	})
 
-	local sectionText = self.Utility:Create("TextLabel", {
+	local sectionText = Utility:Create("TextLabel", {
 		Name = "sectionText",
 		Position = icon ~= "" and UDim2.new(0, 30, 0, 0) or UDim2.new(0, 10, 0, 0),
 		Size = icon ~= "" and UDim2.new(1, -35, 1, 0) or UDim2.new(1, -15, 1, 0),
@@ -653,7 +656,7 @@ function Library:addPage(title, icon, isDefault)
 	})
 
 	if icon ~= "" then
-		self.Utility:Create("ImageLabel", {
+		Utility:Create("ImageLabel", {
 			Name = "ImageLabel",
 			Position = UDim2.new(0, 5, 0, 5),
 			Size = UDim2.new(0, 20, 0, 20),
@@ -665,7 +668,7 @@ function Library:addPage(title, icon, isDefault)
 		})
 	end
 
-	local pageContainer = self.Utility:Create("ScrollingFrame", {
+	local pageContainer = Utility:Create("ScrollingFrame", {
 		Size = UDim2.new(1, 0, 1, 0),
 		BackgroundTransparency = 1,
 		Visible = #self.Pages == 0,
@@ -676,7 +679,7 @@ function Library:addPage(title, icon, isDefault)
 		{"UIPadding", {PaddingTop = UDim.new(0, 5), PaddingLeft = UDim.new(0, 2.5), PaddingRight = UDim.new(0, 2.5)}}
 	})
 
-	local leftCol = self.Utility:Create("Frame", {
+	local leftCol = Utility:Create("Frame", {
 		Name = "Left",
 		Size = UDim2.new(0.5, -7.5, 1, 0),
 		Position = UDim2.new(0, 5, 0, 0),
@@ -686,7 +689,7 @@ function Library:addPage(title, icon, isDefault)
 		{"UIListLayout", {Padding = UDim.new(0, 5)}}
 	})
 
-	local rightCol = self.Utility:Create("Frame", {
+	local rightCol = Utility:Create("Frame", {
 		Name = "Right",
 		Position = UDim2.new(0.5, 2.5, 0, 0),
 		Size = UDim2.new(0.5, -7.5, 1, 0),
@@ -775,7 +778,7 @@ function Library:PageAddSection(page, title, autoSize)
 		layout.SortOrder = Enum.SortOrder.LayoutOrder
 	end
 
-	local section = self.Utility:Create("Frame", {
+	local section = Utility:Create("Frame", {
 		Name = title .. "Section",
 		Parent = targetCol,
 		BackgroundColor3 = Color3.fromRGB(24, 24, 24),
@@ -804,7 +807,7 @@ function Library:PageAddSection(page, title, autoSize)
 		}}
 	})
 
-	local sectionScrolling = self.Utility:Create("ScrollingFrame", {
+	local sectionScrolling = Utility:Create("ScrollingFrame", {
 		Name = "SectionScrolling",
 		Parent = section,
 		Position = UDim2.new(0, 0, 0, 30),
@@ -835,7 +838,7 @@ function Library:PageAddSection(page, title, autoSize)
 		Container = section
 	}
 
-	-- Element methods (same as before, but now inside sectionData)
+	-- Element methods
 	function sectionData:addButton(text, callback)
 		local frame = Utility:Create("Frame", {
 			Size = UDim2.new(1, 0, 0, 28),
@@ -1743,3 +1746,5 @@ function Library.new(title, ver)
 end
 
 return Library
+
+
