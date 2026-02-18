@@ -62,7 +62,7 @@ local Library = {
 	IsAnimating = false,
 	MobileToggleButton = nil,
 	MobileToggleImageId = nil,
-	MobileToggleGui = nil, -- separate ScreenGui for mobile button
+	MobileToggleGui = nil,
 }
 
 function Library:ToggleUI()
@@ -200,6 +200,8 @@ function Library:Init(title, ver)
 	title = title or "Unknown Script"
 	ver = ver or "Version : ???"
 
+	self.Utility = Utility
+
 	-- Main UI ScreenGui
 	local container = Utility:Create("ScreenGui", {
 		Name = title,
@@ -235,46 +237,49 @@ function Library:Init(title, ver)
 		self.MobileToggleButton = mobileToggle
 		self:SetMobileToggleImage(self.MobileToggleImageId)
 
-		-- Dragging for mobile toggle with camera prevention
-		local toggleDragging = false
-		local toggleDragStart = nil
-		local toggleDragStartPos = nil
+		-- Dragging for mobile toggle with overlay
+		local function startToggleDrag(input)
+			local overlay = Utility:Create("Frame", {
+				Name = "DragOverlay",
+				Size = UDim2.new(1, 0, 1, 0),
+				BackgroundTransparency = 1,
+				Active = true,
+				Parent = mobileGui
+			})
 
-		local function onToggleInputBegan(input)
+			local dragStart = input.Position
+			local startPos = mobileToggle.Position
+
+			local connection
+			connection = overlay.InputChanged:Connect(function(change)
+				if change.UserInputType == Enum.UserInputType.Touch then
+					local delta = change.Position - dragStart
+					mobileToggle.Position = UDim2.new(
+						startPos.X.Scale,
+						startPos.X.Offset + delta.X,
+						startPos.Y.Scale,
+						startPos.Y.Offset + delta.Y
+					)
+					change.Handled = true
+				end
+			end)
+
+			overlay.InputEnded:Connect(function(ended)
+				if ended.UserInputType == Enum.UserInputType.Touch then
+					connection:Disconnect()
+					overlay:Destroy()
+					ended.Handled = true
+				end
+			end)
+
+			input.Handled = true
+		end
+
+		mobileToggle.InputBegan:Connect(function(input)
 			if input.UserInputType == Enum.UserInputType.Touch then
-				toggleDragging = true
-				toggleDragStart = Vector2.new(input.Position.X, input.Position.Y)
-				toggleDragStartPos = mobileToggle.Position
-				input.Handled = true
+				startToggleDrag(input)
 			end
-		end
-
-		local function onToggleInputChanged(input)
-			if toggleDragging and input.UserInputType == Enum.UserInputType.Touch then
-				local delta = Vector2.new(input.Position.X, input.Position.Y) - toggleDragStart
-				mobileToggle.Position = UDim2.new(
-					toggleDragStartPos.X.Scale,
-					toggleDragStartPos.X.Offset + delta.X,
-					toggleDragStartPos.Y.Scale,
-					toggleDragStartPos.Y.Offset + delta.Y
-				)
-				input.Handled = true
-			end
-		end
-
-		local function onToggleInputEnded(input)
-			if input.UserInputType == Enum.UserInputType.Touch then
-				toggleDragging = false
-				input.Handled = true
-			end
-		end
-
-		mobileToggle.InputBegan:Connect(onToggleInputBegan)
-		mobileToggle.InputChanged:Connect(onToggleInputChanged)
-		mobileToggle.InputEnded:Connect(onToggleInputEnded)
-
-		-- Also handle global input to ensure camera doesn't move
-		UserInputService.InputChanged:Connect(onToggleInputChanged)
+		end)
 
 		mobileToggle.MouseButton1Click:Connect(function()
 			Library:ToggleUI()
@@ -481,7 +486,7 @@ function Library:Init(title, ver)
 		Library:ToggleUI()
 	end)
 
-	-- Resize button with touch support
+	-- Resize button with overlay
 	local resizeButton = Utility:Create("TextButton", {
 		Name = "ResizeButton",
 		Position = UDim2.new(1, -2, 1, -2),
@@ -493,50 +498,45 @@ function Library:Init(title, ver)
 		Parent = mainFrame
 	})
 
-	local draggingResize = false
-	local resizeStartPos = nil
-	local resizeStartSize = nil
-	local resizeStartPosFrame = nil
+	local function startResize(input)
+		local overlay = Utility:Create("Frame", {
+			Name = "ResizeOverlay",
+			Size = UDim2.new(1, 0, 1, 0),
+			BackgroundTransparency = 1,
+			Active = true,
+			Parent = container
+		})
 
-	local function updateResize(input)
-		if not draggingResize then return end
-		local delta = Vector2.new(input.Position.X, input.Position.Y) - resizeStartPos
-		local newSizeX = math.max(400, resizeStartSize.X.Offset + delta.X)
-		local newSizeY = math.max(225, resizeStartSize.Y.Offset + delta.Y)
-		mainFrame.Size = UDim2.new(0, newSizeX, 0, newSizeY)
-		-- Keep frame anchored at top-left? Actually resize button is at bottom-right, so we need to adjust position to keep top-left fixed.
-		-- The current logic: when resizing, we want the top-left to stay the same, so we don't change position.
-		-- But if we only change size, the bottom-right moves. That's correct.
-		DefaultUISize = mainFrame.Size
+		local startPos = input.Position
+		local startSize = mainFrame.Size
+		local startFramePos = mainFrame.Position
+
+		local connection
+		connection = overlay.InputChanged:Connect(function(change)
+			if change.UserInputType == Enum.UserInputType.Touch or change.UserInputType == Enum.UserInputType.MouseMovement then
+				local delta = change.Position - startPos
+				local newSizeX = math.max(400, startSize.X.Offset + delta.X)
+				local newSizeY = math.max(225, startSize.Y.Offset + delta.Y)
+				mainFrame.Size = UDim2.new(0, newSizeX, 0, newSizeY)
+				-- Keep top-left fixed: we don't adjust position because resize button is at bottom-right
+				change.Handled = true
+			end
+		end)
+
+		overlay.InputEnded:Connect(function(ended)
+			if ended.UserInputType == Enum.UserInputType.Touch or ended.UserInputType == Enum.UserInputType.MouseButton1 then
+				connection:Disconnect()
+				overlay:Destroy()
+				ended.Handled = true
+			end
+		end)
+
 		input.Handled = true
 	end
 
 	resizeButton.InputBegan:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-			draggingResize = true
-			resizeStartPos = Vector2.new(input.Position.X, input.Position.Y)
-			resizeStartSize = mainFrame.Size
-			resizeStartPosFrame = mainFrame.Position
-			input.Handled = true
-		end
-	end)
-
-	resizeButton.InputChanged:Connect(function(input)
-		if draggingResize and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-			updateResize(input)
-		end
-	end)
-
-	resizeButton.InputEnded:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-			draggingResize = false
-			input.Handled = true
-		end
-	end)
-
-	UserInputService.InputChanged:Connect(function(input)
-		if draggingResize and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-			updateResize(input)
+			startResize(input)
 		end
 	end)
 
@@ -618,40 +618,49 @@ function Library:Init(title, ver)
 	})
 	self.TopbarText = topbar.TopbarText
 
-	-- Dragging for topbar with camera prevention
-	local dragging = false
-	local dragStart = nil
-	local startPos = nil
+	-- Dragging for topbar with overlay
+	local function startTopbarDrag(input)
+		local overlay = Utility:Create("Frame", {
+			Name = "DragOverlay",
+			Size = UDim2.new(1, 0, 1, 0),
+			BackgroundTransparency = 1,
+			Active = true,
+			Parent = container
+		})
 
-	local function onTopbarInputBegan(input)
+		local dragStart = input.Position
+		local startPos = mainFrame.Position
+
+		local connection
+		connection = overlay.InputChanged:Connect(function(change)
+			if change.UserInputType == Enum.UserInputType.Touch or change.UserInputType == Enum.UserInputType.MouseMovement then
+				local delta = change.Position - dragStart
+				mainFrame.Position = UDim2.new(
+					startPos.X.Scale,
+					startPos.X.Offset + delta.X,
+					startPos.Y.Scale,
+					startPos.Y.Offset + delta.Y
+				)
+				change.Handled = true
+			end
+		end)
+
+		overlay.InputEnded:Connect(function(ended)
+			if ended.UserInputType == Enum.UserInputType.Touch or ended.UserInputType == Enum.UserInputType.MouseButton1 then
+				connection:Disconnect()
+				overlay:Destroy()
+				ended.Handled = true
+			end
+		end)
+
+		input.Handled = true
+	end
+
+	topbar.InputBegan:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-			dragging = true
-			dragStart = input.Position
-			startPos = mainFrame.Position
-			input.Handled = true
+			startTopbarDrag(input)
 		end
-	end
-
-	local function onTopbarInputChanged(input)
-		if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-			local delta = input.Position - dragStart
-			mainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-			input.Handled = true
-		end
-	end
-
-	local function onTopbarInputEnded(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-			dragging = false
-			input.Handled = true
-		end
-	end
-
-	topbar.InputBegan:Connect(onTopbarInputBegan)
-	topbar.InputChanged:Connect(onTopbarInputChanged)
-	topbar.InputEnded:Connect(onTopbarInputEnded)
-
-	UserInputService.InputChanged:Connect(onTopbarInputChanged)
+	end)
 
 	UserInputService.InputBegan:Connect(function(input, gpe)
 		if not gpe and input.KeyCode == Library.ToggleKey then
