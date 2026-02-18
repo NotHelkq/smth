@@ -237,15 +237,17 @@ function Library:Init(title, ver)
 		self.MobileToggleButton = mobileToggle
 		self:SetMobileToggleImage(self.MobileToggleImageId)
 
-		-- Mobile toggle drag (perfect overlay method)
+		-- Mobile toggle drag (perfect overlay method with TextButton)
 		local function startToggleDrag(input)
 			input.Handled = true
-			local overlay = Utility:Create("Frame", {
+
+			local overlay = Utility:Create("TextButton", {
 				Name = "DragOverlay",
 				Size = UDim2.new(1, 0, 1, 0),
 				BackgroundTransparency = 1,
-				Active = true,
-				ZIndex = 1000,
+				Text = "",
+				AutoButtonColor = false,
+				ZIndex = 10000,
 				Parent = mobileGui
 			})
 
@@ -486,7 +488,7 @@ function Library:Init(title, ver)
 		Library:ToggleUI()
 	end)
 
-	-- Resize button with overlay (same perfect method)
+	-- Resize button with overlay (same perfect method as mobile toggle)
 	local resizeButton = Utility:Create("TextButton", {
 		Name = "ResizeButton",
 		Position = UDim2.new(1, -2, 1, -2),
@@ -500,12 +502,14 @@ function Library:Init(title, ver)
 
 	local function startResize(input)
 		input.Handled = true
-		local overlay = Utility:Create("Frame", {
+
+		local overlay = Utility:Create("TextButton", {
 			Name = "ResizeOverlay",
 			Size = UDim2.new(1, 0, 1, 0),
 			BackgroundTransparency = 1,
-			Active = true,
-			ZIndex = 1000,
+			Text = "",
+			AutoButtonColor = false,
+			ZIndex = 10000,
 			Parent = container
 		})
 
@@ -617,15 +621,17 @@ function Library:Init(title, ver)
 	})
 	self.TopbarText = topbar.TopbarText
 
-	-- Topbar drag with overlay (same perfect method)
+	-- Topbar drag with overlay (same perfect method as mobile toggle)
 	local function startTopbarDrag(input)
 		input.Handled = true
-		local overlay = Utility:Create("Frame", {
+
+		local overlay = Utility:Create("TextButton", {
 			Name = "DragOverlay",
 			Size = UDim2.new(1, 0, 1, 0),
 			BackgroundTransparency = 1,
-			Active = true,
-			ZIndex = 1000,
+			Text = "",
+			AutoButtonColor = false,
+			ZIndex = 10000,
 			Parent = container
 		})
 
