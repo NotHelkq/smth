@@ -227,7 +227,8 @@ function Library:Init(title, ver)
 			BackgroundTransparency = 0.5,
 			ImageTransparency = 0,
 			Parent = mobileGui,
-			Visible = true
+			Visible = true,
+			Active = true -- Block camera movement
 		}, {
 			{"UICorner", {CornerRadius = UDim.new(1, 0)}}
 		})
@@ -256,6 +257,7 @@ function Library:Init(title, ver)
 						startPos.Y.Scale,
 						startPos.Y.Offset + delta.Y
 					)
+					-- CRITICAL: Prevent camera movement during drag
 					change.Handled = true
 				end
 			end)
@@ -264,11 +266,8 @@ function Library:Init(title, ver)
 				if ended.UserInputType == Enum.UserInputType.Touch then
 					connection:Disconnect()
 					overlay:Destroy()
-					ended.Handled = true
 				end
 			end)
-
-			input.Handled = true
 		end
 
 		mobileToggle.InputBegan:Connect(function(input)
@@ -288,6 +287,7 @@ function Library:Init(title, ver)
 		Position = UDim2.new(0.5, -DefaultUISize.X.Offset/2, 0.5, -DefaultUISize.Y.Offset/2),
 		Size = DefaultUISize,
 		BackgroundColor3 = Color3.fromRGB(15, 15, 15),
+		Active = true, -- Block camera clicks through the frame
 		Parent = container
 	}, {
 		{"UICorner", {}},
@@ -519,11 +519,8 @@ function Library:Init(title, ver)
 			if ended.UserInputType == Enum.UserInputType.Touch or ended.UserInputType == Enum.UserInputType.MouseButton1 then
 				connection:Disconnect()
 				overlay:Destroy()
-				ended.Handled = true
 			end
 		end)
-
-		input.Handled = true
 	end
 
 	resizeButton.InputBegan:Connect(function(input)
@@ -594,6 +591,7 @@ function Library:Init(title, ver)
 		Size = UDim2.new(1, -188, 0, 26),
 		BackgroundTransparency = 1,
 		BorderSizePixel = 0,
+		Active = true, -- Block input to things behind the topbar
 		Parent = mainFrame
 	}, {
 		{"TextLabel", {
@@ -614,7 +612,7 @@ function Library:Init(title, ver)
 			Name = "DragOverlay",
 			Size = UDim2.new(1, 0, 1, 0),
 			BackgroundTransparency = 1,
-			Active = true,
+			Active = true, -- Block camera interaction
 			Parent = container
 		})
 
@@ -631,6 +629,7 @@ function Library:Init(title, ver)
 					startPos.Y.Scale,
 					startPos.Y.Offset + delta.Y
 				)
+				-- Sink the input so the camera doesn't move
 				change.Handled = true
 			end
 		end)
@@ -639,11 +638,8 @@ function Library:Init(title, ver)
 			if ended.UserInputType == Enum.UserInputType.Touch or ended.UserInputType == Enum.UserInputType.MouseButton1 then
 				connection:Disconnect()
 				overlay:Destroy()
-				ended.Handled = true
 			end
 		end)
-
-		input.Handled = true
 	end
 
 	topbar.InputBegan:Connect(function(input)
@@ -1786,3 +1782,4 @@ function Library.new(title, ver)
 end
 
 return Library
+
