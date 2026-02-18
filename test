@@ -5,6 +5,7 @@ local TweenService = game:GetService("TweenService")
 local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 
+-- Default size remains 800x450 on execution, resizing now allows down to 400x225
 local DefaultUISize = UDim2.new(0, 800, 0, 450)
 local ThemeColor = Color3.fromRGB(125, 125, 125)
 
