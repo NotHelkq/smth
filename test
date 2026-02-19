@@ -205,8 +205,8 @@ function Library:Init(title, ver)
 		Name = title,
 		Parent = game.CoreGui,
 		ResetOnSpawn = false,
-		ZIndexBehavior = Enum.ZIndexBehavior.Global,
-		DisplayOrder = 5 -- Main UI at base level
+		ZIndexBehavior = Enum.ZIndexBehavior.Sibling, -- Changed to Sibling for better layering
+		DisplayOrder = 5
 	})
 	self.Container = container
 
@@ -215,8 +215,8 @@ function Library:Init(title, ver)
 			Name = title .. "_MobileToggle",
 			Parent = game.CoreGui,
 			ResetOnSpawn = false,
-			ZIndexBehavior = Enum.ZIndexBehavior.Global,
-			DisplayOrder = 10 -- HIGHER than the main UI so the overlay doesn't block it
+			ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
+			DisplayOrder = 100 -- Set very high to ensure it's always on top
 		})
 		self.MobileToggleGui = mobileGui
 
@@ -237,44 +237,35 @@ function Library:Init(title, ver)
 		self.MobileToggleButton = mobileToggle
 		self:SetMobileToggleImage(self.MobileToggleImageId)
 
-		local function startToggleDrag(input)
-			-- Using the mobileGui as parent so it stays on top while dragging
-			local overlay = Utility:Create("Frame", {
-				Name = "DragOverlay",
-				Size = UDim2.new(1, 0, 1, 0),
-				BackgroundTransparency = 1,
-				Active = true,
-				Parent = mobileGui 
-			})
-
-			local dragStart = input.Position
-			local startPos = mobileToggle.Position
-
-			local connection
-			connection = overlay.InputChanged:Connect(function(change)
-				if change.UserInputType == Enum.UserInputType.Touch then
-					local delta = change.Position - dragStart
-					mobileToggle.Position = UDim2.new(
-						startPos.X.Scale,
-						startPos.X.Offset + delta.X,
-						startPos.Y.Scale,
-						startPos.Y.Offset + delta.Y
-					)
-					change.Handled = true
-				end
-			end)
-
-			overlay.InputEnded:Connect(function(ended)
-				if ended.UserInputType == Enum.UserInputType.Touch then
-					connection:Disconnect()
-					overlay:Destroy()
-				end
-			end)
-		end
+		-- Improved Mobile Toggle Drag (No Overlay)
+		local toggleDragging = false
+		local toggleDragInput
+		local toggleDragStart
+		local toggleStartPos
 
 		mobileToggle.InputBegan:Connect(function(input)
 			if input.UserInputType == Enum.UserInputType.Touch then
-				startToggleDrag(input)
+				toggleDragging = true
+				toggleDragStart = input.Position
+				toggleStartPos = mobileToggle.Position
+				
+				input.Changed:Connect(function()
+					if input.UserInputState == Enum.UserInputState.End then
+						toggleDragging = false
+					end
+				end)
+			end
+		end)
+
+		UserInputService.InputChanged:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.Touch and toggleDragging then
+				local delta = input.Position - toggleDragStart
+				mobileToggle.Position = UDim2.new(
+					toggleStartPos.X.Scale,
+					toggleStartPos.X.Offset + delta.X,
+					toggleStartPos.Y.Scale,
+					toggleStartPos.Y.Offset + delta.Y
+				)
 			end
 		end)
 
@@ -338,6 +329,9 @@ function Library:Init(title, ver)
 		Parent = mainFrame
 	})
 	self.MainContent = mainContent
+
+	-- ... [Rest of your UI elements: NameFrame, PlayerFrame, Avatar, etc. stay exactly the same] ...
+	-- (Skipped for brevity, copy your existing NameFrame/PlayerFrame/Avatar code here)
 
 	local nameFrame = Utility:Create("Frame", {
 		Name = "NameFrame",
@@ -483,6 +477,62 @@ function Library:Init(title, ver)
 		Library:ToggleUI()
 	end)
 
+	-- Main UI Dragging Logic (NO OVERLAY)
+	local mainDragging = false
+	local mainDragStart
+	local mainStartPos
+
+	local topbar = Utility:Create("Frame", {
+		Name = "Topbar",
+		Position = UDim2.new(0, 187, 0, 1),
+		Size = UDim2.new(1, -188, 0, 26),
+		BackgroundTransparency = 1,
+		BorderSizePixel = 0,
+		Active = true,
+		Parent = mainFrame
+	}, {
+		{"TextLabel", {
+			Name = "TopbarText",
+			Position = UDim2.new(0, 0, 0, 0),
+			Size = UDim2.new(1, 0, 1, 0),
+			TextColor3 = Color3.fromRGB(125, 125, 125),
+			BackgroundTransparency = 1,
+			FontFace = Font.fromName("FredokaOne", Enum.FontWeight.Regular, Enum.FontStyle.Normal),
+			TextSize = 17,
+			Text = ""
+		}}
+	})
+	self.TopbarText = topbar.TopbarText
+
+	topbar.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+			mainDragging = true
+			mainDragStart = input.Position
+			mainStartPos = mainFrame.Position
+			
+			input.Changed:Connect(function()
+				if input.UserInputState == Enum.UserInputState.End then
+					mainDragging = false
+				end
+			end)
+		end
+	end)
+
+	UserInputService.InputChanged:Connect(function(input)
+		if mainDragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+			local delta = input.Position - mainDragStart
+			mainFrame.Position = UDim2.new(
+				mainStartPos.X.Scale,
+				mainStartPos.X.Offset + delta.X,
+				mainStartPos.Y.Scale,
+				mainStartPos.Y.Offset + delta.Y
+			)
+		end
+	end)
+
+	-- ... [Rest of your sidebar and gradient logic remains same] ...
+	-- (Ensuring you have the resize logic, gradient loop, etc.)
+
 	local resizeButton = Utility:Create("TextButton", {
 		Name = "ResizeButton",
 		Position = UDim2.new(1, -2, 1, -2),
@@ -494,55 +544,38 @@ function Library:Init(title, ver)
 		Parent = mainFrame
 	})
 
-	local function startResize(input)
-		local overlay = Utility:Create("Frame", {
-			Name = "ResizeOverlay",
-			Size = UDim2.new(1, 0, 1, 0),
-			BackgroundTransparency = 1,
-			Active = true,
-			Parent = container
-		})
-
-		local dragStart = input.Position
-		local startSize = mainFrame.Size
-
-		local connection
-		connection = overlay.InputChanged:Connect(function(change)
-			if change.UserInputType == Enum.UserInputType.Touch or change.UserInputType == Enum.UserInputType.MouseMovement then
-				local delta = change.Position - dragStart
-				local newSizeX = math.max(400, startSize.X.Offset + delta.X)
-				local newSizeY = math.max(225, startSize.Y.Offset + delta.Y)
-				mainFrame.Size = UDim2.new(0, newSizeX, 0, newSizeY)
-				change.Handled = true
-			end
-		end)
-
-		overlay.InputEnded:Connect(function(ended)
-			if ended.UserInputType == Enum.UserInputType.Touch or ended.UserInputType == Enum.UserInputType.MouseButton1 then
-				connection:Disconnect()
-				overlay:Destroy()
-			end
-		end)
-	end
+	local resizing = false
+	local resizeDragStart
+	local resizeStartSize
 
 	resizeButton.InputBegan:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-			startResize(input)
+			resizing = true
+			resizeDragStart = input.Position
+			resizeStartSize = mainFrame.Size
+			
+			input.Changed:Connect(function()
+				if input.UserInputState == Enum.UserInputState.End then
+					resizing = false
+				end
+			end)
+		end
+	end)
+
+	UserInputService.InputChanged:Connect(function(input)
+		if resizing and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+			local delta = input.Position - resizeDragStart
+			mainFrame.Size = UDim2.new(0, math.max(400, resizeStartSize.X.Offset + delta.X), 0, math.max(225, resizeStartSize.Y.Offset + delta.Y))
 		end
 	end)
 
 	local gradient = mainFrame.UIStroke:FindFirstChildOfClass("UIGradient")
 	task.spawn(function()
 		local rotation = -180
-		local step = 1
-		local maxRotation = 180
 		while true do
 			if gradient and gradient.Parent then
 				gradient.Rotation = rotation
-				rotation = rotation + step
-				if rotation > maxRotation then
-					rotation = -180
-				end
+				rotation = (rotation >= 180) and -180 or rotation + 1
 				task.wait(0.01)
 			else break end
 		end
@@ -575,78 +608,10 @@ function Library:Init(title, ver)
 	self.SidebarScrollingFrame = sidebarScrollingFrame
 
 	local sidebarListLayout = sidebarScrollingFrame:FindFirstChildOfClass("UIListLayout")
-	local function updateSidebarScrolling()
+	sidebarListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
 		local totalHeight = sidebarListLayout.AbsoluteContentSize.Y
 		sidebarScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, totalHeight)
-
-		if totalHeight > sidebarScrollingFrame.AbsoluteSize.Y + 5 then
-			sidebarScrollingFrame.ScrollBarImageTransparency = 0
-		else
-			sidebarScrollingFrame.ScrollBarImageTransparency = 1
-		end
-	end
-	sidebarListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(updateSidebarScrolling)
-
-	local topbar = Utility:Create("Frame", {
-		Name = "Topbar",
-		Position = UDim2.new(0, 187, 0, 1),
-		Size = UDim2.new(1, -188, 0, 26),
-		BackgroundTransparency = 1,
-		BorderSizePixel = 0,
-		Active = true,
-		Parent = mainFrame
-	}, {
-		{"TextLabel", {
-			Name = "TopbarText",
-			Position = UDim2.new(0, 0, 0, 0),
-			Size = UDim2.new(1, 0, 1, 0),
-			TextColor3 = Color3.fromRGB(125, 125, 125),
-			BackgroundTransparency = 1,
-			FontFace = Font.fromName("FredokaOne", Enum.FontWeight.Regular, Enum.FontStyle.Normal),
-			TextSize = 17,
-			Text = ""
-		}}
-	})
-	self.TopbarText = topbar.TopbarText
-
-	local function startTopbarDrag(input)
-		local overlay = Utility:Create("Frame", {
-			Name = "DragOverlay",
-			Size = UDim2.new(1, 0, 1, 0),
-			BackgroundTransparency = 1,
-			Active = true,
-			Parent = container -- Inside main container (Order 5)
-		})
-
-		local dragStart = input.Position
-		local startPos = mainFrame.Position
-
-		local connection
-		connection = overlay.InputChanged:Connect(function(change)
-			if change.UserInputType == Enum.UserInputType.Touch or change.UserInputType == Enum.UserInputType.MouseMovement then
-				local delta = change.Position - dragStart
-				mainFrame.Position = UDim2.new(
-					startPos.X.Scale,
-					startPos.X.Offset + delta.X,
-					startPos.Y.Scale,
-					startPos.Y.Offset + delta.Y
-				)
-				change.Handled = true
-			end
-		end)
-
-		overlay.InputEnded:Connect(function(ended)
-			if ended.UserInputType == Enum.UserInputType.Touch or ended.UserInputType == Enum.UserInputType.MouseButton1 then
-				connection:Disconnect()
-				overlay:Destroy()
-			end
-		end)
-	end
-
-	topbar.InputBegan:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-			startTopbarDrag(input)
-		end
+		sidebarScrollingFrame.ScrollBarImageTransparency = (totalHeight > sidebarScrollingFrame.AbsoluteSize.Y + 5) and 0 or 1
 	end)
 
 	UserInputService.InputBegan:Connect(function(input, gpe)
