@@ -1,6 +1,7 @@
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
+local textService = game:GetService("TextService")
 local TweenService = game:GetService("TweenService")
 local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
@@ -237,7 +238,6 @@ function Library:Init(title, ver)
 		self.MobileToggleButton = mobileToggle
 		self:SetMobileToggleImage(self.MobileToggleImageId)
 
-		-- Improved Mobile Toggle Drag (No Overlay)
 		local toggleDragging = false
 		local toggleDragInput
 		local toggleDragStart
@@ -272,6 +272,12 @@ function Library:Init(title, ver)
 		mobileToggle.MouseButton1Click:Connect(function()
 			Library:ToggleUI()
 		end)
+
+        container.Destroying:Connect(function()
+            if mobileGui then
+                mobileGui:Destroy()
+            end
+        end)
 	end
 
 	local mainFrame = Utility:Create("Frame", {
@@ -1454,51 +1460,68 @@ function Library:PageAddSection(page, title, autoSize)
 		return frame
 	end
 
-	function sectionData:addLabel(text)
-		local textService = game:GetService("TextService")
+    function sectionData:addLabel(text, alignment)
+        alignment = alignment or "left"
+        local xAlignment = Enum.TextXAlignment.Left
+        if alignment:lower() == "center" then
+            xAlignment = Enum.TextXAlignment.Center
+        elseif alignment:lower() == "right" then
+            xAlignment = Enum.TextXAlignment.Right
+        end
 
-		local function calculateHeight(txt)
-			local maxWidth = sectionScrolling.AbsoluteSize.X - 20
-			local textSize = textService:GetTextSize(
-				txt,
-				14,
-				Enum.Font.FredokaOne,
-				Vector2.new(maxWidth > 0 and maxWidth or 180, math.huge)
-			)
-			return math.max(30, textSize.Y + 12)
-		end
+        local function calculateHeight(txt)
+            local maxWidth = sectionScrolling.AbsoluteSize.X - 20
+            local textSize = textService:GetTextSize(
+                txt,
+                14,
+                Enum.Font.FredokaOne,
+                Vector2.new(maxWidth > 0 and maxWidth or 180, math.huge)
+            )
+            return math.max(30, textSize.Y + 12)
+        end
 
-		local frame = Utility:Create("Frame", {
-			Size = UDim2.new(1, 0, 0, calculateHeight(text)),
-			BackgroundTransparency = 1,
-			Parent = sectionScrolling
-		}, {
-			Utility:Create("UIStroke", {Color = Color3.fromRGB(45, 45, 45), ApplyStrokeMode = "Border"}),
-			Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)})
-		})
+        local frame = Utility:Create("Frame", {
+            Size = UDim2.new(1, 0, 0, calculateHeight(text)),
+            BackgroundTransparency = 1,
+            Parent = sectionScrolling
+        }, {
+            Utility:Create("UIStroke", {Color = Color3.fromRGB(45, 45, 45), ApplyStrokeMode = "Border"}),
+            Utility:Create("UICorner", {CornerRadius = UDim.new(0, 4)})
+        })
 
-		local label = Utility:Create("TextLabel", {
-			Size = UDim2.new(1, -10, 1, 0),
-			Position = UDim2.new(0, 7, 0, 0),
-			BackgroundTransparency = 1,
-			Text = text,
-			TextColor3 = Color3.fromRGB(125, 125, 125),
-			FontFace = Font.fromName("FredokaOne"),
-			TextSize = 14,
-			TextXAlignment = "Left",
-			TextYAlignment = "Center",
-			TextWrapped = true,
-			Parent = frame
-		})
+        local label = Utility:Create("TextLabel", {
+            Size = UDim2.new(1, -10, 1, 0),
+            Position = UDim2.new(0, 7, 0, 0),
+            BackgroundTransparency = 1,
+            Text = text,
+            TextColor3 = Color3.fromRGB(125, 125, 125),
+            FontFace = Font.fromName("FredokaOne"),
+            TextSize = 14,
+            TextXAlignment = xAlignment,
+            TextYAlignment = "Center",
+            TextWrapped = true,
+            Parent = frame
+        })
 
-		local labelController = {}
-		function labelController:SetText(newText)
-			label.Text = tostring(newText)
-			frame.Size = UDim2.new(1, 0, 0, calculateHeight(newText))
-		end
+        local labelController = {}
+        function labelController:SetText(newText)
+            label.Text = tostring(newText)
+            frame.Size = UDim2.new(1, 0, 0, calculateHeight(newText))
+        end
 
-		return labelController
-	end
+        function labelController:SetAlignment(newAlignment)
+            newAlignment = newAlignment or "left"
+            if newAlignment:lower() == "center" then
+                label.TextXAlignment = Enum.TextXAlignment.Center
+            elseif newAlignment:lower() == "right" then
+                label.TextXAlignment = Enum.TextXAlignment.Right
+            else
+                label.TextXAlignment = Enum.TextXAlignment.Left
+            end
+        end
+
+        return labelController
+    end
 
 	function sectionData:addKeybind(text, default, callback)
 		local binding = false
