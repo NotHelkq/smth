@@ -336,9 +336,6 @@ function Library:Init(title, ver)
 	})
 	self.MainContent = mainContent
 
-	-- ... [Rest of your UI elements: NameFrame, PlayerFrame, Avatar, etc. stay exactly the same] ...
-	-- (Skipped for brevity, copy your existing NameFrame/PlayerFrame/Avatar code here)
-
 	local nameFrame = Utility:Create("Frame", {
 		Name = "NameFrame",
 		Position = UDim2.new(0, 1, 0, 28),
@@ -483,7 +480,6 @@ function Library:Init(title, ver)
 		Library:ToggleUI()
 	end)
 
-	-- Main UI Dragging Logic (NO OVERLAY)
 	local mainDragging = false
 	local mainDragStart
 	local mainStartPos
@@ -535,9 +531,6 @@ function Library:Init(title, ver)
 			)
 		end
 	end)
-
-	-- ... [Rest of your sidebar and gradient logic remains same] ...
-	-- (Ensuring you have the resize logic, gradient loop, etc.)
 
 	local resizeButton = Utility:Create("TextButton", {
 		Name = "ResizeButton",
