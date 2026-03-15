@@ -231,12 +231,26 @@ if game.PlaceId == 2202352383 then
     local lastWebhookSent = 0
     local punchSide = "Left"
 
+    local webhookSentThisMinute = false
+
     task.spawn(function()
         while _G.MainLoopActive and task.wait(0.05) do
             local char = Player.Character
             local hum = char and char:FindFirstChild("Humanoid")
             local hrp = char and char:FindFirstChild("HumanoidRootPart")
-        
+            
+            local currentTime = os.date("!*t")
+            if currentTime.sec == 0 then
+                if not webhookSentThisMinute then
+                    if Player.Name == TargetName then
+                        sendWebhook()
+                    end
+                    webhookSentThisMinute = true
+                end
+            else
+                webhookSentThisMinute = false
+            end
+
             if _G.rod and hum and hrp then
                 if not ScreenGui.Enabled then ScreenGui.Enabled = true end
                 if hum.Health > 1 then _G.lastSavedPos = hrp.CFrame end
@@ -254,11 +268,6 @@ if game.PlaceId == 2202352383 then
                     RemoteEvent:FireServer({"Skill_Punch", punchSide})
                     punchSide = (punchSide == "Left" and "Right" or "Left")
                 end
-            end
-
-            if Player.Name == TargetName and (tick() - lastWebhookSent >= 60) then 
-                lastWebhookSent = tick()
-                sendWebhook()
             end
         end
     end)
