@@ -306,10 +306,14 @@ if game.PlaceId == 2202352383 then
     local initialRep = parseRep(Player.PlayerGui.ScreenGui.MenuFrame.InfoFrame.RepTxt.Text)
 
     function sendWebhook()
+        if _G.WebhookURL == "" or _G.WebhookURL == "URL here" then return end
+
         local status = Player.leaderstats.Status.Value
         local repRawText = Player.PlayerGui.ScreenGui.MenuFrame.InfoFrame.RepTxt.Text
         local currentRep = parseRep(repRawText)
-        local gain = currentRep - initialRep
+        
+        local gain = currentRep - lastRecordedRep
+        lastRecordedRep = currentRep
 
         local data = {
             ["embeds"] = {{
@@ -319,7 +323,7 @@ if game.PlaceId == 2202352383 then
                 ["fields"] = {
                     {["name"] = "🎭 Status", ["value"] = "```" .. tostring(status) .. "```", ["inline"] = true},
                     {["name"] = "📈 Reputation", ["value"] = "```" .. repRawText .. "```", ["inline"] = true},
-                    {["name"] = "⏱️ Gain", ["value"] = "```" .. (gain > 0 and "+" or "") .. tostring(gain) .. "```", ["inline"] = true},
+                    {["name"] = "⏱️ Gain (Last 1m)", ["value"] = "```" .. (gain > 0 and "+" or "") .. tostring(gain) .. "```", ["inline"] = true},
                 },
                 ["timestamp"] = DateTime.now():ToIsoDate()
             }}
