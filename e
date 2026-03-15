@@ -9,6 +9,7 @@ if game.PlaceId == 2202352383 then
     local TeleportService   = game:GetService("TeleportService")
     local UserInputService  = game:GetService("UserInputService")
     local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    local VirtualInputManager = game:GetService("VirtualInputManager")
     local HttpRequest       = (syn and syn.request) or (http and http.request) or (http_request) or (fluxus and fluxus.request) or (request)
     local QueueTeleport     = queue_on_teleport or (syn and syn.queue_on_teleport) or (fluxus and fluxus.queue_on_teleport)
     local Player            = Players.LocalPlayer
@@ -270,6 +271,21 @@ if game.PlaceId == 2202352383 then
                     RemoteEvent:FireServer({"Skill_Punch", punchSide})
                     punchSide = (punchSide == "Left" and "Right" or "Left")
                 end
+            end
+        end
+    end)
+
+    _G.AntiAFKThread = task.spawn(function()
+        while true do
+            task.wait(300)
+            if _G.Config.antiAFK then
+                VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.A, false, game)
+                task.wait(0.05)
+                VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.A, false, game)
+                task.wait(0.05)
+                VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.D, false, game)
+                task.wait(0.05)
+                VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.D, false, game)
             end
         end
     end)
