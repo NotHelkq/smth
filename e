@@ -103,7 +103,7 @@ if game.PlaceId == 2202352383 then
                     Size = UDim2.new(1, 0, 1, 0),
                     BackgroundColor3 = Color3.new(0, 0, 0),
                     BorderSizePixel = 0,
-                    ZIndex = 100 
+                    ZIndex = -100 
                 })
             end
             _G.PerfFrame.Visible = true
@@ -119,14 +119,16 @@ if game.PlaceId == 2202352383 then
 
     local function RejoinTP()  
         local pos = _G.lastSavedPos or Vector3.new(448, 250, 883)
-        local posStr = "Vector3.new(" .. tostring(pos.Position.X) .. "," .. tostring(pos.Position.Y) .. "," .. tostring(pos.Position.Z) .. ")"
+        local cf = typeof(pos) == "CFrame" and pos or CFrame.new(pos)
+        local components = {cf:GetComponents()}
+        local posStr = "CFrame.new(" .. table.concat(components, ", ") .. ")"
         
         local scriptToQueue = [[
             _G.rod = ]] .. tostring(_G.rod) .. [[
             _G.killBots = ]] .. tostring(_G.killBots) .. [[
             _G.AutoRejoin = true
             _G.PerformanceMode = ]] .. tostring(_G.PerformanceMode) .. [[
-            _G.lastSavedPos = CFrame.new(]] .. posStr .. [[)
+            _G.lastSavedPos = ]] .. posStr .. [[
             
             if not game:IsLoaded() then game.Loaded:Wait() end
             task.wait(5)
