@@ -120,37 +120,31 @@ if game.PlaceId == 2202352383 then
         
         RemoteEvent:FireServer({"Respawn"})
 
-        local newChar
-        local startTime = tick()
+        local newCam = Workspace:WaitForChild("Camera", 10)    
+        local newChar = Player.CharacterAdded:Wait()
+        local hum = newChar:WaitForChild("Humanoid", 10)
+        local newHrp = newChar:WaitForChild("HumanoidRootPart", 10)
         
-        repeat
-            newChar = Player.Character
-            task.wait() 
-        until (newChar and newChar:FindFirstChild("HumanoidRootPart")) or (tick() - startTime > 5)
-
-        if not newChar then return end
-
-        local newHrp = newChar:WaitForChild("HumanoidRootPart", 5)
-        local hum = newChar:WaitForChild("Humanoid", 5)
-        
-        local newCam = Workspace.CurrentCamera
         if newCam and hum then
             newCam.CameraType = Enum.CameraType.Custom
             newCam.CameraSubject = hum
         end
-
+        
         if _G.rod or _G.deathTrainActive then
             setUIState(true)
             if ScreenGui then ScreenGui.Enabled = true end
         end
 
         if newHrp and savedPos then
-            local forceStartTime = tick()
-            while tick() - forceStartTime < 2.5 do 
-                newHrp.CFrame = savedPos
-                newHrp.Velocity = Vector3.new(0, 0, 0)
-                RunService.RenderStepped:Wait() 
-            end
+            task.spawn(function()
+                local forceStart = tick()
+                while tick() - forceStart < 7 do
+                    if not newHrp or not newHrp.Parent then break end
+                    newHrp.CFrame = savedPos
+                    newHrp.Velocity = Vector3.zero
+                    RunService.Heartbeat:Wait()
+                end
+            end)
         end
     end
 
@@ -221,7 +215,7 @@ if game.PlaceId == 2202352383 then
     -- UI Creation
     -- ==========================================
     local Library      = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/Unknown%20UI%20v2.luau"))()
-    local Window       = Library.new("SPTS : Classic", "Version: 2.1-rep")
+    local Window       = Library.new("SPTS : Classic", "Version: 2.0-rep")
     local Main         = Library:addPage("Auto Farm", 10723376114)
     local Settings     = Library:addPage("Settings", 10734950309)
 
