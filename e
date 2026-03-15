@@ -306,8 +306,6 @@ if game.PlaceId == 2202352383 then
     local initialRep = parseRep(Player.PlayerGui.ScreenGui.MenuFrame.InfoFrame.RepTxt.Text)
 
     function sendWebhook()
-        if _G.WebhookURL == "" or _G.WebhookURL == "URL here" or not _G.WebhookActive then return end
-
         local status = Player.leaderstats.Status.Value
         local repRawText = Player.PlayerGui.ScreenGui.MenuFrame.InfoFrame.RepTxt.Text
         local currentRep = parseRep(repRawText)
