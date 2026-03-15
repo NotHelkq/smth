@@ -167,6 +167,47 @@ if game.PlaceId == 2202352383 then
         end
     end)
 
+    -- Webhook
+    _G.WebhookURL = "https://discord.com/api/webhooks/1457786185480147178/_y-fLwD2muf9L79Bzq4PCbCknn_E4G-1tX3Yhq80MypbTk-RbSRqk-SzllRHEm_zbmYO"
+    local function parseRep(text)
+        local cleaned = text:match(":%s*(-?%d+)")
+        return tonumber(cleaned) or 0
+    end
+
+    local lastRecordedRep = parseRep(Player.PlayerGui.ScreenGui.MenuFrame.InfoFrame.RepTxt.Text)
+
+    local function sendWebhook()
+        if _G.WebhookURL == "" or _G.WebhookURL == "URL here" then return end
+
+        local status = Player.leaderstats.Status.Value
+        local repRawText = Player.PlayerGui.ScreenGui.MenuFrame.InfoFrame.RepTxt.Text
+        local currentRep = parseRep(repRawText)
+        
+        local gain = currentRep - lastRecordedRep
+        lastRecordedRep = currentRep
+
+        local data = {
+            ["embeds"] = {{
+                ["title"] = "Status & Reputation Update",
+                ["description"] = "Stats for **" .. Player.DisplayName .. "** (@" .. Player.Name .. ")",
+                ["color"] = 0x00FF00,
+                ["fields"] = {
+                    {["name"] = "🎭 Status", ["value"] = "```" .. tostring(status) .. "```", ["inline"] = true},
+                    {["name"] = "📈 Reputation", ["value"] = "```" .. repRawText .. "```", ["inline"] = true},
+                    {["name"] = "⏱️ Gain (Last 1m)", ["value"] = "```" .. (gain > 0 and "+" or "") .. tostring(gain) .. "```", ["inline"] = true},
+                },
+                ["timestamp"] = DateTime.now():ToIsoDate()
+            }}
+        }
+
+        HttpRequest({
+            Url = _G.WebhookURL,
+            Method = "POST",
+            Headers = {["Content-Type"] = "application/json"},
+            Body = HttpService:JSONEncode(data)
+        })
+    end
+
     -- ==========================================
     -- Stat Tracking, AntiAFK
     -- ==========================================
@@ -300,47 +341,6 @@ if game.PlaceId == 2202352383 then
             end
         end
     end)
-
-    -- Webhook
-    _G.WebhookURL = "https://discord.com/api/webhooks/1457786185480147178/_y-fLwD2muf9L79Bzq4PCbCknn_E4G-1tX3Yhq80MypbTk-RbSRqk-SzllRHEm_zbmYO"
-    local function parseRep(text)
-        local cleaned = text:match(":%s*(-?%d+)")
-        return tonumber(cleaned) or 0
-    end
-
-    local lastRecordedRep = parseRep(Player.PlayerGui.ScreenGui.MenuFrame.InfoFrame.RepTxt.Text)
-
-    local function sendWebhook()
-        if _G.WebhookURL == "" or _G.WebhookURL == "URL here" then return end
-
-        local status = Player.leaderstats.Status.Value
-        local repRawText = Player.PlayerGui.ScreenGui.MenuFrame.InfoFrame.RepTxt.Text
-        local currentRep = parseRep(repRawText)
-        
-        local gain = currentRep - lastRecordedRep
-        lastRecordedRep = currentRep
-
-        local data = {
-            ["embeds"] = {{
-                ["title"] = "Status & Reputation Update",
-                ["description"] = "Stats for **" .. Player.DisplayName .. "** (@" .. Player.Name .. ")",
-                ["color"] = 0x00FF00,
-                ["fields"] = {
-                    {["name"] = "🎭 Status", ["value"] = "```" .. tostring(status) .. "```", ["inline"] = true},
-                    {["name"] = "📈 Reputation", ["value"] = "```" .. repRawText .. "```", ["inline"] = true},
-                    {["name"] = "⏱️ Gain (Last 1m)", ["value"] = "```" .. (gain > 0 and "+" or "") .. tostring(gain) .. "```", ["inline"] = true},
-                },
-                ["timestamp"] = DateTime.now():ToIsoDate()
-            }}
-        }
-
-        HttpRequest({
-            Url = _G.WebhookURL,
-            Method = "POST",
-            Headers = {["Content-Type"] = "application/json"},
-            Body = HttpService:JSONEncode(data)
-        })
-    end
 
     -- ==========================================
     -- Teleports & Settings
