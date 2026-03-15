@@ -103,7 +103,7 @@ if game.PlaceId == 2202352383 then
                     Size = UDim2.new(1, 0, 1, 0),
                     BackgroundColor3 = Color3.new(0, 0, 0),
                     BorderSizePixel = 0,
-                    ZIndex = -100 
+                    ZIndex = 100 
                 })
             end
             _G.PerfFrame.Visible = true
