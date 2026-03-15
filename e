@@ -21,8 +21,16 @@ if game.PlaceId == 2202352383 then
     local Storage           = ReplicatedStorage:FindFirstChild("Storage") or Instance.new("Folder", ReplicatedStorage)
     Storage.Name            = "Storage"
 
+    for _, connection in pairs(getconnections(Player.Idled)) do
+        connection:Disable()
+    end
+    Player.Idled:Connect(function()
+        game:GetService("VirtualUser"):ClickButton2(Vector2.new())
+    end)
+
     _G.rod = _G.rod or false
     _G.killBots = _G.killBots or false
+    _G.AutoRejoin = _G.AutoRejoin or true
 
     local function Create(class, parent, props)
         local obj = Instance.new(class)
@@ -89,6 +97,7 @@ if game.PlaceId == 2202352383 then
         local scriptToQueue = [[
             _G.rod = ]] .. tostring(_G.rod) .. [[
             _G.killBots = ]] .. tostring(_G.killBots) .. [[
+            _G.AutoRejoin = true
             _G.lastSavedPos = CFrame.new(]] .. posStr .. [[)
             
             if not game:IsLoaded() then game.Loaded:Wait() end
@@ -108,10 +117,15 @@ if game.PlaceId == 2202352383 then
         if _G.RejoinConnection then _G.RejoinConnection:Disconnect() end
         if enable then
             _G.RejoinConnection = CoreGui.RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(child)
-                if child.Name == "ErrorPrompt" then task.wait(2); RejoinTP() end
+                if child.Name == "ErrorPrompt" or child:FindFirstChild("ErrorTitle") then 
+                    task.wait(2)
+                    RejoinTP() 
+                end
             end)
         end
     end
+
+    if _G.AutoRejoin then ToggleRejoin(true) end
 
     _G.WebhookURL = "https://discord.com/api/webhooks/1457786185480147178/_y-fLwD2muf9L79Bzq4PCbCknn_E4G-1tX3Yhq80MypbTk-RbSRqk-SzllRHEm_zbmYO"
     local function parseRep(text)
@@ -156,7 +170,7 @@ if game.PlaceId == 2202352383 then
     end)
 
     local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/Unknown%20UI%20v2.luau"))()
-    local Window  = Library.new("SPTS : Classic", "Version: 2.0-rep")
+    local Window  = Library.new("SPTS : Classic", "Version: 2.1-rep")
     local Main    = Library:addPage("Auto Farm", 10723376114)
     local FarmSec = Window:PageAddSection(Main, "Combat Farm", true)
     local Utils   = Window:PageAddSection(Main, "Utilities", true)
@@ -177,7 +191,10 @@ if game.PlaceId == 2202352383 then
     FarmSec:addButton("Teleport to Spawn", function() teleportTo(Vector3.new(448, 250, 883)) end)
     FarmSec:addButton("Teleport to Leaderboards", function() teleportTo(Vector3.new(-733, 250, 736)) end)
 
-    Utils:addToggle("Auto Rejoin", true, function(t) ToggleRejoin(t) end)
+    Utils:addToggle("Auto Rejoin", _G.AutoRejoin, function(t) 
+        _G.AutoRejoin = t
+        ToggleRejoin(t) 
+    end)
     Utils:addSlider("FPS Limit", 10, 60, 60, function(t) setfpscap(t) end)
     Utils:addKeybind("Toggle Hub", Enum.KeyCode.RightControl, function() Window:ToggleUI() end)
 
@@ -219,8 +236,9 @@ if game.PlaceId == 2202352383 then
 
     local function deactivateAllToggles()
         _G.MainLoopActive = false
-        local t = {"rod", "killBots"}
-        for _, v in ipairs(t) do _G[v] = false end
+        _G.rod = false
+        _G.killBots = false
+        _G.AutoRejoin = false
         if _G.deathConn then _G.deathConn:Disconnect(); _G.deathConn = nil end
         if _G.RejoinConnection then _G.RejoinConnection:Disconnect(); _G.RejoinConnection = nil end
         setUIState(false)
