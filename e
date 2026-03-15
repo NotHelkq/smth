@@ -31,6 +31,7 @@ if game.PlaceId == 2202352383 then
     _G.rod = _G.rod or false
     _G.killBots = _G.killBots or false
     _G.AutoRejoin = _G.AutoRejoin or true
+    _G.PerformanceMode = _G.PerformanceMode or false
 
     local function Create(class, parent, props)
         local obj = Instance.new(class)
@@ -90,6 +91,32 @@ if game.PlaceId == 2202352383 then
         end
     end
 
+    local function togglePerformance(val)
+        _G.PerformanceMode = val
+        RunService:Set3dRenderingEnabled(not val)
+        
+        if val then
+            setfpscap(10)
+            if not _G.PerfFrame then
+                _G.PerfFrame = Create("Frame", ScreenGui, {
+                    Name = "PerfBackground",
+                    Size = UDim2.new(1, 0, 1, 0),
+                    BackgroundColor3 = Color3.new(0, 0, 0),
+                    BorderSizePixel = 0,
+                    ZIndex = -100 
+                })
+            end
+            _G.PerfFrame.Visible = true
+        else
+            setfpscap(60)
+            if _G.PerfFrame then
+                _G.PerfFrame.Visible = false
+            end
+        end
+    end
+
+    if _G.PerformanceMode then togglePerformance(true) end
+
     local function RejoinTP()  
         local pos = _G.lastSavedPos or Vector3.new(448, 250, 883)
         local posStr = "Vector3.new(" .. tostring(pos.Position.X) .. "," .. tostring(pos.Position.Y) .. "," .. tostring(pos.Position.Z) .. ")"
@@ -98,6 +125,7 @@ if game.PlaceId == 2202352383 then
             _G.rod = ]] .. tostring(_G.rod) .. [[
             _G.killBots = ]] .. tostring(_G.killBots) .. [[
             _G.AutoRejoin = true
+            _G.PerformanceMode = ]] .. tostring(_G.PerformanceMode) .. [[
             _G.lastSavedPos = CFrame.new(]] .. posStr .. [[)
             
             if not game:IsLoaded() then game.Loaded:Wait() end
@@ -195,6 +223,7 @@ if game.PlaceId == 2202352383 then
         _G.AutoRejoin = t
         ToggleRejoin(t) 
     end)
+    Utils:addToggle("Performance Mode", _G.PerformanceMode, function(t) togglePerformance(t) end)
     Utils:addSlider("FPS Limit", 10, 60, 60, function(t) setfpscap(t) end)
     Utils:addKeybind("Toggle Hub", Enum.KeyCode.RightControl, function() Window:ToggleUI() end)
 
