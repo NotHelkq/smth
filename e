@@ -120,11 +120,20 @@ if game.PlaceId == 2202352383 then
         
         RemoteEvent:FireServer({"Respawn"})
 
-        local newCam = Workspace:WaitForChild("Camera", 10)    
-        local newChar = Player.CharacterAdded:Wait()
-        local hum = newChar:WaitForChild("Humanoid", 10)
-        local newHrp = newChar:WaitForChild("HumanoidRootPart", 10)
+        local newChar
+        local startTime = tick()
         
+        repeat
+            newChar = Player.Character
+            task.wait(0.1)
+        until (newChar and newChar:FindFirstChild("HumanoidRootPart")) or (tick() - startTime > 5)
+
+        if not newChar then return end
+
+        local hum = newChar:WaitForChild("Humanoid", 5)
+        local newHrp = newChar:WaitForChild("HumanoidRootPart", 5)
+        
+        local newCam = Workspace.CurrentCamera
         if newCam and hum then
             newCam.CameraType = Enum.CameraType.Custom
             newCam.CameraSubject = hum
@@ -136,9 +145,9 @@ if game.PlaceId == 2202352383 then
         end
 
         if newHrp and savedPos then
-            for i = 1, 10 do
+            for i = 1, 5 do
                 newHrp.CFrame = savedPos
-                RunService.Heartbeat:Wait()
+                task.wait(0.1)
             end
         end
     end
