@@ -9,7 +9,6 @@ if game.PlaceId == 2202352383 then
     local TeleportService   = game:GetService("TeleportService")
     local UserInputService  = game:GetService("UserInputService")
     local ReplicatedStorage = game:GetService("ReplicatedStorage")
-    local VirtualInputManager = game:GetService("VirtualInputManager")
     local HttpRequest       = (syn and syn.request) or (http and http.request) or (http_request) or (fluxus and fluxus.request) or (request)
     local QueueTeleport     = queue_on_teleport or (syn and syn.queue_on_teleport) or (fluxus and fluxus.queue_on_teleport)
     local Player            = Players.LocalPlayer
@@ -21,6 +20,31 @@ if game.PlaceId == 2202352383 then
     local TargetName        = "Esil_HatesShowers"
     local Storage           = ReplicatedStorage:FindFirstChild("Storage") or Instance.new("Folder", ReplicatedStorage)
     Storage.Name            = "Storage"
+
+    local altCoords = {
+        ["helkq301"] = Vector3.new(-685, 249, 737),
+        ["helkq302"] = Vector3.new(-686, 249, 702),
+        ["helkq303"] = Vector3.new(-684, 249, 772),
+        ["helkq304"] = Vector3.new(-719, 249, 773),
+        ["helkq305"] = Vector3.new(-720, 249, 741),
+        ["helkq306"] = Vector3.new(-721, 249, 706),
+        ["helkq307"] = Vector3.new(-723, 249, 671),
+        ["helkq103"] = Vector3.new(-689, 249, 670),
+        ["helkq105"] = Vector3.new(-743, 249, 812),
+        ["helkq106"] = Vector3.new(-758, 249, 788),
+        ["helkq107"] = Vector3.new(-791, 249, 772),
+        ["helkq108"] = Vector3.new(-785, 249, 744),
+        ["helkq109"] = Vector3.new(-767, 249, 713),
+        ["helkq110"] = Vector3.new(-765, 249, 747)
+    }
+
+    pcall(function()
+        local hurt = CoreGui:FindFirstChild("TopBarApp"):FindFirstChild("TopBarApp"):FindFirstChild("FullScreenFrame"):FindFirstChild("HurtOverlay")
+        if hurt then
+            hurt.Size = UDim2.new(0, 0, 0, 0)
+            hurt.Position = UDim2.new(10, 0, 10, 0)
+        end
+    end)
 
     for _, connection in pairs(getconnections(Player.Idled)) do
         connection:Disable()
@@ -95,7 +119,6 @@ if game.PlaceId == 2202352383 then
     local function togglePerformance(val)
         _G.PerformanceMode = val
         RunService:Set3dRenderingEnabled(not val)
-        
         if val then
             setfpscap(10)
             if not _G.PerfFrame then
@@ -110,19 +133,16 @@ if game.PlaceId == 2202352383 then
             _G.PerfFrame.Visible = true
         else
             setfpscap(60)
-            if _G.PerfFrame then
-                _G.PerfFrame.Visible = false
-            end
+            if _G.PerfFrame then _G.PerfFrame.Visible = false end
         end
     end
 
     if _G.PerformanceMode then togglePerformance(true) end
 
     local function RejoinTP()  
-        local pos = _G.lastSavedPos or Vector3.new(448, 250, 883)
-        local cf = typeof(pos) == "CFrame" and pos or CFrame.new(pos)
-        local components = {cf:GetComponents()}
-        local posStr = "CFrame.new(" .. table.concat(components, ", ") .. ")"
+        local pos = _G.lastSavedPos or CFrame.new(448, 250, 883)
+        local p = pos.Position
+        local posStr = "CFrame.new(" .. tostring(p.X) .. "," .. tostring(p.Y) .. "," .. tostring(p.Z) .. ")"
         
         local scriptToQueue = [[
             _G.rod = ]] .. tostring(_G.rod) .. [[
@@ -207,33 +227,21 @@ if game.PlaceId == 2202352383 then
     local Utils   = Window:PageAddSection(Main, "Utilities", true)
 
     FarmSec:addToggle("Auto Kill", _G.killBots, function(t) 
-        if Player.Name == TargetName then 
-            _G.killBots = false
-            return 
-        end
+        if Player.Name == TargetName then _G.killBots = false; return end
         _G.killBots = t 
     end)
 
-    FarmSec:addToggle("Return On Death", _G.rod, function(t) 
-        _G.rod = t 
-        setUIState(t) 
-    end)
-
+    FarmSec:addToggle("Return On Death", _G.rod, function(t) _G.rod = t; setUIState(t) end)
     FarmSec:addButton("Teleport to Spawn", function() teleportTo(Vector3.new(448, 250, 883)) end)
     FarmSec:addButton("Teleport to Leaderboards", function() teleportTo(Vector3.new(-733, 250, 736)) end)
 
-    Utils:addToggle("Auto Rejoin", _G.AutoRejoin, function(t) 
-        _G.AutoRejoin = t
-        ToggleRejoin(t) 
-    end)
+    Utils:addToggle("Auto Rejoin", _G.AutoRejoin, function(t) _G.AutoRejoin = t; ToggleRejoin(t) end)
     Utils:addToggle("Performance Mode", _G.PerformanceMode, function(t) togglePerformance(t) end)
     Utils:addSlider("FPS Limit", 10, 60, 60, function(t) setfpscap(t) end)
     Utils:addKeybind("Toggle Hub", Enum.KeyCode.RightControl, function() Window:ToggleUI() end)
 
     _G.MainLoopActive = true
-    local lastWebhookSent = 0
     local punchSide = "Left"
-
     local webhookSentThisMinute = false
 
     task.spawn(function()
@@ -241,31 +249,25 @@ if game.PlaceId == 2202352383 then
             local char = Player.Character
             local hum = char and char:FindFirstChild("Humanoid")
             local hrp = char and char:FindFirstChild("HumanoidRootPart")
-            
             local currentTime = os.date("!*t")
             if currentTime.sec == 0 then
                 if not webhookSentThisMinute then
-                    if Player.Name == TargetName then
-                        sendWebhook()
-                    end
+                    if Player.Name == TargetName then sendWebhook() end
                     webhookSentThisMinute = true
                 end
             else
                 webhookSentThisMinute = false
             end
-
             if _G.rod and hum and hrp then
                 if not ScreenGui.Enabled then ScreenGui.Enabled = true end
                 if hum.Health > 1 then _G.lastSavedPos = hrp.CFrame end
                 if hum.Health > 0 and hum.Health <= 51 then respawn(_G.lastSavedPos) end
             end
-
             if _G.killBots and Player.Name ~= TargetName then
                 local target = Players:FindFirstChild(TargetName)
                 local tChar = target and target.Character
                 local tHrp = tChar and tChar:FindFirstChild("HumanoidRootPart")
                 local tHum = tChar and tChar:FindFirstChild("Humanoid")
-
                 if tHrp and tHum and tHum.Health > 0 and hrp then
                     tHrp.CFrame = hrp.CFrame
                     RemoteEvent:FireServer({"Skill_Punch", punchSide})
@@ -275,30 +277,11 @@ if game.PlaceId == 2202352383 then
         end
     end)
 
-    _G.AntiAFKThread = task.spawn(function()
-        while true do
-            task.wait(300)
-            if _G.Config.antiAFK then
-                VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.A, false, game)
-                task.wait(0.05)
-                VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.A, false, game)
-                task.wait(0.05)
-                VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.D, false, game)
-                task.wait(0.05)
-                VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.D, false, game)
-            end
-        end
-    end)
-
     local function deactivateAllToggles()
-        _G.MainLoopActive = false
-        _G.rod = false
-        _G.killBots = false
-        _G.AutoRejoin = false
+        _G.MainLoopActive = false; _G.rod = false; _G.killBots = false; _G.AutoRejoin = false
         if _G.deathConn then _G.deathConn:Disconnect(); _G.deathConn = nil end
         if _G.RejoinConnection then _G.RejoinConnection:Disconnect(); _G.RejoinConnection = nil end
-        setUIState(false)
-        setfpscap(60)
+        setUIState(false); setfpscap(60)
     end
 
     task.spawn(function()
@@ -306,11 +289,17 @@ if game.PlaceId == 2202352383 then
         local intro = PlayerGui:FindFirstChild("IntroGui")
         local skill = ScreenGui:FindFirstChild("SkillHotkey_Frame")
         local blur  = Lighting:FindFirstChild("Blur")
+        local sz    = ScreenGui:FindFirstChild("SafeZoneTxt")
         if intro then intro.Enabled = false end
         if blur then blur.Enabled = false end
         if ScreenGui then ScreenGui.Enabled = true end
         if skill then skill:Destroy() end
         if _G.rod then setUIState(true) end
+        task.wait(3)
+        if sz and sz.Visible then
+            local pos = altCoords[Player.Name]
+            if pos then teleportTo(pos) end
+        end
     end)
 
     if Library and Library.Container then Library.Container.Destroying:Connect(deactivateAllToggles) end
