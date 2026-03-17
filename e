@@ -27,7 +27,7 @@ if game.PlaceId == 2202352383 then
         ["helkq303"] = Vector3.new(-684, 249, 772),
         ["helkq304"] = Vector3.new(-719, 249, 773),
         ["helkq305"] = Vector3.new(-720, 249, 741),
-        ["helkq306"] = Vector3.new(-721, 249, 706),
+        ["helkq111"] = Vector3.new(-721, 249, 706),
         ["helkq307"] = Vector3.new(-723, 249, 671),
         ["helkq103"] = Vector3.new(-689, 249, 670),
         ["helkq105"] = Vector3.new(-743, 249, 812),
@@ -81,17 +81,6 @@ if game.PlaceId == 2202352383 then
         local root = Player.Character and Player.Character:FindFirstChild("HumanoidRootPart")
         if root then root.CFrame = CFrame.new(pos) end
     end
-
-    local function loadAnims()
-        local char = Player.Character
-        local hum = char and char:WaitForChild("Humanoid", 5)
-        if hum then
-            hum:LoadAnimation(AnimFolder.Punch1Anim)
-            hum:LoadAnimation(AnimFolder.Punch2Anim)
-        end
-    end
-    Player.CharacterAdded:Connect(function() task.wait(1); loadAnims() end)
-    loadAnims()
 
     local function respawn(savedPos)
         local oldCam = Workspace.CurrentCamera
@@ -295,11 +284,9 @@ if game.PlaceId == 2202352383 then
         if ScreenGui then ScreenGui.Enabled = true end
         if skill then skill:Destroy() end
         if _G.rod then setUIState(true) end
-        task.wait(3)
-        if sz and sz.Visible then
-            local pos = altCoords[Player.Name]
-            if pos then teleportTo(pos) end
-        end
+        task.wait(10)
+        local pos = altCoords[Player.Name]
+        if pos then teleportTo(pos) end
     end)
 
     if Library and Library.Container then Library.Container.Destroying:Connect(deactivateAllToggles) end
