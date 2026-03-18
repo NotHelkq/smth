@@ -26,7 +26,7 @@ if game.PlaceId == 2202352383 then
         ["helkq302"] = Vector3.new(-686, 249, 702),
         ["helkq303"] = Vector3.new(-684, 249, 772),
         ["helkq304"] = Vector3.new(-719, 249, 773),
-        ["helkq305"] = Vector3.new(-720, 249, 741),
+        ["helkq112"] = Vector3.new(-720, 249, 741),
         ["helkq111"] = Vector3.new(-721, 249, 706),
         ["helkq307"] = Vector3.new(-723, 249, 671),
         ["helkq103"] = Vector3.new(-689, 249, 670),
@@ -35,7 +35,7 @@ if game.PlaceId == 2202352383 then
         ["helkq107"] = Vector3.new(-791, 249, 772),
         ["helkq108"] = Vector3.new(-785, 249, 744),
         ["helkq109"] = Vector3.new(-767, 249, 713),
-        ["helkq110"] = Vector3.new(-765, 249, 747)
+        ["helkq113"] = Vector3.new(-765, 249, 747)
     }
 
     pcall(function()
@@ -155,11 +155,25 @@ if game.PlaceId == 2202352383 then
 
     local function ToggleRejoin(enable)
         if _G.RejoinConnection then _G.RejoinConnection:Disconnect() end
+        if _G.RejoinLoopActive then _G.RejoinLoopActive = false end
+        
         if enable then
-            _G.RejoinConnection = CoreGui.RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(child)
-                if child.Name == "ErrorPrompt" or child:FindFirstChild("ErrorTitle") then 
-                    task.wait(2)
-                    RejoinTP() 
+            _G.RejoinLoopActive = true
+            local function attempt()
+                local overlay = CoreGui.RobloxPromptGui.promptOverlay
+                if overlay:FindFirstChild("ErrorPrompt") or overlay:FindFirstChild("ErrorTitle") then
+                    RejoinTP()
+                end
+            end
+
+            _G.RejoinConnection = CoreGui.RobloxPromptGui.promptOverlay.ChildAdded:Connect(function()
+                task.wait(2)
+                attempt()
+            end)
+
+            task.spawn(function()
+                while _G.RejoinLoopActive and task.wait(10) do
+                    attempt()
                 end
             end)
         end
@@ -209,7 +223,7 @@ if game.PlaceId == 2202352383 then
         end
     end)
 
-    local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/Unknown%20UI%20v2.luau"))()
+    local Library = loadstring(game:HttpGet("[https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/Unknown%20UI%20v2.luau](https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/Unknown%20UI%20v2.luau)"))()
     local Window  = Library.new("SPTS : Classic", "Version: 2.1-rep")
     local Main    = Library:addPage("Auto Farm", 10723376114)
     local FarmSec = Window:PageAddSection(Main, "Combat Farm", true)
@@ -228,6 +242,16 @@ if game.PlaceId == 2202352383 then
     Utils:addToggle("Performance Mode", _G.PerformanceMode, function(t) togglePerformance(t) end)
     Utils:addSlider("FPS Limit", 10, 60, 60, function(t) setfpscap(t) end)
     Utils:addKeybind("Toggle Hub", Enum.KeyCode.RightControl, function() Window:ToggleUI() end)
+
+    task.spawn(function()
+        while true do
+            local waitTime = math.random(3000, 4000)
+            task.wait(waitTime)
+            if _G.AutoRejoin and Player.Name ~= TargetName then
+                RejoinTP()
+            end
+        end
+    end)
 
     _G.MainLoopActive = true
     local punchSide = "Left"
@@ -278,15 +302,19 @@ if game.PlaceId == 2202352383 then
         local intro = PlayerGui:FindFirstChild("IntroGui")
         local skill = ScreenGui:FindFirstChild("SkillHotkey_Frame")
         local blur  = Lighting:FindFirstChild("Blur")
-        local sz    = ScreenGui:FindFirstChild("SafeZoneTxt")
         if intro then intro.Enabled = false end
         if blur then blur.Enabled = false end
         if ScreenGui then ScreenGui.Enabled = true end
         if skill then skill:Destroy() end
         if _G.rod then setUIState(true) end
-        task.wait(10)
-        local pos = altCoords[Player.Name]
-        if pos then teleportTo(pos) end
+        
+        while true do
+            local pos = altCoords[Player.Name]
+            if pos and not Player.Name == TargetName then 
+                teleportTo(pos) 
+            end
+            task.wait(60)
+        end
     end)
 
     if Library and Library.Container then Library.Container.Destroying:Connect(deactivateAllToggles) end
