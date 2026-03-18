@@ -307,7 +307,7 @@ if game.PlaceId == 2202352383 then
         if ScreenGui then ScreenGui.Enabled = true end
         if skill then skill:Destroy() end
         if _G.rod then setUIState(true) end
-        
+        task.wait(5)
         while true do
             local pos = altCoords[Player.Name]
             if pos and not Player.Name == TargetName then 
