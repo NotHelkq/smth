@@ -256,6 +256,8 @@ if game.PlaceId == 2202352383 then
     _G.MainLoopActive = true
     local punchSide = "Left"
     local webhookSentThisMinute = false
+    local pos = altCoords[Player.Name]
+    local lastTP = 0
 
     task.spawn(function()
         while _G.MainLoopActive and task.wait(0.05) do
@@ -287,6 +289,10 @@ if game.PlaceId == 2202352383 then
                     punchSide = (punchSide == "Left" and "Right" or "Left")
                 end
             end
+            if tick() - lastTP >= 30 and Player.Name ~= TargetName then 
+                if pos then teleportTo(pos) end
+                lastTP = tick()
+            end
         end
     end)
 
@@ -308,13 +314,8 @@ if game.PlaceId == 2202352383 then
         if skill then skill:Destroy() end
         if _G.rod then setUIState(true) end
         task.wait(5)
-        while true do
-            local pos = altCoords[Player.Name]
-            if pos and not Player.Name == TargetName then 
-                teleportTo(pos) 
-            end
-            task.wait(60)
-        end
+        local pos = altCoords[Player.Name]
+        if pos then teleportTo(pos) end
     end)
 
     if Library and Library.Container then Library.Container.Destroying:Connect(deactivateAllToggles) end
