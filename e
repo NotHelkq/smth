@@ -223,7 +223,7 @@ if game.PlaceId == 2202352383 then
         end
     end)
 
-    local Library = loadstring(game:HttpGet("[https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/Unknown%20UI%20v2.luau](https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/Unknown%20UI%20v2.luau)"))()
+    local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/NotHelkq/smth/refs/heads/main/Unknown%20UI%20v2.luau"))()
     local Window  = Library.new("SPTS : Classic", "Version: 2.1-rep")
     local Main    = Library:addPage("Auto Farm", 10723376114)
     local FarmSec = Window:PageAddSection(Main, "Combat Farm", true)
